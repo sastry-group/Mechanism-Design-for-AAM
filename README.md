@@ -3,6 +3,39 @@
 This is a fork of the Bluesky repo for Air Traffic Simulation. This fork implements an incentive compatible
 approach to air traffic management.
 
+## Installation
+
+To install and run the BlueSky simulator, follow these steps:
+
+1. Create a virtual environment using `venv`:
+    ```bash
+    python3 -m venv venv
+    ```
+
+2. Activate the virtual environment:
+    - For Windows:
+      ```bash
+      .\bluesky-env\Scripts\activate
+      ```
+    - For macOS/Linux:
+      ```bash
+      source bluesky-env/bin/activate
+      ```
+
+3. Install the required dependencies using `pip`:
+    ```bash
+    pip3 install -r requirements-gui.txt
+    ```
+
+4. Run the BlueSky simulator:
+    ```bash
+    python3 BlueSky.py
+    ```
+
+Note: Make sure you have Python 3 and pip installed on your system before proceeding with the installation.
+
+For more detailed installation instructions and troubleshooting, please refer to the [BlueSky Wiki](https://github.com/TUDelft-CNS-ATM/bluesky/wiki).
+
 # 10 years of BlueSky!
 This year marks BlueSky's tenth anniversary, which we are celebrating with a two-day [workshop](https://forms.office.com/e/mXamnSYba5) on November 8-9.
 ![workshop programme](https://github.com/TUDelft-CNS-ATM/bluesky/blob/a20cf4497d6fc57d859970891026db7ba3574807/docs/workshop_programme.png)
