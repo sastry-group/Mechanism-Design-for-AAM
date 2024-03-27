@@ -1,3 +1,8 @@
+# Incentive Compatible Fleets for Advanced Air Mobility
+
+This is a fork of the Bluesky repo for Air Traffic Simulation. This fork implements an incentive compatible
+approach to air traffic management.
+
 # 10 years of BlueSky!
 This year marks BlueSky's tenth anniversary, which we are celebrating with a two-day [workshop](https://forms.office.com/e/mXamnSYba5) on November 8-9.
 ![workshop programme](https://github.com/TUDelft-CNS-ATM/bluesky/blob/a20cf4497d6fc57d859970891026db7ba3574807/docs/workshop_programme.png)
