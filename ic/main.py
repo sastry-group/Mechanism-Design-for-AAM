@@ -40,8 +40,13 @@ def run_from_json(file = None, run_gui = False):
     #     bs.init(mode="sim")
     #     bs.net.connect()
 
-    # Create vertiport graph
-    capacity_status = VertiportStatus(data["vertiports"], data["edges"], data["time_horizon"])
+    # Create vertiport graph and add starting aircraft positions
+    vertiport_usage = VertiportStatus(data["vertiports"], data["edges"], data["time_horizon"])
+    vertiport_usage.add_aircraft(data["flights"])
+
+    # Allocate all flights and move them
+    for flight in data["flights"]:
+        vertiport_usage.move_aircraft(flight["origin_vertiport_id"], flight["requests"][0])
 
 
 if __name__ == "__main__":
