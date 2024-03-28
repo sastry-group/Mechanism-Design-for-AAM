@@ -6,13 +6,15 @@ import argparse
 import json
 import sys
 from pathlib import Path
+import tkinter
 
 # Add the bluesky package to the path
 top_level_path = Path(__file__).resolve().parent.parent
 print(str(top_level_path))
 sys.path.append(str(top_level_path))
 import bluesky as bs
-from ic.VertiportStatus import VertiportStatus
+from ic.VertiportStatus import VertiportStatus, draw_graph
+from ic.allocation import determine_allocation
 
 parser = argparse.ArgumentParser(description='Process a true/false argument.')
 parser.add_argument('--gui', action='store_true', help='Flag for running with gui.')
@@ -44,9 +46,17 @@ def run_from_json(file = None, run_gui = False):
     vertiport_usage = VertiportStatus(data["vertiports"], data["edges"], data["time_horizon"])
     vertiport_usage.add_aircraft(data["flights"])
 
+    # Determin allocation
+    allocated_flights = determine_allocation(vertiport_usage, 0, data["flights"])
+
     # Allocate all flights and move them
-    for flight in data["flights"]:
+    for flight in allocated_flights:
         vertiport_usage.move_aircraft(flight["origin_vertiport_id"], flight["requests"][0])
+
+    # Visualize the graph
+    if False:
+        draw_graph(vertiport_usage)
+    
 
 
 if __name__ == "__main__":

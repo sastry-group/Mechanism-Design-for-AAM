@@ -1,4 +1,6 @@
 import networkx as nx
+import matplotlib.pyplot as plt
+
 
 class VertiportStatus(nx.DiGraph):
     """
@@ -27,6 +29,7 @@ class VertiportStatus(nx.DiGraph):
                 self.nodes[time_extended_vertiport_id]["landing_usage"] = 0
                 self.nodes[time_extended_vertiport_id]["takeoff_usage"] = 0
                 self.nodes[time_extended_vertiport_id]["hold_usage"] = 0
+                self.nodes[time_extended_vertiport_id]["time"] = step
 
         # Add edges to time extended graph
         for step in self.time_steps:
@@ -91,3 +94,13 @@ class VertiportStatus(nx.DiGraph):
         time_extended_destination = destination_vertiport + "_" + str(arrival_time)
         self.nodes[time_extended_origin]["takeoff_usage"] += 1
         self.nodes[time_extended_destination]["landing_usage"] += 1
+
+
+def draw_graph(graph):
+    # Todo: This could be significantly improved
+    # Draw the graph
+    pos = nx.shell_layout(graph)
+    nx.draw(graph, pos, with_labels=True, node_color='skyblue', node_size=700, edge_color='k')
+
+    # Show the plot
+    plt.show()
