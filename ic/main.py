@@ -12,6 +12,7 @@ top_level_path = Path(__file__).resolve().parent.parent
 print(str(top_level_path))
 sys.path.append(str(top_level_path))
 import bluesky as bs
+from ic.VertiportStatus import VertiportStatus
 
 parser = argparse.ArgumentParser(description='Process a true/false argument.')
 parser.add_argument('--gui', action='store_true', help='Flag for running with gui.')
@@ -33,11 +34,14 @@ def run_from_json(file = None, run_gui = False):
         print(f"Opened file {file}")
 
     # Create the BlueSky simulation
-    if not run_gui:
-        bs.init(mode="sim", detached=True)
-    else:
-        bs.init(mode="sim")
-        bs.net.connect()
+    # if not run_gui:
+    #     bs.init(mode="sim", detached=True)
+    # else:
+    #     bs.init(mode="sim")
+    #     bs.net.connect()
+
+    # Create vertiport graph
+    capacity_status = VertiportStatus(data["vertiports"], data["edges"], data["time_horizon"])
 
 
 if __name__ == "__main__":
