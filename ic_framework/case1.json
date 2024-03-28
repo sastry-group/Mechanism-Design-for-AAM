@@ -1,0 +1,55 @@
+{
+    "time_horizon": {
+      "start_time": 0,
+      "end_time": 1440,
+      "step_time": 10
+    },
+    "flights": [
+      {
+        "simulation_time": 600,
+        "aircraft_id": "AC001",
+        "origin_vertiport_id": "V001",
+        "destination_vertiport_id": "V002",
+        "request_departure_time": 630,
+        "request_arrival_time": 675
+      },
+      {
+        "simulation_time": 600,
+        "aircraft_id": "AC002",
+        "origin_vertiport_id": "V003",
+        "destination_vertiport_id": "V004",
+        "request_departure_time": 645,
+        "request_arrival_time": 690
+      }
+    ],
+    "vertiports": {
+      "V001": {
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "landing_capacity": 10,
+        "takeoff_capacity": 10,
+        "hold_capacity": 5
+      },
+      "V002": {
+        "latitude": 34.0522,
+        "longitude": -118.2437,
+        "landing_capacity": 8,
+        "takeoff_capacity": 8,
+        "hold_capacity": 4
+      },
+      "V003": {
+        "latitude": 40.7128,
+        "longitude": -74.0060,
+        "landing_capacity": 12,
+        "takeoff_capacity": 12,
+        "hold_capacity": 6
+      },
+      "V004": {
+        "latitude": 41.8781,
+        "longitude": -87.6298,
+        "landing_capacity": 15,
+        "takeoff_capacity": 15,
+        "hold_capacity": 8
+      }
+    }
+}
