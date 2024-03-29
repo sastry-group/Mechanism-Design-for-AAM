@@ -23,7 +23,7 @@
           {
             "destination_vertiport_id": "V001",
             "request_departure_time": 0,
-            "request_arrival_time": 0,
+            "request_arrival_time": 1,
             "valuation": 50,
             "bid": 50
           },
@@ -44,7 +44,7 @@
           {
             "destination_vertiport_id": "V003",
             "request_departure_time": 0,
-            "request_arrival_time": 0,
+            "request_arrival_time": 1,
             "valuation": 50,
             "bid": 50
           },

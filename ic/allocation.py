@@ -123,16 +123,16 @@ def build_auxiliary(vertiport_status, flights, time, max_time, time_steps=None):
         auxiliary_graph.add_edge("source", vertiport[0] + "_1", **attributes)
 
         # E8. Connect each node at the last time step to sink per park allowance
-        for val in range(vertiport_status.nodes[node]["hold_capacity"]):
+        for val in range(vertiport[1]["hold_capacity"]):
             attributes = {"upper_capacity": 1,
                         "lower_capacity": 0,
                         "weight": 0, #lambda = 0
-                        "edge_group": "E8" + str(val + 1)}
+                        "edge_group": "E8_" + str(val + 1)}
             auxiliary_graph.add_edge(vertiport[0] + "_" + str(max_time), "sink", **attributes)  
             
     # Print edges using pretty print
-    for edge in auxiliary_graph.edges(data=True):
-        print(edge)
+    # for edge in auxiliary_graph.edges(data=True):
+    #     print(edge)
     # draw_graph(auxiliary_graph)
     return auxiliary_graph
 
