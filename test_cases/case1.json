@@ -21,6 +21,13 @@
         "origin_vertiport_id": "V001",
         "requests": [
           {
+            "destination_vertiport_id": "V001",
+            "request_departure_time": 0,
+            "request_arrival_time": 0,
+            "valuation": 50,
+            "bid": 50
+          },
+          {
             "destination_vertiport_id": "V002",
             "request_departure_time": 2,
             "request_arrival_time": 4,
@@ -34,6 +41,13 @@
         "aircraft_id": "AC002",
         "origin_vertiport_id": "V003",
         "requests": [
+          {
+            "destination_vertiport_id": "V003",
+            "request_departure_time": 0,
+            "request_arrival_time": 0,
+            "valuation": 50,
+            "bid": 50
+          },
           {
             "destination_vertiport_id": "V004",
             "request_departure_time": 2,

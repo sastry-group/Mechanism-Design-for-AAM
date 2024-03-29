@@ -46,12 +46,14 @@ def run_from_json(file = None, run_gui = False):
     vertiport_usage = VertiportStatus(data["vertiports"], data["edges"], data["time_horizon"])
     vertiport_usage.add_aircraft(data["flights"])
 
-    # Determin allocation
-    allocated_flights = determine_allocation(vertiport_usage, 0, data["flights"])
+    # Determine allocation
+    start_time = data["time_horizon"]["start_time"]
+    end_time = data["time_horizon"]["end_time"]
+    allocated_flights = determine_allocation(vertiport_usage, data["flights"], start_time, end_time)
 
     # Allocate all flights and move them
     for flight in allocated_flights:
-        vertiport_usage.move_aircraft(flight["origin_vertiport_id"], flight["requests"][0])
+        vertiport_usage.move_aircraft(flight["origin_vertiport_id"], flight["requests"][1])
 
     # Visualize the graph
     if False:
