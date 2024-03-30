@@ -81,8 +81,8 @@ def build_auxiliary(vertiport_status, flights, time, max_time, time_steps=None):
         for depart_time in unique_departure_times[flight["aircraft_id"]]:
             if depart_time == 0:
                 continue
-            attributes = {"upper_capacity": None,
-                          "lower_capacity": None,
+            attributes = {"upper_capacity": f"d_{flight['aircraft_id']}_{depart_time}",
+                          "lower_capacity": f"d_{flight['aircraft_id']}_{depart_time}",
                           "weight": 0,
                           "edge_group": "E4"}
             auxiliary_graph.add_edge(origin + "_" + str(depart_time) + "_dep", flight["aircraft_id"] + "_" + str(depart_time), **attributes)
@@ -90,8 +90,8 @@ def build_auxiliary(vertiport_status, flights, time, max_time, time_steps=None):
         for request in flight["requests"]:
             # E7. Connect source node to flight 0 node
             if request["request_departure_time"] == 0:
-                attributes = {"upper_capacity": None,
-                            "lower_capacity": None,
+                attributes = {"upper_capacity": f"d_{flight['aircraft_id']}_0",
+                            "lower_capacity": f"d_{flight['aircraft_id']}_0",
                             "weight": rho * request["bid"], # rho * b, rho=1 for now
                             "edge_group": "E7"}
                 auxiliary_graph.add_edge("source", flight["aircraft_id"] + "_0", **attributes)
@@ -108,16 +108,16 @@ def build_auxiliary(vertiport_status, flights, time, max_time, time_steps=None):
                                         destination + "_" + str(arrival_time) + "_arr", **attributes)
             
         # E9. Connect flight 0 node to origin
-        attributes = {"upper_capacity": None,
-                    "lower_capacity": None,
+        attributes = {"upper_capacity": f"d_{flight['aircraft_id']}_0",
+                    "lower_capacity": f"d_{flight['aircraft_id']}_0",
                     "weight": 0,
                     "edge_group": "E9"}
         auxiliary_graph.add_edge(flight["aircraft_id"] + "_0", origin + "_1", **attributes)
 
     for vertiport in vertiport_status.vertiports.items():
         # E6. Connect source to each node at the first time step
-        attributes = {"upper_capacity": None,
-                      "lower_capacity": None,
+        attributes = {"upper_capacity": f"E6_{vertiport[0]}_cap",
+                      "lower_capacity": f"E6_{vertiport[0]}_cap",
                       "weight": 0,
                       "edge_group": "E6"}
         auxiliary_graph.add_edge("source", vertiport[0] + "_1", **attributes)
