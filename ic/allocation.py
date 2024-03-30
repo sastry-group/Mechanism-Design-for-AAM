@@ -87,18 +87,7 @@ def build_auxiliary(vertiport_status, flights, time, max_time, time_steps=None):
                           "edge_group": "E4"}
             auxiliary_graph.add_edge(origin + "_" + str(depart_time) + "_dep", flight["aircraft_id"] + "_" + str(depart_time), **attributes)
             
-        # E5. Connect flight departure time node (V2) to arrival node (V1)
         for request in flight["requests"]:
-            destination = request["destination_vertiport_id"]
-            depart_time = request["request_departure_time"]
-            arrival_time = request["request_arrival_time"]
-            attributes = {"upper_capacity": 1,
-                          "lower_capacity": 0,
-                          "weight": rho * request["bid"],  # rho * b, rho=1 for now
-                          "edge_group": "E5"}
-            auxiliary_graph.add_edge(flight["aircraft_id"] + "_" + str(depart_time), \
-                                     destination + "_" + str(arrival_time) + "_arr", **attributes)
-            
             # E7. Connect source node to flight 0 node
             if request["request_departure_time"] == 0:
                 attributes = {"upper_capacity": None,
@@ -106,7 +95,18 @@ def build_auxiliary(vertiport_status, flights, time, max_time, time_steps=None):
                             "weight": rho * request["bid"], # rho * b, rho=1 for now
                             "edge_group": "E7"}
                 auxiliary_graph.add_edge("source", flight["aircraft_id"] + "_0", **attributes)
-        
+            else:
+                # E5. Connect flight departure time node (V2) to arrival node (V1)
+                destination = request["destination_vertiport_id"]
+                depart_time = request["request_departure_time"]
+                arrival_time = request["request_arrival_time"]
+                attributes = {"upper_capacity": 1,
+                            "lower_capacity": 0,
+                            "weight": rho * request["bid"],  # rho * b, rho=1 for now
+                            "edge_group": "E5"}
+                auxiliary_graph.add_edge(flight["aircraft_id"] + "_" + str(depart_time), \
+                                        destination + "_" + str(arrival_time) + "_arr", **attributes)
+            
         # E9. Connect flight 0 node to origin
         attributes = {"upper_capacity": None,
                     "lower_capacity": None,
