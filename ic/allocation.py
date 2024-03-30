@@ -137,7 +137,21 @@ def build_auxiliary(vertiport_status, flights, time, max_time, time_steps=None):
     return auxiliary_graph
 
 
-def determine_allocation(vertiport_usage, flights, time, max_time):
+def determine_allocation(auxiliary_graph):
+    incidence_matrix = nx.incidence_matrix(auxiliary_graph, oriented=True)
+    node_order = auxiliary_graph.nodes()
+    source_position = node_order.index('source')
+    sink_position = node_order.index('sink')
+    if source_position > sink_position:
+        reduced_incidence_matrix = incidence_matrix[:source_position, :] + incidence_matrix[source_position + 1:, :]
+        reduced_incidence_matrix = reduced_incidence_matrix[:sink_position, :] + reduced_incidence_matrix[sink_position + 1:, :]
+    else:
+        reduced_incidence_matrix = incidence_matrix[:sink_position, :] + incidence_matrix[sink_position + 1:, :]
+        reduced_incidence_matrix = reduced_incidence_matrix[:source_position, :] + reduced_incidence_matrix[source_position + 1:, :]
+    return incidence_matrix
+
+
+def allocation_and_payment(vertiport_usage, flights, time, max_time):
     """
     Allocate flights for a given time and set of requests.
 
@@ -147,5 +161,6 @@ def determine_allocation(vertiport_usage, flights, time, max_time):
         flights (list): List of flights making requests at this time step.
     """
     auxiliary_graph = build_auxiliary(vertiport_usage, flights, time, max_time)
+    allocation = determine_allocation(auxiliary_graph)
     allocated_flights = flights
-    return allocated_flights
+    return allocated_flights, None

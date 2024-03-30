@@ -49,7 +49,7 @@ def run_from_json(file = None, run_gui = False):
     # Determine allocation
     start_time = data["time_horizon"]["start_time"]
     end_time = data["time_horizon"]["end_time"]
-    allocated_flights = determine_allocation(vertiport_usage, data["flights"], start_time, end_time)
+    allocated_flights, payments = allocation_and_payment(vertiport_usage, data["flights"], start_time, end_time)
 
     # Allocate all flights and move them
     for flight in allocated_flights:
