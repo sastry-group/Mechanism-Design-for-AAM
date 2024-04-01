@@ -35,27 +35,6 @@
             "bid": 100
           }
         ]
-      },
-      {
-        "appearance_time": 1,
-        "aircraft_id": "AC002",
-        "origin_vertiport_id": "V003",
-        "requests": [
-          {
-            "destination_vertiport_id": "V003",
-            "request_departure_time": 0,
-            "request_arrival_time": 1,
-            "valuation": 30,
-            "bid": 30
-          },
-          {
-            "destination_vertiport_id": "V004",
-            "request_departure_time": 2,
-            "request_arrival_time": 3,
-            "valuation": 80,
-            "bid": 80
-          }
-        ]
       }
     ],
     "vertiports": {
@@ -72,36 +51,12 @@
         "landing_capacity": 1,
         "takeoff_capacity": 1,
         "hold_capacity": 2
-      },
-      "V003": {
-        "latitude": 40.7128,
-        "longitude": -74.0060,
-        "landing_capacity": 1,
-        "takeoff_capacity": 1,
-        "hold_capacity": 2
-      },
-      "V004": {
-        "latitude": 41.8781,
-        "longitude": -87.6298,
-        "landing_capacity": 1,
-        "takeoff_capacity": 1,
-        "hold_capacity": 2
       }
     },
     "edges": [
       {
         "origin_vertiport_id": "V001",
         "destination_vertiport_id": "V002",
-        "travel_time": 1
-      },
-      {
-        "origin_vertiport_id": "V002",
-        "destination_vertiport_id": "V003",
-        "travel_time": 6
-      },
-      {
-        "origin_vertiport_id": "V003",
-        "destination_vertiport_id": "V004",
         "travel_time": 1
       }
     ]

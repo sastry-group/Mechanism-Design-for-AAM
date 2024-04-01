@@ -2,6 +2,7 @@ import networkx as nx
 from VertiportStatus import draw_graph
 import numpy as np
 import gurobipy as gp
+from scipy.sparse import csr_matrix
 
 rho = 1
 
@@ -132,20 +133,48 @@ def build_auxiliary(vertiport_status, flights, time, max_time, time_steps=None):
                         "edge_group": "E8_" + str(val + 1)}
             auxiliary_graph.add_edge(vertiport[0] + "_" + str(max_time), "sink", **attributes)  
             
-    # Print edges using pretty print
+    # Print edges for debugging
     # for edge in auxiliary_graph.edges(data=True):
     #     print(edge)
     # draw_graph(auxiliary_graph)
-    return auxiliary_graph
+    return auxiliary_graph, unique_departure_times
 
 
-def determine_allocation(auxiliary_graph):
-    # Start building allocation optimization problem
+def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_departure_times):
+    vertiports = vertiport_usage.vertiports
+    aircraft_ids = list(unique_departure_times.keys())
 
-    # Create the incidence matrix with the pulled node order so that we know what each column and row corresponds to
+    # Create the incidence matrix (I) with the pulled node order so that we know what each column and row corresponds to
     node_order = list(auxiliary_graph.nodes())
     edges = auxiliary_graph.edges(data=True)
     edge_order = list(edges)
+    I = nx.incidence_matrix(auxiliary_graph, oriented=True, nodelist=node_order, edgelist=edge_order).toarray()
+
+    # Remove source and sink rows to create I_star
+    source_index = node_order.index("source")
+    sink_index = node_order.index("sink")
+    I_star = np.delete(I, [source_index, sink_index], axis=0)
+    print(f"Node_order:")
+    for node in node_order:
+        print(node)
+    print(f"\nI_star:")
+    for i in range(len(I_star)):
+        for j in range(len(I_star[i])):
+            if I_star[i][j] != 0:
+                print(f"({i}, {j}, {I_star[i][j]})")
+    print(f"\nEdge_order:")
+    for edge in edge_order:
+        print(edge)
+
+    # Start building allocation optimization problem
+    m = gp.Model("allocation")
+
+    # Define the decision variables
+    delta = [
+        [m.addVar(vtype=gp.GRB.BINARY, name=f"delta_{flight}_time{t}") for t in unique_departure_times[flight]]
+        for flight in aircraft_ids
+    ]
+    A = m.addVars(len(edge_order), lb=0, name="A")
 
     # Pull weight values (W)
     W = np.zeros(len(edge_order))
@@ -154,27 +183,76 @@ def determine_allocation(auxiliary_graph):
         _, _, attr = edge
         W[i] = attr["weight"]
 
-    # Pull complete incidence matrix (I)
-    incidence_matrix = nx.incidence_matrix(auxiliary_graph, oriented=True, nodelist=node_order, edgelist=edge_order)
+    # Define the objective function
+    m.setObjective(gp.quicksum(W[i] * A[i] for i in range(len(edge_order))), sense=gp.GRB.MAXIMIZE)
 
-    # Determine source and sink position and remove those rows to create I_star
-    I = incidence_matrix.toarray()
-    source_position = list(node_order).index('source')
-    sink_position = list(node_order).index('sink')
-    I_star = np.delete(I, [source_position, sink_position], axis=0)
-
-    C_lower = np.zeros(len(edge_order))
-    C_upper = np.zeros(len(edge_order))
-    for i, edge in enumerate(edge_order):
-        lower_c = auxiliary_graph.edges[edge]["lower_capacity"]
-        upper_c = auxiliary_graph.edges[edge]["upper_capacity"]
-        if isinstance(lower_c, str):
-            # Process string
-            continue
+    # Define the constraints
+    for i in range(len(delta)):
+        m.addConstr(gp.quicksum(delta[i][j] for j in range(len(delta[i]))), gp.GRB.EQUAL, 1, f"unique_departure_time_flight{i}")
+    for row in I_star:
+        m.addConstr(gp.quicksum(row[i] * A[i] for i in range(len(edge_order))), gp.GRB.EQUAL, 0, f"flow_conservation")
+    # m.addConstr(I_star @ A == 0, f"flow_conservation")
+    # m.addConstr(A <= C_upper, f"upper_capacity")
+    # m.addConstr(C_lower <= A, f"lower_capacity")
+    # Pull capacity values (C_upper, C_lower) per edge (c_upper, c_lower)
+    # C_upper = np.zeros(len(edge_order))
+    # C_lower = np.zeros(len(edge_order))
+    for k, edge in enumerate(edges):
+        assert len(edge) == 3, "Missing attributes in edge."
+        _, _, attr = edge
+        c_upper = attr["upper_capacity"]
+        if isinstance(c_upper, str):
+            upper_parts = c_upper.split("_")
+            if upper_parts[0] == "d":
+                flight = upper_parts[1]
+                idx = aircraft_ids.index(flight)
+                time = int(upper_parts[2])
+                time_idx = unique_departure_times[flight].index(time)
+                m.addConstr(A[k] <= delta[idx][time_idx], f"upper_capacity_edge{k}")
+            elif upper_parts[0] == "E6":
+                vertiport = upper_parts[1]
+                S_r = 0
+                delta_indices = []
+                for flight in flights:
+                    if flight["origin_vertiport_id"] == vertiport:
+                        S_r += 1
+                        idx = aircraft_ids.index(flight["aircraft_id"])
+                        delta_indices.append(idx)
+                delta_sum_r = gp.quicksum(delta[idx][0] for idx in delta_indices)
+                m.addConstr(S_r - delta_sum_r <= A[k], f"upper_capacity_edge{k}")
+                m.addConstr(A[k] <= S_r - delta_sum_r, f"lower_capacity_edge{k}")
+                # idx = node_order.index(vertiport + "_1")
+                # m.addConstr(A[k] <= 1, f"upper_capacity_edge{k}")
         else:
-            C_lower[i] = lower_c
+            m.addConstr(A[k] <= c_upper, f"upper_capacity_edge{k}")
 
-    allocation = None
+        c_lower = attr["lower_capacity"]
+        if isinstance(c_lower, str):
+            lower_parts = c_lower.split("_")
+            if lower_parts[0] == "d":
+                flight = lower_parts[1]
+                idx = aircraft_ids.index(flight)
+                time = int(lower_parts[2])
+                time_idx = unique_departure_times[flight].index(time)
+                m.addConstr(delta[idx][time_idx] <= A[k], f"lower_capacity_edge{k}")
+        else:
+            m.addConstr(c_lower <= A[k], f"lower_capacity_edge{k}")
+
+    # Set initial guess for decision variables
+    for i in range(len(delta)):
+        delta[i][-1].start = 1  # Set initial guess for delta variables
+
+    # Optimize the model
+    m.optimize()
+
+    # Retrieve the allocation values
+    # Todo: Implement for the case when agents have more than one request per time
+    allocation = []
+    for idx, flight_times in enumerate(delta):
+        for dep_time in flight_times:
+            if dep_time.x == 1:
+                allocation.append((aircraft_ids[idx], dep_time.varName.split("_")[-1][4:]))
+
     return allocation
 
 
@@ -187,7 +265,8 @@ def allocation_and_payment(vertiport_usage, flights, time, max_time):
         time (int): Time step for which to allocate flights.
         flights (list): List of flights making requests at this time step.
     """
-    auxiliary_graph = build_auxiliary(vertiport_usage, flights, time, max_time)
-    allocation = determine_allocation(auxiliary_graph)
+    auxiliary_graph, unique_departure_times = build_auxiliary(vertiport_usage, flights, time, max_time)
+    allocation = determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_departure_times)
+    print(allocation)
     allocated_flights = flights
     return allocated_flights, None
