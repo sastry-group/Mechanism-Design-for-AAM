@@ -14,7 +14,7 @@ print(str(top_level_path))
 sys.path.append(str(top_level_path))
 import bluesky as bs
 from ic.VertiportStatus import VertiportStatus, draw_graph
-from ic.allocation import determine_allocation
+from ic.allocation import allocation_and_payment
 
 parser = argparse.ArgumentParser(description='Process a true/false argument.')
 parser.add_argument('--gui', action='store_true', help='Flag for running with gui.')

@@ -1,5 +1,7 @@
 import networkx as nx
 from VertiportStatus import draw_graph
+import numpy as np
+import gurobipy as gp
 
 rho = 1
 
@@ -138,17 +140,42 @@ def build_auxiliary(vertiport_status, flights, time, max_time, time_steps=None):
 
 
 def determine_allocation(auxiliary_graph):
-    incidence_matrix = nx.incidence_matrix(auxiliary_graph, oriented=True)
-    node_order = auxiliary_graph.nodes()
-    source_position = node_order.index('source')
-    sink_position = node_order.index('sink')
-    if source_position > sink_position:
-        reduced_incidence_matrix = incidence_matrix[:source_position, :] + incidence_matrix[source_position + 1:, :]
-        reduced_incidence_matrix = reduced_incidence_matrix[:sink_position, :] + reduced_incidence_matrix[sink_position + 1:, :]
-    else:
-        reduced_incidence_matrix = incidence_matrix[:sink_position, :] + incidence_matrix[sink_position + 1:, :]
-        reduced_incidence_matrix = reduced_incidence_matrix[:source_position, :] + reduced_incidence_matrix[source_position + 1:, :]
-    return incidence_matrix
+    # Start building allocation optimization problem
+
+    # Create the incidence matrix with the pulled node order so that we know what each column and row corresponds to
+    node_order = list(auxiliary_graph.nodes())
+    edges = auxiliary_graph.edges(data=True)
+    edge_order = list(edges)
+
+    # Pull weight values (W)
+    W = np.zeros(len(edge_order))
+    for i, edge in enumerate(edges):
+        assert len(edge) == 3, "Missing attributes in edge."
+        _, _, attr = edge
+        W[i] = attr["weight"]
+
+    # Pull complete incidence matrix (I)
+    incidence_matrix = nx.incidence_matrix(auxiliary_graph, oriented=True, nodelist=node_order, edgelist=edge_order)
+
+    # Determine source and sink position and remove those rows to create I_star
+    I = incidence_matrix.toarray()
+    source_position = list(node_order).index('source')
+    sink_position = list(node_order).index('sink')
+    I_star = np.delete(I, [source_position, sink_position], axis=0)
+
+    C_lower = np.zeros(len(edge_order))
+    C_upper = np.zeros(len(edge_order))
+    for i, edge in enumerate(edge_order):
+        lower_c = auxiliary_graph.edges[edge]["lower_capacity"]
+        upper_c = auxiliary_graph.edges[edge]["upper_capacity"]
+        if isinstance(lower_c, str):
+            # Process string
+            continue
+        else:
+            C_lower[i] = lower_c
+
+    allocation = None
+    return allocation
 
 
 def allocation_and_payment(vertiport_usage, flights, time, max_time):
