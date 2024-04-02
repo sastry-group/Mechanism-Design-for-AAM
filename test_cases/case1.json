@@ -1,59 +1,53 @@
 {
-    "time_horizon": {
-      "start_time": 1,
-      "end_time": 3,
-      "time_step": 1
+    "timing_info": {
+      "start_time": 10,
+      "end_time": 30,
+      "time_step": 10
     },
-    "fleets": [
-      {
-        "fleet_id": "F001",
-        "aircraft": ["AC001"]
-      },
-      {
-        "fleet_id": "F002",
-        "aircraft": ["AC002"]
-      }
-    ],
+    "fleets": {
+      "F001": ["AC001"],
+      "F002": ["AC002"]
+    },
     "flights": {
       "AC001": {
         "appearance_time": 1,
         "origin_vertiport_id": "V001",
-        "requests": [
-          {
+        "requests": {
+          "000": {
             "destination_vertiport_id": "V001",
             "request_departure_time": 0,
-            "request_arrival_time": 1,
+            "request_arrival_time": 0,
             "valuation": 30,
             "bid": 30
           },
-          {
+          "001": {
             "destination_vertiport_id": "V002",
-            "request_departure_time": 1,
-            "request_arrival_time": 2,
+            "request_departure_time": 10,
+            "request_arrival_time": 20,
             "valuation": 100,
             "bid": 100
           }
-        ]
+        }
       },
       "AC002": {
         "appearance_time": 1,
         "origin_vertiport_id": "V003",
-        "requests": [
-          {
+        "requests": {
+          "000": {
             "destination_vertiport_id": "V003",
             "request_departure_time": 0,
-            "request_arrival_time": 1,
+            "request_arrival_time": 0,
             "valuation": 30,
             "bid": 30
           },
-          {
+          "001": {
             "destination_vertiport_id": "V004",
-            "request_departure_time": 2,
-            "request_arrival_time": 3,
+            "request_departure_time": 20,
+            "request_arrival_time": 30,
             "valuation": 80,
             "bid": 80
           }
-        ]
+        }
       }
     },
     "vertiports": {
@@ -86,21 +80,21 @@
         "hold_capacity": 2
       }
     },
-    "edges": [
+    "routes": [
       {
         "origin_vertiport_id": "V001",
         "destination_vertiport_id": "V002",
-        "travel_time": 1
+        "travel_time": 10
       },
       {
         "origin_vertiport_id": "V002",
         "destination_vertiport_id": "V003",
-        "travel_time": 6
+        "travel_time": 20
       },
       {
         "origin_vertiport_id": "V003",
         "destination_vertiport_id": "V004",
-        "travel_time": 1
+        "travel_time": 10
       }
     ]
 }

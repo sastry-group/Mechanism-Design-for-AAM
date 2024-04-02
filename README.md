@@ -26,6 +26,7 @@ To install and run the BlueSky simulator, follow these steps:
       ```bash
       source bluesky-env/bin/activate
       ```
+    (Use ```deactivate``` to exit the virtual environment when finished)
 
 4. Install the required dependencies using `pip`:
     ```bash

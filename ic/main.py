@@ -43,18 +43,19 @@ def run_from_json(file = None, run_gui = False):
     #     bs.net.connect()
 
     # Create vertiport graph and add starting aircraft positions
-    vertiport_usage = VertiportStatus(data["vertiports"], data["edges"], data["time_horizon"])
+    vertiport_usage = VertiportStatus(data["vertiports"], data["routes"], data["timing_info"])
     vertiport_usage.add_aircraft(data["flights"])
 
     # Determine allocation
-    start_time = data["time_horizon"]["start_time"]
-    end_time = data["time_horizon"]["end_time"]
-    allocated_flights, payments = allocation_and_payment(vertiport_usage, data["flights"], start_time, end_time)
+    start_time = data["timing_info"]["start_time"]
+    end_time = data["timing_info"]["end_time"]
+    time_step = data["timing_info"]["time_step"]
+    allocated_flights, payments = allocation_and_payment(vertiport_usage, data["flights"], start_time, end_time, time_step)
 
     # Allocate all flights and move them
-    for flight_id, request_idx in allocated_flights:
+    for flight_id, request_id in allocated_flights:
         flight = data["flights"][flight_id]
-        vertiport_usage.move_aircraft(flight["origin_vertiport_id"], flight["requests"][int(request_idx)])
+        vertiport_usage.move_aircraft(flight["origin_vertiport_id"], flight["requests"][request_id])
 
     # Visualize the graph
     if False:

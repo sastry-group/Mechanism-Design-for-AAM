@@ -99,6 +99,12 @@ class VertiportStatus(nx.DiGraph):
 
 
 def draw_graph(graph):
+    """
+        Draw networkx graph.
+
+        Args:
+            graph (nx.Graph): Graph to draw.
+        """
     # Todo: This could be significantly improved
     # Draw the graph
     pos = nx.shell_layout(graph)
