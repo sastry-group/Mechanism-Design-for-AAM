@@ -1,4 +1,6 @@
 import networkx as nx
+import matplotlib.pyplot as plt
+
 
 class VertiportStatus(nx.DiGraph):
     """
@@ -18,6 +20,7 @@ class VertiportStatus(nx.DiGraph):
         """
         super().__init__(data, **attr)
         self.time_steps = list(range(timing["start_time"], timing["end_time"] + timing["time_step"], timing["time_step"]))
+        self.vertiports = vertiports
 
         # Create time extended graph of vertiports
         for step in self.time_steps:
@@ -27,6 +30,8 @@ class VertiportStatus(nx.DiGraph):
                 self.nodes[time_extended_vertiport_id]["landing_usage"] = 0
                 self.nodes[time_extended_vertiport_id]["takeoff_usage"] = 0
                 self.nodes[time_extended_vertiport_id]["hold_usage"] = 0
+                self.nodes[time_extended_vertiport_id]["time"] = step
+                self.nodes[time_extended_vertiport_id]["vertiport_id"] = vertiport[0]
 
         # Add edges to time extended graph
         for step in self.time_steps:
@@ -47,7 +52,7 @@ class VertiportStatus(nx.DiGraph):
         Args:
             flights (list): List of flights with at least origin_vertiport_id information.
         """
-        for flight in flights:
+        for flight_id, flight in flights.items():
             start_vertiport = flight["origin_vertiport_id"]
             for time in self.time_steps:
                 time_extended_start = start_vertiport + "_" + str(time)
@@ -91,3 +96,19 @@ class VertiportStatus(nx.DiGraph):
         time_extended_destination = destination_vertiport + "_" + str(arrival_time)
         self.nodes[time_extended_origin]["takeoff_usage"] += 1
         self.nodes[time_extended_destination]["landing_usage"] += 1
+
+
+def draw_graph(graph):
+    """
+        Draw networkx graph.
+
+        Args:
+            graph (nx.Graph): Graph to draw.
+        """
+    # Todo: This could be significantly improved
+    # Draw the graph
+    pos = nx.shell_layout(graph)
+    nx.draw(graph, pos, with_labels=True, node_color='skyblue', node_size=700, edge_color='k')
+
+    # Show the plot
+    plt.show()

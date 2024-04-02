@@ -6,13 +6,15 @@ import argparse
 import json
 import sys
 from pathlib import Path
+import tkinter
 
 # Add the bluesky package to the path
 top_level_path = Path(__file__).resolve().parent.parent
 print(str(top_level_path))
 sys.path.append(str(top_level_path))
 import bluesky as bs
-from ic.VertiportStatus import VertiportStatus
+from ic.VertiportStatus import VertiportStatus, draw_graph
+from ic.allocation import allocation_and_payment
 
 parser = argparse.ArgumentParser(description='Process a true/false argument.')
 parser.add_argument('--gui', action='store_true', help='Flag for running with gui.')
@@ -41,12 +43,24 @@ def run_from_json(file = None, run_gui = False):
     #     bs.net.connect()
 
     # Create vertiport graph and add starting aircraft positions
-    vertiport_usage = VertiportStatus(data["vertiports"], data["edges"], data["time_horizon"])
+    vertiport_usage = VertiportStatus(data["vertiports"], data["routes"], data["timing_info"])
     vertiport_usage.add_aircraft(data["flights"])
 
+    # Determine allocation
+    start_time = data["timing_info"]["start_time"]
+    end_time = data["timing_info"]["end_time"]
+    time_step = data["timing_info"]["time_step"]
+    allocated_flights, payments = allocation_and_payment(vertiport_usage, data["flights"], start_time, end_time, time_step)
+
     # Allocate all flights and move them
-    for flight in data["flights"]:
-        vertiport_usage.move_aircraft(flight["origin_vertiport_id"], flight["requests"][0])
+    for flight_id, request_id in allocated_flights:
+        flight = data["flights"][flight_id]
+        vertiport_usage.move_aircraft(flight["origin_vertiport_id"], flight["requests"][request_id])
+
+    # Visualize the graph
+    if False:
+        draw_graph(vertiport_usage)
+    
 
 
 if __name__ == "__main__":
