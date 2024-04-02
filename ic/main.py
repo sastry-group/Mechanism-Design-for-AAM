@@ -79,13 +79,16 @@ def create_scenario(data, scene_path, scene_name, run_gui = False):
     return
 
 
-def evaluate_scenario(run_gui=False):
+def evaluate_scenario(scn_file, run_gui=False):
         # Create the BlueSky simulation
     if not run_gui:
         bs.init(mode="sim", detached=True)
     else:
         bs.init(mode="sim")
         bs.net.connect()
+    
+    bs.stack.stack("IC " + scn_file)
+    bs.stack.stack("DT 1; FF")
     # if LOG:
     #     bs.stack.stack(f"CRELOG rb 1")
     #     bs.stack.stack(f"rb  ADD id, lat, lon, alt, tas, vs, hdg")
@@ -121,21 +124,17 @@ def write_scenario(SCN_PATH, SCN_NAME, stack_commands):
 
               
 
-
-def create_uav(data):
-    flights = data['flights'] # Let's get a name to refer to these vehicles
-    vertiports = data['vertiports']
-    for flight in flights:
-        aircraft_id = flight['aircraft_id']
-        origin_vertiport_id = flight['origin_vertiport_id']
-        origin_vertiport = vertiports[origin_vertiport_id]
-        appearance_time = flight['appearance_time']
-    return 
+# def create_uav(data):
+#     flights = data['flights'] # Let's get a name to refer to these vehicles
+#     vertiports = data['vertiports']
+#     for flight in flights:
+#         aircraft_id = flight['aircraft_id']
+#         origin_vertiport_id = flight['origin_vertiport_id']
+#         origin_vertiport = vertiports[origin_vertiport_id]
+#         appearance_time = flight['appearance_time']
+#     return 
 
     
-        
-
-
 
 
 if __name__ == "__main__":
@@ -148,9 +147,11 @@ if __name__ == "__main__":
     # The two below will become args in bash file
     SCN_PATH ='/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/scenario'
     SCN_NAME = 'TEST_IC'
+    scn_file = f'{SCN_PATH}/{SCN_NAME}.scn'
+    create_scenario(data, SCN_PATH, SCN_NAME)
     if args.gui:
         # run_from_json(file_name, run_gui=True)
         # Always call as false because the gui does not currently work
-        create_scenario(data, SCN_PATH, SCN_NAME, run_gui=False)
+        evaluate_scenario(scn_file, run_gui=False)
     else:
-        create_scenario(data, SCN_PATH, SCN_NAME)
+        evaluate_scenario(scn_file)
