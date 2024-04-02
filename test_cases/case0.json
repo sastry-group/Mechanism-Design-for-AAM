@@ -14,10 +14,9 @@
         "aircraft": ["AC002"]
       }
     ],
-    "flights": [
-      {
+    "flights": {
+      "AC001": {
         "appearance_time": 1,
-        "aircraft_id": "AC001",
         "origin_vertiport_id": "V001",
         "requests": [
           {
@@ -36,7 +35,7 @@
           }
         ]
       }
-    ],
+    },
     "vertiports": {
       "V001": {
         "latitude": 37.7749,

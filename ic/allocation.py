@@ -31,7 +31,7 @@ def build_auxiliary(vertiport_status, flights, time, max_time, time_steps=None):
 
     #  V2. Create a node for each unique departure time for each agent
     unique_departure_times = {}
-    for flight in flights:
+    for flight_id, flight in flights.items():
         flight_unique_departure_times = []
         for request in flight["requests"]:
             if request["request_departure_time"] not in flight_unique_departure_times:
@@ -39,8 +39,8 @@ def build_auxiliary(vertiport_status, flights, time, max_time, time_steps=None):
                 flight_unique_departure_times.append(request["request_departure_time"])
         assert 0 in flight_unique_departure_times, "Request departure times must include 0."
         for time in flight_unique_departure_times:
-            auxiliary_graph.add_node(flight["aircraft_id"] + "_" + str(time))
-        unique_departure_times[flight["aircraft_id"]] = flight_unique_departure_times
+            auxiliary_graph.add_node(flight_id + "_" + str(time))
+        unique_departure_times[flight_id] = flight_unique_departure_times
 
     #  V3. Add source and sink nodes
     auxiliary_graph.add_node("source")
@@ -78,26 +78,26 @@ def build_auxiliary(vertiport_status, flights, time, max_time, time_steps=None):
             next_time = vertiport_status.nodes[node]["time"] + 1
             auxiliary_graph.add_edge(node, vertiport_id + "_" + str(next_time), **attributes)
 
-    for flight in flights:
+    for flight_id, flight in flights.items():
         origin = flight["origin_vertiport_id"]
         # E4. Connect departure node (V1) to flight departure time node (V2)
-        for depart_time in unique_departure_times[flight["aircraft_id"]]:
+        for depart_time in unique_departure_times[flight_id]:
             if depart_time == 0:
                 continue
-            attributes = {"upper_capacity": f"d_{flight['aircraft_id']}_{depart_time}",
-                          "lower_capacity": f"d_{flight['aircraft_id']}_{depart_time}",
+            attributes = {"upper_capacity": f"d_{flight_id}_{depart_time}",
+                          "lower_capacity": f"d_{flight_id}_{depart_time}",
                           "weight": 0,
                           "edge_group": "E4"}
-            auxiliary_graph.add_edge(origin + "_" + str(depart_time) + "_dep", flight["aircraft_id"] + "_" + str(depart_time), **attributes)
+            auxiliary_graph.add_edge(origin + "_" + str(depart_time) + "_dep", flight_id + "_" + str(depart_time), **attributes)
             
         for request in flight["requests"]:
             # E7. Connect source node to flight 0 node
             if request["request_departure_time"] == 0:
-                attributes = {"upper_capacity": f"d_{flight['aircraft_id']}_0",
-                            "lower_capacity": f"d_{flight['aircraft_id']}_0",
+                attributes = {"upper_capacity": f"d_{flight_id}_0",
+                            "lower_capacity": f"d_{flight_id}_0",
                             "weight": rho * request["bid"], # rho * b, rho=1 for now
                             "edge_group": "E7"}
-                auxiliary_graph.add_edge("source", flight["aircraft_id"] + "_0", **attributes)
+                auxiliary_graph.add_edge("source", flight_id + "_0", **attributes)
             else:
                 # E5. Connect flight departure time node (V2) to arrival node (V1)
                 destination = request["destination_vertiport_id"]
@@ -107,15 +107,15 @@ def build_auxiliary(vertiport_status, flights, time, max_time, time_steps=None):
                             "lower_capacity": 0,
                             "weight": rho * request["bid"],  # rho * b, rho=1 for now
                             "edge_group": "E5"}
-                auxiliary_graph.add_edge(flight["aircraft_id"] + "_" + str(depart_time), \
+                auxiliary_graph.add_edge(flight_id + "_" + str(depart_time), \
                                         destination + "_" + str(arrival_time) + "_arr", **attributes)
             
         # E9. Connect flight 0 node to origin
-        attributes = {"upper_capacity": f"d_{flight['aircraft_id']}_0",
-                    "lower_capacity": f"d_{flight['aircraft_id']}_0",
+        attributes = {"upper_capacity": f"d_{flight_id}_0",
+                    "lower_capacity": f"d_{flight_id}_0",
                     "weight": 0,
                     "edge_group": "E9"}
-        auxiliary_graph.add_edge(flight["aircraft_id"] + "_0", origin + "_1", **attributes)
+        auxiliary_graph.add_edge(flight_id + "_0", origin + "_1", **attributes)
 
     for vertiport in vertiport_status.vertiports.items():
         # E6. Connect source to each node at the first time step
@@ -213,10 +213,10 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
                 vertiport = upper_parts[1]
                 S_r = 0
                 delta_indices = []
-                for flight in flights:
+                for flight_id, flight in flights.items():
                     if flight["origin_vertiport_id"] == vertiport:
                         S_r += 1
-                        idx = aircraft_ids.index(flight["aircraft_id"])
+                        idx = aircraft_ids.index(flight_id)
                         delta_indices.append(idx)
                 delta_sum_r = gp.quicksum(delta[idx][0] for idx in delta_indices)
                 m.addConstr(S_r - delta_sum_r <= A[k], f"upper_capacity_edge{k}")
@@ -251,7 +251,12 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
     for idx, flight_times in enumerate(delta):
         for dep_time in flight_times:
             if dep_time.x == 1:
-                allocation.append((aircraft_ids[idx], dep_time.varName.split("_")[-1][4:]))
+                allocation.append((aircraft_ids[idx], 1))
+                # allocation.append((aircraft_ids[idx], dep_time.varName.split("_")[-1][4:]))
+
+    # For each flight operator, create a pseudo-bid, which just involves changing the weightings
+    
+    
 
     return allocation
 
@@ -267,6 +272,9 @@ def allocation_and_payment(vertiport_usage, flights, time, max_time):
     """
     auxiliary_graph, unique_departure_times = build_auxiliary(vertiport_usage, flights, time, max_time)
     allocation = determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_departure_times)
+    print("Allocation")
     print(allocation)
-    allocated_flights = flights
-    return allocated_flights, None
+    payment = None
+    print("\nPayment")
+    print(payment)
+    return allocation, payment

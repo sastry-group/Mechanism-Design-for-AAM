@@ -52,8 +52,9 @@ def run_from_json(file = None, run_gui = False):
     allocated_flights, payments = allocation_and_payment(vertiport_usage, data["flights"], start_time, end_time)
 
     # Allocate all flights and move them
-    for flight in allocated_flights:
-        vertiport_usage.move_aircraft(flight["origin_vertiport_id"], flight["requests"][1])
+    for flight_id, request_idx in allocated_flights:
+        flight = data["flights"][flight_id]
+        vertiport_usage.move_aircraft(flight["origin_vertiport_id"], flight["requests"][int(request_idx)])
 
     # Visualize the graph
     if False:

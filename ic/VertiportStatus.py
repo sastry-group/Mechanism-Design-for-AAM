@@ -52,7 +52,7 @@ class VertiportStatus(nx.DiGraph):
         Args:
             flights (list): List of flights with at least origin_vertiport_id information.
         """
-        for flight in flights:
+        for flight_id, flight in flights.items():
             start_vertiport = flight["origin_vertiport_id"]
             for time in self.time_steps:
                 time_extended_start = start_vertiport + "_" + str(time)
