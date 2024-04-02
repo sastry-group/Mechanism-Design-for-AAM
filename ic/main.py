@@ -37,19 +37,13 @@ def run_from_json(file = None):
     assert Path(file).is_file(), f"File {file} does not exist."
     
     # Load the JSON file
-    with open(file) as f:
+    with open(file, 'r') as f:
         data = json.load(f)
         print(f"Opened file {file}")
     return data
 
 
 def create_scenario(data, scene_path, scene_name, run_gui = False):
-    # Create the BlueSky simulation
-    if not run_gui:
-        bs.init(mode="sim", detached=True)
-    else:
-        bs.init(mode="sim")
-        bs.net.connect()
 
     stack_commands = [] 
     init_settings = "00:00:00.00>TRAILS ON\n00:00:00.00>PAN OAK\n"
@@ -57,10 +51,6 @@ def create_scenario(data, scene_path, scene_name, run_gui = False):
     flights = data['flights'] # Let's get a name to refer to these vehicles
     vertiports = data['vertiports']
 
-    # if LOG:
-    #     bs.stack.stack(f"CRELOG rb 1")
-    #     bs.stack.stack(f"rb  ADD id, lat, lon, alt, tas, vs, hdg")
-    #     bs.stack.stack(f"rb  ON 1  ")
 
     for flight in flights:
         aircraft_id = flight['aircraft_id']
@@ -72,9 +62,6 @@ def create_scenario(data, scene_path, scene_name, run_gui = False):
             destination_vertiport_id = request['destination_vertiport_id']
             destination_vertiport = vertiports[destination_vertiport_id]
             request_departure_time = request['request_departure_time']
-            origin_vertiport_id = request['destination_vertiport_id']
-            origin_vertiport = vertiports[origin_vertiport_id]
-
             or_lat = origin_vertiport['latitude']
             or_lon = origin_vertiport['longitude']
             des_lat = destination_vertiport['latitude']
@@ -83,16 +70,42 @@ def create_scenario(data, scene_path, scene_name, run_gui = False):
             alt = 'FL250'  # placeholder
             spd = 200  # placeholder
             hdg = 0  # placeholder
-            time_stamp = '00:00:00.00'
+            time_stamp = convert_time(request_departure_time)
             stack_commands.append(f"{time_stamp}>CRE {aircraft_id} {type} {or_lat} {or_lon} {hdg} {alt} {spd}\n")
             stack_commands.append(f"{time_stamp}>DEST {aircraft_id} {des_lat}, {des_lon}\n")
-            # bs.stack.stack(f"CRE {aircraft_id} {type} {or_lat} {or_lon} {hdg} {alt} {spd}\n")
-            # bs.stack.stack(f"DEST {aircraft_id} {des_lat}, {des_lon}")
-        
+            
         write_scenario(scene_path, scene_name, stack_commands)
-        # bs.stack.stack("OP")
 
     return
+
+
+def evaluate_scenario(run_gui=False):
+        # Create the BlueSky simulation
+    if not run_gui:
+        bs.init(mode="sim", detached=True)
+    else:
+        bs.init(mode="sim")
+        bs.net.connect()
+    # if LOG:
+    #     bs.stack.stack(f"CRELOG rb 1")
+    #     bs.stack.stack(f"rb  ADD id, lat, lon, alt, tas, vs, hdg")
+    #     bs.stack.stack(f"rb  ON 1  ")
+    #     bs.stack.stack(f"CRE {aircraft_id} {type} {or_lat} {or_lon} {hdg} {alt} {spd}\n")
+    # bs.stack.stack(f"DEST {aircraft_id} {des_lat}, {des_lon}")
+    # bs.stack.stack("OP")
+        
+
+
+def convert_time(time):
+    total_seconds = time
+
+    # Calculate hours, minutes, and seconds
+    hours = total_seconds // 3600
+    minutes = (total_seconds % 3600) // 60
+    seconds = (total_seconds % 3600) % 60
+
+    timestamp = f"{hours:02d}:{minutes:02d}:{seconds:05.2f}"
+    return timestamp
 
 def write_scenario(SCN_PATH, SCN_NAME, stack_commands):
     text = ''.join(stack_commands)

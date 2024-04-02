@@ -32,7 +32,7 @@
       {
         "appearance_time": 600,
         "aircraft_id": "AC002",
-        "origin_vertiport_id": "V003",
+        "origin_vertiport_id": "V001",
         "requests": [
           {
             "destination_vertiport_id": "V004",
@@ -54,7 +54,7 @@
       },
       "V002": {
         "latitude": 37.8044,
-        "longitude": -122.2711,
+        "longitude": -121.2711,
         "landing_capacity": 4,
         "takeoff_capacity": 4,
         "hold_capacity": 8
@@ -68,7 +68,7 @@
       },
       "V004": {
         "latitude": 41.8781,
-        "longitude": -87.6298,
+        "longitude": -127.6298,
         "landing_capacity": 3,
         "takeoff_capacity": 3,
         "hold_capacity": 8
