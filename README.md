@@ -6,13 +6,18 @@ approach to air traffic management.
 ## Installation
 
 To install and run the BlueSky simulator, follow these steps:
-
-1. Create a virtual environment using `venv`:
+1. Clone the repo
     ```bash
+    git clone https://github.com/victoria-tuck/bluesky-IC.git
+    ```
+
+2. We recommend creating a virtual environment using `venv`:
+    ```bash
+    cd bluesky-IC
     python3 -m venv venv
     ```
 
-2. Activate the virtual environment:
+3. Activate the virtual environment:
     - For Windows:
       ```bash
       .\bluesky-env\Scripts\activate
@@ -22,12 +27,12 @@ To install and run the BlueSky simulator, follow these steps:
       source bluesky-env/bin/activate
       ```
 
-3. Install the required dependencies using `pip`:
+4. Install the required dependencies using `pip`:
     ```bash
-    pip3 install -r requirements-gui.txt
+    pip3 install -r requirements.txt
     ```
 
-4. Run the BlueSky simulator:
+5. Run the BlueSky simulator:
     ```bash
     python3 BlueSky.py
     ```
