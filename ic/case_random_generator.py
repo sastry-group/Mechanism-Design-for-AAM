@@ -3,10 +3,11 @@ import random
 from datetime import datetime, timedelta
 import sys
 import os
+import math
 from math import radians, sin, cos, sqrt, atan2
 
 # Simulation time settings
-START_TIME = 1
+START_TIME = 1 #multiple of timestep
 END_TIME = 300
 TIME_STEP = 10
 
@@ -42,7 +43,7 @@ def generate_flights():
     flights = {}
     for i in range(N_FLIGHTS):  # Random number of flights between 100 to 200
         flight_id = f"AC{i+1:03d}"
-        appearance_time = random.randint(10, 30)
+        appearance_time = random.randint(10, 30) #change this
         origin_vertiport_id = random.choice(list(vertiports.keys()))
         destination_vertiport_id = random.choice(list(vertiports.keys()))
         while destination_vertiport_id == origin_vertiport_id:
@@ -50,12 +51,19 @@ def generate_flights():
         request_departure_time = appearance_time
         request_arrival_time = request_departure_time + random.randint(5, 20)
         valuation = random.randint(50, 200)
-        bid = valuation
-        flight_info = {
+        bid = valuation 
+        flight_info = { # change the request to be parking or move if nonalloc
             "appearance_time": appearance_time,
             "origin_vertiport_id": origin_vertiport_id,
             "requests": {
                 "000": {
+                    "destination_vertiport_id": origin_vertiport_id,
+                    "request_departure_time": request_departure_time,
+                    "request_arrival_time": request_departure_time + 1,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
                     "destination_vertiport_id": destination_vertiport_id,
                     "request_departure_time": request_departure_time,
                     "request_arrival_time": request_arrival_time,
@@ -113,14 +121,16 @@ for origin_id, origin_data in vertiports.items():
     for destination_id, destination_data in vertiports.items():
         if origin_id != destination_id:
             # this could be bad code practice below to input unformatted data, might change later
+            # this is also somthing that will be moved to each agent's bid
             distance = calculate_distance(origin_data, destination_data) # km
             speed = 90 # placeholder, we need to add specific vehicle speed in knots (Wisk)
-            travel_time = int(distance * 0.5399568 / speed) * 60  # cover distance from km to naut.miles then hr to seconds
+            travel_time = math.ceil(distance * 0.5399568 * 60  / speed)   # cover distance from km to naut.miles then hr to seconds
             route = {"origin_vertiport_id": origin_id, "destination_vertiport_id": destination_id, "travel_time": travel_time}
             routes.append(route)
 
 
 # Write JSON data to dictionary
+# add a fucntionatily aht check vertiport capacity based on origin
 json_data = {
     "timing_info": {"start_time": START_TIME, "end_time": END_TIME, "time_step": TIME_STEP},
     "fleets": generate_fleets(),
@@ -134,7 +144,7 @@ current_datetime = datetime.now()
 formatted_datetime = current_datetime.strftime("%Y%m%d_%H%M%S")
 
 current_directory = os.getcwd()
-test_cases_directory = os.path.join(current_directory, 'test_cases')
+test_cases_directory = os.path.join(current_directory, '../test_cases')
 if not os.path.exists(test_cases_directory):
     os.makedirs(test_cases_directory)
 
