@@ -37,13 +37,22 @@ To install and run the BlueSky simulator, follow these steps:
     ```bash
     python3 BlueSky.py
     ```
-5. Running the IC-package:
+
+6. Running the IC-package:
    1. Create database in .test_cases
    2. cd ic/
    3. python3 main.py --file ./../test_cases/case1.json
    4. Run Bluesky.py and load the scenario
 
 Note: Make sure you have Python 3 and pip installed on your system before proceeding with the installation.
+
+## Code Quality
+
+```black``` and ```pylint``` are included for assistance with good code writing. 
+Black will reformat your code according to standard Python guidelines, and pylint will make code reformatting suggestions.
+These can be run with ```black <filename>``` and ```pylint <filename>```.
+We recommend running each of these in this order on any files you are making changes to.
+
 
 For more detailed installation instructions and troubleshooting, please refer to the [BlueSky Wiki](https://github.com/TUDelft-CNS-ATM/bluesky/wiki).
 
