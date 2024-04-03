@@ -170,9 +170,10 @@ if __name__ == "__main__":
 
     # Create the scenario
     if args.scn_folder is not None:
-        scenario_folder = args.scn_folder
+        scenario_folder = str(top_level_path) + args.scn_folder
     else:
-        scenario_folder = './scenario/TEST_IC'
+        scenario_folder = str(top_level_path) + '/scenario/TEST_IC'
+        print(scenario_folder)
     if args.scn_name is not None:
         scenario_name = args.scn_name
         if scenario_name.endswith('.scn'):
