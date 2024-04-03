@@ -1,7 +1,6 @@
 """
 Incentive Compatible Fleet Level Strategic Allocation
 """
-
 import argparse
 import json
 import sys
@@ -14,7 +13,6 @@ print(str(top_level_path))
 sys.path.append(str(top_level_path))
 import bluesky as bs
 
-
 # Bluesky settings
 T_STEP = 10000
 MANEUVER = True
@@ -25,12 +23,15 @@ SIMDT = 1
 parser = argparse.ArgumentParser(description='Process a true/false argument.')
 parser.add_argument('--gui', action='store_true', help='Flag for running with gui.')
 parser.add_argument('--file', type=str, required=True, help='The path to the test case json file.')
+parser.add_argument('--scn_folder', type=str, help='The folder in which scenario files are saved.')
+parser.add_argument('--scn_name', type=str, help='The name of the scenario file.')
+parser.add_argument('--force_overwrite', action='store_true', help='Flag for overwriting the scenario file(s).')
 args = parser.parse_args()
 
 
-def run_from_json(file = None):
+def load_json(file = None):
     """
-    Run the bluesky simulation from a JSON file.
+    Load a case file for a bluesky simulation from a JSON file.
     """
     if file is None:
         return None
@@ -43,7 +44,7 @@ def run_from_json(file = None):
     return data
 
 
-def create_scenario(data, scene_path, scene_name, run_gui = False):
+def create_scenario(data, scenario_path, scenario_name):
 
     stack_commands = [] 
     init_settings = "00:00:00.00>TRAILS ON\n00:00:00.00>PAN OAK\n"
@@ -74,12 +75,12 @@ def create_scenario(data, scene_path, scene_name, run_gui = False):
             stack_commands.append(f"{time_stamp}>CRE {aircraft_id} {type} {or_lat} {or_lon} {hdg} {alt} {spd}\n")
             stack_commands.append(f"{time_stamp}>DEST {aircraft_id} {des_lat}, {des_lon}\n")
             
-        write_scenario(scene_path, scene_name, stack_commands)
+    path_to_scn_file = write_scenario(scenario_path, scenario_name, stack_commands)
 
-    return
+    return path_to_scn_file
 
 
-def evaluate_scenario(scn_file, run_gui=False):
+def evaluate_scenario(path_to_scenario_file, run_gui=False):
         # Create the BlueSky simulation
     if not run_gui:
         bs.init(mode="sim", detached=True)
@@ -87,7 +88,7 @@ def evaluate_scenario(scn_file, run_gui=False):
         bs.init(mode="sim")
         bs.net.connect()
     
-    bs.stack.stack("IC " + scn_file)
+    bs.stack.stack("IC " + path_to_scenario_file)
     bs.stack.stack("DT 1; FF")
     # if LOG:
     #     bs.stack.stack(f"CRELOG rb 1")
@@ -97,7 +98,6 @@ def evaluate_scenario(scn_file, run_gui=False):
     # bs.stack.stack(f"DEST {aircraft_id} {des_lat}, {des_lon}")
     # bs.stack.stack("OP")
         
-
 
 def convert_time(time):
     total_seconds = time
@@ -110,20 +110,23 @@ def convert_time(time):
     timestamp = f"{hours:02d}:{minutes:02d}:{seconds:05.2f}"
     return timestamp
 
-def write_scenario(SCN_PATH, SCN_NAME, stack_commands):
+
+def write_scenario(scenario_folder, scenario_name, stack_commands):
     text = ''.join(stack_commands)
     
     # Create directory if it doesn't exist
-    directory = f'{SCN_PATH}/{SCN_NAME}'
+    directory = f'{scenario_folder}'
     if not os.path.exists(directory):
         os.makedirs(directory)
     
     # Write the text to the scenario file
-    with open(f'{directory}/{SCN_NAME}.scn', "w") as file:
+    path_to_scn_file = f'{directory}/{scenario_name}.scn'
+    with open(path_to_scn_file, "w") as file:
         file.write(text)
 
-              
+    return path_to_scn_file
 
+              
 # def create_uav(data):
 #     flights = data['flights'] # Let's get a name to refer to these vehicles
 #     vertiports = data['vertiports']
@@ -135,23 +138,44 @@ def write_scenario(SCN_PATH, SCN_NAME, stack_commands):
 #     return 
 
     
-
-
 if __name__ == "__main__":
     # Example call:
     # python3 main.py --file /path/to/test_case.json
-    # python3 main.py --file ./../test_cases/case1.json
+    # python3 main.py --file ./../test_cases/case1.json --scn_folder ./scenario --scn_name test-ic
     file_name = args.file
     assert Path(file_name).is_file(), f"File {file_name} does not exist."
-    data = run_from_json(file_name)
-    # The two below will become args in bash file
-    SCN_PATH ='/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/scenario'
-    SCN_NAME = 'TEST_IC'
-    scn_file = f'{SCN_PATH}/{SCN_NAME}.scn'
-    create_scenario(data, SCN_PATH, SCN_NAME)
+    data = load_json(file_name)
+
+    # Create the scenario
+    if args.scn_folder is not None:
+        scenario_folder = args.scn_folder
+    else:
+        scenario_folder = './scenario/TEST_IC'
+    if args.scn_name is not None:
+        scenario_name = args.scn_name
+        if scenario_name.endswith('.scn'):
+            scenario_name = scenario_name[:-4]
+    else:
+        scenario_name = 'test-ic'
+    path = f'{scenario_folder}/{scenario_name}.scn'
+
+    # Check if the path exists and if the user wants to overwrite
+    if args.force_overwrite:
+        overwrite = 'y'
+    elif os.path.exists(path):
+        overwrite = input("The scenario file already exists. Do you want to overwrite it? (y/n): ")
+    if overwrite.lower() != 'y':
+        print("File not overwritten. Exiting...")
+        sys.exit()
+
+    # Create the scenario file and double check the correct path was used
+    path_to_scn_file = create_scenario(data, scenario_folder, scenario_name)
+    assert path == path_to_scn_file, "An error occured while writing the scenario file."
+
+    # Evaluate scenario
     if args.gui:
         # run_from_json(file_name, run_gui=True)
         # Always call as false because the gui does not currently work
-        evaluate_scenario(scn_file, run_gui=False)
+        evaluate_scenario(path_to_scn_file, run_gui=False)
     else:
-        evaluate_scenario(scn_file)
+        evaluate_scenario(path_to_scn_file)
