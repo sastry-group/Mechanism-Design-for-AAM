@@ -163,7 +163,7 @@ def write_scenario(scenario_folder, scenario_name, stack_commands):
 if __name__ == "__main__":
     # Example call:
     # python3 main.py --file /path/to/test_case.json
-    # python3 main.py --file ./../test_cases/case1.json --scn_folder ./scenario --scn_name test-ic
+    # python3 ic/main.py --file test_cases/case1.json --scn_folder ./scenario --scn_name test-ic
     file_name = args.file
     assert Path(file_name).is_file(), f"File {file_name} does not exist."
     data = load_json(file_name)
@@ -182,13 +182,14 @@ if __name__ == "__main__":
     path = f'{scenario_folder}/{scenario_name}.scn'
 
     # Check if the path exists and if the user wants to overwrite
-    if args.force_overwrite:
-        overwrite = 'y'
-    elif os.path.exists(path):
-        overwrite = input("The scenario file already exists. Do you want to overwrite it? (y/n): ")
-    if overwrite.lower() != 'y':
-        print("File not overwritten. Exiting...")
-        sys.exit()
+    if os.path.exists(path):
+        if args.force_overwrite:
+            overwrite = 'y'
+        else:
+            overwrite = input("The scenario file already exists. Do you want to overwrite it? (y/n): ")
+        if overwrite.lower() != 'y':
+            print("File not overwritten. Exiting...")
+            sys.exit()
 
     # Create the scenario file and double check the correct path was used
     path_to_scn_file = create_scenario(data, scenario_folder, scenario_name)
