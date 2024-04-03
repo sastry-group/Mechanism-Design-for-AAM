@@ -12,6 +12,8 @@ top_level_path = Path(__file__).resolve().parent.parent
 print(str(top_level_path))
 sys.path.append(str(top_level_path))
 import bluesky as bs
+from ic.VertiportStatus import VertiportStatus, draw_graph
+from ic.allocation import allocation_and_payment
 
 # Bluesky settings
 T_STEP = 10000
@@ -52,30 +54,44 @@ def create_scenario(data, scenario_path, scenario_name):
     flights = data['flights'] # Let's get a name to refer to these vehicles
     vertiports = data['vertiports']
 
+    # Create vertiport graph and add starting aircraft positions
+    vertiport_usage = VertiportStatus(vertiports, data["routes"], data["timing_info"])
+    vertiport_usage.add_aircraft(flights)
 
-    for flight in flights:
-        aircraft_id = flight['aircraft_id']
+    # Determine allocation
+    start_time = data["timing_info"]["start_time"]
+    end_time = data["timing_info"]["end_time"]
+    time_step = data["timing_info"]["time_step"]
+    allocated_flights, payments = allocation_and_payment(vertiport_usage, flights, start_time, end_time, time_step)
+
+    # Allocate all flights and move them
+    for flight_id, request_id in allocated_flights:
+        flight = flights[flight_id]
+        request = flight["requests"][request_id]
+        vertiport_usage.move_aircraft(flight["origin_vertiport_id"], request)
+
         origin_vertiport_id = flight['origin_vertiport_id']
         origin_vertiport = vertiports[origin_vertiport_id]
-        appearance_time = flight['appearance_time']
-
-        for request in flight['requests']:
-            destination_vertiport_id = request['destination_vertiport_id']
-            destination_vertiport = vertiports[destination_vertiport_id]
-            request_departure_time = request['request_departure_time']
-            or_lat = origin_vertiport['latitude']
-            or_lon = origin_vertiport['longitude']
-            des_lat = destination_vertiport['latitude']
-            des_lon = destination_vertiport['longitude']
-            type = 'B744' #placeholder
-            alt = 'FL250'  # placeholder
-            spd = 200  # placeholder
-            hdg = 0  # placeholder
-            time_stamp = convert_time(request_departure_time)
-            stack_commands.append(f"{time_stamp}>CRE {aircraft_id} {type} {or_lat} {or_lon} {hdg} {alt} {spd}\n")
-            stack_commands.append(f"{time_stamp}>DEST {aircraft_id} {des_lat}, {des_lon}\n")
+        destination_vertiport_id = request['destination_vertiport_id']
+        destination_vertiport = vertiports[destination_vertiport_id]
+        request_departure_time = request['request_departure_time']
+        or_lat = origin_vertiport['latitude']
+        or_lon = origin_vertiport['longitude']
+        des_lat = destination_vertiport['latitude']
+        des_lon = destination_vertiport['longitude']
+        type = 'B744' #placeholder
+        alt = 'FL250'  # placeholder
+        spd = 200  # placeholder
+        hdg = 0  # placeholder
+        time_stamp = convert_time(request_departure_time)
+        stack_commands.append(f"{time_stamp}>CRE {flight_id} {type} {or_lat} {or_lon} {hdg} {alt} {spd}\n")
+        stack_commands.append(f"{time_stamp}>DEST {flight_id} {des_lat}, {des_lon}\n")
             
     path_to_scn_file = write_scenario(scenario_path, scenario_name, stack_commands)
+
+    # Visualize the graph
+    if False:
+        draw_graph(vertiport_usage)
 
     return path_to_scn_file
 
@@ -109,7 +125,13 @@ def convert_time(time):
 
     timestamp = f"{hours:02d}:{minutes:02d}:{seconds:05.2f}"
     return timestamp
-
+    # Create the BlueSky simulation
+    # if not run_gui:
+    #     bs.init(mode="sim", detached=True)
+    # else:
+    #     bs.init(mode="sim")
+    #     bs.net.connect()
+    
 
 def write_scenario(scenario_folder, scenario_name, stack_commands):
     text = ''.join(stack_commands)
