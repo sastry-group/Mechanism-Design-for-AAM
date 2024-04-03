@@ -163,7 +163,7 @@ def write_scenario(scenario_folder, scenario_name, stack_commands):
 if __name__ == "__main__":
     # Example call:
     # python3 main.py --file /path/to/test_case.json
-    # python3 ic/main.py --file test_cases/case1.json --scn_folder ./scenario --scn_name test-ic
+    # python3 ic/main.py --file test_cases/case1.json --scn_folder ./scenario/TEST_IC --scn_name test-ic
     file_name = args.file
     assert Path(file_name).is_file(), f"File {file_name} does not exist."
     data = load_json(file_name)
