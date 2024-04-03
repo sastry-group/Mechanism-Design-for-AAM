@@ -8,6 +8,8 @@ import numpy as np
 # Import the global bluesky objects. Uncomment the ones you need
 from bluesky import core, stack, traf  #, settings, navdb, sim, scr, tools
 import json
+import bluesky as bs
+
 
 ### Initialization function of your plugin. Do not change the name of this
 ### function, as it is the way BlueSky recognizes this file as a plugin.
@@ -19,7 +21,7 @@ def init_plugin():
     # Configuration parameters
     config = {
         # The name of your plugin
-        'plugin_name':     'EXAMPLE',
+        'plugin_name':     'IC_PLUGIN',
 
         # The type of this plugin. For now, only simulation plugins are possible.
         'plugin_type':     'sim',
@@ -27,6 +29,11 @@ def init_plugin():
 
     # init_plugin() should always return a configuration dict.
     return config
+
+def read_json_file(file_path):
+    with open(file_path, 'r') as file:
+        data = json.load(file)
+    return data
 
 # Probably should be in a different file
 class CurrentState():
@@ -52,13 +59,15 @@ class Scheduler():
 # Your existing code for Allocation and Example classes
 class Allocation(core.Entity):
     ''' Example new entity object for BlueSky. '''
-    def __init__(self):
+    def __init__(self, json_data):
         super().__init__()
         # All classes deriving from Entity can register lists and numpy arrays
         # that hold per-aircraft data. This way, their size is automatically
         # updated when aircraft are created or deleted in the simulation.
         # read json file 
-        self.aircraft_data = {}  # Let's get a name to refer to these vehicles
+        self.flights = json_data['flights'] # Let's get a name to refer to these vehicles
+        self.vertiports = json_data['vertiports']
+        # print(self.flights, self.vertiports)
 
     def create(self, n=1):
         ''' This function gets called automatically when new UAVs are created. '''
@@ -67,11 +76,10 @@ class Allocation(core.Entity):
         # After base creation we can change the values in our own states for the new aircraft
         #create uavs based on JSON FILE 
         # I want to change this later so that the file is specified with arguments and not hardcoded
-        with open('case1.json', 'r') as file:
-            self.aircraft_data = json.load(file)
-        
-        for _ in range(n):
-            self.create_uav(self.aircraft_data)
+        # self.aircraft_data = json_data.data
+        # print(self.aircraft_data)
+        # for _ in range(n):
+        #     self.create_uav(self.aircraft_data)
 
     def create_uav(self, data):
         ''' Create UAV based on data from JSON file. '''
@@ -89,3 +97,10 @@ class Allocation(core.Entity):
 
     def keep_track():
         pass
+
+
+# testing
+if __name__ == "__main__":
+    # Reading JSON file
+    json_data = read_json_file('../../../test_cases/case1.json')
+    allocation_instance = Allocation(json_data)

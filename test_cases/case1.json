@@ -10,7 +10,7 @@
     },
     "flights": {
       "AC001": {
-        "appearance_time": 1,
+        "appearance_time": 0,
         "origin_vertiport_id": "V001",
         "requests": {
           "000": {
@@ -30,7 +30,7 @@
         }
       },
       "AC002": {
-        "appearance_time": 1,
+        "appearance_time": 0,
         "origin_vertiport_id": "V003",
         "requests": {
           "000": {
