@@ -12,8 +12,7 @@ END_TIME = 300
 TIME_STEP = 1
 
 # Case study settings
-# N_FLIGHTS = random.randint(100, 200)
-N_FLIGHTS = 100
+N_FLIGHTS = random.randint(100, 150)
 NUM_FLEETS = 10
 
 
@@ -28,11 +27,11 @@ NUM_FLEETS = 10
 # V007: Random Flat Location in Sacramento 
 # Eventually we could extend the functionaility to read the .kml file from google earth to get the coordinates
 vertiports = {
-    "V001": {"latitude": 37.766699, "longitude": -122.3903664, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 15},
-    "V002": {"latitude": 37.8361761, "longitude": -122.2668028, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 15},
-    "V003": {"latitude": 37.7835538, "longitude": -122.5067642, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 15},
-    "V004": {"latitude": 37.9472484, "longitude": -122.4880737, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 15},
-    "V005": {"latitude": 37.38556649999999, "longitude": -121.9723564, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 15},
+    "V001": {"latitude": 37.766699, "longitude": -122.3903664, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 20},
+    "V002": {"latitude": 37.8361761, "longitude": -122.2668028, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 20},
+    "V003": {"latitude": 37.7835538, "longitude": -122.5067642, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 20},
+    "V004": {"latitude": 37.9472484, "longitude": -122.4880737, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 20},
+    "V005": {"latitude": 37.38556649999999, "longitude": -121.9723564, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 20},
     "V006": {"latitude": 37.25214395119753, "longitude": -122.4066509403772, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 15},
     "V007": {"latitude": 38.58856301092047, "longitude": -121.5627454937505, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 15},
 }
@@ -50,7 +49,7 @@ def generate_flights():
     allowed_origin_vertiport = [vertiport_id for vertiport_id in vertiports_list for _ in range(vertiports[vertiport_id]["hold_capacity"])]
     
 
-    for i in range(N_FLIGHTS):  # Random number of flights between 100 to 200
+    for i in range(N_FLIGHTS):  
         flight_id = f"AC{i+1:03d}"
         appearance_time = random.randint(10, 30) #change this
         
@@ -101,10 +100,10 @@ def calculate_distance(origin, destination):
     R = 6371.0  # Radius of the Earth in kilometers
 
     # Convert latitude and longitude from degrees to radians
-    lat1 = radians(origin_data["latitude"])
-    lon1 = radians(origin_data["longitude"])
-    lat2 = radians(destination_data["latitude"])
-    lon2 = radians(destination_data["longitude"])
+    lat1 = radians(origin["latitude"])
+    lon1 = radians(origin["longitude"])
+    lat2 = radians(destination["latitude"])
+    lon2 = radians(destination["longitude"])
 
     # Calculate the change in coordinates
     dlon = lon2 - lon1
@@ -134,23 +133,25 @@ def generate_fleets(flights_data):
         fleets[fleet_id] = fleet_flights
     return fleets
 
-# Generate routes that connect all vertiports
-routes = []
-for origin_id, origin_data in vertiports.items():
-    for destination_id, destination_data in vertiports.items():
-        if origin_id != destination_id:
-            # this could be bad code practice below to input unformatted data, might change later
-            # this is also somthing that will be moved to each agent's bid
-            distance = calculate_distance(origin_data, destination_data) # km
-            speed = 90 # placeholder, we need to add specific vehicle speed in knots (Wisk)
-            travel_time = math.ceil(distance * 0.5399568 * 60  / speed)   # cover distance from km to naut.miles then hr to seconds
-            route = {"origin_vertiport_id": origin_id, "destination_vertiport_id": destination_id, "travel_time": travel_time}
-            routes.append(route)
-
+def generate_routes():
+    # Generate routes that connect all vertiports
+    routes = []
+    for origin_id, origin_data in vertiports.items():
+        for destination_id, destination_data in vertiports.items():
+            if origin_id != destination_id:
+                # this could be bad code practice below to input unformatted data, might change later
+                # this is also somthing that will be moved to each agent's bid
+                distance = calculate_distance(origin_data, destination_data) # km
+                speed = 90 # placeholder, we need to add specific vehicle speed in knots (Wisk)
+                travel_time = math.ceil(distance * 0.5399568 * 60  / speed)   # cover distance from km to naut.miles then hr to seconds
+                route = {"origin_vertiport_id": origin_id, "destination_vertiport_id": destination_id, "travel_time": travel_time}
+                routes.append(route)
+    return routes
 
 # Write JSON data to dictionary
 flights = generate_flights()
 fleets = generate_fleets(list(flights.keys()))
+routes = generate_routes()
 json_data = {
     "timing_info": {"start_time": START_TIME, "end_time": END_TIME, "time_step": TIME_STEP},
     "fleets": fleets,
