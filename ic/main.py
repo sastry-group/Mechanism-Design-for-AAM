@@ -6,7 +6,6 @@ import argparse
 import json
 import sys
 from pathlib import Path
-import tkinter
 
 # Add the bluesky package to the path
 top_level_path = Path(__file__).resolve().parent.parent

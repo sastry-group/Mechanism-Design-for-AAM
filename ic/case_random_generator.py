@@ -9,10 +9,11 @@ from math import radians, sin, cos, sqrt, atan2
 # Simulation time settings
 START_TIME = 1 #multiple of timestep
 END_TIME = 300
-TIME_STEP = 10
+TIME_STEP = 1
 
 # Case study settings
-N_FLIGHTS = random.randint(100, 200)
+# N_FLIGHTS = random.randint(100, 200)
+N_FLIGHTS = 100
 NUM_FLEETS = 10
 
 
@@ -27,27 +28,40 @@ NUM_FLEETS = 10
 # V007: Random Flat Location in Sacramento 
 # Eventually we could extend the functionaility to read the .kml file from google earth to get the coordinates
 vertiports = {
-    "V001": {"latitude": 37.766699, "longitude": -122.3903664, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 2},
-    "V002": {"latitude": 37.8361761, "longitude": -122.2668028, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 2},
-    "V003": {"latitude": 37.7835538, "longitude": -122.5067642, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 2},
-    "V004": {"latitude": 37.9472484, "longitude": -122.4880737, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 2},
-    "V005": {"latitude": 37.38556649999999, "longitude": -121.9723564, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 2},
-    "V006": {"latitude": 37.25214395119753, "longitude": -122.4066509403772, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 2},
-    "V007": {"latitude": 38.58856301092047, "longitude": -121.5627454937505, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 2},
-
+    "V001": {"latitude": 37.766699, "longitude": -122.3903664, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 15},
+    "V002": {"latitude": 37.8361761, "longitude": -122.2668028, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 15},
+    "V003": {"latitude": 37.7835538, "longitude": -122.5067642, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 15},
+    "V004": {"latitude": 37.9472484, "longitude": -122.4880737, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 15},
+    "V005": {"latitude": 37.38556649999999, "longitude": -121.9723564, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 15},
+    "V006": {"latitude": 37.25214395119753, "longitude": -122.4066509403772, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 15},
+    "V007": {"latitude": 38.58856301092047, "longitude": -121.5627454937505, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 15},
 }
+
+total_capacity = sum(vertiport["hold_capacity"] for vertiport in vertiports.values())
+# Assert that total holding capacity is greater than or equal to the number of flights
+assert total_capacity >= N_FLIGHTS, f"Total holding capacity ({total_capacity}) must be greater than or equal to the number of flights ({N_FLIGHTS})"
+
 
 
 # Function to generate random flights
 def generate_flights():
     flights = {}
+    vertiports_list = list(vertiports.keys())
+    allowed_origin_vertiport = [vertiport_id for vertiport_id in vertiports_list for _ in range(vertiports[vertiport_id]["hold_capacity"])]
+    
+
     for i in range(N_FLIGHTS):  # Random number of flights between 100 to 200
         flight_id = f"AC{i+1:03d}"
         appearance_time = random.randint(10, 30) #change this
-        origin_vertiport_id = random.choice(list(vertiports.keys()))
-        destination_vertiport_id = random.choice(list(vertiports.keys()))
+        
+        # Choose origin vertiport
+        origin_vertiport_id = random.choice(allowed_origin_vertiport)
+        allowed_origin_vertiport.remove(origin_vertiport_id)
+        
+        destination_vertiport_id = random.choice(vertiports_list)
         while destination_vertiport_id == origin_vertiport_id:
-            destination_vertiport_id = random.choice(list(vertiports.keys()))
+            destination_vertiport_id = random.choice(vertiports_list)
+
         request_departure_time = appearance_time
         request_arrival_time = request_departure_time + random.randint(5, 20)
         valuation = random.randint(50, 200)
@@ -74,6 +88,7 @@ def generate_flights():
         }
         flights[flight_id] = flight_info
     return flights
+
 
 
 # Function to calculate distance between two points using Haversine formula
@@ -103,10 +118,14 @@ def calculate_distance(origin, destination):
     distance = R * c
     return distance
 
+
+
 # Generate fleets
-def generate_fleets():
+def generate_fleets(flights_data):
     fleets = {}
-    flights = list(generate_flights().keys())
+    # flights = list(generate_flights().keys())
+    flights = flights_data
+    # print(flights)
     random.shuffle(flights)
     split = len(flights) // NUM_FLEETS
     for i in range(NUM_FLEETS):
@@ -130,11 +149,12 @@ for origin_id, origin_data in vertiports.items():
 
 
 # Write JSON data to dictionary
-# add a fucntionatily aht check vertiport capacity based on origin
+flights = generate_flights()
+fleets = generate_fleets(list(flights.keys()))
 json_data = {
     "timing_info": {"start_time": START_TIME, "end_time": END_TIME, "time_step": TIME_STEP},
-    "fleets": generate_fleets(),
-    "flights": generate_flights(),
+    "fleets": fleets,
+    "flights": flights,
     "vertiports": vertiports,
     "routes": routes
 }
