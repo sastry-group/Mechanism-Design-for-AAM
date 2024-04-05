@@ -101,26 +101,33 @@ def create_scenario(data, scenario_path, scenario_name):
         or_lon = origin_vertiport["longitude"]
         des_lat = destination_vertiport["latitude"]
         des_lon = destination_vertiport["longitude"]
-        type = "B744"  # placeholder
+        vehicle_type = "B744"  # placeholder
         alt = "FL250"  # placeholder
         spd = 200  # placeholder
         hdg = 0  # placeholder
         time_stamp = convert_time(request_departure_time)
         stack_commands.append(
-            f"{time_stamp}>CRE {flight_id} {type} {or_lat} {or_lon} {hdg} {alt} {spd}\n"
+            f"{time_stamp}>CRE {flight_id} {vehicle_type} {or_lat} {or_lon} {hdg} {alt} {spd}\n"
         )
         stack_commands.append(f"{time_stamp}>DEST {flight_id} {des_lat}, {des_lon}\n")
 
-    path_to_scn_file = write_scenario(scenario_path, scenario_name, stack_commands)
+    path_to_written_file = write_scenario(scenario_path, scenario_name, stack_commands)
 
     # Visualize the graph
     if VISUALIZE:
         draw_graph(vertiport_usage)
 
-    return path_to_scn_file
+    return path_to_written_file
 
 
 def evaluate_scenario(path_to_scenario_file, run_gui=False):
+    """
+    Evaluate the scenario by running the BlueSky simulation.
+
+    Args:
+        path_to_scenario_file (str): The path to the scenario file to run.
+        run_gui (bool): Flag for running the simulation with the GUI (default is False)
+    """
     # Create the BlueSky simulation
     if not run_gui:
         bs.init(mode="sim", detached=True)
@@ -134,12 +141,18 @@ def evaluate_scenario(path_to_scenario_file, run_gui=False):
     #     bs.stack.stack(f"CRELOG rb 1")
     #     bs.stack.stack(f"rb  ADD id, lat, lon, alt, tas, vs, hdg")
     #     bs.stack.stack(f"rb  ON 1  ")
-    #     bs.stack.stack(f"CRE {aircraft_id} {type} {or_lat} {or_lon} {hdg} {alt} {spd}\n")
+    #     bs.stack.stack(f"CRE {aircraft_id} {vehicle_type} {or_lat} {or_lon} {hdg} {alt} {spd}\n")
     # bs.stack.stack(f"DEST {aircraft_id} {des_lat}, {des_lon}")
     # bs.stack.stack("OP")
 
 
 def convert_time(time):
+    """
+    Convert a time in seconds to a timestamp in the format HH:MM:SS.SS.
+    
+    Args:
+        time (int): The time in seconds.
+    """
     total_seconds = time
 
     # Calculate hours, minutes, and seconds
@@ -158,6 +171,14 @@ def convert_time(time):
 
 
 def write_scenario(scenario_folder, scenario_name, stack_commands):
+    """
+    Write the stack commands to a scenario file.
+    
+    Args:
+        scenario_folder (str): The folder where the scenario file will be saved.
+        scenario_name (str): The desired name of the scenario file.
+        stack_commands (list): A list of stack commands to write to the scenario file.
+    """
     text = "".join(stack_commands)
 
     # Create directory if it doesn't exist
@@ -166,11 +187,11 @@ def write_scenario(scenario_folder, scenario_name, stack_commands):
         os.makedirs(directory)
 
     # Write the text to the scenario file
-    path_to_scn_file = f"{directory}/{scenario_name}.scn"
-    with open(path_to_scn_file, "w", encoding='utf-8') as file:
+    path_to_file = f"{directory}/{scenario_name}.scn"
+    with open(path_to_file, "w", encoding='utf-8') as file:
         file.write(text)
 
-    return path_to_scn_file
+    return path_to_file
 
 
 # def create_uav(data):
