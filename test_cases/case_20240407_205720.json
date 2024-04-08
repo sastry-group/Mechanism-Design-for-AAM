@@ -1,0 +1,2744 @@
+{
+    "timing_info": {
+        "start_time": 1,
+        "end_time": 300,
+        "time_step": 1
+    },
+    "fleets": {
+        "F001": [
+            "AC011",
+            "AC074",
+            "AC084",
+            "AC081",
+            "AC035",
+            "AC022",
+            "AC009",
+            "AC076",
+            "AC032",
+            "AC106",
+            "AC013"
+        ],
+        "F002": [
+            "AC008",
+            "AC111",
+            "AC034",
+            "AC023",
+            "AC050",
+            "AC005",
+            "AC107",
+            "AC104",
+            "AC014",
+            "AC031",
+            "AC040"
+        ],
+        "F003": [
+            "AC075",
+            "AC085",
+            "AC004",
+            "AC006",
+            "AC069",
+            "AC026",
+            "AC105",
+            "AC115",
+            "AC101",
+            "AC059",
+            "AC103"
+        ],
+        "F004": [
+            "AC073",
+            "AC090",
+            "AC082",
+            "AC088",
+            "AC095",
+            "AC113",
+            "AC021",
+            "AC058",
+            "AC044",
+            "AC063",
+            "AC083"
+        ],
+        "F005": [
+            "AC045",
+            "AC049",
+            "AC072",
+            "AC067",
+            "AC089",
+            "AC003",
+            "AC060",
+            "AC112",
+            "AC057",
+            "AC080",
+            "AC108"
+        ],
+        "F006": [
+            "AC091",
+            "AC024",
+            "AC042",
+            "AC037",
+            "AC051",
+            "AC117",
+            "AC098",
+            "AC071",
+            "AC068",
+            "AC053",
+            "AC062"
+        ],
+        "F007": [
+            "AC061",
+            "AC030",
+            "AC079",
+            "AC001",
+            "AC047",
+            "AC018",
+            "AC055",
+            "AC109",
+            "AC019",
+            "AC064",
+            "AC097"
+        ],
+        "F008": [
+            "AC012",
+            "AC025",
+            "AC046",
+            "AC093",
+            "AC052",
+            "AC020",
+            "AC070",
+            "AC039",
+            "AC041",
+            "AC028",
+            "AC036"
+        ],
+        "F009": [
+            "AC010",
+            "AC017",
+            "AC056",
+            "AC086",
+            "AC029",
+            "AC038",
+            "AC100",
+            "AC016",
+            "AC102",
+            "AC065",
+            "AC099"
+        ],
+        "F010": [
+            "AC043",
+            "AC007",
+            "AC114",
+            "AC048",
+            "AC078",
+            "AC002",
+            "AC066",
+            "AC054",
+            "AC015",
+            "AC094",
+            "AC092"
+        ]
+    },
+    "flights": {
+        "AC001": {
+            "appearance_time": 56,
+            "origin_vertiport_id": "V005",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 56,
+                    "request_arrival_time": 64,
+                    "valuation": 170,
+                    "bid": 170
+                }
+            }
+        },
+        "AC002": {
+            "appearance_time": 23,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 23,
+                    "request_arrival_time": 36,
+                    "valuation": 152,
+                    "bid": 152
+                }
+            }
+        },
+        "AC003": {
+            "appearance_time": 38,
+            "origin_vertiport_id": "V004",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 38,
+                    "request_arrival_time": 43,
+                    "valuation": 72,
+                    "bid": 72
+                }
+            }
+        },
+        "AC004": {
+            "appearance_time": 24,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 24,
+                    "request_arrival_time": 32,
+                    "valuation": 191,
+                    "bid": 191
+                }
+            }
+        },
+        "AC005": {
+            "appearance_time": 18,
+            "origin_vertiport_id": "V007",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 18,
+                    "request_arrival_time": 33,
+                    "valuation": 163,
+                    "bid": 163
+                }
+            }
+        },
+        "AC006": {
+            "appearance_time": 3,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 3,
+                    "request_arrival_time": 14,
+                    "valuation": 194,
+                    "bid": 194
+                }
+            }
+        },
+        "AC007": {
+            "appearance_time": 82,
+            "origin_vertiport_id": "V004",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 82,
+                    "request_arrival_time": 99,
+                    "valuation": 50,
+                    "bid": 50
+                }
+            }
+        },
+        "AC008": {
+            "appearance_time": 51,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 51,
+                    "request_arrival_time": 56,
+                    "valuation": 97,
+                    "bid": 97
+                }
+            }
+        },
+        "AC009": {
+            "appearance_time": 29,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 29,
+                    "request_arrival_time": 42,
+                    "valuation": 138,
+                    "bid": 138
+                }
+            }
+        },
+        "AC010": {
+            "appearance_time": 2,
+            "origin_vertiport_id": "V005",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 2,
+                    "request_arrival_time": 16,
+                    "valuation": 79,
+                    "bid": 79
+                }
+            }
+        },
+        "AC011": {
+            "appearance_time": 48,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 48,
+                    "request_arrival_time": 58,
+                    "valuation": 97,
+                    "bid": 97
+                }
+            }
+        },
+        "AC012": {
+            "appearance_time": 26,
+            "origin_vertiport_id": "V005",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 26,
+                    "request_arrival_time": 43,
+                    "valuation": 122,
+                    "bid": 122
+                }
+            }
+        },
+        "AC013": {
+            "appearance_time": 86,
+            "origin_vertiport_id": "V004",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 86,
+                    "request_arrival_time": 97,
+                    "valuation": 132,
+                    "bid": 132
+                }
+            }
+        },
+        "AC014": {
+            "appearance_time": 15,
+            "origin_vertiport_id": "V007",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 15,
+                    "request_arrival_time": 20,
+                    "valuation": 167,
+                    "bid": 167
+                }
+            }
+        },
+        "AC015": {
+            "appearance_time": 84,
+            "origin_vertiport_id": "V005",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 84,
+                    "request_arrival_time": 95,
+                    "valuation": 129,
+                    "bid": 129
+                }
+            }
+        },
+        "AC016": {
+            "appearance_time": 50,
+            "origin_vertiport_id": "V001",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 50,
+                    "request_arrival_time": 58,
+                    "valuation": 77,
+                    "bid": 77
+                }
+            }
+        },
+        "AC017": {
+            "appearance_time": 24,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 24,
+                    "request_arrival_time": 40,
+                    "valuation": 50,
+                    "bid": 50
+                }
+            }
+        },
+        "AC018": {
+            "appearance_time": 83,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 83,
+                    "request_arrival_time": 88,
+                    "valuation": 70,
+                    "bid": 70
+                }
+            }
+        },
+        "AC019": {
+            "appearance_time": 67,
+            "origin_vertiport_id": "V007",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 67,
+                    "request_arrival_time": 83,
+                    "valuation": 190,
+                    "bid": 190
+                }
+            }
+        },
+        "AC020": {
+            "appearance_time": 67,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 67,
+                    "request_arrival_time": 86,
+                    "valuation": 121,
+                    "bid": 121
+                }
+            }
+        },
+        "AC021": {
+            "appearance_time": 9,
+            "origin_vertiport_id": "V004",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 9,
+                    "request_arrival_time": 26,
+                    "valuation": 117,
+                    "bid": 117
+                }
+            }
+        },
+        "AC022": {
+            "appearance_time": 74,
+            "origin_vertiport_id": "V004",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 74,
+                    "request_arrival_time": 87,
+                    "valuation": 133,
+                    "bid": 133
+                }
+            }
+        },
+        "AC023": {
+            "appearance_time": 91,
+            "origin_vertiport_id": "V007",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 91,
+                    "request_arrival_time": 101,
+                    "valuation": 155,
+                    "bid": 155
+                }
+            }
+        },
+        "AC024": {
+            "appearance_time": 31,
+            "origin_vertiport_id": "V005",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 31,
+                    "request_arrival_time": 51,
+                    "valuation": 112,
+                    "bid": 112
+                }
+            }
+        },
+        "AC025": {
+            "appearance_time": 86,
+            "origin_vertiport_id": "V007",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 86,
+                    "request_arrival_time": 94,
+                    "valuation": 55,
+                    "bid": 55
+                }
+            }
+        },
+        "AC026": {
+            "appearance_time": 57,
+            "origin_vertiport_id": "V007",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 57,
+                    "request_arrival_time": 68,
+                    "valuation": 145,
+                    "bid": 145
+                }
+            }
+        },
+        "AC027": {
+            "appearance_time": 11,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 11,
+                    "request_arrival_time": 26,
+                    "valuation": 199,
+                    "bid": 199
+                }
+            }
+        },
+        "AC028": {
+            "appearance_time": 48,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 48,
+                    "request_arrival_time": 64,
+                    "valuation": 136,
+                    "bid": 136
+                }
+            }
+        },
+        "AC029": {
+            "appearance_time": 84,
+            "origin_vertiport_id": "V004",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 84,
+                    "request_arrival_time": 95,
+                    "valuation": 76,
+                    "bid": 76
+                }
+            }
+        },
+        "AC030": {
+            "appearance_time": 100,
+            "origin_vertiport_id": "V004",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 100,
+                    "request_arrival_time": 117,
+                    "valuation": 194,
+                    "bid": 194
+                }
+            }
+        },
+        "AC031": {
+            "appearance_time": 30,
+            "origin_vertiport_id": "V006",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 30,
+                    "request_arrival_time": 40,
+                    "valuation": 188,
+                    "bid": 188
+                }
+            }
+        },
+        "AC032": {
+            "appearance_time": 37,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 37,
+                    "request_arrival_time": 43,
+                    "valuation": 153,
+                    "bid": 153
+                }
+            }
+        },
+        "AC033": {
+            "appearance_time": 80,
+            "origin_vertiport_id": "V004",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 80,
+                    "request_arrival_time": 98,
+                    "valuation": 179,
+                    "bid": 179
+                }
+            }
+        },
+        "AC034": {
+            "appearance_time": 74,
+            "origin_vertiport_id": "V004",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 74,
+                    "request_arrival_time": 80,
+                    "valuation": 140,
+                    "bid": 140
+                }
+            }
+        },
+        "AC035": {
+            "appearance_time": 89,
+            "origin_vertiport_id": "V006",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 89,
+                    "request_arrival_time": 105,
+                    "valuation": 143,
+                    "bid": 143
+                }
+            }
+        },
+        "AC036": {
+            "appearance_time": 28,
+            "origin_vertiport_id": "V005",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 28,
+                    "request_arrival_time": 42,
+                    "valuation": 152,
+                    "bid": 152
+                }
+            }
+        },
+        "AC037": {
+            "appearance_time": 71,
+            "origin_vertiport_id": "V001",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 71,
+                    "request_arrival_time": 89,
+                    "valuation": 97,
+                    "bid": 97
+                }
+            }
+        },
+        "AC038": {
+            "appearance_time": 67,
+            "origin_vertiport_id": "V007",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 67,
+                    "request_arrival_time": 77,
+                    "valuation": 92,
+                    "bid": 92
+                }
+            }
+        },
+        "AC039": {
+            "appearance_time": 99,
+            "origin_vertiport_id": "V001",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 99,
+                    "request_arrival_time": 113,
+                    "valuation": 88,
+                    "bid": 88
+                }
+            }
+        },
+        "AC040": {
+            "appearance_time": 28,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 28,
+                    "request_arrival_time": 33,
+                    "valuation": 130,
+                    "bid": 130
+                }
+            }
+        },
+        "AC041": {
+            "appearance_time": 93,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 93,
+                    "request_arrival_time": 107,
+                    "valuation": 120,
+                    "bid": 120
+                }
+            }
+        },
+        "AC042": {
+            "appearance_time": 92,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 92,
+                    "request_arrival_time": 98,
+                    "valuation": 194,
+                    "bid": 194
+                }
+            }
+        },
+        "AC043": {
+            "appearance_time": 30,
+            "origin_vertiport_id": "V004",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 30,
+                    "request_arrival_time": 44,
+                    "valuation": 95,
+                    "bid": 95
+                }
+            }
+        },
+        "AC044": {
+            "appearance_time": 64,
+            "origin_vertiport_id": "V005",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 64,
+                    "request_arrival_time": 70,
+                    "valuation": 198,
+                    "bid": 198
+                }
+            }
+        },
+        "AC045": {
+            "appearance_time": 15,
+            "origin_vertiport_id": "V007",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 15,
+                    "request_arrival_time": 30,
+                    "valuation": 52,
+                    "bid": 52
+                }
+            }
+        },
+        "AC046": {
+            "appearance_time": 49,
+            "origin_vertiport_id": "V007",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 49,
+                    "request_arrival_time": 68,
+                    "valuation": 101,
+                    "bid": 101
+                }
+            }
+        },
+        "AC047": {
+            "appearance_time": 68,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 68,
+                    "request_arrival_time": 75,
+                    "valuation": 56,
+                    "bid": 56
+                }
+            }
+        },
+        "AC048": {
+            "appearance_time": 50,
+            "origin_vertiport_id": "V001",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 50,
+                    "request_arrival_time": 64,
+                    "valuation": 157,
+                    "bid": 157
+                }
+            }
+        },
+        "AC049": {
+            "appearance_time": 81,
+            "origin_vertiport_id": "V005",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 81,
+                    "request_arrival_time": 86,
+                    "valuation": 90,
+                    "bid": 90
+                }
+            }
+        },
+        "AC050": {
+            "appearance_time": 5,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 5,
+                    "request_arrival_time": 19,
+                    "valuation": 68,
+                    "bid": 68
+                }
+            }
+        },
+        "AC051": {
+            "appearance_time": 21,
+            "origin_vertiport_id": "V005",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 21,
+                    "request_arrival_time": 34,
+                    "valuation": 51,
+                    "bid": 51
+                }
+            }
+        },
+        "AC052": {
+            "appearance_time": 59,
+            "origin_vertiport_id": "V001",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 59,
+                    "request_arrival_time": 77,
+                    "valuation": 63,
+                    "bid": 63
+                }
+            }
+        },
+        "AC053": {
+            "appearance_time": 58,
+            "origin_vertiport_id": "V004",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 58,
+                    "request_arrival_time": 68,
+                    "valuation": 103,
+                    "bid": 103
+                }
+            }
+        },
+        "AC054": {
+            "appearance_time": 51,
+            "origin_vertiport_id": "V006",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 51,
+                    "request_arrival_time": 71,
+                    "valuation": 85,
+                    "bid": 85
+                }
+            }
+        },
+        "AC055": {
+            "appearance_time": 87,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 87,
+                    "request_arrival_time": 101,
+                    "valuation": 57,
+                    "bid": 57
+                }
+            }
+        },
+        "AC056": {
+            "appearance_time": 7,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 7,
+                    "request_arrival_time": 13,
+                    "valuation": 76,
+                    "bid": 76
+                }
+            }
+        },
+        "AC057": {
+            "appearance_time": 30,
+            "origin_vertiport_id": "V005",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 30,
+                    "request_arrival_time": 44,
+                    "valuation": 109,
+                    "bid": 109
+                }
+            }
+        },
+        "AC058": {
+            "appearance_time": 63,
+            "origin_vertiport_id": "V001",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 63,
+                    "request_arrival_time": 79,
+                    "valuation": 115,
+                    "bid": 115
+                }
+            }
+        },
+        "AC059": {
+            "appearance_time": 72,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 72,
+                    "request_arrival_time": 89,
+                    "valuation": 136,
+                    "bid": 136
+                }
+            }
+        },
+        "AC060": {
+            "appearance_time": 33,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 33,
+                    "request_arrival_time": 46,
+                    "valuation": 102,
+                    "bid": 102
+                }
+            }
+        },
+        "AC061": {
+            "appearance_time": 72,
+            "origin_vertiport_id": "V004",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 72,
+                    "request_arrival_time": 82,
+                    "valuation": 120,
+                    "bid": 120
+                }
+            }
+        },
+        "AC062": {
+            "appearance_time": 42,
+            "origin_vertiport_id": "V007",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 42,
+                    "request_arrival_time": 49,
+                    "valuation": 159,
+                    "bid": 159
+                }
+            }
+        },
+        "AC063": {
+            "appearance_time": 93,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 93,
+                    "request_arrival_time": 112,
+                    "valuation": 115,
+                    "bid": 115
+                }
+            }
+        },
+        "AC064": {
+            "appearance_time": 28,
+            "origin_vertiport_id": "V007",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 28,
+                    "request_arrival_time": 38,
+                    "valuation": 160,
+                    "bid": 160
+                }
+            }
+        },
+        "AC065": {
+            "appearance_time": 90,
+            "origin_vertiport_id": "V007",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 90,
+                    "request_arrival_time": 102,
+                    "valuation": 189,
+                    "bid": 189
+                }
+            }
+        },
+        "AC066": {
+            "appearance_time": 39,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 39,
+                    "request_arrival_time": 56,
+                    "valuation": 92,
+                    "bid": 92
+                }
+            }
+        },
+        "AC067": {
+            "appearance_time": 82,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 82,
+                    "request_arrival_time": 95,
+                    "valuation": 142,
+                    "bid": 142
+                }
+            }
+        },
+        "AC068": {
+            "appearance_time": 81,
+            "origin_vertiport_id": "V001",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 81,
+                    "request_arrival_time": 97,
+                    "valuation": 98,
+                    "bid": 98
+                }
+            }
+        },
+        "AC069": {
+            "appearance_time": 62,
+            "origin_vertiport_id": "V004",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 62,
+                    "request_arrival_time": 81,
+                    "valuation": 122,
+                    "bid": 122
+                }
+            }
+        },
+        "AC070": {
+            "appearance_time": 84,
+            "origin_vertiport_id": "V005",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 84,
+                    "request_arrival_time": 96,
+                    "valuation": 166,
+                    "bid": 166
+                }
+            }
+        },
+        "AC071": {
+            "appearance_time": 56,
+            "origin_vertiport_id": "V004",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 56,
+                    "request_arrival_time": 63,
+                    "valuation": 171,
+                    "bid": 171
+                }
+            }
+        },
+        "AC072": {
+            "appearance_time": 56,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 56,
+                    "request_arrival_time": 66,
+                    "valuation": 53,
+                    "bid": 53
+                }
+            }
+        },
+        "AC073": {
+            "appearance_time": 82,
+            "origin_vertiport_id": "V001",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 82,
+                    "request_arrival_time": 91,
+                    "valuation": 111,
+                    "bid": 111
+                }
+            }
+        },
+        "AC074": {
+            "appearance_time": 74,
+            "origin_vertiport_id": "V004",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 74,
+                    "request_arrival_time": 87,
+                    "valuation": 155,
+                    "bid": 155
+                }
+            }
+        },
+        "AC075": {
+            "appearance_time": 93,
+            "origin_vertiport_id": "V006",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 93,
+                    "request_arrival_time": 102,
+                    "valuation": 100,
+                    "bid": 100
+                }
+            }
+        },
+        "AC076": {
+            "appearance_time": 35,
+            "origin_vertiport_id": "V004",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 35,
+                    "request_arrival_time": 42,
+                    "valuation": 54,
+                    "bid": 54
+                }
+            }
+        },
+        "AC077": {
+            "appearance_time": 27,
+            "origin_vertiport_id": "V005",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 27,
+                    "request_arrival_time": 37,
+                    "valuation": 193,
+                    "bid": 193
+                }
+            }
+        },
+        "AC078": {
+            "appearance_time": 83,
+            "origin_vertiport_id": "V005",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 83,
+                    "request_arrival_time": 103,
+                    "valuation": 150,
+                    "bid": 150
+                }
+            }
+        },
+        "AC079": {
+            "appearance_time": 27,
+            "origin_vertiport_id": "V007",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 27,
+                    "request_arrival_time": 43,
+                    "valuation": 88,
+                    "bid": 88
+                }
+            }
+        },
+        "AC080": {
+            "appearance_time": 14,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 14,
+                    "request_arrival_time": 32,
+                    "valuation": 58,
+                    "bid": 58
+                }
+            }
+        },
+        "AC081": {
+            "appearance_time": 82,
+            "origin_vertiport_id": "V005",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 82,
+                    "request_arrival_time": 89,
+                    "valuation": 195,
+                    "bid": 195
+                }
+            }
+        },
+        "AC082": {
+            "appearance_time": 79,
+            "origin_vertiport_id": "V001",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 79,
+                    "request_arrival_time": 93,
+                    "valuation": 50,
+                    "bid": 50
+                }
+            }
+        },
+        "AC083": {
+            "appearance_time": 20,
+            "origin_vertiport_id": "V001",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 20,
+                    "request_arrival_time": 31,
+                    "valuation": 178,
+                    "bid": 178
+                }
+            }
+        },
+        "AC084": {
+            "appearance_time": 34,
+            "origin_vertiport_id": "V006",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 34,
+                    "request_arrival_time": 42,
+                    "valuation": 153,
+                    "bid": 153
+                }
+            }
+        },
+        "AC085": {
+            "appearance_time": 71,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 71,
+                    "request_arrival_time": 78,
+                    "valuation": 158,
+                    "bid": 158
+                }
+            }
+        },
+        "AC086": {
+            "appearance_time": 76,
+            "origin_vertiport_id": "V006",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 76,
+                    "request_arrival_time": 94,
+                    "valuation": 82,
+                    "bid": 82
+                }
+            }
+        },
+        "AC087": {
+            "appearance_time": 11,
+            "origin_vertiport_id": "V005",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 11,
+                    "request_arrival_time": 22,
+                    "valuation": 168,
+                    "bid": 168
+                }
+            }
+        },
+        "AC088": {
+            "appearance_time": 35,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 35,
+                    "request_arrival_time": 41,
+                    "valuation": 183,
+                    "bid": 183
+                }
+            }
+        },
+        "AC089": {
+            "appearance_time": 49,
+            "origin_vertiport_id": "V006",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 49,
+                    "request_arrival_time": 63,
+                    "valuation": 157,
+                    "bid": 157
+                }
+            }
+        },
+        "AC090": {
+            "appearance_time": 56,
+            "origin_vertiport_id": "V007",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 56,
+                    "request_arrival_time": 76,
+                    "valuation": 73,
+                    "bid": 73
+                }
+            }
+        },
+        "AC091": {
+            "appearance_time": 43,
+            "origin_vertiport_id": "V001",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 43,
+                    "request_arrival_time": 56,
+                    "valuation": 130,
+                    "bid": 130
+                }
+            }
+        },
+        "AC092": {
+            "appearance_time": 57,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 57,
+                    "request_arrival_time": 69,
+                    "valuation": 135,
+                    "bid": 135
+                }
+            }
+        },
+        "AC093": {
+            "appearance_time": 73,
+            "origin_vertiport_id": "V006",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 73,
+                    "request_arrival_time": 82,
+                    "valuation": 88,
+                    "bid": 88
+                }
+            }
+        },
+        "AC094": {
+            "appearance_time": 37,
+            "origin_vertiport_id": "V005",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 37,
+                    "request_arrival_time": 55,
+                    "valuation": 198,
+                    "bid": 198
+                }
+            }
+        },
+        "AC095": {
+            "appearance_time": 17,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 17,
+                    "request_arrival_time": 32,
+                    "valuation": 169,
+                    "bid": 169
+                }
+            }
+        },
+        "AC096": {
+            "appearance_time": 75,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 75,
+                    "request_arrival_time": 90,
+                    "valuation": 53,
+                    "bid": 53
+                }
+            }
+        },
+        "AC097": {
+            "appearance_time": 39,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 39,
+                    "request_arrival_time": 47,
+                    "valuation": 165,
+                    "bid": 165
+                }
+            }
+        },
+        "AC098": {
+            "appearance_time": 66,
+            "origin_vertiport_id": "V006",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 66,
+                    "request_arrival_time": 79,
+                    "valuation": 146,
+                    "bid": 146
+                }
+            }
+        },
+        "AC099": {
+            "appearance_time": 66,
+            "origin_vertiport_id": "V001",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 66,
+                    "request_arrival_time": 86,
+                    "valuation": 122,
+                    "bid": 122
+                }
+            }
+        },
+        "AC100": {
+            "appearance_time": 43,
+            "origin_vertiport_id": "V006",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 43,
+                    "request_arrival_time": 55,
+                    "valuation": 124,
+                    "bid": 124
+                }
+            }
+        },
+        "AC101": {
+            "appearance_time": 6,
+            "origin_vertiport_id": "V001",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 6,
+                    "request_arrival_time": 22,
+                    "valuation": 121,
+                    "bid": 121
+                }
+            }
+        },
+        "AC102": {
+            "appearance_time": 38,
+            "origin_vertiport_id": "V006",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 38,
+                    "request_arrival_time": 52,
+                    "valuation": 77,
+                    "bid": 77
+                }
+            }
+        },
+        "AC103": {
+            "appearance_time": 80,
+            "origin_vertiport_id": "V001",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 80,
+                    "request_arrival_time": 94,
+                    "valuation": 133,
+                    "bid": 133
+                }
+            }
+        },
+        "AC104": {
+            "appearance_time": 45,
+            "origin_vertiport_id": "V007",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 45,
+                    "request_arrival_time": 52,
+                    "valuation": 116,
+                    "bid": 116
+                }
+            }
+        },
+        "AC105": {
+            "appearance_time": 87,
+            "origin_vertiport_id": "V006",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 87,
+                    "request_arrival_time": 102,
+                    "valuation": 92,
+                    "bid": 92
+                }
+            }
+        },
+        "AC106": {
+            "appearance_time": 91,
+            "origin_vertiport_id": "V001",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 91,
+                    "request_arrival_time": 104,
+                    "valuation": 156,
+                    "bid": 156
+                }
+            }
+        },
+        "AC107": {
+            "appearance_time": 68,
+            "origin_vertiport_id": "V005",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 68,
+                    "request_arrival_time": 73,
+                    "valuation": 189,
+                    "bid": 189
+                }
+            }
+        },
+        "AC108": {
+            "appearance_time": 19,
+            "origin_vertiport_id": "V001",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 19,
+                    "request_arrival_time": 29,
+                    "valuation": 135,
+                    "bid": 135
+                }
+            }
+        },
+        "AC109": {
+            "appearance_time": 91,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V007",
+                    "request_departure_time": 91,
+                    "request_arrival_time": 97,
+                    "valuation": 154,
+                    "bid": 154
+                }
+            }
+        },
+        "AC110": {
+            "appearance_time": 92,
+            "origin_vertiport_id": "V001",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 92,
+                    "request_arrival_time": 105,
+                    "valuation": 143,
+                    "bid": 143
+                }
+            }
+        },
+        "AC111": {
+            "appearance_time": 99,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 99,
+                    "request_arrival_time": 114,
+                    "valuation": 119,
+                    "bid": 119
+                }
+            }
+        },
+        "AC112": {
+            "appearance_time": 96,
+            "origin_vertiport_id": "V006",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 96,
+                    "request_arrival_time": 105,
+                    "valuation": 127,
+                    "bid": 127
+                }
+            }
+        },
+        "AC113": {
+            "appearance_time": 75,
+            "origin_vertiport_id": "V002",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V002",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 75,
+                    "request_arrival_time": 82,
+                    "valuation": 162,
+                    "bid": 162
+                }
+            }
+        },
+        "AC114": {
+            "appearance_time": 63,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V005",
+                    "request_departure_time": 63,
+                    "request_arrival_time": 82,
+                    "valuation": 140,
+                    "bid": 140
+                }
+            }
+        },
+        "AC115": {
+            "appearance_time": 95,
+            "origin_vertiport_id": "V004",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 95,
+                    "request_arrival_time": 107,
+                    "valuation": 142,
+                    "bid": 142
+                }
+            }
+        },
+        "AC116": {
+            "appearance_time": 25,
+            "origin_vertiport_id": "V003",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V004",
+                    "request_departure_time": 25,
+                    "request_arrival_time": 32,
+                    "valuation": 85,
+                    "bid": 85
+                }
+            }
+        },
+        "AC117": {
+            "appearance_time": 95,
+            "origin_vertiport_id": "V006",
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V006",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "valuation": 30,
+                    "bid": 30
+                },
+                "001": {
+                    "destination_vertiport_id": "V003",
+                    "request_departure_time": 95,
+                    "request_arrival_time": 103,
+                    "valuation": 108,
+                    "bid": 108
+                }
+            }
+        }
+    },
+    "vertiports": {
+        "V001": {
+            "latitude": 37.766699,
+            "longitude": -122.3903664,
+            "landing_capacity": 2,
+            "takeoff_capacity": 1,
+            "hold_capacity": 20
+        },
+        "V002": {
+            "latitude": 37.8361761,
+            "longitude": -122.2668028,
+            "landing_capacity": 2,
+            "takeoff_capacity": 1,
+            "hold_capacity": 20
+        },
+        "V003": {
+            "latitude": 37.7835538,
+            "longitude": -122.5067642,
+            "landing_capacity": 3,
+            "takeoff_capacity": 4,
+            "hold_capacity": 20
+        },
+        "V004": {
+            "latitude": 37.9472484,
+            "longitude": -122.4880737,
+            "landing_capacity": 1,
+            "takeoff_capacity": 1,
+            "hold_capacity": 20
+        },
+        "V005": {
+            "latitude": 37.38556649999999,
+            "longitude": -121.9723564,
+            "landing_capacity": 1,
+            "takeoff_capacity": 2,
+            "hold_capacity": 20
+        },
+        "V006": {
+            "latitude": 37.25214395119753,
+            "longitude": -122.4066509403772,
+            "landing_capacity": 1,
+            "takeoff_capacity": 1,
+            "hold_capacity": 15
+        },
+        "V007": {
+            "latitude": 38.58856301092047,
+            "longitude": -121.5627454937505,
+            "landing_capacity": 1,
+            "takeoff_capacity": 3,
+            "hold_capacity": 15
+        }
+    },
+    "routes": [
+        {
+            "origin_vertiport_id": "V001",
+            "destination_vertiport_id": "V002",
+            "travel_time": 5
+        },
+        {
+            "origin_vertiport_id": "V001",
+            "destination_vertiport_id": "V003",
+            "travel_time": 4
+        },
+        {
+            "origin_vertiport_id": "V001",
+            "destination_vertiport_id": "V004",
+            "travel_time": 8
+        },
+        {
+            "origin_vertiport_id": "V001",
+            "destination_vertiport_id": "V005",
+            "travel_time": 21
+        },
+        {
+            "origin_vertiport_id": "V001",
+            "destination_vertiport_id": "V006",
+            "travel_time": 21
+        },
+        {
+            "origin_vertiport_id": "V001",
+            "destination_vertiport_id": "V007",
+            "travel_time": 42
+        },
+        {
+            "origin_vertiport_id": "V002",
+            "destination_vertiport_id": "V001",
+            "travel_time": 5
+        },
+        {
+            "origin_vertiport_id": "V002",
+            "destination_vertiport_id": "V003",
+            "travel_time": 8
+        },
+        {
+            "origin_vertiport_id": "V002",
+            "destination_vertiport_id": "V004",
+            "travel_time": 9
+        },
+        {
+            "origin_vertiport_id": "V002",
+            "destination_vertiport_id": "V005",
+            "travel_time": 21
+        },
+        {
+            "origin_vertiport_id": "V002",
+            "destination_vertiport_id": "V006",
+            "travel_time": 24
+        },
+        {
+            "origin_vertiport_id": "V002",
+            "destination_vertiport_id": "V007",
+            "travel_time": 38
+        },
+        {
+            "origin_vertiport_id": "V003",
+            "destination_vertiport_id": "V001",
+            "travel_time": 4
+        },
+        {
+            "origin_vertiport_id": "V003",
+            "destination_vertiport_id": "V002",
+            "travel_time": 8
+        },
+        {
+            "origin_vertiport_id": "V003",
+            "destination_vertiport_id": "V004",
+            "travel_time": 7
+        },
+        {
+            "origin_vertiport_id": "V003",
+            "destination_vertiport_id": "V005",
+            "travel_time": 24
+        },
+        {
+            "origin_vertiport_id": "V003",
+            "destination_vertiport_id": "V006",
+            "travel_time": 22
+        },
+        {
+            "origin_vertiport_id": "V003",
+            "destination_vertiport_id": "V007",
+            "travel_time": 44
+        },
+        {
+            "origin_vertiport_id": "V004",
+            "destination_vertiport_id": "V001",
+            "travel_time": 8
+        },
+        {
+            "origin_vertiport_id": "V004",
+            "destination_vertiport_id": "V002",
+            "travel_time": 9
+        },
+        {
+            "origin_vertiport_id": "V004",
+            "destination_vertiport_id": "V003",
+            "travel_time": 7
+        },
+        {
+            "origin_vertiport_id": "V004",
+            "destination_vertiport_id": "V005",
+            "travel_time": 28
+        },
+        {
+            "origin_vertiport_id": "V004",
+            "destination_vertiport_id": "V006",
+            "travel_time": 28
+        },
+        {
+            "origin_vertiport_id": "V004",
+            "destination_vertiport_id": "V007",
+            "travel_time": 39
+        },
+        {
+            "origin_vertiport_id": "V005",
+            "destination_vertiport_id": "V001",
+            "travel_time": 21
+        },
+        {
+            "origin_vertiport_id": "V005",
+            "destination_vertiport_id": "V002",
+            "travel_time": 21
+        },
+        {
+            "origin_vertiport_id": "V005",
+            "destination_vertiport_id": "V003",
+            "travel_time": 24
+        },
+        {
+            "origin_vertiport_id": "V005",
+            "destination_vertiport_id": "V004",
+            "travel_time": 28
+        },
+        {
+            "origin_vertiport_id": "V005",
+            "destination_vertiport_id": "V006",
+            "travel_time": 15
+        },
+        {
+            "origin_vertiport_id": "V005",
+            "destination_vertiport_id": "V007",
+            "travel_time": 50
+        },
+        {
+            "origin_vertiport_id": "V006",
+            "destination_vertiport_id": "V001",
+            "travel_time": 21
+        },
+        {
+            "origin_vertiport_id": "V006",
+            "destination_vertiport_id": "V002",
+            "travel_time": 24
+        },
+        {
+            "origin_vertiport_id": "V006",
+            "destination_vertiport_id": "V003",
+            "travel_time": 22
+        },
+        {
+            "origin_vertiport_id": "V006",
+            "destination_vertiport_id": "V004",
+            "travel_time": 28
+        },
+        {
+            "origin_vertiport_id": "V006",
+            "destination_vertiport_id": "V005",
+            "travel_time": 15
+        },
+        {
+            "origin_vertiport_id": "V006",
+            "destination_vertiport_id": "V007",
+            "travel_time": 60
+        },
+        {
+            "origin_vertiport_id": "V007",
+            "destination_vertiport_id": "V001",
+            "travel_time": 42
+        },
+        {
+            "origin_vertiport_id": "V007",
+            "destination_vertiport_id": "V002",
+            "travel_time": 38
+        },
+        {
+            "origin_vertiport_id": "V007",
+            "destination_vertiport_id": "V003",
+            "travel_time": 44
+        },
+        {
+            "origin_vertiport_id": "V007",
+            "destination_vertiport_id": "V004",
+            "travel_time": 39
+        },
+        {
+            "origin_vertiport_id": "V007",
+            "destination_vertiport_id": "V005",
+            "travel_time": 50
+        },
+        {
+            "origin_vertiport_id": "V007",
+            "destination_vertiport_id": "V006",
+            "travel_time": 60
+        }
+    ]
+}

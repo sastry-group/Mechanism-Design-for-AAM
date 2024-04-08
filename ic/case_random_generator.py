@@ -12,7 +12,7 @@ END_TIME = 300
 TIME_STEP = 1
 
 # Case study settings
-N_FLIGHTS = random.randint(100, 150)
+N_FLIGHTS = random.randint(100, 130)
 NUM_FLEETS = 10
 
 
@@ -47,12 +47,12 @@ def generate_flights():
     flights = {}
     vertiports_list = list(vertiports.keys())
     allowed_origin_vertiport = [vertiport_id for vertiport_id in vertiports_list for _ in range(vertiports[vertiport_id]["hold_capacity"])]
-    
+    # appearance_time = 0
 
     for i in range(N_FLIGHTS):  
         flight_id = f"AC{i+1:03d}"
-        appearance_time = random.randint(10, 30) #change this
-        
+        appearance_time = random.randint(1, 100)
+
         # Choose origin vertiport
         origin_vertiport_id = random.choice(allowed_origin_vertiport)
         allowed_origin_vertiport.remove(origin_vertiport_id)
@@ -71,8 +71,8 @@ def generate_flights():
             "requests": {
                 "000": {
                     "destination_vertiport_id": origin_vertiport_id,
-                    "request_departure_time": request_departure_time,
-                    "request_arrival_time": request_departure_time + 1,
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
                     "valuation": 30,
                     "bid": 30
                 },
