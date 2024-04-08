@@ -1,4 +1,4 @@
-"""
+git diff"""
 Incentive Compatible Fleet Level Strategic Allocation
 """
 import argparse
