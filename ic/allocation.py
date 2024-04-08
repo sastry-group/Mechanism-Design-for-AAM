@@ -86,7 +86,7 @@ def build_auxiliary(vertiport_status, flights, time, max_time, time_step=1):
                           "edge_group": "E4"}
             auxiliary_graph.add_edge(origin + "_" + str(depart_time) + "_dep", flight_id + "_" + str(depart_time), **attributes)
             
-        for key, request in flight["requests"].items():
+        for request_id, request in flight["requests"].items():
             # E7. Connect source node to flight 0 node
             if request["request_departure_time"] == 0:
                 attributes = {"upper_capacity": f"d_{flight_id}_0",
@@ -102,7 +102,9 @@ def build_auxiliary(vertiport_status, flights, time, max_time, time_step=1):
                 attributes = {"upper_capacity": 1,
                             "lower_capacity": 0,
                             "weight": rho * request["bid"],  # rho * b, rho=1 for now
-                            "edge_group": "E5"}
+                            "edge_group": "E5",
+                            "flight_id": flight_id,
+                            "request_id": request_id}
                 auxiliary_graph.add_edge(flight_id + "_" + str(depart_time), \
                                         destination + "_" + str(arrival_time) + "_arr", **attributes)
             
@@ -234,14 +236,14 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
     m.optimize()
     
     # Retrieve the allocation values
-    # Todo: Implement for the case when agents have more than one request per time
-    allocation = []
     if m.status == gp.GRB.OPTIMAL:
-        for idx, flight_times in enumerate(delta):
-            for dep_time in flight_times:
-                if dep_time.x == 1:
-                    # Todo: Fix; this just picks the first non-zero one
-                    allocation.append((aircraft_ids[idx], "001"))
+        nonzero_indices = np.where([A[i].x != 0 for i in range(len(A))])[0].tolist()
+        allocated_edges = [edge_order[i] for i in nonzero_indices]
+        # If the edge is in group E5, pull the flight and request information.
+        allocation = []
+        for _, _, attr in allocated_edges:
+            if attr["edge_group"] == "E5":
+                allocation.append((attr["flight_id"], attr["request_id"]))
     else:
         print("Optimization was not successful.")
         allocation = None
