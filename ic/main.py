@@ -1,6 +1,7 @@
 """
 Incentive Compatible Fleet Level Strategic Allocation
 """
+
 import argparse
 import json
 import os
@@ -49,13 +50,111 @@ def load_json(file=None):
     assert Path(file).is_file(), f"File {file} does not exist."
 
     # Load the JSON file
-    with open(file, "r", encoding='utf-8') as f:
+    with open(file, "r", encoding="utf-8") as f:
         data = json.load(f)
         print(f"Opened file {file}")
     return data
 
 
-def create_scenario(data, scenario_path, scenario_name):
+def get_vehicle_info(flight):
+    """
+    Get the vehicle information for a given flight.
+
+    Args:
+        flight (dict): The flight information.
+
+    Returns:
+        str: The vehicle type.
+        str: The altitude.
+        int: The speed.
+        int: The heading.
+    """
+    # Predefined placeholders as constants for now
+    return "B744", "FL250", 200, 0
+
+
+def get_lat_lon(vertiport):
+    """
+    Get the latitude and longitude of a vertiport.
+
+    Args:
+        vertiport (dict): The vertiport information.
+
+    Returns:
+        float: The latitude of the vertiport.
+        float: The longitude of the vertiport.
+    """
+    return vertiport["latitude"], vertiport["longitude"]
+
+
+def add_commands_for_flight(
+    flight_id, flight, request, origin_vertiport, destination_vertiport, stack_commands
+):
+    """
+    Add the necessary stack commands for a given allocated request to the stack commands list.
+
+    Args:
+        flight_id (str): The flight ID.
+        flight (dict): The flight information.
+        request (dict): The request information.
+        origin_vertiport (dict): The origin vertiport information.
+        destination_vertiport (dict): The destination vertiport information.
+        stack_commands (list): The list of stack commands to add to.
+    """
+    # Get vertiport information
+    or_lat, or_lon = get_lat_lon(origin_vertiport)
+    des_lat, des_lon = get_lat_lon(destination_vertiport)
+
+    # Get vehicle information
+    veh_type, alt, spd, head = get_vehicle_info(flight)
+
+    # Add movement to stack commands
+    time_stamp = convert_time(request["request_departure_time"])
+    stack_commands.extend(
+        [
+            f"{time_stamp}>CRE {flight_id} {veh_type} {or_lat} {or_lon} {head} {alt} {spd}\n",
+            f"{time_stamp}>DEST {flight_id} {des_lat}, {des_lon}\n",
+        ]
+    )
+
+
+def step_simulation(
+    vertiport_usage, vertiports, flights, allocated_flights, stack_commands
+):
+    """
+    Step the simulation forward based on the allocated flights.
+
+    Args:
+        vertiport_usage (VertiportStatus): The current status of the vertiports.
+        vertiports (dict): The vertiports information.
+        flights (dict): The flights information.
+        allocated_flights (list): The list of allocated flights.
+        stack_commands (list): The list of stack commands to add to.
+    """
+    for flight_id, request_id in allocated_flights:
+        # Pull flight and allocated request
+        flight = flights[flight_id]
+        request = flight["requests"][request_id]
+
+        # Move aircraft in VertiportStatus
+        vertiport_usage.move_aircraft(flight["origin_vertiport_id"], request)
+
+        # Add movement to stack commands
+        origin_vertiport = vertiports[flight["origin_vertiport_id"]]
+        destination_vertiport = vertiports[request["destination_vertiport_id"]]
+        add_commands_for_flight(
+            flight_id,
+            flight,
+            request,
+            origin_vertiport,
+            destination_vertiport,
+            stack_commands,
+        )
+
+    return vertiport_usage
+
+
+def run_scenario(data, scenario_path, scenario_name):
     """
     Create and run a scenario based on the given data. Save it to the specified path.
 
@@ -66,51 +165,46 @@ def create_scenario(data, scenario_path, scenario_name):
 
     Returns:
         str: The path to the created scenario file.
-
     """
-    stack_commands = []
-    init_settings = "00:00:00.00>TRAILS ON\n00:00:00.00>PAN OAK\n"
-    stack_commands.append(init_settings)
-    flights = data["flights"]  # Let's get a name to refer to these vehicles
+    flights = data["flights"]
     vertiports = data["vertiports"]
+    timing_info = data["timing_info"]
 
     # Create vertiport graph and add starting aircraft positions
-    vertiport_usage = VertiportStatus(vertiports, data["routes"], data["timing_info"])
+    vertiport_usage = VertiportStatus(vertiports, data["routes"], timing_info)
     vertiport_usage.add_aircraft(flights)
 
-    # Determine allocation
-    start_time = data["timing_info"]["start_time"]
-    end_time = data["timing_info"]["end_time"]
-    time_step = data["timing_info"]["time_step"]
-    allocated_flights, payments = allocation_and_payment(
-        vertiport_usage, flights, start_time, end_time, time_step
-    )
+    # Sort arriving flights by appearance time
+    ordered_flights = {}
+    for flight_id, flight in flights.items():
+        appearance_time = flight["appearance_time"]
+        if appearance_time not in ordered_flights:
+            ordered_flights[appearance_time] = [flight_id]
+        else:
+            ordered_flights[appearance_time].append(flight_id)
 
-    # Allocate all flights and move them
-    for flight_id, request_id in allocated_flights:
-        flight = flights[flight_id]
-        request = flight["requests"][request_id]
-        vertiport_usage.move_aircraft(flight["origin_vertiport_id"], request)
+    # Initialize stack commands
+    stack_commands = ["00:00:00.00>TRAILS ON\n00:00:00.00>PAN OAK\n"]
 
-        origin_vertiport_id = flight["origin_vertiport_id"]
-        origin_vertiport = vertiports[origin_vertiport_id]
-        destination_vertiport_id = request["destination_vertiport_id"]
-        destination_vertiport = vertiports[destination_vertiport_id]
-        request_departure_time = request["request_departure_time"]
-        or_lat = origin_vertiport["latitude"]
-        or_lon = origin_vertiport["longitude"]
-        des_lat = destination_vertiport["latitude"]
-        des_lon = destination_vertiport["longitude"]
-        vehicle_type = "B744"  # placeholder
-        alt = "FL250"  # placeholder
-        spd = 200  # placeholder
-        hdg = 0  # placeholder
-        time_stamp = convert_time(request_departure_time)
-        stack_commands.append(
-            f"{time_stamp}>CRE {flight_id} {vehicle_type} {or_lat} {or_lon} {hdg} {alt} {spd}\n"
+    # Iterate through each time flights appear
+    for appearance_time in sorted(ordered_flights.keys()):
+        # Get the current flights
+        current_flight_ids = ordered_flights[appearance_time]
+        current_flights = {
+            flight_id: flights[flight_id] for flight_id in current_flight_ids
+        }
+
+        # Determine flight allocation and payment
+        allocated_flights, payments = allocation_and_payment(
+            vertiport_usage, current_flights, timing_info
         )
-        stack_commands.append(f"{time_stamp}>DEST {flight_id} {des_lat}, {des_lon}\n")
 
+        # Update system status based on allocation
+        vertiport_usage = step_simulation(
+            vertiport_usage, vertiports, flights, allocated_flights, stack_commands
+        )
+
+    # Write the scenario to a file
     path_to_written_file = write_scenario(scenario_path, scenario_name, stack_commands)
 
     # Visualize the graph
@@ -149,7 +243,7 @@ def evaluate_scenario(path_to_scenario_file, run_gui=False):
 def convert_time(time):
     """
     Convert a time in seconds to a timestamp in the format HH:MM:SS.SS.
-    
+
     Args:
         time (int): The time in seconds.
     """
@@ -173,7 +267,7 @@ def convert_time(time):
 def write_scenario(scenario_folder, scenario_name, stack_commands):
     """
     Write the stack commands to a scenario file.
-    
+
     Args:
         scenario_folder (str): The folder where the scenario file will be saved.
         scenario_name (str): The desired name of the scenario file.
@@ -188,7 +282,7 @@ def write_scenario(scenario_folder, scenario_name, stack_commands):
 
     # Write the text to the scenario file
     path_to_file = f"{directory}/{scenario_name}.scn"
-    with open(path_to_file, "w", encoding='utf-8') as file:
+    with open(path_to_file, "w", encoding="utf-8") as file:
         file.write(text)
 
     return path_to_file
@@ -229,18 +323,19 @@ if __name__ == "__main__":
 
     # Check if the path exists and if the user wants to overwrite
     if os.path.exists(path):
-        if args.force_overwrite:
-            OVERWRITE = "y"
-        else:
-            OVERWRITE = input(
+        # Directly proceed if force overwrite is enabled; else, prompt the user
+        if (
+            not args.force_overwrite
+            and input(
                 "The scenario file already exists. Do you want to overwrite it? (y/n): "
-            )
-        if OVERWRITE.lower() != "y":
+            ).lower()
+            != "y"
+        ):
             print("File not overwritten. Exiting...")
             sys.exit()
 
     # Create the scenario file and double check the correct path was used
-    path_to_scn_file = create_scenario(test_case_data, SCN_FOLDER, SCN_NAME)
+    path_to_scn_file = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME)
     assert path == path_to_scn_file, "An error occured while writing the scenario file."
 
     # Evaluate scenario

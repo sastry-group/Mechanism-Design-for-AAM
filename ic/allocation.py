@@ -5,7 +5,7 @@ import gurobipy as gp
 
 rho = 1
 
-def build_auxiliary(vertiport_status, flights, time, max_time, time_step=1):
+def build_auxiliary(vertiport_status, flights, timing_info):
     """
     Build auxiliary graph for a given time and set of requests.
 
@@ -16,6 +16,7 @@ def build_auxiliary(vertiport_status, flights, time, max_time, time_step=1):
         max_time (int): The max time step value of the vertiport graph.
         time_steps (list): List of time steps for the graph.
     """
+    time, max_time, time_step = timing_info["start_time"], timing_info["end_time"], timing_info["time_step"]
     auxiliary_graph = nx.MultiDiGraph()
     ## Construct nodes
     #  V1. Create dep, arr, and standard nodes for each initial node (vertiport + time step)
@@ -28,7 +29,7 @@ def build_auxiliary(vertiport_status, flights, time, max_time, time_step=1):
     unique_departure_times = {}
     for flight_id, flight in flights.items():
         flight_unique_departure_times = []
-        for key, request in flight["requests"].items():
+        for request_id, request in flight["requests"].items():
             if request["request_departure_time"] not in flight_unique_departure_times:
                 # assert request["request_departure_time"] != 0, "Request departure times cannot be 0."
                 flight_unique_departure_times.append(request["request_departure_time"])
@@ -251,7 +252,7 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
     return allocation
 
 
-def allocation_and_payment(vertiport_usage, flights, time, max_time, time_step):
+def allocation_and_payment(vertiport_usage, flights, timing_info):
     """
     Allocate flights for a given time and set of requests.
 
@@ -262,7 +263,7 @@ def allocation_and_payment(vertiport_usage, flights, time, max_time, time_step):
     """
     # Create auxiliary graph and determine allocation
     # Todo: Also determine payment here
-    auxiliary_graph, unique_departure_times = build_auxiliary(vertiport_usage, flights, time, max_time, time_step=time_step)
+    auxiliary_graph, unique_departure_times = build_auxiliary(vertiport_usage, flights, timing_info)
     allocation = determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_departure_times)
 
     # Print outputs
