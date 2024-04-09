@@ -7,6 +7,8 @@ import json
 import os
 import sys
 from pathlib import Path
+import time
+
 
 # Add the bluesky package to the path
 top_level_path = Path(__file__).resolve().parent.parent
@@ -185,7 +187,8 @@ def run_scenario(data, scenario_path, scenario_name):
 
     # Initialize stack commands
     stack_commands = ["00:00:00.00>TRAILS ON\n00:00:00.00>PAN OAK\n"]
-
+    
+    start_time = time.time()
     # Iterate through each time flights appear
     for appearance_time in sorted(ordered_flights.keys()):
         # Get the current flights
@@ -203,6 +206,10 @@ def run_scenario(data, scenario_path, scenario_name):
         vertiport_usage = step_simulation(
             vertiport_usage, vertiports, flights, allocated_flights, stack_commands
         )
+
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        print(f"Elapsed time: {elapsed_time} seconds")
 
     # Write the scenario to a file
     path_to_written_file = write_scenario(scenario_path, scenario_name, stack_commands)

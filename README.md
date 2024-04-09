@@ -4,6 +4,9 @@ This is a fork of the Bluesky repo for Air Traffic Simulation. This fork impleme
 approach to air traffic management.
 
 ## Installation
+You need to get a [Gurobi](https://www.gurobi.com/) license, there is a free regular academic version.
+You can follow their steps to get their license installed in the system.
+
 
 To install and run the BlueSky simulator, follow these steps:
 1. Clone the repo
