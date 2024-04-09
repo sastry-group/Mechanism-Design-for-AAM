@@ -317,7 +317,7 @@ def write_scenario(scenario_folder, scenario_name, stack_commands):
 if __name__ == "__main__":
     # Example call:
     # python3 main.py --file /path/to/test_case.json
-    # python3 ic/main.py --file test_cases/case1.json --scn_folder ./scenario/TEST_IC
+    # python3 ic/main.py --file test_cases/case1.json --scn_folder /scenario/TEST_IC
     file_path = args.file
     assert Path(file_path).is_file(), f"File at {file_path} does not exist."
     test_case_data = load_json(file_path)
@@ -327,6 +327,7 @@ if __name__ == "__main__":
     if args.scn_folder is not None:
         SCN_FOLDER = str(top_level_path) + args.scn_folder
     else:
+        print(str(top_level_path))
         SCN_FOLDER = str(top_level_path) + "/scenario/TEST_IC"
         print(SCN_FOLDER)
     SCN_NAME = file_name.split(".")[0]
@@ -347,6 +348,7 @@ if __name__ == "__main__":
 
     # Create the scenario file and double check the correct path was used
     path_to_scn_file = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME)
+    print(path_to_scn_file)
     assert path == path_to_scn_file, "An error occured while writing the scenario file."
 
     # Evaluate scenario
