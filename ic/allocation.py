@@ -269,7 +269,23 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
     return allocation
 
 
-def allocation_and_payment(vertiport_usage, flights, timing_info):
+def save_allocation(allocation, save_file, start_time, initial_allocation=False):
+    """
+    Save the allocation to a file.
+    
+    Args:
+        allocation (list): List of tuples with flight ID and request ID.
+        save_file (str): Name of the file to save the allocation.
+    """
+    open_style = "w" if initial_allocation else "a"
+    with open(f"./data/{save_file}", open_style) as f:
+        f.write(f"Time: {start_time}\n")
+        f.write("    Flight ID, Request ID\n")
+        for flight_id, request_id in allocation:
+            f.write(f"    {flight_id}, {request_id}\n")
+
+
+def allocation_and_payment(vertiport_usage, flights, timing_info, save_file, initial_allocation):
     """
     Allocate flights for a given time and set of requests.
 
@@ -282,6 +298,7 @@ def allocation_and_payment(vertiport_usage, flights, timing_info):
     # Todo: Also determine payment here
     auxiliary_graph, unique_departure_times = build_auxiliary(vertiport_usage, flights, timing_info)
     allocation = determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_departure_times)
+    save_allocation(allocation, save_file, timing_info["current_time"], initial_allocation=initial_allocation)
 
     # Print outputs
     print(f"Allocation\n{allocation}")
