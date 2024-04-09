@@ -157,6 +157,12 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
     # Remove source and sink rows to create I_star
     source_index = node_order.index("source")
     sink_index = node_order.index("sink")
+    if source_index > sink_index:
+        node_order.pop(source_index)
+        node_order.pop(sink_index)
+    else:
+        node_order.pop(sink_index)
+        node_order.pop(source_index)
     I_star = np.delete(I, [source_index, sink_index], axis=0)
     # print(f"Node_order:")
     # for node in node_order:
@@ -183,7 +189,7 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
 
     # Pull weight values (W)
     W = np.zeros(len(edge_order))
-    for i, edge in enumerate(edges):
+    for i, edge in enumerate(edge_order):
         assert len(edge) == 3, "Missing attributes in edge."
         _, _, attr = edge
         W[i] = attr["weight"]
@@ -196,7 +202,7 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
         m.addConstr(gp.quicksum(delta[i][j] for j in range(len(delta[i]))), gp.GRB.EQUAL, 1, f"unique_departure_time_flight{i}")
     for row in I_star:
         m.addConstr(gp.quicksum(row[i] * A[i] for i in range(len(edge_order))), gp.GRB.EQUAL, 0, f"flow_conservation")
-    for k, edge in enumerate(edges):
+    for k, edge in enumerate(edge_order):
         assert len(edge) == 3, "Missing attributes in edge."
         _, _, attr = edge
         c_upper = attr["upper_capacity"]
