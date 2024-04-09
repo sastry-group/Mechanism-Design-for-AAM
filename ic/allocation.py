@@ -171,6 +171,7 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
     #     print(edge)
 
     # Start building allocation optimization problem
+    start_time_build_model = time.time()
     m = gp.Model("allocation")
 
     # Define the decision variables
@@ -237,6 +238,8 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
     # Set initial guess for delta variables
     for i in range(len(delta)):
         delta[i][-1].start = 1
+    
+    print(f"Time to build model: {time.time() - start_time_build_model}")
 
     # Optimize the model
     print("Optimizing...")
