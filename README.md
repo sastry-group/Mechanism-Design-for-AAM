@@ -4,6 +4,9 @@ This is a fork of the Bluesky repo for Air Traffic Simulation. This fork impleme
 approach to air traffic management.
 
 ## Installation
+You need to get a [Gurobi](https://www.gurobi.com/) license, there is a free regular academic version.
+You can follow their steps to get their license installed in the system.
+
 
 To install and run the BlueSky simulator, follow these steps:
 1. Clone the repo
@@ -41,8 +44,9 @@ To install and run the BlueSky simulator, follow these steps:
 6. Running the IC-package:
    1. Create database in .test_cases
    2. cd ic/
-   3. python3 main.py --file ./../test_cases/case1.json
-   4. Run ```python3 Bluesky.py``` and load the scenario
+   3. To create the scenario based on the case run python3 ic/case_random_generator.py
+   4. python3 ic/main.py --file test_cases/case1.json --scn_folder ./scenario/TEST_IC --scn_name test-ic
+   5. Run ```python3 Bluesky.py``` and load the scenario
 
 
 Note: Make sure you have Python 3 and pip installed on your system before proceeding with the installation.
