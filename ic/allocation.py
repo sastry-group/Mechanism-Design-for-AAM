@@ -2,6 +2,8 @@ import networkx as nx
 from VertiportStatus import draw_graph
 import numpy as np
 import gurobipy as gp
+import time
+
 
 rho = 1
 
@@ -16,7 +18,9 @@ def build_auxiliary(vertiport_status, flights, timing_info):
         max_time (int): The max time step value of the vertiport graph.
         time_steps (list): List of time steps for the graph.
     """
-    time, max_time, time_step = timing_info["start_time"], timing_info["end_time"], timing_info["time_step"]
+    print("Building auxiliary graph...")
+    start_time_graph_build = time.time()
+    max_time, time_step = timing_info["end_time"], timing_info["time_step"]
     auxiliary_graph = nx.MultiDiGraph()
     ## Construct nodes
     #  V1. Create dep, arr, and standard nodes for each initial node (vertiport + time step)
@@ -34,8 +38,8 @@ def build_auxiliary(vertiport_status, flights, timing_info):
                 # assert request["request_departure_time"] != 0, "Request departure times cannot be 0."
                 flight_unique_departure_times.append(request["request_departure_time"])
         assert 0 in flight_unique_departure_times, "Request departure times must include 0."
-        for time in flight_unique_departure_times:
-            auxiliary_graph.add_node(flight_id + "_" + str(time))
+        for depart_time in flight_unique_departure_times:
+            auxiliary_graph.add_node(flight_id + "_" + str(depart_time))
         unique_departure_times[flight_id] = flight_unique_departure_times
 
     #  V3. Add source and sink nodes
@@ -131,7 +135,8 @@ def build_auxiliary(vertiport_status, flights, timing_info):
                         "weight": 0, #lambda = 0
                         "edge_group": "E8_" + str(val + 1)}
             auxiliary_graph.add_edge(vertiport[0] + "_" + str(max_time), "sink", **attributes)  
-            
+    
+    print(f"Time to build graph: {time.time() - start_time_graph_build}")
     # Print edges for debugging
     # for edge in auxiliary_graph.edges(data=True):
     #     print(edge)
@@ -153,17 +158,17 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
     source_index = node_order.index("source")
     sink_index = node_order.index("sink")
     I_star = np.delete(I, [source_index, sink_index], axis=0)
-    print(f"Node_order:")
-    for node in node_order:
-        print(node)
-    print(f"\nI_star:")
-    for i in range(len(I_star)):
-        for j in range(len(I_star[i])):
-            if I_star[i][j] != 0:
-                print(f"({i}, {j}, {I_star[i][j]})")
-    print(f"\nEdge_order:")
-    for edge in edge_order:
-        print(edge)
+    # print(f"Node_order:")
+    # for node in node_order:
+    #     print(node)
+    # print(f"\nI_star:")
+    # for i in range(len(I_star)):
+    #     for j in range(len(I_star[i])):
+    #         if I_star[i][j] != 0:
+    #             print(f"({i}, {j}, {I_star[i][j]})")
+    # print(f"\nEdge_order:")
+    # for edge in edge_order:
+    #     print(edge)
 
     # Start building allocation optimization problem
     m = gp.Model("allocation")
@@ -199,8 +204,8 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
             if upper_parts[0] == "d":
                 flight = upper_parts[1]
                 idx = aircraft_ids.index(flight)
-                time = int(upper_parts[2])
-                time_idx = unique_departure_times[flight].index(time)
+                upper_time = int(upper_parts[2])
+                time_idx = unique_departure_times[flight].index(upper_time)
                 m.addConstr(A[k] <= delta[idx][time_idx], f"upper_capacity_edge{k}")
             elif upper_parts[0] == "E6":
                 vertiport = upper_parts[1]
@@ -223,8 +228,8 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
             if lower_parts[0] == "d":
                 flight = lower_parts[1]
                 idx = aircraft_ids.index(flight)
-                time = int(lower_parts[2])
-                time_idx = unique_departure_times[flight].index(time)
+                lower_time = int(lower_parts[2])
+                time_idx = unique_departure_times[flight].index(lower_time)
                 m.addConstr(delta[idx][time_idx] <= A[k], f"lower_capacity_edge{k}")
         else:
             m.addConstr(c_lower <= A[k], f"lower_capacity_edge{k}")
@@ -234,7 +239,10 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
         delta[i][-1].start = 1
 
     # Optimize the model
+    print("Optimizing...")
+    start_time_optimization = time.time()
     m.optimize()
+    print(f"Time to optimize: {time.time() - start_time_optimization}")
     
     # Retrieve the allocation values
     if m.status == gp.GRB.OPTIMAL:
