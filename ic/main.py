@@ -108,13 +108,17 @@ def add_commands_for_flight(
 
     # Get vehicle information
     veh_type, alt, spd, head = get_vehicle_info(flight)
+    print(request)
 
     # Add movement to stack commands
     time_stamp = convert_time(request["request_departure_time"])
+    arrival_time_stamp = convert_time(request["request_arrival_time"])
     stack_commands.extend(
         [
             f"{time_stamp}>CRE {flight_id} {veh_type} {or_lat} {or_lon} {head} {alt} {spd}\n",
             f"{time_stamp}>DEST {flight_id} {des_lat}, {des_lon}\n",
+            f"{time_stamp}>SCHEDULE {arrival_time_stamp}, DEL {flight_id}\n",
+
         ]
     )
 
