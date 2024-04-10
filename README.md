@@ -45,7 +45,7 @@ To install and run the BlueSky simulator, follow these steps:
    1. Create database in .test_cases
    2. cd ic/
    3. To create the scenario based on the case run python3 ic/case_random_generator.py
-   4. python3 ic/main.py --file test_cases/case1.json --scn_folder ./scenario/TEST_IC --scn_name test-ic
+   4. python3 ic/main.py --file test_cases/case1.json --scn_folder /scenario/TEST_IC
    5. Run ```python3 Bluesky.py``` and load the scenario
 
 

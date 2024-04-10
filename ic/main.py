@@ -34,7 +34,6 @@ parser.add_argument(
 parser.add_argument(
     "--scn_folder", type=str, help="The folder in which scenario files are saved."
 )
-parser.add_argument("--scn_name", type=str, help="The name of the scenario file.")
 parser.add_argument(
     "--force_overwrite",
     action="store_true",
@@ -193,6 +192,7 @@ def run_scenario(data, scenario_path, scenario_name):
     stack_commands = ["00:00:00.00>TRAILS ON\n00:00:00.00>PAN OAK\n"]
     
     start_time = time.time()
+    initial_allocation = True
     # Iterate through each time flights appear
     for appearance_time in sorted(ordered_flights.keys()):
         # Get the current flights
@@ -202,9 +202,17 @@ def run_scenario(data, scenario_path, scenario_name):
         }
 
         # Determine flight allocation and payment
+        current_timing_info = {
+            "start_time" : timing_info["start_time"],
+            "current_time" : appearance_time,
+            "end_time": timing_info["end_time"],
+            "time_step": timing_info["time_step"]
+        }
         allocated_flights, payments = allocation_and_payment(
-            vertiport_usage, current_flights, timing_info
+            vertiport_usage, current_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
         )
+        if initial_allocation:
+            initial_allocation = False
 
         # Update system status based on allocation
         vertiport_usage = step_simulation(
@@ -313,23 +321,20 @@ def write_scenario(scenario_folder, scenario_name, stack_commands):
 if __name__ == "__main__":
     # Example call:
     # python3 main.py --file /path/to/test_case.json
-    # python3 ic/main.py --file test_cases/case1.json --scn_folder ./scenario/TEST_IC --scn_name test-ic
-    file_name = args.file
-    assert Path(file_name).is_file(), f"File {file_name} does not exist."
-    test_case_data = load_json(file_name)
+    # python3 ic/main.py --file test_cases/case1.json --scn_folder /scenario/TEST_IC
+    file_path = args.file
+    assert Path(file_path).is_file(), f"File at {file_path} does not exist."
+    test_case_data = load_json(file_path)
+    file_name = Path(file_path).name
 
     # Create the scenario
     if args.scn_folder is not None:
         SCN_FOLDER = str(top_level_path) + args.scn_folder
     else:
+        print(str(top_level_path))
         SCN_FOLDER = str(top_level_path) + "/scenario/TEST_IC"
         print(SCN_FOLDER)
-    if args.scn_name is not None:
-        SCN_NAME = args.scn_name
-        if SCN_NAME.endswith(".scn"):
-            SCN_NAME = SCN_NAME[:-4]
-    else:
-        SCN_NAME = "test-ic"
+    SCN_NAME = file_name.split(".")[0]
     path = f"{SCN_FOLDER}/{SCN_NAME}.scn"
 
     # Check if the path exists and if the user wants to overwrite
@@ -347,11 +352,12 @@ if __name__ == "__main__":
 
     # Create the scenario file and double check the correct path was used
     path_to_scn_file = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME)
+    print(path_to_scn_file)
     assert path == path_to_scn_file, "An error occured while writing the scenario file."
 
     # Evaluate scenario
     if args.gui:
-        # run_from_json(file_name, run_gui=True)
+        # run_from_json(file_path, run_gui=True)
         # Always call as false because the gui does not currently work
         evaluate_scenario(path_to_scn_file, run_gui=False)
     else:

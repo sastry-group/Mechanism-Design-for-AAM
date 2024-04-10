@@ -157,6 +157,12 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
     # Remove source and sink rows to create I_star
     source_index = node_order.index("source")
     sink_index = node_order.index("sink")
+    if source_index > sink_index:
+        node_order.pop(source_index)
+        node_order.pop(sink_index)
+    else:
+        node_order.pop(sink_index)
+        node_order.pop(source_index)
     I_star = np.delete(I, [source_index, sink_index], axis=0)
     # print(f"Node_order:")
     # for node in node_order:
@@ -183,7 +189,7 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
 
     # Pull weight values (W)
     W = np.zeros(len(edge_order))
-    for i, edge in enumerate(edges):
+    for i, edge in enumerate(edge_order):
         assert len(edge) == 3, "Missing attributes in edge."
         _, _, attr = edge
         W[i] = attr["weight"]
@@ -196,7 +202,7 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
         m.addConstr(gp.quicksum(delta[i][j] for j in range(len(delta[i]))), gp.GRB.EQUAL, 1, f"unique_departure_time_flight{i}")
     for row in I_star:
         m.addConstr(gp.quicksum(row[i] * A[i] for i in range(len(edge_order))), gp.GRB.EQUAL, 0, f"flow_conservation")
-    for k, edge in enumerate(edges):
+    for k, edge in enumerate(edge_order):
         assert len(edge) == 3, "Missing attributes in edge."
         _, _, attr = edge
         c_upper = attr["upper_capacity"]
@@ -263,7 +269,23 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
     return allocation
 
 
-def allocation_and_payment(vertiport_usage, flights, timing_info):
+def save_allocation(allocation, save_file, start_time, initial_allocation=False):
+    """
+    Save the allocation to a file.
+    
+    Args:
+        allocation (list): List of tuples with flight ID and request ID.
+        save_file (str): Name of the file to save the allocation.
+    """
+    open_style = "w" if initial_allocation else "a"
+    with open(f"./data/{save_file}", open_style) as f:
+        f.write(f"Time: {start_time}\n")
+        f.write("    Flight ID, Request ID\n")
+        for flight_id, request_id in allocation:
+            f.write(f"    {flight_id}, {request_id}\n")
+
+
+def allocation_and_payment(vertiport_usage, flights, timing_info, save_file, initial_allocation):
     """
     Allocate flights for a given time and set of requests.
 
@@ -276,6 +298,7 @@ def allocation_and_payment(vertiport_usage, flights, timing_info):
     # Todo: Also determine payment here
     auxiliary_graph, unique_departure_times = build_auxiliary(vertiport_usage, flights, timing_info)
     allocation = determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_departure_times)
+    save_allocation(allocation, save_file, timing_info["current_time"], initial_allocation=initial_allocation)
 
     # Print outputs
     print(f"Allocation\n{allocation}")
