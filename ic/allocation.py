@@ -181,27 +181,32 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
     m = gp.Model("allocation")
 
     # Define the decision variables
-    delta = [
-        [m.addVar(vtype=gp.GRB.BINARY, name=f"delta_{flight}_time{t}") for t in unique_departure_times[flight]]
+    delta = [m.addMVar((len(unique_departure_times[flight]), 1), vtype=gp.GRB.BINARY, name=f"delta_{flight}")
         for flight in aircraft_ids
     ]
-    A = m.addVars(len(edge_order), lb=0, name="A")
+    A = m.addMVar((len(edge_order),1), lb=0, name="A")
 
     # Pull weight values (W)
-    W = np.zeros(len(edge_order))
+    W = np.zeros((1,len(edge_order)))
     for i, edge in enumerate(edge_order):
         assert len(edge) == 3, "Missing attributes in edge."
         _, _, attr = edge
-        W[i] = attr["weight"]
+        W[0][i] = attr["weight"]
 
     # Define the objective function
-    m.setObjective(gp.quicksum(W[i] * A[i] for i in range(len(edge_order))), sense=gp.GRB.MAXIMIZE)
+    m.setObjective(W @ A, sense=gp.GRB.MAXIMIZE)
+    # m.setObjective(gp.quicksum(W[i] * A[i] for i in range(len(edge_order))), sense=gp.GRB.MAXIMIZE)
 
     # Define the constraints
-    for i in range(len(delta)):
-        m.addConstr(gp.quicksum(delta[i][j] for j in range(len(delta[i]))), gp.GRB.EQUAL, 1, f"unique_departure_time_flight{i}")
+    for flight, delta_line in zip(aircraft_ids, delta):
+        multiplier = np.ones((1, len(unique_departure_times[flight])))
+        m.addConstr(multiplier @ delta_line == 1, f"unique_departure_time_flight{flight}")
+    # for i in range(len(delta)):
+    #     m.addConstr(gp.quicksum(delta[i][j] for j in range(len(delta[i]))), gp.GRB.EQUAL, 1, f"unique_departure_time_flight{i}")
+    row_index = 0
     for row in I_star:
-        m.addConstr(gp.quicksum(row[i] * A[i] for i in range(len(edge_order))), gp.GRB.EQUAL, 0, f"flow_conservation")
+        m.addConstr(row @ A == 0, f"flow_conservation_row{row_index}")
+        row_index += 1
     for k, edge in enumerate(edge_order):
         assert len(edge) == 3, "Missing attributes in edge."
         _, _, attr = edge
@@ -255,7 +260,7 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
     
     # Retrieve the allocation values
     if m.status == gp.GRB.OPTIMAL:
-        nonzero_indices = np.where([A[i].x != 0 for i in range(len(A))])[0].tolist()
+        nonzero_indices = np.where([A[i].x != 0 for i in range(len(edge_order))])[0].tolist()
         allocated_edges = [edge_order[i] for i in nonzero_indices]
         # If the edge is in group E5, pull the flight and request information.
         allocation = []
