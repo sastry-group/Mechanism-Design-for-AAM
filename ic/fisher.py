@@ -2,6 +2,12 @@ import cvxpy as cp
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+# MODEL PARAMETERS
+epsilon = 0.001
+beta = 1
+
+
 num_agents  = 10 
 num_goods = 10
 budget = np.random.rand(num_agents) # (n x 1)
@@ -11,16 +17,11 @@ initial_prices = np.random.rand(num_goods) # initialize the Prices in the market
 
 
 opt_xi = np.zeros((num_agents, num_goods)) # optimal valuation, xi
-
-# Convergence criteria
-epsilon = 0.001
-
 x_iter = 1
-
 p = initial_prices
 supply_demand2 = []
 
-beta = 1
+
 
 y_in = (1/num_goods) * np.ones((num_agents, num_goods))
 

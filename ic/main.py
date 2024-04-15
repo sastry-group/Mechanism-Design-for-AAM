@@ -8,6 +8,7 @@ import os
 import sys
 from pathlib import Path
 import time
+import math
 
 
 # Add the bluesky package to the path
@@ -57,7 +58,7 @@ def load_json(file=None):
     return data
 
 
-def get_vehicle_info(flight):
+def get_vehicle_info(flight, lat1, lon1, lat2, lon2):
     """
     Get the vehicle information for a given flight.
 
@@ -70,8 +71,12 @@ def get_vehicle_info(flight):
         int: The speed.
         int: The heading.
     """
+    # Assuming zero magnetic declination
+    true_heading = calculate_bearing(lat1, lon1, lat2, lon2) % 360
+    
+
     # Predefined placeholders as constants for now
-    return "B744", "FL250", 200, 0
+    return "B744", "FL250", 200, true_heading
 
 
 def get_lat_lon(vertiport):
@@ -87,6 +92,60 @@ def get_lat_lon(vertiport):
     """
     return vertiport["latitude"], vertiport["longitude"]
 
+def calculate_bearing(lat1, lon1, lat2, lon2):
+    """
+    Calculate the initial bearing between two points 
+    to determine the orientation of the strategic region
+    with respect to the trajectory.
+
+    input: lat1, lon1, lat2, lon2
+    output: initial bearing
+    """
+    lat1 = math.radians(lat1)
+    lon1 = math.radians(lon1)
+    lat2 = math.radians(lat2)
+    lon2 = math.radians(lon2)
+    
+    delta_lon = lon2 - lon1
+    
+    y = math.sin(delta_lon) * math.cos(lat2)
+    x = math.cos(lat1) * math.sin(lat2) - math.sin(lat1) * math.cos(lat2) * math.cos(delta_lon)
+    
+    initial_bearing = math.atan2(y, x)
+    
+    initial_bearing = math.degrees(initial_bearing)
+    initial_bearing = (initial_bearing + 360) % 360
+    
+    return initial_bearing
+
+def create_allocated_area(lat1, lon1, lat2, lon2, width):
+    """
+    Create a rectangular shape surrounding a trajectory given two points and width.
+
+    input: lat1, lon1, lat2, lon2, width (in kilometers)
+    ourtput: string of coordinates for the polygon
+    """
+    bearing = calculate_bearing(lat1, lon1, lat2, lon2)
+    perpendicular_bearing = (bearing + 90) % 360
+    
+    # Convert width from kilometers to degrees (approximate)
+    width_degrees = width / 111.32
+    
+    lat_delta = math.cos(math.radians(perpendicular_bearing)) * width_degrees
+    lon_delta = math.sin(math.radians(perpendicular_bearing)) * width_degrees
+    
+    lat3 = lat1 + lat_delta
+    lon3 = lon1 + lon_delta
+    lat4 = lat1 - lat_delta
+    lon4 = lon1 - lon_delta
+    lat5 = lat2 + lat_delta
+    lon5 = lon2 + lon_delta
+    lat6 = lat2 - lat_delta
+    lon6 = lon2 - lon_delta
+    
+    poly_string = f"{lat3},{lon3},{lat4},{lon4},{lat6},{lon6},{lat5},{lon5},{lat3},{lon3}"
+    
+    return poly_string
 
 def add_commands_for_flight(
     flight_id, flight, request, origin_vertiport, destination_vertiport, stack_commands
@@ -107,21 +166,25 @@ def add_commands_for_flight(
     des_lat, des_lon = get_lat_lon(destination_vertiport)
 
     # Get vehicle information
-    veh_type, alt, spd, head = get_vehicle_info(flight)
+    veh_type, alt, spd, head = get_vehicle_info(flight, or_lat, or_lon, des_lat, des_lon)
     print(request)
 
     # Timestamps
     time_stamp = convert_time(request["request_departure_time"])
     arrival_time_stamp = convert_time(request["request_arrival_time"])
 
+    # Object name to represent the strategic deconfliction area
+    poly_name = f"{flight_id}_AREA"
+    strategic_area_string = create_allocated_area(or_lat, or_lon, des_lat, des_lon, 3)
 
     stack_commands.extend(
         [
             f"{time_stamp}>CRE {flight_id} {veh_type} {or_lat} {or_lon} {head} {alt} {spd}\n",
             f"{time_stamp}>DEST {flight_id} {des_lat}, {des_lon}\n",
+            # f"{time_stamp}>SCHEDULE {arrival_time_stamp}, DEL {flight_id}\n",
+            f"{time_stamp}>POLY {poly_name},{strategic_area_string}\n",
+            f"{time_stamp}>AREA, {poly_name}\n",
             f"{time_stamp}>SCHEDULE {arrival_time_stamp}, DEL {flight_id}\n",
-            f"{time_stamp}>AREA BOX {or_lat},{or_lon}, {des_lat}, {des_lon} \n",
-
         ]
     
     )
@@ -310,16 +373,6 @@ def write_scenario(scenario_folder, scenario_name, stack_commands):
     return path_to_file
 
 
-# def create_uav(data):
-#     flights = data['flights'] # Let's get a name to refer to these vehicles
-#     vertiports = data['vertiports']
-#     for flight in flights:
-#         aircraft_id = flight['aircraft_id']
-#         origin_vertiport_id = flight['origin_vertiport_id']
-#         origin_vertiport = vertiports[origin_vertiport_id]
-#         appearance_time = flight['appearance_time']
-#     return
-
 
 if __name__ == "__main__":
     # Example call:
@@ -339,6 +392,8 @@ if __name__ == "__main__":
         print(SCN_FOLDER)
     SCN_NAME = file_name.split(".")[0]
     path = f"{SCN_FOLDER}/{SCN_NAME}.scn"
+
+    print(SCN_NAME)
 
     # Check if the path exists and if the user wants to overwrite
     if os.path.exists(path):

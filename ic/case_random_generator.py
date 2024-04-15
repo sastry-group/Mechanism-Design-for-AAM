@@ -61,7 +61,7 @@ def generate_flights():
         while destination_vertiport_id == origin_vertiport_id:
             destination_vertiport_id = random.choice(vertiports_list)
 
-        request_departure_time = appearance_time
+        request_departure_time = appearance_time + random.randint(5, 10)
         request_arrival_time = request_departure_time + random.randint(5, 20)
         valuation = random.randint(50, 200)
         bid = valuation 
@@ -165,7 +165,7 @@ current_datetime = datetime.now()
 formatted_datetime = current_datetime.strftime("%Y%m%d_%H%M%S")
 
 current_directory = os.getcwd()
-test_cases_directory = os.path.join(current_directory, '../test_cases')
+test_cases_directory = os.path.join(current_directory, 'test_cases')
 if not os.path.exists(test_cases_directory):
     os.makedirs(test_cases_directory)
 
