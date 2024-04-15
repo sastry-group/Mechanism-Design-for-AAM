@@ -111,8 +111,8 @@ def add_commands_for_flight(
     print(request)
 
     # Add movement to stack commands
-    time_stamp = convert_time(request["request_departure_time"])
-    arrival_time_stamp = convert_time(request["request_arrival_time"])
+    time_stamp = convert_time(request["request_departure_time"]*60)
+    arrival_time_stamp = convert_time(request["request_arrival_time"]*60)
     stack_commands.extend(
         [
             f"{time_stamp}>CRE {flight_id} {veh_type} {or_lat} {or_lon} {head} {alt} {spd}\n",
