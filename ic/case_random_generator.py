@@ -143,7 +143,7 @@ def generate_routes():
                 # this is also somthing that will be moved to each agent's bid
                 distance = calculate_distance(origin_data, destination_data) # km
                 speed = 90 # placeholder, we need to add specific vehicle speed in knots (Wisk)
-                travel_time = math.ceil(distance * 0.5399568 * 60  / speed)   # cover distance from km to naut.miles then hr to seconds
+                travel_time = math.ceil(distance * 0.5399568 * 60  / speed)   # cover distance from km to naut.miles then hr to min
                 route = {"origin_vertiport_id": origin_id, "destination_vertiport_id": destination_id, "travel_time": travel_time}
                 routes.append(route)
     return routes

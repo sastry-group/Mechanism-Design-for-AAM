@@ -170,8 +170,8 @@ def add_commands_for_flight(
     print(request)
 
     # Timestamps
-    time_stamp = convert_time(request["request_departure_time"])
-    arrival_time_stamp = convert_time(request["request_arrival_time"])
+    time_stamp = convert_time(request["request_departure_time"]*60)
+    arrival_time_stamp = convert_time(request["request_arrival_time"]*60)
 
     # Object name to represent the strategic deconfliction area
     poly_name = f"{flight_id}_AREA"
@@ -184,7 +184,7 @@ def add_commands_for_flight(
             # f"{time_stamp}>SCHEDULE {arrival_time_stamp}, DEL {flight_id}\n",
             f"{time_stamp}>POLY {poly_name},{strategic_area_string}\n",
             f"{time_stamp}>AREA, {poly_name}\n",
-            f"{time_stamp}>SCHEDULE {arrival_time_stamp}, DEL {flight_id}\n",
+            f"{time_stamp}>SCHEDULE {arrival_time_stamp}, DEL {strategic_area_string}\n",
         ]
     
     )
