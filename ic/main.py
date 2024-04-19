@@ -184,7 +184,7 @@ def add_commands_for_flight(
             # f"{time_stamp}>SCHEDULE {arrival_time_stamp}, DEL {flight_id}\n",
             f"{time_stamp}>POLY {poly_name},{strategic_area_string}\n",
             f"{time_stamp}>AREA, {poly_name}\n",
-            f"{time_stamp}>SCHEDULE {arrival_time_stamp}, DEL {strategic_area_string}\n",
+            f"{time_stamp}>SCHEDULE {arrival_time_stamp}, DEL {poly_name}\n",
         ]
     
     )
