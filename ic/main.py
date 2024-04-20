@@ -255,7 +255,7 @@ def run_scenario(data, scenario_path, scenario_name):
             ordered_flights[appearance_time].append(flight_id)
 
     # Initialize stack commands
-    stack_commands = ["00:00:00.00>TRAILS ON\n00:00:00.00>PAN OAK\n"]
+    stack_commands = ["00:00:00.00>TRAILS ON\n00:00:00.00>PAN OAK\n00:00:00.00>ZOOM 1\n00:00:00.00>CDMETHOD STATEBASED\n"]
     
     start_time = time.time()
     initial_allocation = True
