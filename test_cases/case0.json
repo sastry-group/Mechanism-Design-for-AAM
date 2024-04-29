@@ -12,27 +12,21 @@
     "AC001": {
       "appearance_time": 0,
       "origin_vertiport_id": "V001",
-      "budget_constraint": 50,
       "requests": {
         "000": {
           "destination_vertiport_id": "V001",
           "request_departure_time": 0,
           "request_arrival_time": 0,
-          "valuation": 30
+          "valuation": 30,
+          "bid": 30
         },
         "001": {
           "destination_vertiport_id": "V002",
           "request_departure_time": 10,
           "request_arrival_time": 20,
-          "valuation": 100
-        },
-        "002": {
-          "destination_vertiport_id": "V002",
-          "request_departure_time": 13,
-          "request_arrival_time": 23,
-          "valuation": 70
+          "valuation": 100,
+          "bid": 100
         }
-
       }
     }
   },
