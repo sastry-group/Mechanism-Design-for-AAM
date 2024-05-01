@@ -29,7 +29,7 @@ def test_update_market():
     print(y_new, p_new, r_new)
 
 
-def test_run_market(plotting=False):
+def test_run_market(plotting=False, rational=False):
     print("Testing full market run")
     num_agents, num_goods, constraints_per_agent = 5, 10, [2, 3, 4, 5, 6]
     w = np.random.rand(num_agents)*10
@@ -39,17 +39,22 @@ def test_run_market(plotting=False):
     constraints = []
     for i in range(num_agents):
         A = np.random.rand(constraints_per_agent[i], num_goods)*10
-        A[:, -1] = 0
+        # for j in range(num_goods):
+        #     A[0, j] = 1
+        # A[:, -1] = 0
+        # b = np.zeros(constraints_per_agent[i])
+        # b[0] = np.random.rand()*10
         b = np.random.rand(constraints_per_agent[i])*10
         constraints.append((A, b))
+        # constraints.append((np.concatenate((A, -A), axis=0), np.concatenate((b,-b), axis=0)+0.01))
     y = np.random.rand(num_agents, num_goods)*10
     # supply = np.random.rand(num_goods)*10
     supply = np.ones(num_goods)*1
     supply[-1] = 100
     beta = 1
-    x, p, r, overdemand = run_market((y, p, r), (u, constraints), (w, supply, beta), plotting=plotting)
-    print(x, p, r)
+    x, p, r, overdemand = run_market((y, p, r), (u, constraints), (w, supply, beta), plotting=plotting, rational=rational)
+    # print(x, p, r)
 
 
 if __name__ == "__main__":
-    test_run_market(plotting=True)
+    test_run_market(plotting=True, rational=False)
