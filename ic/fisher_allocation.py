@@ -2,7 +2,7 @@ import cvxpy as cp
 import numpy as np
 import matplotlib.pyplot as plt
 
-UPDATED_APPROACH = True
+UPDATED_APPROACH = False
 
 
 def build_graph():
@@ -63,7 +63,8 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False):
     num_goods = len(p)
 
     budget_adjustment = r_i.T @ b_i
-    w_adj = max(w_i + budget_adjustment, 0)
+    w_adj = w_i + budget_adjustment
+    # w_adj = max(w_i + budget_adjustment, 0)
 
     print(f"Adjusted budget: {w_adj}")
 
@@ -103,12 +104,12 @@ def run_market(initial_values, agent_settings, market_settings, plotting=False, 
     rebates = []
     overdemand = []
     error = [] * len(agent_constraints)
-    while x_iter <= 200:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
+    while x_iter <= 100:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
         # Update agents
         x = update_agents(w, u, p, r, agent_constraints, y, beta, rational=rational)
         overdemand.append(np.sum(x, axis=0) - supply.flatten())
         for agent_index in range(len(agent_constraints)):
-            constraint_error = np.linalg.norm(agent_constraints[agent_index][0] @ x[agent_index] - agent_constraints[agent_index][1])
+            constraint_error = agent_constraints[agent_index][0] @ x[agent_index] - agent_constraints[agent_index][1]
             if x_iter == 0:
                 error.append([constraint_error])
             else:

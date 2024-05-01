@@ -29,24 +29,32 @@ def test_update_market():
     print(y_new, p_new, r_new)
 
 
-def test_run_market(plotting=False, rational=False):
+def test_run_market(plotting=False, rational=False, homogeneous=False):
     print("Testing full market run")
     num_agents, num_goods, constraints_per_agent = 5, 10, [2, 3, 4, 5, 6]
     w = np.random.rand(num_agents)*10
     u = np.random.rand(num_agents, num_goods)*5
     p = np.random.rand(num_goods)*10
-    r = [np.random.rand(constraints_per_agent[i])*10 for i in range(num_agents)]
+    # r = [np.random.rand(constraints_per_agent[i])*10 for i in range(num_agents)]
     constraints = []
-    for i in range(num_agents):
-        A = np.random.rand(constraints_per_agent[i], num_goods)*10
-        # for j in range(num_goods):
-        #     A[0, j] = 1
-        # A[:, -1] = 0
-        # b = np.zeros(constraints_per_agent[i])
-        # b[0] = np.random.rand()*10
-        b = np.random.rand(constraints_per_agent[i])*10
-        constraints.append((A, b))
-        # constraints.append((np.concatenate((A, -A), axis=0), np.concatenate((b,-b), axis=0)+0.01))
+    if not homogeneous:
+        r = [np.zeros(constraints_per_agent[i]) for i in range(num_agents)]
+        for i in range(num_agents):
+            A = np.random.rand(constraints_per_agent[i], num_goods)*10
+            # for j in range(num_goods):
+            #     A[0, j] = 1
+            A[:, -1] = 0
+            # b = np.zeros(constraints_per_agent[i])
+            # b[0] = np.random.rand()*10
+            b = np.random.rand(constraints_per_agent[i])*10
+            constraints.append((A, b))
+            # constraints.append((np.concatenate((A, -A), axis=0), np.concatenate((b,-b), axis=0)+0.01))
+    else:
+        A = np.random.rand(constraints_per_agent[0], num_goods)*10
+        A[:, -1] = 0
+        b = np.zeros(constraints_per_agent[0])
+        r = [np.zeros(constraints_per_agent[0]) for i in range(num_agents)]
+        constraints = [(A, b) for i in range(num_agents)]
     y = np.random.rand(num_agents, num_goods)*10
     # supply = np.random.rand(num_goods)*10
     supply = np.ones(num_goods)*1
@@ -57,4 +65,4 @@ def test_run_market(plotting=False, rational=False):
 
 
 if __name__ == "__main__":
-    test_run_market(plotting=True, rational=False)
+    test_run_market(plotting=True, rational=False, homogeneous=True)
