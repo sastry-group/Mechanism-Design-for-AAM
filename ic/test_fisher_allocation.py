@@ -31,9 +31,11 @@ def test_update_market():
 
 def test_run_market(plotting=False, rational=False, homogeneous=False):
     print("Testing full market run")
-    num_agents, num_goods, constraints_per_agent = 5, 10, [2, 3, 4, 5, 6]
-    w = np.random.rand(num_agents)*10
-    u = np.random.rand(num_agents, num_goods)*5
+    num_agents, num_goods, constraints_per_agent = 5, 6, [3] * 5
+    # w = np.random.rand(num_agents)*100
+    w = np.ones(num_agents)*100 + np.random.rand(num_agents)*10 - 5
+    # u = np.random.rand(num_agents, num_goods)*5
+    u = np.array([2, 6, 2, 4, 2, 1] * num_agents).reshape((num_agents, num_goods)) + np.random.rand(num_agents, num_goods)*0.2 - 0.1
     p = np.random.rand(num_goods)*10
     # r = [np.random.rand(constraints_per_agent[i])*10 for i in range(num_agents)]
     constraints = []
@@ -50,17 +52,23 @@ def test_run_market(plotting=False, rational=False, homogeneous=False):
             constraints.append((A, b))
             # constraints.append((np.concatenate((A, -A), axis=0), np.concatenate((b,-b), axis=0)+0.01))
     else:
-        A = np.random.rand(constraints_per_agent[0], num_goods)*10
-        A[:, -1] = 0
+        # A = np.array([[1, 1, 0, 0, 0, 0], [1, 0, 0, -1, -1, 0], [0, 1, -1, 0, 0, 0], [0, 0, 1, 1, 1, 0]]) # with unnecessary constraint
+        A = np.array([[1, 1, 0, 0, 0, 0], [1, 0, 0, -1, -1, 0], [0, 1, -1, 0, 0, 0]])
+        # A = np.random.rand(constraints_per_agent[0], num_goods)*10
+        # A[:, -1] = 0
         b = np.zeros(constraints_per_agent[0])
+        b[0] = 1
         r = [np.zeros(constraints_per_agent[0]) for i in range(num_agents)]
         constraints = [(A, b) for i in range(num_agents)]
     y = np.random.rand(num_agents, num_goods)*10
     # supply = np.random.rand(num_goods)*10
     supply = np.ones(num_goods)*1
+    supply[0] = 10
+    supply[4] = 10
     supply[-1] = 100
     beta = 1
     x, p, r, overdemand = run_market((y, p, r), (u, constraints), (w, supply, beta), plotting=plotting, rational=rational)
+    print(f"Agent allocations: {x}")
     # print(x, p, r)
 
 

@@ -2,7 +2,7 @@ import cvxpy as cp
 import numpy as np
 import matplotlib.pyplot as plt
 
-UPDATED_APPROACH = False
+UPDATED_APPROACH = True
 
 
 def build_graph():
@@ -64,7 +64,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False):
 
     budget_adjustment = r_i.T @ b_i
     w_adj = w_i + budget_adjustment
-    # w_adj = max(w_i + budget_adjustment, 0)
+    w_adj = max(w_adj, 0)
 
     print(f"Adjusted budget: {w_adj}")
 
@@ -103,10 +103,12 @@ def run_market(initial_values, agent_settings, market_settings, plotting=False, 
     prices = []
     rebates = []
     overdemand = []
+    agent_allocations = []
     error = [] * len(agent_constraints)
     while x_iter <= 100:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
         # Update agents
         x = update_agents(w, u, p, r, agent_constraints, y, beta, rational=rational)
+        agent_allocations.append(x)
         overdemand.append(np.sum(x, axis=0) - supply.flatten())
         for agent_index in range(len(agent_constraints)):
             constraint_error = agent_constraints[agent_index][0] @ x[agent_index] - agent_constraints[agent_index][1]
@@ -139,6 +141,10 @@ def run_market(initial_values, agent_settings, market_settings, plotting=False, 
         for constraint_index in range(len(rebates[0])):
             plt.plot(range(1, x_iter+1), [rebates[i][constraint_index] for i in range(len(rebates))])
         plt.title("Rebate evolution")
+        plt.show()
+        for agent_index in range(len(agent_allocations[0])):
+            plt.plot(range(1, x_iter+1), [agent_allocations[i][agent_index] for i in range(len(agent_allocations))])
+        plt.title("Agent allocation evolution")
         plt.show()
     print(f"Error: {[error[i][-1] for i in range(len(error))]}")
     print(f"Overdemand: {overdemand[-1][:]}")
