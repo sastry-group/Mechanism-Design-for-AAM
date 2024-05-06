@@ -47,6 +47,7 @@ def update_market(x, values_k, market_settings, constraints):
 
 
 def update_agents(w, u, p, r, constraints, y, beta, rational=False):
+    "(3) Update agents' consumption given market settings and constraints"
     num_agents = len(w)
     num_goods = len(p)
     x = np.zeros((num_agents, num_goods))
@@ -57,6 +58,7 @@ def update_agents(w, u, p, r, constraints, y, beta, rational=False):
 
 
 def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False):
+    "(4) Update individual agent's consumption given market settings and constraints"
     # Individual agent optimization
     A_i, b_i = constraints
     num_constraints = len(b_i)
@@ -94,6 +96,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False):
 
 
 def run_market(initial_values, agent_settings, market_settings, plotting=False, rational=False):
+    "(2) Run market simulation with agents and market settings"
     u, agent_constraints = agent_settings
     y, p, r = initial_values
     w, supply, beta = market_settings

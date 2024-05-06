@@ -138,9 +138,9 @@ def build_auxiliary(vertiport_status, flights, timing_info):
     
     print(f"Time to build graph: {time.time() - start_time_graph_build}")
     # Print edges for debugging
-    # for edge in auxiliary_graph.edges(data=True):
-    #     print(edge)
-    # draw_graph(auxiliary_graph)
+    for edge in auxiliary_graph.edges(data=True):
+        print(edge)
+    draw_graph(auxiliary_graph)
     return auxiliary_graph, unique_departure_times
 
 
