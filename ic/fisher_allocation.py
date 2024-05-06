@@ -5,8 +5,9 @@ import matplotlib.pyplot as plt
 UPDATED_APPROACH = True
 
 
-def build_graph():
+def build_graph(vertiport_status, flights, timing_info):
     print("Building graph...")
+    
 
 
 
