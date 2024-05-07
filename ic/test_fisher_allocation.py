@@ -1,6 +1,19 @@
-from fisher_allocation import update_agents, update_market, run_market
+import argparse
+import json
+from pathlib import Path
+from fisher_allocation import update_agents, update_market, run_market, build_graph, construct_market
+from VertiportStatus import VertiportStatus
 import numpy as np
 import math
+import os
+
+
+
+# parser = argparse.ArgumentParser(description="Inputs to test Fisher market implementation.")
+# parser.add_argument(
+#     "--file", type=str, required=True, help="The path to the test case json file."
+# )
+# args = parser.parse_args()
 
 
 def test_update_agents():
@@ -81,5 +94,39 @@ def test_run_market(plotting=False, rational=False, homogeneous=False):
     # print(x, p, r)
 
 
+def test_construct_market(data):
+    flights = data["flights"]
+    vertiports = data["vertiports"]
+    timing_info = data["timing_info"]
+
+    # Create vertiport graph and add starting aircraft positions
+    vertiport_usage = VertiportStatus(vertiports, data["routes"], timing_info)
+
+    # Build Fisher Graph
+    market_graph = build_graph(vertiport_usage, timing_info)
+
+    # Construct market
+    agent_information, market_information, bookkeeping = construct_market(market_graph, flights, timing_info)
+
+def load_json(file=None):
+    """
+    Load a case file for a fisher market test case from a JSON file.
+    """
+    if file is None:
+        return None
+    assert Path(file).is_file(), f"File {file} does not exist."
+
+    # Load the JSON file
+    with open(file, "r", encoding="utf-8") as f:
+        data = json.load(f)
+        print(f"Opened file {file}")
+    return data
+
+
 if __name__ == "__main__":
-    test_run_market(plotting=True, rational=False, homogeneous=True)
+    # file_path = args.file
+    # assert Path(file_path).is_file(), f"File at {file_path} does not exist."
+    file_path = "test_cases/case0_fisher.json"
+    test_case_data = load_json(file_path)
+    test_construct_market(test_case_data)
+    # test_run_market(plotting=True, rational=False, homogeneous=True)

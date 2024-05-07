@@ -41,6 +41,81 @@ def build_graph(vertiport_status, timing_info):
     return auxiliary_graph
 
 
+def construct_market(market_graph, flights, timing_info):
+    max_time, time_step = timing_info["end_time"], timing_info["time_step"]
+    times_list = list(range(timing_info["start_time"], max_time + time_step, time_step))
+
+    print("Constructing market...")
+    start_time_market_construct = time.time()
+    goods_list = list(market_graph.edges)
+    w = []
+    u = []
+    agent_constraints = []
+    agent_goods_lists = []
+    for flight_id, flight in flights.items():
+        origin_vertiport = flight["origin_vertiport_id"]
+        # Create agent graph
+        agent_graph = nx.DiGraph()
+        # for node_time in times_list:
+        #     agent_graph.add_edge(origin_vertiport + "_" + str(node_time), origin_vertiport + "_" + str(node_time) + "_dep")
+        for request_id, request in flight["requests"].items():
+            if request["request_departure_time"] == 0:
+                for start_time, end_time in zip(times_list[:-1],times_list[1:]):
+                    start_node, end_node = origin_vertiport + "_" + str(start_time), origin_vertiport + "_" + str(end_time)
+                    if end_time == times_list[-1]:
+                        attributes = {"valuation": request["valuation"]}
+                    else:
+                        attributes = {"valuation": 0}
+                    agent_graph.add_edge(start_node, end_node, **attributes)
+            else:
+                dep_time = request["request_departure_time"]
+                arr_time = request["request_arrival_time"]
+                destination_vertiport = request["destination_vertiport_id"]
+                start_node, end_node = origin_vertiport + "_" + str(dep_time) + "_dep", destination_vertiport + "_" + str(arr_time) + "_arr"
+                attributes = {"valuation": request["valuation"]}
+                agent_graph.add_edge(start_node, end_node, **attributes)
+                dep_start_node, dep_end_node = origin_vertiport + "_" + str(dep_time), origin_vertiport + "_" + str(dep_time) + "_dep"
+                arr_start_node, arr_end_node = destination_vertiport + "_" + str(arr_time) + "_arr", destination_vertiport + "_" + str(arr_time)
+                agent_graph.add_edge(dep_start_node, dep_end_node, **{"valuation": 0})
+                agent_graph.add_edge(arr_start_node, arr_end_node, **{"valuation": 0})
+                stationary_times = [time for time in times_list if time >= arr_time]
+                for start_time, end_time in zip(stationary_times[:-1], stationary_times[1:]):
+                    start_node, end_node = destination_vertiport + "_" + str(start_time), destination_vertiport + "_" + str(end_time)
+                    attributes = {"valuation": 0}
+                    agent_graph.add_edge(start_node, end_node, **attributes)
+
+        # Add constraints
+        nodes = list(agent_graph.nodes)
+        edges = list(agent_graph.edges)
+        starting_node = origin_vertiport + "_" + str(timing_info["start_time"])
+        nodes.remove(starting_node)
+        nodes = [starting_node] + nodes
+        inc_matrix = nx.incidence_matrix(agent_graph, nodelist=nodes, edgelist=edges, oriented=True).toarray()
+        rows_to_delete = []
+        for i, row in enumerate(inc_matrix):
+            if -1 not in row:
+                rows_to_delete.append(i)
+        A = np.delete(inc_matrix, rows_to_delete, axis=0)
+        A[0] = -1 * A[0]
+        valuations = []
+        for edge in edges:
+            valuations.append(agent_graph.edges[edge]["valuation"])
+
+        b = np.zeros(len(inc_matrix))
+        b[0] = 1
+        
+        w.append(flight["budget_constraint"])
+        u.append(valuations)
+        agent_constraints.append((A, b))
+        agent_goods_lists.append(edges)
+
+        supply = np.ones(len(goods_list))
+        beta = 1
+
+    print(f"Time to construct market: {time.time() - start_time_market_construct}")
+    return (u, agent_constraints, agent_goods_lists), (w, supply, beta), (goods_list, times_list)
+
+
 def update_market(x, values_k, market_settings, constraints):
     '''Update market consumption, prices, and rebates'''
     shape = np.shape(x)
