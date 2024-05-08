@@ -28,8 +28,8 @@
         },
         "002": {
           "destination_vertiport_id": "V002",
-          "request_departure_time": 13,
-          "request_arrival_time": 23,
+          "request_departure_time": 20,
+          "request_arrival_time": 30,
           "valuation": 70
         }
 
