@@ -1,7 +1,7 @@
 import argparse
 import json
 from pathlib import Path
-from fisher_allocation import update_agents, update_market, run_market, build_graph, construct_market
+from fisher_allocation import update_basic_agents, update_market, run_basic_market, run_market, build_graph, construct_market
 from VertiportStatus import VertiportStatus
 import numpy as np
 import math
@@ -16,7 +16,7 @@ import os
 # args = parser.parse_args()
 
 
-def test_update_agents():
+def test_update_basic_agents():
     print("Testing agent update")
     num_agents, num_goods, constraints_per_agent = 5, 10, [2, 3, 4, 5, 6]
     w = np.random.rand(num_agents)*10
@@ -26,7 +26,7 @@ def test_update_agents():
     constraints = [(np.random.rand(constraints_per_agent[i], num_goods)*10, np.random.rand(constraints_per_agent[i])*10) for i in range(num_agents)]
     y = np.random.rand(num_agents, num_goods)*10
     beta = 1
-    x = update_agents(w, u, p, r, constraints, y, beta)
+    x = update_basic_agents(w, u, p, r, constraints, y, beta)
     print(x)
 
 
@@ -89,12 +89,12 @@ def test_run_market(plotting=False, rational=False, homogeneous=False):
     supply[2] = 10
     supply[-1] = 100
     beta = 1
-    x, p, r, overdemand = run_market((y, p, r), (u, constraints), (w, supply, beta), plotting=plotting, rational=rational)
+    x, p, r, overdemand = run_basic_market((y, p, r), (u, constraints), (w, supply, beta), plotting=plotting, rational=rational)
     print(f"Agent allocations: {x}")
     # print(x, p, r)
 
 
-def test_construct_market(data):
+def test_construct_and_run_market(data):
     flights = data["flights"]
     vertiports = data["vertiports"]
     timing_info = data["timing_info"]
@@ -107,6 +107,16 @@ def test_construct_market(data):
 
     # Construct market
     agent_information, market_information, bookkeeping = construct_market(market_graph, flights, timing_info)
+
+    # Run market
+    goods_list, times_list = bookkeeping
+    num_goods = len(goods_list)
+    num_agents = len(flights)
+    u, agent_constraints, agent_goods_lists = agent_information
+    y = np.random.rand(num_agents, num_goods)*10
+    p = np.random.rand(num_goods)*10
+    r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
+    x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
 
 def load_json(file=None):
     """
@@ -126,7 +136,7 @@ def load_json(file=None):
 if __name__ == "__main__":
     # file_path = args.file
     # assert Path(file_path).is_file(), f"File at {file_path} does not exist."
-    file_path = "test_cases/case0_fisher.json"
-    test_case_data = load_json(file_path)
-    test_construct_market(test_case_data)
-    # test_run_market(plotting=True, rational=False, homogeneous=True)
+    # file_path = "test_cases/case0_fisher.json"
+    # test_case_data = load_json(file_path)
+    # test_construct_and_run_market(test_case_data)
+    test_run_market(plotting=True, rational=False, homogeneous=True)
