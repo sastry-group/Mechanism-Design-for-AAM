@@ -37,7 +37,7 @@ def test_run_market(plotting=False, rational=False):
     w (list, num_agetns x 1): budget of each agent 
     p (list, num_goods x 1): price of each good
     r (list, num_agents x 1): rebates of each agent
-    constraints (list, num_agents x 1): constraints of each agent
+    constraints (matrix, num_constraints x num_goods): constraints of each agent
     """
     print("(1) Testing full market run")
     num_agents, num_goods, constraints_per_agent = 5, 10, [2, 3, 4, 5, 6]
