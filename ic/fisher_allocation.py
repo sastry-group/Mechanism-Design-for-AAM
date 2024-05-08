@@ -230,10 +230,11 @@ def run_market(initial_values, agent_settings, market_settings, plotting=False, 
         x_iter += 1
     if plotting:
         for good_index in range(len(p)):
-            plt.plot(range(1, x_iter+1), [prices[i][good_index] for i in range(len(prices))])
+            plt.plot(range(1, x_iter+1), [prices[i][good_index] for i in range(len(prices))], label=f"Good {good_index}")
         plt.xlabel('x_iter')
         plt.ylabel('Prices')
         plt.title("Price evolution")
+        plt.legend()
         plt.show()
         plt.plot(range(1, x_iter+1), overdemand)
         plt.xlabel('x_iter')
