@@ -136,7 +136,7 @@ def load_json(file=None):
 if __name__ == "__main__":
     # file_path = args.file
     # assert Path(file_path).is_file(), f"File at {file_path} does not exist."
-    # file_path = "test_cases/case0_fisher.json"
-    # test_case_data = load_json(file_path)
-    # test_construct_and_run_market(test_case_data)
-    test_run_market(plotting=True, rational=False, homogeneous=True)
+    file_path = "test_cases/case0_fisher.json"
+    test_case_data = load_json(file_path)
+    test_construct_and_run_market(test_case_data)
+    # test_run_market(plotting=True, rational=False, homogeneous=True)
