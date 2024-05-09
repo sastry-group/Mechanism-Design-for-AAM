@@ -117,6 +117,7 @@ def construct_market(market_graph, flights, timing_info):
         agent_goods_lists.append(goods)
 
         supply = np.ones(len(goods_list))
+        supply[-1] = 100
         beta = 1
 
     print(f"Time to construct market: {time.time() - start_time_market_construct}")
@@ -352,28 +353,37 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
         prices.append(p)
         x_iter += 1
     if plotting:
+        plt.subplot(2, 3, 1)
         for good_index in range(len(p)):
             plt.plot(range(1, x_iter+1), [prices[i][good_index] for i in range(len(prices))])
         plt.xlabel('x_iter')
         plt.ylabel('Prices')
         plt.title("Price evolution")
-        plt.show()
+
+        plt.subplot(2, 3, 2)
         plt.plot(range(1, x_iter+1), overdemand)
         plt.xlabel('x_iter')
         plt.ylabel('Demand - Supply')
         plt.title("Overdemand evolution")
-        plt.show()
+
+        plt.subplot(2, 3, 3)
         for agent_index in range(len(agent_constraints)):
             plt.plot(range(1, x_iter+1), error[agent_index])
         plt.title("Constraint error evolution")
-        plt.show()
+
+        plt.subplot(2, 3, 4)
         for constraint_index in range(len(rebates[0])):
             plt.plot(range(1, x_iter+1), [rebates[i][constraint_index] for i in range(len(rebates))])
         plt.title("Rebate evolution")
-        plt.show()
+
+        plt.subplot(2, 3, 5)
         for agent_index in range(len(agent_allocations[0])):
             plt.plot(range(1, x_iter+1), [agent_allocations[i][agent_index] for i in range(len(agent_allocations))])
         plt.title("Agent allocation evolution")
+
+        plt.subplot(2, 3, 6)
+        # Plot for subplot 6
+
         plt.show()
     print(f"Error: {[error[i][-1] for i in range(len(error))]}")
     print(f"Overdemand: {overdemand[-1][:]}")
