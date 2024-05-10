@@ -6,6 +6,7 @@ from VertiportStatus import VertiportStatus
 import numpy as np
 import math
 import os
+import pickle
 
 
 
@@ -44,6 +45,10 @@ def test_update_market():
 
 
 def test_run_market(plotting=False, rational=False, homogeneous=False):
+    st0 = np.random.get_state()
+    dbfile = open('ic/Picklerandomstate', 'ab')
+    pickle.dump(st0, dbfile)                    
+    dbfile.close()
     print("Testing full market run")
     num_agents, num_goods, constraints_per_agent = 5, 9, [6] * 5
     # w = np.random.rand(num_agents)*100
@@ -51,7 +56,8 @@ def test_run_market(plotting=False, rational=False, homogeneous=False):
     # u = np.random.rand(num_agents, num_goods)*5
     # u = np.array([2, 6, 2, 4, 2, 1] * num_agents).reshape((num_agents, num_goods)) + np.random.rand(num_agents, num_goods)*0.2 - 0.1
     u_1 = np.array([2, 6, 2, 4, 2, 0, 0, 0, 1] * math.ceil(num_agents/2)).reshape((math.ceil(num_agents/2), num_goods))
-    u_2 = np.array([0, 0, 1, 0, 1, 1, 6, 4, 1] * math.floor(num_agents/2)).reshape((math.floor(num_agents/2), num_goods))
+    # u_2 = np.array([0, 0, 1, 0, 1, 1, 6, 4, 1] * math.floor(num_agents/2)).reshape((math.floor(num_agents/2), num_goods))
+    u_2 = np.array([0, 0, 2, 0, 2, 2, 6, 4, 1] * math.floor(num_agents/2)).reshape((math.floor(num_agents/2), num_goods))
     u = np.concatenate((u_1, u_2), axis=0).reshape(num_agents, num_goods) + np.random.rand(num_agents, num_goods)*0.2 - 0.1
     p = np.random.rand(num_goods)*10
     # r = [np.random.rand(constraints_per_agent[i])*10 for i in range(num_agents)]
@@ -136,7 +142,7 @@ def load_json(file=None):
 if __name__ == "__main__":
     # file_path = args.file
     # assert Path(file_path).is_file(), f"File at {file_path} does not exist."
-    file_path = "test_cases/case0_fisher.json"
-    test_case_data = load_json(file_path)
-    test_construct_and_run_market(test_case_data)
-    # test_run_market(plotting=True, rational=False, homogeneous=True)
+    # file_path = "test_cases/case0_fisher.json"
+    # test_case_data = load_json(file_path)
+    # test_construct_and_run_market(test_case_data)
+    test_run_market(plotting=True, rational=False, homogeneous=True)

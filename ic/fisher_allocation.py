@@ -124,14 +124,13 @@ def construct_market(market_graph, flights, timing_info):
     return (u, agent_constraints, agent_goods_lists), (w, supply, beta), (goods_list, times_list)
 
 
-def update_basic_market(x, values_k, market_settings, constraints, bookkeeping):
+def update_basic_market(x, values_k, market_settings, constraints):
     '''Update market consumption, prices, and rebates'''
     shape = np.shape(x)
     num_agents = shape[0]
     num_goods = shape[1]
     k, p_k, r_k = values_k
     supply, beta = market_settings
-    goods_list, agent_goods_lists = bookkeeping
     
     # Update consumption
     y = cp.Variable((num_agents, num_goods))
@@ -153,7 +152,6 @@ def update_basic_market(x, values_k, market_settings, constraints, bookkeeping):
     for i in range(num_agents):
         agent_constraints = constraints[i]
         if UPDATED_APPROACH:
-            agent_x = np.array([x[i, goods_list.index(good)] for good in agent_goods_lists[i]])
             constraint_violations = np.array([agent_constraints[0][j] @ x[i] - agent_constraints[1][j] for j in range(len(agent_constraints[1]))])
 
         else:
@@ -288,7 +286,7 @@ def run_basic_market(initial_values, agent_settings, market_settings, plotting=F
                 error[agent_index].append(constraint_error)
 
         # Update market
-        k, y, p, r = update_market(x, (1, p, r), (supply, beta), agent_constraints)
+        k, y, p, r = update_basic_market(x, (1, p, r), (supply, beta), agent_constraints)
         rebates.append([rebate_list for rebate_list in r])
         prices.append(p)
         x_iter += 1
