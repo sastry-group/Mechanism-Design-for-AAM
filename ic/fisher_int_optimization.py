@@ -39,35 +39,36 @@ def int_optimization(x_agents, capacity, budget, prices, utility, A, b):
         new_market_b = []
         # constraints for the new market
         for index in agents_with_contested_allocations:
-            Aarray = A[index]  
-            Acleaned_array = Aarray[:-1]  # Remove the last element
+            Aarray = A[index]
+            last_index = Aarray.shape[1] - 1
             barray = b[index]
-            new_market_A.append(Acleaned_array)
+            new_market_A.append(np.delete(Aarray, last_index, axis=1))
             new_market_b.append(barray)
    
-    
 
         Aprime = np.array(new_market_A)
         bprime = np.array(new_market_b)
-        # print(Aprime)
-        # print(bprime)
-        print(contested_agent_allocations)
 
         k = 0
         equilibrium_reached = False
         ALPHA = 0.1
+        contested_agent_allocations = contested_agent_allocations.tolist()
+        new_market_utility = new_market_utility.tolist()
 
         while not equilibrium_reached:
-            xi_values = find_optimal_xi(contested_agent_allocations, utility, Aprime, bprime)
+            xi_values = np.zeros((num_agents, num_goods))
+            for i in range(len(contested_agent_allocations)):
+                # print(len(contested_agent_allocations[i]), new_market_utility[i], Aprime[i], bprime[i])
+                xi_values[i,:] = find_optimal_xi(len(contested_agent_allocations[i]), new_market_utility[i], Aprime[i], bprime[i])
+               
             
             demand = np.sum(xi_values, axis=0)
             for j in range(len(capacity)):
                 if demand[j] > capacity[j]:
-                    prices[k+1] = prices[k] + ALPHA
+                    prices[j] = prices[j] + ALPHA
             equilibrium_reached = check_equilibrium(demand, capacity)
             
             k += 1
-        print(xi_values)
 
         
     else:
