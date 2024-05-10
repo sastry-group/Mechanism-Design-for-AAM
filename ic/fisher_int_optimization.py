@@ -18,18 +18,22 @@ def int_optimization(x_agents, capacity, budget, prices, utility, A, b):
     # Check contested allocations
     contested_edges, agents_with_contested_allocations, contested_edges_col, contested_agent_allocations = contested_allocations(x_agents, capacity)
     if contested_edges:
+        ALPHA = 0.1
         # print(f"Contested edge index: {contested_edges}")
         # print(f"Agents with contested allocations: {agents_with_contested_allocations}")
         # print(f"Contested edges cols: {contested_edges_col}")
         for contested_edge in contested_edges:
-            prices[contested_edge] = prices[contested_edge] 
+            prices[contested_edge] = prices[contested_edge] + ALPHA
+        # prices = prices.tolist()
+        prices = prices[:-1]
         # print(f"Updated prices: {prices}")
         new_market_capacity = capacity - np.sum(x_agents, axis=0)
         new_market_capacity[contested_edges] = capacity[contested_edges]
-        # print(f"New capacity: {new_market_capacity}")  
+        print(f"New capacity: {new_market_capacity}")  
 
-        new_market_budget = budget[agents_with_contested_allocations][0]
-        # print(f"Congested budget: ", new_market_budget)
+        new_market_budget = budget[agents_with_contested_allocations]
+        new_market_budget = new_market_budget.tolist()
+        # print(f"Congested agent budget: ", new_market_budget)
         # x = contested_agent_allocations
         # print("New market probabilities: ", contested_agent_allocations)
         new_market_utility = utility[agents_with_contested_allocations][0]
@@ -51,15 +55,16 @@ def int_optimization(x_agents, capacity, budget, prices, utility, A, b):
 
         k = 0
         equilibrium_reached = False
-        ALPHA = 0.1
+
         contested_agent_allocations = contested_agent_allocations.tolist()
         new_market_utility = new_market_utility.tolist()
-
+        test = np.array(contested_agent_allocations[0])
+        # print("test: ",cp.sum(cp.matmul(prices, test)))
         while not equilibrium_reached:
             xi_values = np.zeros((num_agents, num_goods))
             for i in range(len(contested_agent_allocations)):
                 # print(len(contested_agent_allocations[i]), new_market_utility[i], Aprime[i], bprime[i])
-                xi_values[i,:] = find_optimal_xi(len(contested_agent_allocations[i]), new_market_utility[i], Aprime[i], bprime[i])
+                xi_values[i,:] = find_optimal_xi(len(contested_agent_allocations[i]), new_market_utility[i], Aprime[i], bprime[i], prices, new_market_budget[i])
                
             
             demand = np.sum(xi_values, axis=0)
@@ -67,8 +72,13 @@ def int_optimization(x_agents, capacity, budget, prices, utility, A, b):
                 if demand[j] > capacity[j]:
                     prices[j] = prices[j] + ALPHA
             equilibrium_reached = check_equilibrium(demand, capacity)
+            print("equilibrium: ",equilibrium_reached)
+            print("prices: ",prices)
+            print("xi_values: ",xi_values)
+            print("demand: ",demand)
             
             k += 1
+            print(k)
 
         
     else:
@@ -77,10 +87,10 @@ def int_optimization(x_agents, capacity, budget, prices, utility, A, b):
 def check_equilibrium(demand, capacity):
     return np.all(demand <= capacity)
 
-def find_optimal_xi(n, utility, A, b):
+def find_optimal_xi(n, utility, A, b, prices, budget):
     x = cp.Variable(n, integer=True)
     objective = cp.Maximize(cp.sum(cp.multiply(utility, x)))
-    constraints = [A @ x == b]
+    constraints = [A @ x == b, cp.sum(cp.matmul(prices, x)) <= budget] #missing x >= 0
     problem = cp.Problem(objective, constraints)
     problem.solve()
     return x.value
@@ -134,7 +144,8 @@ x_agents = np.array([[1.00397543e+00,4.80360433e-07,1.92159788e-06,1.79412229e-0
     1.00542076e+00, 6.86702827e-08, 1.00451420e+00, 1.85567648e-03]])
 
 x_agents_rounded = np.round(x_agents, 1)
-capacity = np.array([1. ,  1.,  1.  , 1. , 10. , 10. ,  1.  , 1.])
+print(x_agents_rounded)
+capacity = np.array([3 ,  1.,  1.  , 1. , 10. , 10. ,  1.  , 1.])
 budget = np.ones(5)*100 + np.random.rand(5)*10 - 5
 # A = np.array([[1, 1, 0, 0, 0, 0, 0, 0, 0], [1, 0, 0, -1, -1, 0, 0, 0, 0], [0, 1, -1, 0, 0, 0, 0, 0, 0], \
 #                 [0, 0, 0, 0, 0, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 0, 0, 0, 1, 0], \
@@ -171,6 +182,6 @@ A =[
                [1, 0, 0, 0, 0, 0, 0, 0, 0],
                [0, 1, 0, 0, 0, 0, 0, 0, 0],
                [0, 0, 0, 1, 0, 0, 0, 0, 0]])]
-prices = np.array([0., 16.60415211, 0., 7.83724561, 0., 0., 16.97227583, 7.55527186, 4.53592165])
-b = np.array([[1., 0., 0., 0., 0., 0.],[1., 0., 0., 0., 0., 0.],[1., 0., 0., 0., 0., 0.], [1., 0., 0., 0., 0., 0.], [1., 0., 0., 0., 0., 0.]])
-int_optimization(x_agents_rounded, capacity, budget, prices, utility, A, b)
+# prices = np.array([0., 16.60415211, 0., 7.83724561, 0., 0., 16.97227583, 7.55527186, 4.53592165])
+# b = np.array([[1., 0., 0., 0., 0., 0.],[1., 0., 0., 0., 0., 0.],[1., 0., 0., 0., 0., 0.], [1., 0., 0., 0., 0., 0.], [1., 0., 0., 0., 0., 0.]])
+# int_optimization(x_agents_rounded, capacity, budget, prices, utility, A, b)
