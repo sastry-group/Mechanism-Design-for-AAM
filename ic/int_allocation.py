@@ -92,6 +92,7 @@ def agent_probability_graph_extended(edge_information, x):
 
 
 def sample_path(G, start_node):
+    """Sample a path in the graph G starting from the given node."""
     path = [start_node]
     current_node = start_node
 
