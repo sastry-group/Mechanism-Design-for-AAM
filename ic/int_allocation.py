@@ -93,27 +93,33 @@ def agent_probability_graph_extended(edge_information, x):
 
 def sample_path(G, start_node):
     """Sample a path in the graph G starting from the given node."""
-    path = [start_node]
+
     current_node = start_node
+    path = [current_node]
+    edges = []
 
     while True:
-        edges = list(G.out_edges(current_node, data=True))
-        if not edges:
+        possible_edges = list(G.out_edges(current_node, data=True))
+        if not possible_edges:
             break
         
         # Normalize weights
-        total_weight = sum(edge[2]['weight'] for edge in edges)
-        weights = [edge[2]['weight'] / total_weight for edge in edges]
-        # print("Weights:", weights)
-        next_nodes = [edge[1] for edge in edges]
+        total_weight = sum(edge[2]['weight'] for edge in possible_edges)
+        weights = [edge[2]['weight'] / total_weight for edge in possible_edges]
+        next_nodes = [edge[1] for edge in possible_edges]
 
         # Select next node based on normalized weights
-        current_node = random.choices(next_nodes, weights=weights, k=1)[0]
+        chosen_edge = random.choices(possible_edges, weights=weights, k=1)[0]
+        next_node = chosen_edge[1]
 
-        path.append(current_node)
-        
+        # Update path and edges
+        path.append(next_node)
+        edges.append(chosen_edge[2]['label'])  # Save the edge name from the data attributes
 
-    return path
+        # Move to next node
+        current_node = next_node
+
+    return path, edges
 
 
 def plot_sample_path(G, sampled_path):
@@ -199,7 +205,8 @@ x2 = np.array([0.3, 0.7, 0.2, 0.7, 0.7, 0.1,0.2,0.7])  # probabilities or weight
 
 ## Extended graph
 extended_graph = agent_probability_graph_extended(edge_information_extended, x2)
-sampled_path_extended = sample_path(extended_graph, edge_information_extended['e1'][0])
+sampled_path_extended, sampled_edges = sample_path(extended_graph, edge_information_extended['e1'][0])
 print("Sampled Path:", sampled_path_extended)
+print("Sampled Edges:", sampled_edges)
 plot_sample_path_extended(extended_graph, sampled_path_extended)
 

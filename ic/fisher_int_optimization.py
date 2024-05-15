@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 import pandas as pd
-
+from int_allocation import update_agents, update_market
 
 
 def int_optimization(x_agents, capacity, budget, prices, utility, A, b):
