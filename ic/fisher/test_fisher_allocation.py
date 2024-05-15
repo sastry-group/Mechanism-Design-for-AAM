@@ -1,13 +1,17 @@
 import argparse
 import json
 from pathlib import Path
-from fisher_allocation import update_basic_agents, update_market, run_basic_market, run_market, build_graph, construct_market
-from VertiportStatus import VertiportStatus
 import numpy as np
 import math
 import os
 import pickle
+import sys
 
+from pathlib import Path
+sys.path.append(str(Path(__file__).parent.parent))
+
+from fisher_allocation import update_basic_agents, update_market, run_basic_market, run_market, build_graph, construct_market
+from VertiportStatus import VertiportStatus
 
 
 # parser = argparse.ArgumentParser(description="Inputs to test Fisher market implementation.")
