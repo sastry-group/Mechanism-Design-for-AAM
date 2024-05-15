@@ -1,11 +1,12 @@
 import argparse
 import json
 from pathlib import Path
-from fisher_allocation import update_agents, update_market, run_market, build_graph, construct_market
+from fisher_allocation import update_basic_agents, update_market, run_basic_market, run_market, build_graph, construct_market
 from VertiportStatus import VertiportStatus
 import numpy as np
 import math
 import os
+import pickle
 
 
 
@@ -16,7 +17,7 @@ import os
 # args = parser.parse_args()
 
 
-def test_update_agents():
+def test_update_basic_agents():
     print("Testing agent update")
     num_agents, num_goods, constraints_per_agent = 5, 10, [2, 3, 4, 5, 6]
     w = np.random.rand(num_agents)*10
@@ -26,7 +27,8 @@ def test_update_agents():
     constraints = [(np.random.rand(constraints_per_agent[i], num_goods)*10, np.random.rand(constraints_per_agent[i])*10) for i in range(num_agents)]
     y = np.random.rand(num_agents, num_goods)*10
     beta = 1
-    x = update_agents(w, u, p, r, constraints, y, beta)
+    x = update_basic_agents(w, u, p, r, constraints, y, beta)
+    print(x)
 
 
 def test_update_market():
@@ -54,13 +56,19 @@ def test_run_market(plotting=False, rational=False, homogeneous=False):
     constraints (matrix, num_constraints x num_goods): constraints of each agent
     """
     print("(1) Testing full market run")
+    st0 = np.random.get_state()
+    dbfile = open('ic/Picklerandomstate', 'ab')
+    pickle.dump(st0, dbfile)                    
+    dbfile.close()
+    print("Testing full market run")
     num_agents, num_goods, constraints_per_agent = 5, 9, [6] * 5
     # w = np.random.rand(num_agents)*100
     w = np.ones(num_agents)*100 + np.random.rand(num_agents)*10 - 5
     # u = np.random.rand(num_agents, num_goods)*5
     # u = np.array([2, 6, 2, 4, 2, 1] * num_agents).reshape((num_agents, num_goods)) + np.random.rand(num_agents, num_goods)*0.2 - 0.1
     u_1 = np.array([2, 6, 2, 4, 2, 0, 0, 0, 1] * math.ceil(num_agents/2)).reshape((math.ceil(num_agents/2), num_goods))
-    u_2 = np.array([0, 0, 1, 0, 1, 1, 6, 4, 1] * math.floor(num_agents/2)).reshape((math.floor(num_agents/2), num_goods))
+    # u_2 = np.array([0, 0, 1, 0, 1, 1, 6, 4, 1] * math.floor(num_agents/2)).reshape((math.floor(num_agents/2), num_goods))
+    u_2 = np.array([0, 0, 2, 0, 2, 2, 6, 4, 1] * math.floor(num_agents/2)).reshape((math.floor(num_agents/2), num_goods))
     u = np.concatenate((u_1, u_2), axis=0).reshape(num_agents, num_goods) + np.random.rand(num_agents, num_goods)*0.2 - 0.1
     p = np.random.rand(num_goods)*10
     # r = [np.random.rand(constraints_per_agent[i])*10 for i in range(num_agents)]
@@ -98,12 +106,12 @@ def test_run_market(plotting=False, rational=False, homogeneous=False):
     supply[2] = 10
     supply[-1] = 100
     beta = 1
-    x, p, r, overdemand = run_market((y, p, r), (u, constraints), (w, supply, beta), plotting=plotting, rational=rational)
+    x, p, r, overdemand = run_basic_market((y, p, r), (u, constraints), (w, supply, beta), plotting=plotting, rational=rational)
     print(f"Agent allocations: {x}")
     # print(x, p, r)
 
 
-def test_construct_market(data):
+def test_construct_and_run_market(data):
     flights = data["flights"]
     vertiports = data["vertiports"]
     timing_info = data["timing_info"]
@@ -116,6 +124,16 @@ def test_construct_market(data):
 
     # Construct market
     agent_information, market_information, bookkeeping = construct_market(market_graph, flights, timing_info)
+
+    # Run market
+    goods_list, times_list = bookkeeping
+    num_goods = len(goods_list)
+    num_agents = len(flights)
+    u, agent_constraints, agent_goods_lists = agent_information
+    y = np.random.rand(num_agents, num_goods)*10
+    p = np.random.rand(num_goods)*10
+    r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
+    x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
 
 def load_json(file=None):
     """
@@ -135,7 +153,7 @@ def load_json(file=None):
 if __name__ == "__main__":
     # file_path = args.file
     # assert Path(file_path).is_file(), f"File at {file_path} does not exist."
-    file_path = "test_cases/case0_fisher.json"
-    test_case_data = load_json(file_path)
-    test_construct_market(test_case_data)
-    # test_run_market(plotting=True, rational=False, homogeneous=True)
+    # file_path = "test_cases/case0_fisher.json"
+    # test_case_data = load_json(file_path)
+    # test_construct_and_run_market(test_case_data)
+    test_run_market(plotting=True, rational=False, homogeneous=True)
