@@ -333,7 +333,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
     overdemand = []
     agent_allocations = []
     error = [] * len(agent_constraints)
-    while x_iter <= 300:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
+    while x_iter <= 100:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
         # Update agents
         x = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, rational=rational)
         agent_allocations.append(x)
@@ -387,6 +387,26 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
     print(f"Error: {[error[i][-1] for i in range(len(error))]}")
     print(f"Overdemand: {overdemand[-1][:]}")
     return x, p, r, overdemand
+
+
+def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, save_file=None, initial_allocation=True):
+    # Build Fisher Graph
+    market_graph = build_graph(vertiport_usage, timing_info)
+
+    # Construct market
+    agent_information, market_information, bookkeeping = construct_market(market_graph, flights, timing_info)
+
+    # Run market
+    goods_list, times_list = bookkeeping
+    num_goods = len(goods_list)
+    num_agents = len(flights)
+    u, agent_constraints, agent_goods_lists = agent_information
+    y = np.random.rand(num_agents, num_goods)*10
+    p = np.random.rand(num_goods)*10
+    r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
+    x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
+
+    return None, None
 
 
 if __name__ == "__main__":
