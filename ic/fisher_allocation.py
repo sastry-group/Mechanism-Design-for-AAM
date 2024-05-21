@@ -3,11 +3,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 import time
+import json
+from VertiportStatus import VertiportStatus
+from pathlib import Path
+
 
 UPDATED_APPROACH = True
 
 
 def build_graph(vertiport_status, timing_info):
+    """
+    (2)
+    """
     print("Building graph...")
     start_time_graph_build = time.time()
     max_time, time_step = timing_info["end_time"], timing_info["time_step"]
@@ -45,6 +52,9 @@ def build_graph(vertiport_status, timing_info):
 
 
 def construct_market(market_graph, flights, timing_info):
+    """
+    (3)
+    """
     max_time, time_step = timing_info["end_time"], timing_info["time_step"]
     times_list = list(range(timing_info["start_time"], max_time + time_step, time_step))
 
@@ -161,7 +171,10 @@ def update_basic_market(x, values_k, market_settings, constraints):
 
 
 def update_market(x, values_k, market_settings, constraints, agent_goods_lists, goods_list):
-    '''Update market consumption, prices, and rebates'''
+    '''
+    Update market consumption, prices, and rebates
+    (7)
+    '''
     shape = np.shape(x)
     num_agents = shape[0]
     num_goods = shape[1]
@@ -209,6 +222,9 @@ def update_basic_agents(w, u, p, r, constraints, y, beta, rational=False):
 
 
 def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, beta, rational=False):
+    """
+    (5)
+    """
     num_agents = len(w)
     num_goods = len(p)
     x = np.zeros((num_agents, num_goods))
@@ -225,7 +241,10 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
 
 
 def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False):
-    "(4) Update individual agent's consumption given market settings and constraints"
+    """
+    (4) Update individual agent's consumption given market settings and constraints
+    (6)
+    """
     # Individual agent optimization
     A_i, b_i = constraints
     num_constraints = len(b_i)
@@ -235,7 +254,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False):
     w_adj = w_i + budget_adjustment
     w_adj = max(w_adj, 0)
 
-    print(f"Adjusted budget: {w_adj}")
+    # print(f"Adjusted budget: {w_adj}")
 
     x_i = cp.Variable(num_goods)
     if rational:
@@ -322,6 +341,9 @@ def run_basic_market(initial_values, agent_settings, market_settings, plotting=F
 
 
 def run_market(initial_values, agent_settings, market_settings, bookkeeping, plotting=False, rational=False):
+    """
+    (4)
+    """
     u, agent_constraints, agent_goods_lists = agent_settings
     y, p, r = initial_values
     w, supply, beta = market_settings
@@ -333,6 +355,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
     overdemand = []
     agent_allocations = []
     error = [] * len(agent_constraints)
+    
+    # Algorithm 1
     while x_iter <= 300:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
         # Update agents
         x = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, rational=rational)
@@ -351,6 +375,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
         rebates.append([rebate_list for rebate_list in r])
         prices.append(p)
         x_iter += 1
+
     if plotting:
         plt.subplot(2, 3, 1)
         for good_index in range(len(p)):
@@ -384,10 +409,68 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
         # Plot for subplot 6
 
         plt.show()
-    print(f"Error: {[error[i][-1] for i in range(len(error))]}")
-    print(f"Overdemand: {overdemand[-1][:]}")
-    return x, p, r, overdemand
+    
+
+    last_prices = np.array(prices[-1])
+    final_prices = last_prices[last_prices > 0]
+
+    # print(f"Error: {[error[i][-1] for i in range(len(error))]}")
+    # print(f"Overdemand: {overdemand[-1][:]}")
+    return x, final_prices, r, overdemand, agent_constraints
+
+def load_json(file=None):
+    """
+    Load a case file for a fisher market test case from a JSON file.
+    """
+    if file is None:
+        return None
+    assert Path(file).is_file(), f"File {file} does not exist."
+
+    # Load the JSON file
+    with open(file, "r", encoding="utf-8") as f:
+        data = json.load(f)
+        print(f"Opened file {file}")
+    return data
 
 
 if __name__ == "__main__":
-    pass
+    file_path = "test_cases/case0_fisher.json"
+    data = load_json(file_path)
+    flights = data["flights"]
+    vertiports = data["vertiports"]
+    timing_info = data["timing_info"]
+
+    # Create vertiport graph and add starting aircraft positions
+    vertiport_usage = VertiportStatus(vertiports, data["routes"], timing_info)
+
+    # Build Fisher Graph
+    market_graph = build_graph(vertiport_usage, timing_info)
+
+    # Construct market
+    agent_information, market_information, bookkeeping = construct_market(market_graph, flights, timing_info)
+
+    # Run market
+    goods_list, times_list = bookkeeping
+    num_goods = len(goods_list)
+    num_agents = len(flights)
+    u, agent_constraints, agent_goods_lists = agent_information
+    y = np.random.rand(num_agents, num_goods)*10
+    p = np.random.rand(num_goods)*10
+    r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
+    x, prices, r, overdemand, agent_constraints = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
+    
+    # test_run_market(plotting=True, rational=False, homogeneous=True)
+    output_file = "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/output.txt"
+    with open(output_file, "w") as f:
+        f.write("Agent allocations:\n")
+        f.write(str(x))
+        f.write("\n\n")
+        f.write("Prices:\n")
+        f.write(str(prices))
+        f.write("\n\n")
+        f.write("Agent constraints:\n")
+        f.write(str(agent_constraints))
+    # For testing purposes
+    print("Output written to", output_file)
+
+

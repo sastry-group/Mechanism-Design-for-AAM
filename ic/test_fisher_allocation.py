@@ -28,7 +28,7 @@ def test_update_basic_agents():
     y = np.random.rand(num_agents, num_goods)*10
     beta = 1
     x = update_basic_agents(w, u, p, r, constraints, y, beta)
-    print(x)
+    # print(x)
 
 
 def test_update_market():
@@ -41,7 +41,7 @@ def test_update_market():
     constraints = [(np.random.rand(constraints_per_agent[i], num_goods)*10, np.random.rand(constraints_per_agent[i])*10) for i in range(num_agents)]
     beta = 1
     _, y_new, p_new, r_new = update_market(x, (1, p, r), (s, beta), constraints)
-    print(y_new, p_new, r_new)
+    # print(y_new, p_new, r_new)
 
 
 def test_run_market(plotting=False, rational=False, homogeneous=False):
@@ -107,11 +107,15 @@ def test_run_market(plotting=False, rational=False, homogeneous=False):
     supply[-1] = 100
     beta = 1
     x, p, r, overdemand = run_basic_market((y, p, r), (u, constraints), (w, supply, beta), plotting=plotting, rational=rational)
-    print(f"Agent allocations: {x}")
+    # print(f"Agent allocations: {x}")
     # print(x, p, r)
 
 
 def test_construct_and_run_market(data):
+    """
+
+    (1) 
+    """
     flights = data["flights"]
     vertiports = data["vertiports"]
     timing_info = data["timing_info"]
@@ -133,7 +137,11 @@ def test_construct_and_run_market(data):
     y = np.random.rand(num_agents, num_goods)*10
     p = np.random.rand(num_goods)*10
     r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
-    x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
+    x, p, r, overdemand, agent_constraints = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
+
+    # Algorithm 2
+    # print('Output: ', x, p, r, overdemand)
+    return x,p, agent_constraints
 
 def load_json(file=None):
     """
@@ -155,5 +163,7 @@ if __name__ == "__main__":
     # assert Path(file_path).is_file(), f"File at {file_path} does not exist."
     # file_path = "test_cases/case0_fisher.json"
     # test_case_data = load_json(file_path)
-    # test_construct_and_run_market(test_case_data)
+    # x, p, agent_constraints = test_construct_and_run_market(test_case_data)
     test_run_market(plotting=True, rational=False, homogeneous=True)
+
+    
