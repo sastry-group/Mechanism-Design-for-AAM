@@ -94,3 +94,7 @@ ssd.obj
 *-checkpoint.py
 *-checkpoint.ipynb
 .ropeproject/config.py
+
+#testing files
+ic/output.txt
+ic/Picklerandomstate

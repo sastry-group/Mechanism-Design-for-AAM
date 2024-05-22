@@ -106,7 +106,7 @@ def test_run_market(plotting=False, rational=False, homogeneous=False):
     supply[2] = 10
     supply[-1] = 100
     beta = 1
-    x, p, r, overdemand = run_basic_market((y, p, r), (u, constraints), (w, supply, beta), plotting=plotting, rational=rational)
+    x, p, r, overdemand = run_basic_market((y, p, r), (u, constraints), (w, supply, beta), plotting=True, rational=rational)
     # print(f"Agent allocations: {x}")
     # print(x, p, r)
 

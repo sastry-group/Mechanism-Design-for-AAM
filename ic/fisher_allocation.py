@@ -5,6 +5,7 @@ import networkx as nx
 import time
 import json
 from VertiportStatus import VertiportStatus
+from sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended
 from pathlib import Path
 
 
@@ -340,7 +341,7 @@ def run_basic_market(initial_values, agent_settings, market_settings, plotting=F
     return x, p, r, overdemand
 
 
-def run_market(initial_values, agent_settings, market_settings, bookkeeping, plotting=False, rational=False):
+def run_market(initial_values, agent_settings, market_settings, bookkeeping, plotting=True, rational=False):
     """
     (4)
     """
@@ -416,7 +417,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
 
     # print(f"Error: {[error[i][-1] for i in range(len(error))]}")
     # print(f"Overdemand: {overdemand[-1][:]}")
-    return x, final_prices, r, overdemand, agent_constraints
+    return x, last_prices, r, overdemand, agent_constraints
 
 def load_json(file=None):
     """
@@ -459,6 +460,16 @@ if __name__ == "__main__":
     r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
     x, prices, r, overdemand, agent_constraints = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
     
+    # sampling
+    # frac_allocations = np.array()
+    edge_information = build_edge_information(goods_list)
+    for i in range(x.shape[0]):
+        frac_allocations = x[i][:-1]
+        extended_graph = agent_probability_graph_extended(edge_information, frac_allocations)
+        sampled_path_extended, sampled_edges = sample_path(extended_graph, edge_information['e1'][0])
+        print("Sampled Path:", sampled_path_extended)
+        print("Sampled Edges:", sampled_edges)
+        plot_sample_path_extended(extended_graph, sampled_path_extended)
     # test_run_market(plotting=True, rational=False, homogeneous=True)
     output_file = "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/output.txt"
     with open(output_file, "w") as f:

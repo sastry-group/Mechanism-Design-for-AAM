@@ -4,12 +4,6 @@ import random
 import networkx as nx
 import re
 
-## Create a graph sample to turn into an A matrix
-# setp a simple guribo optrmization that takes a set of prices A, b pair and calculates an optimal allocatoin for 1 agent.
-# integer program
-
-ALPHA = 0.1
-
 def agent_probability_graph(edge_information, x):
 
 
@@ -74,15 +68,18 @@ def agent_probability_graph_extended(edge_information, x):
     G = nx.DiGraph()
 
     # Add edges with weights and labels
-    for key, edge in edge_information.items():
+    for (key, edge), weight in zip(edge_information.items(), x):
+        if weight == 0:
+            continue
         origin_node, destination_node = edge
-        G.add_edge(origin_node, destination_node, weight=x[list(edge_information.keys()).index(key)], label=key)
+        # G.add_edge(origin_node, destination_node, weight=x[list(edge_information.keys()).index(key)], label=key)
+        G.add_edge(origin_node, destination_node, weight=weight, label=key)
 
     # Create custom layout and plot the graph
     pos = custom_layout(G)
     plt.figure(figsize=(12, 8))
     nx.draw(G, pos, with_labels=True, node_size=700, node_color='lightblue', edge_color='#909090', font_size=9)
-    edge_labels = {(u, v): f"{d['label']} ({d['weight']:.2f})" for u, v, d in G.edges(data=True)}
+    edge_labels = {(u, v): f"{d['label']} ({d['weight']:.4f})" for u, v, d in G.edges(data=True)}
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, label_pos=0.5, font_color='red')
     plt.title("Time Extended Decision Tree Graph with Branching and Constraints")
     plt.show()
@@ -167,34 +164,43 @@ def plot_sample_path_extended(G, sampled_path):
     return H
 
 
+def build_edge_information(goods_list):
+    """
+    Build edge information from goods list.
+    The last good is the default good. 
+    """
+    edge_information = {}
+    for i, goods in enumerate(goods_list[:-1], start=1):
+        edge_information[f"e{i}"] = (goods[0], goods[1])
+    return edge_information
 
+# edge_information = {
+#     'e1': ('V001_1', 'V001_2'),
+#     'e2': ('V001_1', 'V002_2'),
+#     'e3': ('V001_2', 'V001_3'),
+#     'e4': ('V001_2', 'V002_3'),
+#     'e5': ('V002_2', 'V002_3')
+# }
 
-edge_information = {
-    'e1': ('V001_1', 'V001_2'),
-    'e2': ('V001_1', 'V002_2'),
-    'e3': ('V001_2', 'V001_3'),
-    'e4': ('V001_2', 'V002_3'),
-    'e5': ('V002_2', 'V002_3')
-}
+# edge_information_extended = {
+#     'e1': ('V001_1', 'V001_2'),
+#     'e2': ('V001_1_dep', 'V002_2_arr'),
+#     'e3': ('V001_2', 'V001_2_dep'),
+#     'e4': ('V002_2_arr', 'V002_2'),
+#     'e5': ('V002_2', 'V002_2_dep'),
+#     'e6': ('V001_2', 'V001_3'),
+#     'e7': ('V001_2_dep', 'V002_3_arr'),
+#     'e8': ('V002_2_dep', 'V002_3_arr')
+# }
 
-edge_information_extended = {
-    'e1': ('V001_1', 'V001_2'),
-    'e2': ('V001_dep_1', 'V002_arr_2'),
-    'e3': ('V001_2', 'V001_dep_2'),
-    'e4': ('V002_arr_2', 'V002_2'),
-    'e5': ('V002_2', 'V002_dep_2'),
-    'e6': ('V001_2', 'V001_3'),
-    'e7': ('V001_dep_2', 'V002_arr_3'),
-    'e8': ('V002_dep_2', 'V002_arr_3')
-}
+# # constrain, flow matrix
+# A = np.array([[1, 1, 0, 0, 0],
+#               [1, 0, -1, -1,0],
+#               [0, 1, 0, 0, -1],
+#               [0, 0, 1, 1, 1]])
+# # x = np.array([0.3, 0.7, 0.1, 0.2, 0.7])  # probabilities or weights of edges
+# x2 = np.array([0.3, 0.7, 0.2, 0.7, 0.7, 0.1,0.2,0.7])  # probabilities or weights of edges
 
-# constrain, flow matrix
-A = np.array([[1, 1, 0, 0, 0],
-              [1, 0, -1, -1,0],
-              [0, 1, 0, 0, -1],
-              [0, 0, 1, 1, 1]])
-x = np.array([0.3, 0.7, 0.1, 0.2, 0.7])  # probabilities or weights of edges
-x2 = np.array([0.3, 0.7, 0.2, 0.7, 0.7, 0.1,0.2,0.7])  # probabilities or weights of edges
 
 ## Simple graph
 # start_node = edge_information['e1'][0]
@@ -203,10 +209,10 @@ x2 = np.array([0.3, 0.7, 0.2, 0.7, 0.7, 0.1,0.2,0.7])  # probabilities or weight
 # print("Sampled Path:", sampled_path)
 # plot_sample_path(graph, sampled_path)
 
-## Extended graph
-extended_graph = agent_probability_graph_extended(edge_information_extended, x2)
-sampled_path_extended, sampled_edges = sample_path(extended_graph, edge_information_extended['e1'][0])
-print("Sampled Path:", sampled_path_extended)
-print("Sampled Edges:", sampled_edges)
-plot_sample_path_extended(extended_graph, sampled_path_extended)
+# # Extended graph
+# extended_graph = agent_probability_graph_extended(edge_information_extended, x2)
+# sampled_path_extended, sampled_edges = sample_path(extended_graph, edge_information_extended['e1'][0])
+# print("Sampled Path:", sampled_path_extended)
+# print("Sampled Edges:", sampled_edges)
+# plot_sample_path_extended(extended_graph, sampled_path_extended)
 
