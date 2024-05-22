@@ -471,17 +471,20 @@ if __name__ == "__main__":
         print("Sampled Edges:", sampled_edges)
         plot_sample_path_extended(extended_graph, sampled_path_extended)
     # test_run_market(plotting=True, rational=False, homogeneous=True)
-    output_file = "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/output.txt"
-    with open(output_file, "w") as f:
-        f.write("Agent allocations:\n")
-        f.write(str(x))
-        f.write("\n\n")
-        f.write("Prices:\n")
-        f.write(str(prices))
-        f.write("\n\n")
-        f.write("Agent constraints:\n")
-        f.write(str(agent_constraints))
-    # For testing purposes
-    print("Output written to", output_file)
+
+
+    # testing temp, remove later
+    # output_file = "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/output.txt"
+    # with open(output_file, "w") as f:
+    #     f.write("Agent allocations:\n")
+    #     f.write(str(x))
+    #     f.write("\n\n")
+    #     f.write("Prices:\n")
+    #     f.write(str(prices))
+    #     f.write("\n\n")
+    #     f.write("Agent constraints:\n")
+    #     f.write(str(agent_constraints))
+    # # For testing purposes
+    # print("Output written to", output_file)
 
 
