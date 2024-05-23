@@ -6,6 +6,7 @@ import time
 import json
 from VertiportStatus import VertiportStatus
 from sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended
+from fisher_int_optimization import int_optimization
 from pathlib import Path
 
 
@@ -17,6 +18,7 @@ def build_graph(vertiport_status, timing_info):
     (2)
     """
     print("Building graph...")
+    print(output_folder)
     start_time_graph_build = time.time()
     max_time, time_step = timing_info["end_time"], timing_info["time_step"]
 
@@ -409,11 +411,12 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
         plt.subplot(2, 3, 6)
         # Plot for subplot 6
 
-        plt.show()
+        # plt.show()
+        plt.savefig(f"{output_folder}/market_plot.png")
     
 
     last_prices = np.array(prices[-1])
-    final_prices = last_prices[last_prices > 0]
+    # final_prices = last_prices[last_prices > 0]
 
     # print(f"Error: {[error[i][-1] for i in range(len(error))]}")
     # print(f"Overdemand: {overdemand[-1][:]}")
@@ -435,8 +438,13 @@ def load_json(file=None):
 
 
 if __name__ == "__main__":
-    file_path = "test_cases/case0_fisher.json"
+    file_path = "test_cases/case2_fisher.json"
+    file_name = file_path.split("/")[-1].split(".")[0]
     data = load_json(file_path)
+    output_folder = f"ic/results/{file_name}"
+    Path(output_folder).mkdir(parents=True, exist_ok=True)
+
+
     flights = data["flights"]
     vertiports = data["vertiports"]
     timing_info = data["timing_info"]
@@ -460,31 +468,40 @@ if __name__ == "__main__":
     r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
     x, prices, r, overdemand, agent_constraints = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
     
-    # sampling
-    # frac_allocations = np.array()
+    # Sampling fractional edges
     edge_information = build_edge_information(goods_list)
+    int_allocations = np.zeros((num_agents, num_goods-1))
     for i in range(x.shape[0]):
         frac_allocations = x[i][:-1]
-        extended_graph = agent_probability_graph_extended(edge_information, frac_allocations)
-        sampled_path_extended, sampled_edges = sample_path(extended_graph, edge_information['e1'][0])
+        start_edge_index = np.nonzero(x[i])[0][0]
+        start_node = edge_information[f"e{start_edge_index+1}"][0]
+        extended_graph, agent_allocation = agent_probability_graph_extended(edge_information, frac_allocations, output_folder)
+        sampled_path_extended, sampled_edges, int_allocation = sample_path(extended_graph, start_node, agent_allocation)
         print("Sampled Path:", sampled_path_extended)
         print("Sampled Edges:", sampled_edges)
         plot_sample_path_extended(extended_graph, sampled_path_extended)
+        int_allocations[i,:] = int_allocation
+    print(int_allocations)
     # test_run_market(plotting=True, rational=False, homogeneous=True)
 
+    # IOP for contested goods
+    budget, capacity, _ = market_information
+    capacity = capacity[:-1]
+    print("Budget:", budget)
+    print("Capacity:", capacity)
+    print(agent_constraints)
+    new_allocations = int_optimization(int_allocation, capacity, budget, prices, u, agent_constraints)
+    # print(new_allocations)
 
     # testing temp, remove later
-    # output_file = "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/output.txt"
-    # with open(output_file, "w") as f:
-    #     f.write("Agent allocations:\n")
-    #     f.write(str(x))
-    #     f.write("\n\n")
-    #     f.write("Prices:\n")
-    #     f.write(str(prices))
-    #     f.write("\n\n")
-    #     f.write("Agent constraints:\n")
-    #     f.write(str(agent_constraints))
-    # # For testing purposes
-    # print("Output written to", output_file)
+    output_file = f"{output_folder}/output.txt"
+    with open(output_file, "w") as f:
+        f.write("new allocations:\n")
+        f.write(str(x))
+        f.write("\n\n")
+        f.write("Prices:\n")
+        f.write(str(prices))
+    # For testing purposes
+    print("Output written to", output_file)
 
 

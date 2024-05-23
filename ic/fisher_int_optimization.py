@@ -4,9 +4,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 import pandas as pd
+import time
 
 
-def int_optimization(x_agents, capacity, budget, prices, utility, A, b):
+def int_optimization(x_agents, capacity, budget, prices, utility, agents_constraints):
     """
     Function to solve an integer optimization problem
     Args:
@@ -21,8 +22,14 @@ def int_optimization(x_agents, capacity, budget, prices, utility, A, b):
     """
     
     # Checking contested allocations
+    start_time = time.time()
+    print("Checking contested allocations")
     contested_edges, agents_with_contested_allocations, contested_edges_col, contested_agent_allocations = contested_allocations(x_agents, capacity)
+    print(f"Time taken to check contested allocations: {time.time() - start_time}")
+
     if contested_edges:
+        print("Contested allocations found, running integer optimization algorithm")
+        start_time_int = time.time()
         ALPHA = 0.1
 
         # increasing the prices to contested edges
@@ -40,9 +47,9 @@ def int_optimization(x_agents, capacity, budget, prices, utility, A, b):
         new_market_b = []
         # constraints for the new market
         for index in agents_with_contested_allocations:
-            Aarray = A[index]
+            Aarray = agents_constraints[index][0]
             last_index = Aarray.shape[1] - 1
-            barray = b[index]
+            barray = agents_constraints[index][1]
             new_market_A.append(np.delete(Aarray, last_index, axis=1))
             new_market_b.append(barray)
    
@@ -85,6 +92,8 @@ def int_optimization(x_agents, capacity, budget, prices, utility, A, b):
 
         new_allocation = update_allocation(x_agents, contested_edges_col, xi_values, agents_with_contested_allocations)
         print_equilibrium_results(k, equilibrium_reached, prices, xi_values, demand)
+
+        print(f"Time taken to run integer optimization algorithm: {time.time() - start_time_int}")
         return new_allocation
         
     else:
@@ -261,4 +270,4 @@ A =[
 prices = np.array([0., 16.60415211, 0., 7.83724561, 0., 0., 16.97227583, 7.55527186])
 b = np.array([[1., 0., 0., 0., 0., 0.],[1., 0., 0., 0., 0., 0.],[1., 0., 0., 0., 0., 0.], [1., 0., 0., 0., 0., 0.], [1., 0., 0., 0., 0., 0.]])
 
-int_optimization(x_contested, capacity, budget, prices, utility, A, b)
+# int_optimization(x_contested, capacity, budget, prices, utility, A, b)
