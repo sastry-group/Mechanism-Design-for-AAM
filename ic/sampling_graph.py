@@ -131,7 +131,7 @@ def sample_path(G, start_node, agent_allocations):
     agent_allocations.update(allocation_updates)
     agent_allocations = list(agent_allocations.values())
 
-    print(f"Time to sample: {time.time() - start_time_sample:.2f}")
+    print(f"Time to sample: {time.time() - start_time_sample:.5f}")
 
     return path, edges, agent_allocations
 

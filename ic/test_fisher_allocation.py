@@ -141,7 +141,7 @@ def test_construct_and_run_market(data):
 
     # Algorithm 2
     # print('Output: ', x, p, r, overdemand)
-    return x,p, agent_constraints
+    return x,p, agent_constraints, u
 
 def load_json(file=None):
     """
@@ -161,9 +161,13 @@ def load_json(file=None):
 if __name__ == "__main__":
     # file_path = args.file
     # assert Path(file_path).is_file(), f"File at {file_path} does not exist."
-    # file_path = "test_cases/case0_fisher.json"
-    # test_case_data = load_json(file_path)
-    # x, p, agent_constraints = test_construct_and_run_market(test_case_data)
-    test_run_market(plotting=True, rational=False, homogeneous=True)
+    file_path = "test_cases/case0_fisher.json"
+    test_case_data = load_json(file_path)
+    x, p, agent_constraints, u = test_construct_and_run_market(test_case_data)
+    print("x: ", x)
+    print("p: ", p)
+    print("agent_constraints: ", agent_constraints)
+    print("u: ", u)
+    # test_run_market(plotting=True, rational=False, homogeneous=True)
 
     

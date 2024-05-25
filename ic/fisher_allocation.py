@@ -8,6 +8,7 @@ from VertiportStatus import VertiportStatus
 from sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended
 from fisher_int_optimization import int_optimization
 from pathlib import Path
+import math
 
 
 UPDATED_APPROACH = True
@@ -18,7 +19,6 @@ def build_graph(vertiport_status, timing_info):
     (2)
     """
     print("Building graph...")
-    print(output_folder)
     start_time_graph_build = time.time()
     max_time, time_step = timing_info["end_time"], timing_info["time_step"]
 
@@ -258,13 +258,15 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False):
     w_adj = max(w_adj, 0)
 
     # print(f"Adjusted budget: {w_adj}")
-
+    # optimizer check
     x_i = cp.Variable(num_goods)
     if rational:
+        start_time_update = time.time()
         regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.sum([cp.square(cp.maximum(A_i[t] @ x_i - b_i[t], 0)) for t in range(num_constraints)])
         lagrangians = - p.T @ x_i - cp.sum([r_i[t] * cp.maximum(A_i[t] @ x_i - b_i[t], 0) for t in range(num_constraints)])
         objective = cp.Maximize(u_i.T @ x_i + regularizers + lagrangians)
         cp_constraints = [x_i >= 0]
+        print(f"Time to compute regularizers and lagrangians: {time.time() - start_time_update}")
         # cp_constraints = [x_i >= 0, p.T @ x_i <= w_adj]
         # objective = cp.Maximize(u_i.T @ x_i)
         # cp_constraints = [x_i >= 0, p.T @ x_i <= w_adj, A_i @ x_i <= b_i]
@@ -343,7 +345,8 @@ def run_basic_market(initial_values, agent_settings, market_settings, plotting=F
     return x, p, r, overdemand
 
 
-def run_market(initial_values, agent_settings, market_settings, bookkeeping, plotting=True, rational=False):
+
+def run_market(initial_values, agent_settings, market_settings, bookkeeping, plotting=True, rational=False, output_folder=False):
     """
     (4)
     """
@@ -357,6 +360,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
     rebates = []
     overdemand = []
     agent_allocations = []
+    market_clearing = []
     error = [] * len(agent_constraints)
     
     # Algorithm 1
@@ -365,6 +369,9 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
         x = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, rational=rational)
         agent_allocations.append(x)
         overdemand.append(np.sum(x, axis=0) - supply.flatten())
+        clipped_excess_demand = np.where(p > 0, overdemand, np.maximum(0, overdemand))
+        market_clearning_error = np.linalg.norm(clipped_excess_demand, ord=2)
+        market_clearing.append(market_clearning_error)
         for agent_index in range(len(agent_constraints)):
             agent_x = np.array([x[agent_index, goods_list.index(good)] for good in agent_goods_lists[agent_index]])
             constraint_error = agent_constraints[agent_index][0] @ agent_x - agent_constraints[agent_index][1]
@@ -386,6 +393,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
         plt.xlabel('x_iter')
         plt.ylabel('Prices')
         plt.title("Price evolution")
+        # plt.legend(p[-1], title="Fake Good")
+
 
         plt.subplot(2, 3, 2)
         plt.plot(range(1, x_iter+1), overdemand)
@@ -409,10 +418,12 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
         plt.title("Agent allocation evolution")
 
         plt.subplot(2, 3, 6)
-        # Plot for subplot 6
-
+        plt.plot(range(1, x_iter+1), market_clearing)
+        plt.xlabel('x_iter')
+        plt.title("Market Clearing Error")
         # plt.show()
-        plt.savefig(f"{output_folder}/market_plot.png")
+        if output_folder:
+            plt.savefig(f"{output_folder}/market_plot.png")
     
 
     last_prices = np.array(prices[-1])
@@ -438,7 +449,7 @@ def load_json(file=None):
 
 
 if __name__ == "__main__":
-    file_path = "test_cases/case2_fisher.json"
+    file_path = "test_cases/case0_fisher.json"
     file_name = file_path.split("/")[-1].split(".")[0]
     data = load_json(file_path)
     output_folder = f"ic/results/{file_name}"
@@ -467,7 +478,11 @@ if __name__ == "__main__":
     p = np.random.rand(num_goods)*10
     r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
     x, prices, r, overdemand, agent_constraints = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
-    
+
+    # u_1 = np.array([2, 6, 2, 4, 2, 0, 0, 0] * math.ceil(num_agents/2)).reshape((math.ceil(num_agents/2), num_goods))
+    # u_2 = np.array([0, 0, 1, 0, 1, 1, 6, 4] * math.floor(num_agents/2)).reshape((math.floor(num_agents/2), num_goods))
+    # u = np.concatenate((u_1, u_2), axis=0).reshape(num_agents, num_goods) + np.random.rand(num_agents, num_goods)*0.2
+    # print(x, prices, r, overdemand, agent_constraints)
     # Sampling fractional edges
     edge_information = build_edge_information(goods_list)
     int_allocations = np.zeros((num_agents, num_goods-1))
@@ -479,19 +494,19 @@ if __name__ == "__main__":
         sampled_path_extended, sampled_edges, int_allocation = sample_path(extended_graph, start_node, agent_allocation)
         print("Sampled Path:", sampled_path_extended)
         print("Sampled Edges:", sampled_edges)
-        plot_sample_path_extended(extended_graph, sampled_path_extended)
-        int_allocations[i,:] = int_allocation
-    print(int_allocations)
+        plot_sample_path_extended(extended_graph, sampled_path_extended, output_folder)
+        int_allocations[i] = int_allocation
     # test_run_market(plotting=True, rational=False, homogeneous=True)
 
+    print(int_allocations)
     # IOP for contested goods
     budget, capacity, _ = market_information
     capacity = capacity[:-1]
     print("Budget:", budget)
     print("Capacity:", capacity)
-    print(agent_constraints)
-    new_allocations = int_optimization(int_allocation, capacity, budget, prices, u, agent_constraints)
-    # print(new_allocations)
+    # print(agent_constraints)
+    new_allocations = int_optimization(int_allocations, capacity, budget, prices, u, agent_constraints)
+    print(new_allocations)
 
     # testing temp, remove later
     output_file = f"{output_folder}/output.txt"

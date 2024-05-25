@@ -36,50 +36,56 @@ def int_optimization(x_agents, capacity, budget, prices, utility, agents_constra
         for contested_edge in contested_edges:
             prices[contested_edge] = prices[contested_edge] + ALPHA
 
-        # creating a new market
+        # creating a new market - consider changing this to np.arrays for efficiency
         new_market_capacity = capacity - np.sum(x_agents, axis=0)
         new_market_capacity[contested_edges] = capacity[contested_edges] 
-        new_market_budget = budget[agents_with_contested_allocations]
-        new_market_budget = new_market_budget.tolist()
-        new_market_utility = utility[agents_with_contested_allocations]
-
         new_market_A = []
         new_market_b = []
-        # constraints for the new market
-        for index in agents_with_contested_allocations:
-            Aarray = agents_constraints[index][0]
-            last_index = Aarray.shape[1] - 1
-            barray = agents_constraints[index][1]
-            new_market_A.append(np.delete(Aarray, last_index, axis=1))
+        new_market_budget = []
+        new_market_utility = []
+        prices = prices[:-1]
+        for agent in agents_with_contested_allocations:
+            # new_market_budget = budget[agent]
+            new_market_budget.append(budget[agent])
+            # new_market_budget = new_market_budget.tolist()
+            new_market_utility.append(utility[agent])
+            Aarray = agents_constraints[agent][0]
+            new_market_A.append(Aarray[:,:-1])
+            barray = agents_constraints[agent][1]
             new_market_b.append(barray)
+
+        # # constraints for the new market
+        # for index in agents_with_contested_allocations:
+        #     Aarray = agents_constraints[index][0]
+        #     last_index = Aarray.shape[1] - 1
+        #     barray = agents_constraints[index][1]
+        #     new_market_A.append(np.delete(Aarray, last_index, axis=1))
+        #     new_market_b.append(barray)
    
 
-        Aprime = np.array(new_market_A)
-        bprime = np.array(new_market_b)
+        # Aprime = np.array(new_market_A)
+        # bprime = np.array(new_market_b)
 
         print("Starting information for new market:")
         print(f"New capacity: {new_market_capacity}") 
         print("Prices: ", prices)
         print("Utility: ", new_market_utility)
-        # print("A: ", Aprime)
-        # print("b: ", bprime)
         print("Budget: ", new_market_budget)
         print("Capacity: ", new_market_capacity)
-        print("Utility: ", new_market_utility)
         print("Agents with contested allocations: ", agents_with_contested_allocations)
 
         # Setting up for optimization
         k = 0
         equilibrium_reached = False
         contested_agent_allocations = contested_agent_allocations.tolist()
-        new_market_utility = new_market_utility.tolist()
+        # new_market_utility = new_market_utility.tolist()
         n_agents = len(agents_with_contested_allocations)
         xi_values = np.zeros((n_agents, len(prices)))
         while not equilibrium_reached:
 
             for i in range(n_agents):
                 # print(len(contested_agent_allocations[i]), new_market_utility,new_market_budget[i], Aprime[i], bprime[i])
-                xi_values[i,:] = find_optimal_xi(len(contested_agent_allocations[i]), new_market_utility[i], Aprime[i], bprime[i], prices, new_market_budget[i])
+                xi_values[i,:] = find_optimal_xi(len(contested_agent_allocations[i]), new_market_utility[i], new_market_A[i], new_market_b[i], prices, new_market_budget[i])
                
             
             demand = np.sum(xi_values, axis=0)
@@ -174,100 +180,104 @@ def contested_allocations(integer_allocations, capacity):
     """
 
     contested_edges = []
-    contested_edges_col = np.array([])
+    # contested_edges_col = np.array([])
+    contested_edges_col = []
     agents_with_contested_allocations = []
     for i in range(len(capacity)):
-        if np.sum(integer_allocations[:, i]) > capacity[i]:
+        if np.sum(integer_allocations[:,i]) > capacity[i]:
             agents_index = np.where(integer_allocations[:, i] > 0)[0]
-            contested_edges_col = np.append(contested_edges_col, integer_allocations[:,i], axis=0)
+            contested_edges_col.append(integer_allocations[:,i])
             contested_edges.append(i)
             agents_with_contested_allocations.append([idx for idx in agents_index])
 
-    allocations = []
-    for agent in agents_with_contested_allocations:
-        allocation = integer_allocations[agent]
-        allocations.append(allocation)
-    
-    contested_agent_allocations = np.vstack(allocations)
+    if agents_with_contested_allocations == []:
+        return [], [], [], []
+    else:
+        allocations = []
+        for agent in agents_with_contested_allocations:
+            allocation = integer_allocations[agent]
+            allocations.append(allocation)
+        
+        contested_agent_allocations = np.vstack(allocations)
 
-    return contested_edges, agents_with_contested_allocations[0], contested_edges_col, contested_agent_allocations
+        return contested_edges, agents_with_contested_allocations[0], contested_edges_col, contested_agent_allocations
 
 
 
 # Test
-num_agents, num_goods, constraints_per_agent = 5, 8, [6] * 5
+# num_agents, num_goods, constraints_per_agent = 5, 8, [6] * 5
 
-u_1 = np.array([2, 6, 2, 4, 2, 0, 0, 0] * math.ceil(num_agents/2)).reshape((math.ceil(num_agents/2), num_goods))
-u_2 = np.array([0, 0, 1, 0, 1, 1, 6, 4] * math.floor(num_agents/2)).reshape((math.floor(num_agents/2), num_goods))
-utility = np.concatenate((u_1, u_2), axis=0).reshape(num_agents, num_goods) + np.random.rand(num_agents, num_goods)*0.2
-# utiliy = np.array([[2.10628590e+00, 6.13463177e+00, 2.12402939e+00, 4.06331267e+00,
-#   2.19681180e+00 ,2.04596833e-03, 6.15723078e-02, 3.08863481e-02],
-#  [2.16271364e+00, 6.03811631e+00, 2.00095090e+00, 4.19687028e+00,
-#   2.17477883e+00, 2.14251137e-02, 1.90627363e-01, 7.58981569e-02],
-#  [2.04961097e+00, 6.12345572e+00, 2.04791694e+00, 4.05964121e+00,
-#   2.11196920e+00, 6.03082793e-02, 1.24299362e-02, 8.59124297e-02],
-#  [1.18106818e-01 ,1.22718131e-01, 1.08330508e+00, 1.12469963e-01,
-#   1.09494796e+00 ,1.08835093e+00, 6.13612516e+00, 4.04153363e+00],
-#  [9.38598097e-02 ,1.36914154e-01, 1.01101805e+00, 3.57687317e-02,
-#   1.12010625e+00 ,1.07778423e+00, 6.06547205e+00, 4.03022307e+00]])
-# print(utility)
-x_agents = np.array([[1.00397543e+00,4.80360433e-07,1.92159788e-06,1.79412229e-06,
-    1.00599048e+00,2.49121963e-07,6.26215796e-09, 2.42991058e-08],
- [1.00411052e+00 ,1.21665341e-07 ,1.80407082e-03, 1.00637552e+00,
-    4.84328060e-07, 4.82682667e-07 ,7.56841742e-09 ,2.18305684e-08],
- [7.85322580e-08, 9.88166643e-01, 9.84427659e-01 ,1.86267598e-06,
-    1.30186140e-07,6.49328992e-07, 1.08405199e-08, 1.74791140e-08],
- [1.38309823e-06, 5.76908587e-09, 1.35556694e-08 ,1.13796523e-08,
-    4.79966863e-05 ,1.00276772e+00, 3.71215693e-06 ,1.00482195e+00],
- [3.58705716e-06, 6.56599609e-09 ,1.11557250e-08, 9.46150329e-09,
-    1.00542076e+00, 6.86702827e-08, 1.00451420e+00, 1.85567648e-03]])
+# u_1 = np.array([2, 6, 2, 4, 2, 0, 0, 0] * math.ceil(num_agents/2)).reshape((math.ceil(num_agents/2), num_goods))
+# u_2 = np.array([0, 0, 1, 0, 1, 1, 6, 4] * math.floor(num_agents/2)).reshape((math.floor(num_agents/2), num_goods))
+# utility = np.concatenate((u_1, u_2), axis=0).reshape(num_agents, num_goods) + np.random.rand(num_agents, num_goods)*0.2
+# # utiliy = np.array([[2.10628590e+00, 6.13463177e+00, 2.12402939e+00, 4.06331267e+00,
+# #   2.19681180e+00 ,2.04596833e-03, 6.15723078e-02, 3.08863481e-02],
+# #  [2.16271364e+00, 6.03811631e+00, 2.00095090e+00, 4.19687028e+00,
+# #   2.17477883e+00, 2.14251137e-02, 1.90627363e-01, 7.58981569e-02],
+# #  [2.04961097e+00, 6.12345572e+00, 2.04791694e+00, 4.05964121e+00,
+# #   2.11196920e+00, 6.03082793e-02, 1.24299362e-02, 8.59124297e-02],
+# #  [1.18106818e-01 ,1.22718131e-01, 1.08330508e+00, 1.12469963e-01,
+# #   1.09494796e+00 ,1.08835093e+00, 6.13612516e+00, 4.04153363e+00],
+# #  [9.38598097e-02 ,1.36914154e-01, 1.01101805e+00, 3.57687317e-02,
+# #   1.12010625e+00 ,1.07778423e+00, 6.06547205e+00, 4.03022307e+00]])
+# # print(utility)
+# x_agents = np.array([[1.00397543e+00,4.80360433e-07,1.92159788e-06,1.79412229e-06,
+#     1.00599048e+00,2.49121963e-07,6.26215796e-09, 2.42991058e-08],
+#  [1.00411052e+00 ,1.21665341e-07 ,1.80407082e-03, 1.00637552e+00,
+#     4.84328060e-07, 4.82682667e-07 ,7.56841742e-09 ,2.18305684e-08],
+#  [7.85322580e-08, 9.88166643e-01, 9.84427659e-01 ,1.86267598e-06,
+#     1.30186140e-07,6.49328992e-07, 1.08405199e-08, 1.74791140e-08],
+#  [1.38309823e-06, 5.76908587e-09, 1.35556694e-08 ,1.13796523e-08,
+#     4.79966863e-05 ,1.00276772e+00, 3.71215693e-06 ,1.00482195e+00],
+#  [3.58705716e-06, 6.56599609e-09 ,1.11557250e-08, 9.46150329e-09,
+#     1.00542076e+00, 6.86702827e-08, 1.00451420e+00, 1.85567648e-03]])
 
-x_agents_rounded = np.round(x_agents, 1)
+# x_agents_rounded = np.round(x_agents, 1)
 
-x_contested  = np.array([[1., 0., 0., 0., 1., 0., 0., 0.],
- [1. ,0. ,0., 1., 0., 0., 0., 0.],
- [1., 0., 0., 1., 0., 0., 0., 0.],
- [0., 0., 0., 0., 0., 1., 0., 1.],
- [0., 0., 0., 0., 1., 0., 1., 0.]])
-# print(x_agents_rounded)
-capacity = np.array([10 ,  1.,  10.  , 1. , 10. , 10. ,  1.  , 1.])
-budget = np.ones(5)*100 + np.random.rand(5)*10 - 5
-# A = np.array([[1, 1, 0, 0, 0, 0, 0, 0, 0], [1, 0, 0, -1, -1, 0, 0, 0, 0], [0, 1, -1, 0, 0, 0, 0, 0, 0], \
-#                 [0, 0, 0, 0, 0, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 0, 0, 0, 1, 0], \
-#                 [0, 0, 0, 0, 0, 1, 1, 0, 0], [0, 0, -1, 0, 0, 1, 0, -1, 0], [0, 0, 0, 0, -1, 0, 1, 0, 0], \
-#                 [1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0, 0, 0, 0]])
-A =[
-    np.array([[1, 1, 0, 0, 0, 0, 0, 0, 0],
-               [1, 0, 0, -1, -1, 0, 0, 0, 0],
-               [0, 1, -1, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 1, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 1, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 1, 0]]), 
-    np.array([[1, 1, 0, 0, 0, 0, 0, 0, 0],
-               [1, 0, 0, -1, -1, 0, 0, 0, 0],
-               [0, 1, -1, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 1, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 1, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 1, 0]]), 
-    np.array([[1, 1, 0, 0, 0, 0, 0, 0, 0],
-               [1, 0, 0, -1, -1, 0, 0, 0, 0],
-               [0, 1, -1, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 0, 0, 1, 0, 0, 0],
-               [0, 0, 0, 0, 0, 0, 1, 0, 0],
-               [0, 0, 0, 0, 0, 0, 0, 1, 0]]), 
-    np.array([[0, 0, 0, 0, 0, 1, 1, 0, 0],
-               [0, 0, -1, 0, 0, 1, 0, -1, 0],
-               [0, 0, 0, 0, -1, 0, 1, 0, 0],
-               [1, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 1, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 1, 0, 0, 0, 0, 0]]),
-    np.array([[0, 0, 0, 0, 0, 1, 1, 0, 0],
-               [0, 0, -1, 0, 0, 1, 0, -1, 0],
-               [0, 0, 0, 0, -1, 0, 1, 0, 0],
-               [1, 0, 0, 0, 0, 0, 0, 0, 0],
-               [0, 1, 0, 0, 0, 0, 0, 0, 0],
-               [0, 0, 0, 1, 0, 0, 0, 0, 0]])]
-prices = np.array([0., 16.60415211, 0., 7.83724561, 0., 0., 16.97227583, 7.55527186])
-b = np.array([[1., 0., 0., 0., 0., 0.],[1., 0., 0., 0., 0., 0.],[1., 0., 0., 0., 0., 0.], [1., 0., 0., 0., 0., 0.], [1., 0., 0., 0., 0., 0.]])
+# x_contested  = np.array([[1., 0., 0., 0., 1., 0., 0., 0.],
+#  [1. ,0. ,0., 1., 0., 0., 0., 0.],
+#  [1., 0., 0., 1., 0., 0., 0., 0.],
+#  [0., 0., 0., 0., 0., 1., 0., 1.],
+#  [0., 0., 0., 0., 1., 0., 1., 0.]])
+# # print(x_agents_rounded)
+# capacity = np.array([10 ,  1.,  10.  , 1. , 10. , 10. ,  1.  , 1.])
+# budget = np.ones(5)*100 + np.random.rand(5)*10 - 5
+# # A = np.array([[1, 1, 0, 0, 0, 0, 0, 0, 0], [1, 0, 0, -1, -1, 0, 0, 0, 0], [0, 1, -1, 0, 0, 0, 0, 0, 0], \
+# #                 [0, 0, 0, 0, 0, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 0, 0, 0, 1, 0], \
+# #                 [0, 0, 0, 0, 0, 1, 1, 0, 0], [0, 0, -1, 0, 0, 1, 0, -1, 0], [0, 0, 0, 0, -1, 0, 1, 0, 0], \
+# #                 [1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0, 0, 0, 0]])
+# A =[
+#     np.array([[1, 1, 0, 0, 0, 0, 0, 0, 0],
+#                [1, 0, 0, -1, -1, 0, 0, 0, 0],
+#                [0, 1, -1, 0, 0, 0, 0, 0, 0],
+#                [0, 0, 0, 0, 0, 1, 0, 0, 0],
+#                [0, 0, 0, 0, 0, 0, 1, 0, 0],
+#                [0, 0, 0, 0, 0, 0, 0, 1, 0]]), 
+#     np.array([[1, 1, 0, 0, 0, 0, 0, 0, 0],
+#                [1, 0, 0, -1, -1, 0, 0, 0, 0],
+#                [0, 1, -1, 0, 0, 0, 0, 0, 0],
+#                [0, 0, 0, 0, 0, 1, 0, 0, 0],
+#                [0, 0, 0, 0, 0, 0, 1, 0, 0],
+#                [0, 0, 0, 0, 0, 0, 0, 1, 0]]), 
+#     np.array([[1, 1, 0, 0, 0, 0, 0, 0, 0],
+#                [1, 0, 0, -1, -1, 0, 0, 0, 0],
+#                [0, 1, -1, 0, 0, 0, 0, 0, 0],
+#                [0, 0, 0, 0, 0, 1, 0, 0, 0],
+#                [0, 0, 0, 0, 0, 0, 1, 0, 0],
+#                [0, 0, 0, 0, 0, 0, 0, 1, 0]]), 
+#     np.array([[0, 0, 0, 0, 0, 1, 1, 0, 0],
+#                [0, 0, -1, 0, 0, 1, 0, -1, 0],
+#                [0, 0, 0, 0, -1, 0, 1, 0, 0],
+#                [1, 0, 0, 0, 0, 0, 0, 0, 0],
+#                [0, 1, 0, 0, 0, 0, 0, 0, 0],
+#                [0, 0, 0, 1, 0, 0, 0, 0, 0]]),
+#     np.array([[0, 0, 0, 0, 0, 1, 1, 0, 0],
+#                [0, 0, -1, 0, 0, 1, 0, -1, 0],
+#                [0, 0, 0, 0, -1, 0, 1, 0, 0],
+#                [1, 0, 0, 0, 0, 0, 0, 0, 0],
+#                [0, 1, 0, 0, 0, 0, 0, 0, 0],
+#                [0, 0, 0, 1, 0, 0, 0, 0, 0]])]
+# prices = np.array([0., 16.60415211, 0., 7.83724561, 0., 0., 16.97227583, 7.55527186])
+# b = np.array([[1., 0., 0., 0., 0., 0.],[1., 0., 0., 0., 0., 0.],[1., 0., 0., 0., 0., 0.], [1., 0., 0., 0., 0., 0.], [1., 0., 0., 0., 0., 0.]])
 
-# int_optimization(x_contested, capacity, budget, prices, utility, A, b)
+# # int_optimization(x_contested, capacity, budget, prices, utility, A, b)
