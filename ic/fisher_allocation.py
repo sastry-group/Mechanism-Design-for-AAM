@@ -5,7 +5,7 @@ import networkx as nx
 import time
 import json
 from VertiportStatus import VertiportStatus
-from sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended
+from sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, build_agent_edge_utilities
 from fisher_int_optimization import int_optimization
 from pathlib import Path
 import math
@@ -266,24 +266,30 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False):
         lagrangians = - p.T @ x_i - cp.sum([r_i[t] * cp.maximum(A_i[t] @ x_i - b_i[t], 0) for t in range(num_constraints)])
         objective = cp.Maximize(u_i.T @ x_i + regularizers + lagrangians)
         cp_constraints = [x_i >= 0]
-        print(f"Time to compute regularizers and lagrangians: {time.time() - start_time_update}")
+        print(f"1 Time to compute regularizers and lagrangians: {time.time() - start_time_update}")
         # cp_constraints = [x_i >= 0, p.T @ x_i <= w_adj]
         # objective = cp.Maximize(u_i.T @ x_i)
         # cp_constraints = [x_i >= 0, p.T @ x_i <= w_adj, A_i @ x_i <= b_i]
     elif UPDATED_APPROACH:
+        start_time_update = time.time()
         regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.sum([cp.square(A_i[t] @ x_i - b_i[t]) for t in range(num_constraints)])
         lagrangians = - p.T @ x_i - cp.sum([r_i[t] * (A_i[t] @ x_i - b_i[t]) for t in range(num_constraints)])
         nominal_objective = w_adj * cp.log(u_i.T @ x_i)
         objective = cp.Maximize(nominal_objective + lagrangians + regularizers)
         cp_constraints = [x_i >= 0]
+        print(f"2 Time to compute regularizers and lagrangians: {time.time() - start_time_update}")
     else:
+        start_time_update = time.time()
         regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.sum([cp.square(cp.maximum(A_i[t] @ x_i - b_i[t], 0)) for t in range(num_constraints)])
         lagrangians = - p.T @ x_i - cp.sum([r_i[t] * cp.maximum(A_i[t] @ x_i - b_i[t], 0) for t in range(num_constraints)])
         nominal_objective = w_adj * cp.log(u_i.T @ x_i)
         objective = cp.Maximize(nominal_objective + lagrangians + regularizers)
         cp_constraints = [x_i >= 0]
+        print(f"3 Time to compute regularizers and lagrangians: {time.time() - start_time_update}")
+    check_time = time.time()
     problem = cp.Problem(objective, cp_constraints)
     problem.solve(solver=cp.CLARABEL)
+    print(f"Solvers time: {time.time() - check_time}")
     return x_i.value
 
 
@@ -449,7 +455,7 @@ def load_json(file=None):
 
 
 if __name__ == "__main__":
-    file_path = "test_cases/case0_fisher.json"
+    file_path = "test_cases/case2_fisher.json"
     file_name = file_path.split("/")[-1].split(".")[0]
     data = load_json(file_path)
     output_folder = f"ic/results/{file_name}"
@@ -485,6 +491,8 @@ if __name__ == "__main__":
     # print(x, prices, r, overdemand, agent_constraints)
     # Sampling fractional edges
     edge_information = build_edge_information(goods_list)
+    all_agents_utilities = build_agent_edge_utilities(edge_information, agent_goods_lists, u)
+
     int_allocations = np.zeros((num_agents, num_goods-1))
     for i in range(x.shape[0]):
         frac_allocations = x[i][:-1]
@@ -505,17 +513,31 @@ if __name__ == "__main__":
     print("Budget:", budget)
     print("Capacity:", capacity)
     # print(agent_constraints)
-    new_allocations = int_optimization(int_allocations, capacity, budget, prices, u, agent_constraints)
+    new_allocations = int_optimization(int_allocations, capacity, budget, prices, all_agents_utilities, agent_constraints)
     print(new_allocations)
 
     # testing temp, remove later
     output_file = f"{output_folder}/output.txt"
     with open(output_file, "w") as f:
-        f.write("new allocations:\n")
-        f.write(str(x))
-        f.write("\n\n")
+        f.write("From Fisher Markets:\n")
+        f.write("Allocations:\n")
+        f.write(str(x))        
         f.write("Prices:\n")
         f.write(str(prices))
+        f.write("\n")
+        f.write("Constraints:\n")
+        f.write(str(agent_constraints))
+        f.write("\n------------------------------------------------")
+        f.write("Agent Allocation:\n")
+        f.write(str(agent_allocation))
+        f.write("\n")
+        f.write("Utilties:\n")
+        f.write(str(all_agents_utilities))
+        f.write("Int Allocation:\n")
+        f.write(str(int_allocations))
+        f.write("\n")
+        f.write("New Int Allocation:\n")
+        f.write(str(new_allocations))
     # For testing purposes
     print("Output written to", output_file)
 

@@ -186,12 +186,45 @@ def plot_sample_path_extended(G, sampled_path, output_folder=False):
 def build_edge_information(goods_list):
     """
     Build edge information from goods list.
-    The last good is the default good. 
+    The last good is the default good so it is removed
+    Outputs: a dictionary with all the labeled edges. This would a master list.
     """
     edge_information = {}
     for i, goods in enumerate(goods_list[:-1], start=1):
         edge_information[f"e{i}"] = (goods[0], goods[1])
     return edge_information
+
+
+
+def build_agent_edge_utilities(edge_information, agents_goods_list, utility_values):
+    """
+    Build a dictionary of edges with node tuples and utility values for each agent.
+    This creates utility values for agents goods mapped to the master list
+    """
+    # Initialize list to store the utilities for each agent
+    all_agents_utilities = []
+
+    # Iterate over each agent's goods list and utility values
+    for agent_goods, utilities in zip(agents_goods_list, utility_values):
+        # Create a set of agent's goods for quick lookup
+        agent_goods_set = set(agent_goods[:-1])  # Exclude the default good
+
+        # Initialize a list to store utility values in the order of edge_information
+        agent_utilities = []
+        utility_index = 0
+
+        # Populate the agent_utilities list according to the edge_information order
+        for nodes in edge_information.values():
+            if nodes in agent_goods_set:
+                agent_utilities.append(utilities[utility_index])
+                utility_index += 1
+            else:
+                agent_utilities.append(0)
+
+        # Append the agent's utility list to the list of all agents' utilities
+        all_agents_utilities.append(agent_utilities)
+
+    return all_agents_utilities
 
 # edge_information = {
 #     'e1': ('V001_1', 'V001_2'),
