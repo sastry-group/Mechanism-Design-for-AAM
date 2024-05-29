@@ -134,7 +134,7 @@ def update_basic_market(x, values_k, market_settings, constraints):
     
     # Update consumption
     y = cp.Variable((num_agents, num_goods))
-    objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 2)) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply, 2)))
+    objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply, 2)))
     # cp_constraints = [y >= 0]
     # problem = cp.Problem(objective, cp_constraints)
     problem = cp.Problem(objective)
@@ -170,7 +170,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
     
     # Update consumption
     y = cp.Variable((num_agents, num_goods))
-    objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 2)) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply, 2)))
+    objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply, 2)))
     # cp_constraints = [y >= 0]
     # problem = cp.Problem(objective, cp_constraints)
     problem = cp.Problem(objective)
