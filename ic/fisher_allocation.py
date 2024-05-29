@@ -12,6 +12,9 @@ import math
 
 
 UPDATED_APPROACH = True
+TOL_ERROR = 1e-2
+MAX_NUM_ITERATIONS = 100
+BETA = 10
 
 
 def build_graph(vertiport_status, timing_info):
@@ -131,7 +134,7 @@ def construct_market(market_graph, flights, timing_info):
 
         supply = np.ones(len(goods_list))
         supply[-1] = 100
-        beta = 10
+        beta = BETA
 
     print(f"Time to construct market: {time.time() - start_time_market_construct}")
     return (u, agent_constraints, agent_goods_lists), (w, supply, beta), (goods_list, times_list)
@@ -365,12 +368,12 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
     error = [] * len(agent_constraints)
     
     # Algorithm 1
-    TOL_ERROR = 1e-2
     tolerance = len(agent_settings[0]) * np.sqrt(len(supply)-1) * TOL_ERROR
-    market_clearning_error = 1000000
+    market_clearing_error = float('inf')
     x_iter = 0
     start_time_algorithm = time.time()
-    while x_iter <= 100:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
+
+    while x_iter <= 100:
         # Update agents
         x = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, rational=rational)
         agent_allocations.append(x)
@@ -378,8 +381,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
         x_ij = np.sum(x, axis=0)
         excess_demand = x_ij[:-1] - supply[:-1]
         clipped_excess_demand = np.where(p[:-1] > 0,excess_demand, np.maximum(0, excess_demand))
-        market_clearning_error = np.linalg.norm(clipped_excess_demand, ord=2)
-        market_clearing.append(market_clearning_error)
+        market_clearing_error = np.linalg.norm(clipped_excess_demand, ord=2)
+        market_clearing.append(market_clearing_error)
 
         for agent_index in range(len(agent_constraints)):
             agent_x = np.array([x[agent_index, goods_list.index(good)] for good in agent_goods_lists[agent_index]])
@@ -395,7 +398,11 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
         prices.append(p)
         x_iter += 1
         print("Iteration: ", x_iter)
-        print("Market Clearing Error: ", market_clearning_error)
+        print("Market Clearing Error: ", market_clearing_error)
+    
+        if market_clearing_error <= tolerance:
+            break
+
     print(f"Time to run algorithm: {time.time() - start_time_algorithm}")
 
     if plotting:
@@ -489,7 +496,8 @@ if __name__ == "__main__":
     y = np.random.rand(num_agents, num_goods)*10
     p = np.random.rand(num_goods)*10
     r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
-    x, prices, r, overdemand, agent_constraints = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
+    x, prices, r, overdemand, agent_constraints = run_market((y,p,r), agent_information, market_information, 
+                                                             bookkeeping, plotting=True, rational=False, output_folder=output_folder)
 
     # Sampling fractional edges
     edge_information = build_edge_information(goods_list)
