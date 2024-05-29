@@ -6,6 +6,7 @@ import time
 from multiprocessing import Pool
 
 UPDATED_APPROACH = True
+epsilon = 0.05
 
 
 def build_graph(vertiport_status, timing_info):
@@ -344,7 +345,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
     overdemand = []
     agent_allocations = []
     error = [] * len(agent_constraints)
-    while x_iter <= 100:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
+    while x_iter <= 300:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
         # Update agents
         x = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, rational=rational)
         agent_allocations.append(x)
@@ -419,16 +420,23 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, save_fi
     allocation = []
     for i, (flight_id, flight) in enumerate(flights.items()):
         origin_vertiport = flight["origin_vertiport_id"]
+        added_request = False
         for request_id, request in flight["requests"].items():
+            if request["request_departure_time"] == 0:
+                base_request_id = request_id
+                continue
             dep_time = request["request_departure_time"]
             arr_time = request["request_arrival_time"]
             destination_vertiport = request["destination_vertiport_id"]
             start_node, end_node = origin_vertiport + "_" + str(dep_time) + "_dep", destination_vertiport + "_" + str(arr_time) + "_arr"
             good = (start_node, end_node)
-            if x[i][goods_list.index(good)] >= 1 - np.epsilon:
+            if x[i][goods_list.index(good)] >= 1 - epsilon:
+                added_request = True
                 allocation.append((flight_id, request_id))
+        if not added_request:
+            allocation.append((flight_id, base_request_id))
 
-    return None, None
+    return allocation, None
 
 
 if __name__ == "__main__":
