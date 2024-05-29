@@ -226,6 +226,59 @@ def build_agent_edge_utilities(edge_information, agents_goods_list, utility_valu
 
     return all_agents_utilities
 
+def process_allocations(x, edge_information, agent_goods_lists):
+    """
+    Process the allocation matrix to output agent-specific goods allocations
+    and corresponding indices in goods_list.
+    
+    Parameters:
+    - x: np.ndarray of shape (len(goods_list), num_agents)
+    - edge_information: dictionary of edge information
+    - agent_goods_lists: list of lists, each containing tuples of goods for each agent
+    
+    Returns:
+    - agent_allocations: list of np.ndarrays, each containing the allocations for an agent
+    - agent_indices: list of np.ndarrays, each containing the indices in goods_list for an agent
+    """
+    # Create a dictionary for quick lookup of goods in goods_list
+    goods_index_map = {good: idx for idx, good in enumerate(edge_information.values())}
+    
+    agent_allocations = []
+    agent_indices = []
+    agent_edge_information = []
+    edge_labels_list = list(edge_information.keys())
+    
+    for agent, agent_data in enumerate(agent_goods_lists):
+        # Remove 'default_good' if it exists
+        agent_goods = [good for good in agent_data if good != 'default_good']
+        
+        # Find indices of agent_goods in goods_list
+        indices = [goods_index_map[good] for good in agent_goods if good in goods_index_map]
+        
+        # Get allocations for the agent
+        allocations = x[agent][indices]
+        agent_edges = {}
+        for id in indices:
+            agent_edge = edge_labels_list[id]
+            agent_edges[agent_edge] = edge_information[agent_edge]
+        
+        agent_allocations.append(allocations)
+        agent_indices.append(np.array(indices))
+        agent_edge_information.append(agent_edges)
+    
+    return agent_allocations, agent_indices, agent_edge_information
+
+
+def mapping_agent_to_full_data(full_edge_information, sampled_edges):
+    allocation_array = [0] * len(full_edge_information)
+    edge_to_index = {edge: index for index, edge in enumerate(full_edge_information)}
+    for edge in sampled_edges:
+        if edge in edge_to_index:
+            allocation_array[edge_to_index[edge]] = 1
+
+    return allocation_array
+
+
 # edge_information = {
 #     'e1': ('V001_1', 'V001_2'),
 #     'e2': ('V001_1', 'V002_2'),

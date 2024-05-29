@@ -5,7 +5,7 @@ import networkx as nx
 import time
 import json
 from VertiportStatus import VertiportStatus
-from sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, build_agent_edge_utilities
+from sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, process_allocations, mapping_agent_to_full_data
 from fisher_int_optimization import int_optimization
 from pathlib import Path
 import math
@@ -131,7 +131,7 @@ def construct_market(market_graph, flights, timing_info):
 
         supply = np.ones(len(goods_list))
         supply[-1] = 100
-        beta = 1
+        beta = 10
 
     print(f"Time to construct market: {time.time() - start_time_market_construct}")
     return (u, agent_constraints, agent_goods_lists), (w, supply, beta), (goods_list, times_list)
@@ -186,7 +186,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
     
     # Update consumption
     y = cp.Variable((num_agents, num_goods))
-    objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 2)) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply, 2)))
+    objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply, 2)))
     # cp_constraints = [y >= 0]
     # problem = cp.Problem(objective, cp_constraints)
     problem = cp.Problem(objective)
@@ -231,6 +231,7 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
     num_agents = len(w)
     num_goods = len(p)
     x = np.zeros((num_agents, num_goods))
+
     for i in range(num_agents):
         agent_p = np.array([p[goods_list.index(good)] for good in agent_goods_lists[i]])
         agent_u = np.array(u[i])
@@ -243,7 +244,7 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
     return x
 
 
-def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False):
+def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solver=cp.CLARABEL):
     """
     (4) Update individual agent's consumption given market settings and constraints
     (6)
@@ -261,35 +262,29 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False):
     # optimizer check
     x_i = cp.Variable(num_goods)
     if rational:
-        start_time_update = time.time()
         regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.sum([cp.square(cp.maximum(A_i[t] @ x_i - b_i[t], 0)) for t in range(num_constraints)])
         lagrangians = - p.T @ x_i - cp.sum([r_i[t] * cp.maximum(A_i[t] @ x_i - b_i[t], 0) for t in range(num_constraints)])
         objective = cp.Maximize(u_i.T @ x_i + regularizers + lagrangians)
         cp_constraints = [x_i >= 0]
-        print(f"1 Time to compute regularizers and lagrangians: {time.time() - start_time_update}")
         # cp_constraints = [x_i >= 0, p.T @ x_i <= w_adj]
         # objective = cp.Maximize(u_i.T @ x_i)
         # cp_constraints = [x_i >= 0, p.T @ x_i <= w_adj, A_i @ x_i <= b_i]
     elif UPDATED_APPROACH:
-        start_time_update = time.time()
         regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.sum([cp.square(A_i[t] @ x_i - b_i[t]) for t in range(num_constraints)])
         lagrangians = - p.T @ x_i - cp.sum([r_i[t] * (A_i[t] @ x_i - b_i[t]) for t in range(num_constraints)])
         nominal_objective = w_adj * cp.log(u_i.T @ x_i)
         objective = cp.Maximize(nominal_objective + lagrangians + regularizers)
         cp_constraints = [x_i >= 0]
-        print(f"2 Time to compute regularizers and lagrangians: {time.time() - start_time_update}")
     else:
-        start_time_update = time.time()
         regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.sum([cp.square(cp.maximum(A_i[t] @ x_i - b_i[t], 0)) for t in range(num_constraints)])
         lagrangians = - p.T @ x_i - cp.sum([r_i[t] * cp.maximum(A_i[t] @ x_i - b_i[t], 0) for t in range(num_constraints)])
         nominal_objective = w_adj * cp.log(u_i.T @ x_i)
         objective = cp.Maximize(nominal_objective + lagrangians + regularizers)
         cp_constraints = [x_i >= 0]
-        print(f"3 Time to compute regularizers and lagrangians: {time.time() - start_time_update}")
-    check_time = time.time()
+    # check_time = time.time()
     problem = cp.Problem(objective, cp_constraints)
-    problem.solve(solver=cp.CLARABEL)
-    print(f"Solvers time: {time.time() - check_time}")
+    problem.solve(solver=solver)
+    # print(f"Solvers time: {time.time() - check_time}")
     return x_i.value
 
 
@@ -370,14 +365,22 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
     error = [] * len(agent_constraints)
     
     # Algorithm 1
-    while x_iter <= 300:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
+    TOL_ERROR = 1e-2
+    tolerance = len(agent_settings[0]) * np.sqrt(len(supply)-1) * TOL_ERROR
+    market_clearning_error = 1000000
+    x_iter = 0
+    start_time_algorithm = time.time()
+    while x_iter <= 100:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
         # Update agents
         x = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, rational=rational)
         agent_allocations.append(x)
         overdemand.append(np.sum(x, axis=0) - supply.flatten())
-        clipped_excess_demand = np.where(p > 0, overdemand, np.maximum(0, overdemand))
+        x_ij = np.sum(x, axis=0)
+        excess_demand = x_ij[:-1] - supply[:-1]
+        clipped_excess_demand = np.where(p[:-1] > 0,excess_demand, np.maximum(0, excess_demand))
         market_clearning_error = np.linalg.norm(clipped_excess_demand, ord=2)
         market_clearing.append(market_clearning_error)
+
         for agent_index in range(len(agent_constraints)):
             agent_x = np.array([x[agent_index, goods_list.index(good)] for good in agent_goods_lists[agent_index]])
             constraint_error = agent_constraints[agent_index][0] @ agent_x - agent_constraints[agent_index][1]
@@ -391,6 +394,9 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
         rebates.append([rebate_list for rebate_list in r])
         prices.append(p)
         x_iter += 1
+        print("Iteration: ", x_iter)
+        print("Market Clearing Error: ", market_clearning_error)
+    print(f"Time to run algorithm: {time.time() - start_time_algorithm}")
 
     if plotting:
         plt.subplot(2, 3, 1)
@@ -485,35 +491,30 @@ if __name__ == "__main__":
     r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
     x, prices, r, overdemand, agent_constraints = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
 
-    # u_1 = np.array([2, 6, 2, 4, 2, 0, 0, 0] * math.ceil(num_agents/2)).reshape((math.ceil(num_agents/2), num_goods))
-    # u_2 = np.array([0, 0, 1, 0, 1, 1, 6, 4] * math.floor(num_agents/2)).reshape((math.floor(num_agents/2), num_goods))
-    # u = np.concatenate((u_1, u_2), axis=0).reshape(num_agents, num_goods) + np.random.rand(num_agents, num_goods)*0.2
-    # print(x, prices, r, overdemand, agent_constraints)
     # Sampling fractional edges
     edge_information = build_edge_information(goods_list)
-    all_agents_utilities = build_agent_edge_utilities(edge_information, agent_goods_lists, u)
-
-    int_allocations = np.zeros((num_agents, num_goods-1))
-    for i in range(x.shape[0]):
-        frac_allocations = x[i][:-1]
-        start_edge_index = np.nonzero(x[i])[0][0]
-        start_node = edge_information[f"e{start_edge_index+1}"][0]
-        extended_graph, agent_allocation = agent_probability_graph_extended(edge_information, frac_allocations, output_folder)
+    agent_allocations, agent_indices, agent_edge_information = process_allocations(x, edge_information, agent_goods_lists)
+    
+    int_allocations = []
+    int_allocations_full = []
+    for i in range(num_agents):
+        frac_allocations = agent_allocations[i]
+        start_node= list(agent_edge_information[i].values())[0][0]
+        extended_graph, agent_allocation = agent_probability_graph_extended(agent_edge_information[i], frac_allocations, output_folder)
         sampled_path_extended, sampled_edges, int_allocation = sample_path(extended_graph, start_node, agent_allocation)
         print("Sampled Path:", sampled_path_extended)
         print("Sampled Edges:", sampled_edges)
         plot_sample_path_extended(extended_graph, sampled_path_extended, output_folder)
-        int_allocations[i] = int_allocation
-    # test_run_market(plotting=True, rational=False, homogeneous=True)
+        int_allocations.append(int_allocation)
+        int_allocation_full = mapping_agent_to_full_data(edge_information, sampled_edges)
+        int_allocations_full.append(int_allocation_full)
 
-    print(int_allocations)
     # IOP for contested goods
     budget, capacity, _ = market_information
     capacity = capacity[:-1]
     print("Budget:", budget)
     print("Capacity:", capacity)
-    # print(agent_constraints)
-    new_allocations = int_optimization(int_allocations, capacity, budget, prices, all_agents_utilities, agent_constraints)
+    new_allocations = int_optimization(int_allocations_full, capacity, budget, prices, u, agent_constraints, int_allocations, output_folder)
     print(new_allocations)
 
     # testing temp, remove later
@@ -527,12 +528,13 @@ if __name__ == "__main__":
         f.write("\n")
         f.write("Constraints:\n")
         f.write(str(agent_constraints))
-        f.write("\n------------------------------------------------")
+        f.write("\n------------------------------------------------\n")
         f.write("Agent Allocation:\n")
         f.write(str(agent_allocation))
         f.write("\n")
         f.write("Utilties:\n")
-        f.write(str(all_agents_utilities))
+        f.write(str(u))
+        f.write("\n")
         f.write("Int Allocation:\n")
         f.write(str(int_allocations))
         f.write("\n")

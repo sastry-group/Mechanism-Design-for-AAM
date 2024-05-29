@@ -7,7 +7,8 @@ import pandas as pd
 import time
 
 
-def int_optimization(x_agents, capacity, budget, prices, utility, agents_constraints):
+def int_optimization(full_allocations, capacity, budget, prices, utility, agents_constraints, agents_allocations, output_folder):
+    #int_optimization(int_allocations_full, capacity, budget, prices, u, agent_constraints, int_allocations, output_folder)
     """
     Function to solve an integer optimization problem
     Args:
@@ -24,7 +25,7 @@ def int_optimization(x_agents, capacity, budget, prices, utility, agents_constra
     # Checking contested allocations
     start_time = time.time()
     print("Checking contested allocations")
-    contested_edges, agents_with_contested_allocations, contested_edges_col, contested_agent_allocations = contested_allocations(x_agents, capacity)
+    contested_edges, agents_with_contested_allocations, contested_agent_allocations = contested_allocations(full_allocations, capacity)
     print(f"Time taken to check contested allocations: {time.time() - start_time}")
 
     if contested_edges:
@@ -37,7 +38,7 @@ def int_optimization(x_agents, capacity, budget, prices, utility, agents_constra
             prices[contested_edge] = prices[contested_edge] + ALPHA
 
         # creating a new market - consider changing this to np.arrays for efficiency
-        new_market_capacity = capacity - np.sum(x_agents, axis=0)
+        new_market_capacity = capacity - np.sum(full_allocations, axis=0)
         new_market_capacity[contested_edges] = capacity[contested_edges] 
         new_market_A = []
         new_market_b = []
@@ -84,6 +85,7 @@ def int_optimization(x_agents, capacity, budget, prices, utility, agents_constra
         while not equilibrium_reached:
 
             for i in range(n_agents):
+
                 # print(len(contested_agent_allocations[i]), new_market_utility,new_market_budget[i], Aprime[i], bprime[i])
                 xi_values[i,:] = find_optimal_xi(len(contested_agent_allocations[i]), new_market_utility[i], new_market_A[i], new_market_b[i], prices, new_market_budget[i])
                
@@ -96,7 +98,7 @@ def int_optimization(x_agents, capacity, budget, prices, utility, agents_constra
             
             k += 1
 
-        new_allocation = update_allocation(x_agents, contested_edges_col, xi_values, agents_with_contested_allocations)
+        new_allocation = update_allocation(full_allocations, xi_values, agents_with_contested_allocations)
         print_equilibrium_results(k, equilibrium_reached, prices, xi_values, demand)
 
         print(f"Time taken to run integer optimization algorithm: {time.time() - start_time_int}")
@@ -104,10 +106,10 @@ def int_optimization(x_agents, capacity, budget, prices, utility, agents_constra
         
     else:
         print("No contested allocations")
-        return x_agents
+        return full_allocations
     
 
-def update_allocation(x_agents, contested_edges_col, xi_values, agents_with_contested_allocations):
+def update_allocation(x_agents, xi_values, agents_with_contested_allocations):
     """
     Function to update the allocation matrix with the new xi values
     Args:
@@ -183,24 +185,26 @@ def contested_allocations(integer_allocations, capacity):
     # contested_edges_col = np.array([])
     contested_edges_col = []
     agents_with_contested_allocations = []
-    for i in range(len(capacity)):
-        if np.sum(integer_allocations[:,i]) > capacity[i]:
-            agents_index = np.where(integer_allocations[:, i] > 0)[0]
-            contested_edges_col.append(integer_allocations[:,i])
-            contested_edges.append(i)
-            agents_with_contested_allocations.append([idx for idx in agents_index])
+    integer_allocations = np.array(integer_allocations)
+    capacity = np.array(capacity)
+    demand = np.sum(integer_allocations, axis=0)
+    contested_edges = np.where(demand > capacity)[0]
+    contested_agent_allocations = []
+
+    for id, agent in enumerate(integer_allocations):
+        if np.any(agent[contested_edges] > 0):
+            # contested_edges_col = np.append(contested_edges_col, contested_edges)
+            # contested_edges_col.append(contested_edges)
+        # contested_edges_col.append(integer_allocations[id])
+            agents_with_contested_allocations.append(id)
 
     if agents_with_contested_allocations == []:
-        return [], [], [], []
+        return [], [], []
     else:
-        allocations = []
-        for agent in agents_with_contested_allocations:
-            allocation = integer_allocations[agent]
-            allocations.append(allocation)
-        
-        contested_agent_allocations = np.vstack(allocations)
+        contested_agent_allocations = integer_allocations[agents_with_contested_allocations]
+        # contested_agent_allocations = np.vstack(allocations)
 
-        return contested_edges, agents_with_contested_allocations[0], contested_edges_col, contested_agent_allocations
+        return contested_edges, agents_with_contested_allocations, contested_agent_allocations
 
 
 
