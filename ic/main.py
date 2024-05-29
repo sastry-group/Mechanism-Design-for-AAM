@@ -229,7 +229,7 @@ def step_simulation(
     return vertiport_usage
 
 
-def run_scenario(data, scenario_path, scenario_name, method="vcg"):
+def run_scenario(data, scenario_path, scenario_name, method="fisher"):
     """
     Create and run a scenario based on the given data. Save it to the specified path.
 

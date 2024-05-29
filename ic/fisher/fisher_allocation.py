@@ -398,13 +398,24 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, save_fi
 
     # Run market
     goods_list, times_list = bookkeeping
-    num_goods = len(goods_list)
-    num_agents = len(flights)
+    num_goods, num_agents = len(goods_list), len(flights)
     u, agent_constraints, agent_goods_lists = agent_information
     y = np.random.rand(num_agents, num_goods)*10
     p = np.random.rand(num_goods)*10
     r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
     x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
+
+    allocation = []
+    for i, (flight_id, flight) in enumerate(flights.items()):
+        origin_vertiport = flight["origin_vertiport_id"]
+        for request_id, request in flight["requests"].items():
+            dep_time = request["request_departure_time"]
+            arr_time = request["request_arrival_time"]
+            destination_vertiport = request["destination_vertiport_id"]
+            start_node, end_node = origin_vertiport + "_" + str(dep_time) + "_dep", destination_vertiport + "_" + str(arr_time) + "_arr"
+            good = (start_node, end_node)
+            if x[i][goods_list.index(good)] >= 1 - np.epsilon:
+                allocation.append((flight_id, request_id))
 
     return None, None
 
