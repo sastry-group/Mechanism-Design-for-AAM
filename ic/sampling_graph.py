@@ -275,8 +275,8 @@ def mapping_agent_to_full_data(full_edge_information, sampled_edges):
     for edge in sampled_edges:
         if edge in edge_to_index:
             allocation_array[edge_to_index[edge]] = 1
-
-    return allocation_array
+    allocation_indices = [i for i, allocation in enumerate(allocation_array) if allocation > 0]
+    return allocation_array, allocation_indices
 
 
 # edge_information = {

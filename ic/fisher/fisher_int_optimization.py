@@ -7,7 +7,7 @@ import pandas as pd
 import time
 
 
-def int_optimization(full_allocations, capacity, budget, prices, utility, agents_constraints, agents_allocations, output_folder):
+def int_optimization(full_allocations, int_allocation_indices, capacity, budget, prices, utility, agents_constraints, agents_allocations, output_folder):
     #int_optimization(int_allocations_full, capacity, budget, prices, u, agent_constraints, int_allocations, output_folder)
     """
     Function to solve an integer optimization problem
@@ -28,7 +28,7 @@ def int_optimization(full_allocations, capacity, budget, prices, utility, agents
     contested_edges, agents_with_contested_allocations, contested_agent_allocations = contested_allocations(full_allocations, capacity)
     print(f"Time taken to check contested allocations: {time.time() - start_time}")
 
-    if contested_edges:
+    if len(contested_edges) > 0:
         print("Contested allocations found, running integer optimization algorithm")
         start_time_int = time.time()
         ALPHA = 0.1
@@ -55,25 +55,13 @@ def int_optimization(full_allocations, capacity, budget, prices, utility, agents
             barray = agents_constraints[agent][1]
             new_market_b.append(barray)
 
-        # # constraints for the new market
-        # for index in agents_with_contested_allocations:
-        #     Aarray = agents_constraints[index][0]
-        #     last_index = Aarray.shape[1] - 1
-        #     barray = agents_constraints[index][1]
-        #     new_market_A.append(np.delete(Aarray, last_index, axis=1))
-        #     new_market_b.append(barray)
-   
-
-        # Aprime = np.array(new_market_A)
-        # bprime = np.array(new_market_b)
-
-        print("Starting information for new market:")
-        print(f"New capacity: {new_market_capacity}") 
-        print("Prices: ", prices)
-        print("Utility: ", new_market_utility)
-        print("Budget: ", new_market_budget)
-        print("Capacity: ", new_market_capacity)
-        print("Agents with contested allocations: ", agents_with_contested_allocations)
+        # print("Starting information for new market:")
+        # print(f"New capacity: {new_market_capacity}") 
+        # print("Prices: ", prices)
+        # print("Utility: ", new_market_utility)
+        # print("Budget: ", new_market_budget)
+        # print("Capacity: ", new_market_capacity)
+        # print("Agents with contested allocations: ", agents_with_contested_allocations)
 
         # Setting up for optimization
         k = 0
@@ -85,9 +73,8 @@ def int_optimization(full_allocations, capacity, budget, prices, utility, agents
         while not equilibrium_reached:
 
             for i in range(n_agents):
-
                 # print(len(contested_agent_allocations[i]), new_market_utility,new_market_budget[i], Aprime[i], bprime[i])
-                xi_values[i,:] = find_optimal_xi(len(contested_agent_allocations[i]), new_market_utility[i], new_market_A[i], new_market_b[i], prices, new_market_budget[i])
+                xi_values[i,:] = find_optimal_xi(len(agents_allocations[i]), new_market_utility[i], new_market_A[i], new_market_b[i], prices, new_market_budget[i])
                
             
             demand = np.sum(xi_values, axis=0)
@@ -183,7 +170,7 @@ def contested_allocations(integer_allocations, capacity):
 
     contested_edges = []
     # contested_edges_col = np.array([])
-    contested_edges_col = []
+    contested_goods_per_agents = []
     agents_with_contested_allocations = []
     integer_allocations = np.array(integer_allocations)
     capacity = np.array(capacity)

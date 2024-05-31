@@ -1,11 +1,13 @@
+import sys
+from pathlib import Path
 import cvxpy as cp
 import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
 import time
 import json
-from VertiportStatus import VertiportStatus
-from sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, process_allocations, mapping_agent_to_full_data
+from ic.VertiportStatus import VertiportStatus
+from ic.sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, process_allocations, mapping_agent_to_full_data
 from fisher_int_optimization import int_optimization
 from pathlib import Path
 import math
@@ -20,7 +22,7 @@ epsilon = 0.05
 
 def build_graph(vertiport_status, timing_info):
     """
-    (2)
+
     """
     print("Building graph...")
     start_time_graph_build = time.time()
@@ -60,7 +62,7 @@ def build_graph(vertiport_status, timing_info):
 
 def construct_market(market_graph, flights, timing_info):
     """
-    (3)
+
     """
     max_time, time_step = timing_info["end_time"], timing_info["time_step"]
     times_list = list(range(timing_info["start_time"], max_time + time_step, time_step))
@@ -133,7 +135,8 @@ def construct_market(market_graph, flights, timing_info):
         agent_constraints.append((A_with_default_good, b))
         agent_goods_lists.append(goods)
 
-        supply = np.ones(len(goods_list))
+        # supply = np.ones(len(goods_list)) 
+        supply = np.random.randint(1, 6, len(goods_list))
         supply[-1] = 100
         beta = BETA
 
@@ -180,7 +183,6 @@ def update_basic_market(x, values_k, market_settings, constraints):
 def update_market(x, values_k, market_settings, constraints, agent_goods_lists, goods_list):
     '''
     Update market consumption, prices, and rebates
-    (7)
     '''
     shape = np.shape(x)
     num_agents = shape[0]
@@ -254,10 +256,9 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
     return x
 
 
-def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solver=cp.CLARABEL):
+def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solver=cp.SCS):
     """
-    (4) Update individual agent's consumption given market settings and constraints
-    (6)
+    Update individual agent's consumption given market settings and constraints
     """
     # Individual agent optimization
     A_i, b_i = constraints
@@ -293,7 +294,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
         cp_constraints = [x_i >= 0]
     # check_time = time.time()
     problem = cp.Problem(objective, cp_constraints)
-    problem.solve(solver=solver)
+    problem.solve(solver=solver, verbose=True)
     # print(f"Solvers time: {time.time() - check_time}")
     return x_i.value
 
@@ -359,7 +360,7 @@ def run_basic_market(initial_values, agent_settings, market_settings, plotting=F
 
 def run_market(initial_values, agent_settings, market_settings, bookkeeping, plotting=True, rational=False, output_folder=False):
     """
-    (4)
+    
     """
     u, agent_constraints, agent_goods_lists = agent_settings
     y, p, r = initial_values
@@ -513,7 +514,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, save_fi
 
 
 if __name__ == "__main__":
-    file_path = "test_cases/casef_20240530_135115.json"
+    file_path = "test_cases/casef_20240531_105527.json"
     file_name = file_path.split("/")[-1].split(".")[0]
     data = load_json(file_path)
     output_folder = f"ic/results/{file_name}"
@@ -555,19 +556,19 @@ if __name__ == "__main__":
         start_node= list(agent_edge_information[i].values())[0][0]
         extended_graph, agent_allocation = agent_probability_graph_extended(agent_edge_information[i], frac_allocations, output_folder)
         sampled_path_extended, sampled_edges, int_allocation = sample_path(extended_graph, start_node, agent_allocation)
-        print("Sampled Path:", sampled_path_extended)
-        print("Sampled Edges:", sampled_edges)
+        # print("Sampled Path:", sampled_path_extended)
+        # print("Sampled Edges:", sampled_edges)
         plot_sample_path_extended(extended_graph, sampled_path_extended, output_folder)
         int_allocations.append(int_allocation)
-        int_allocation_full = mapping_agent_to_full_data(edge_information, sampled_edges)
+        int_allocation_full, int_allocation_indices = mapping_agent_to_full_data(edge_information, sampled_edges)
         int_allocations_full.append(int_allocation_full)
 
     # IOP for contested goods
     budget, capacity, _ = market_information
     capacity = capacity[:-1]
-    print("Budget:", budget)
-    print("Capacity:", capacity)
-    new_allocations = int_optimization(int_allocations_full, capacity, budget, prices, u, agent_constraints, int_allocations, output_folder)
+    # print("Budget:", budget)
+    # print("Capacity:", capacity)
+    new_allocations = int_optimization(int_allocations_full, int_allocation_indices, capacity, budget, prices, u, agent_constraints, int_allocations, output_folder)
     print(new_allocations)
 
     # testing temp, remove later

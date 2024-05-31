@@ -15,7 +15,7 @@ TIME_STEP = 1
 N_FLIGHTS = random.randint(10, 15)
 NUM_FLEETS = 10
 
-# change the request 000 for always be 0
+# change the request 000 for always be 0 - done
 # routes must match travel time, arrival time not random, match the travel time + startime
 
 # List of vertiports
@@ -50,6 +50,8 @@ def generate_flights():
     vertiports_list = list(vertiports.keys())
     allowed_origin_vertiport = [vertiport_id for vertiport_id in vertiports_list for _ in range(vertiports[vertiport_id]["hold_capacity"])]
     # appearance_time = 0
+    routes = generate_routes(vertiports)
+    route_dict = {(route["origin_vertiport_id"], route["destination_vertiport_id"]): route["travel_time"] for route in routes}
 
     for i in range(N_FLIGHTS):  
         flight_id = f"AC{i+1:03d}"
@@ -66,7 +68,8 @@ def generate_flights():
         request_departure_time = appearance_time + random.randint(5, 10)
         delay = random.randint(1, 5)
         second_departure_time = request_departure_time + delay
-        request_arrival_time = request_departure_time + random.randint(10, 20)
+        travel_time = route_dict.get((origin_vertiport_id , destination_vertiport_id), None)
+        request_arrival_time = request_departure_time + travel_time
         second_arrival_time = request_arrival_time + delay
 
         valuation = random.randint(70, 200)
@@ -79,8 +82,8 @@ def generate_flights():
             "requests": {
                 "000": {
                     "destination_vertiport_id": origin_vertiport_id,
-                    "request_departure_time": request_departure_time,
-                    "request_arrival_time": request_arrival_time,
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
                     "valuation": 30,
                 },
                 "001": {
@@ -99,7 +102,7 @@ def generate_flights():
             }
         }
         flights[flight_id] = flight_info
-    return flights
+    return flights, routes
 
 
 
@@ -146,7 +149,7 @@ def generate_fleets(flights_data):
         fleets[fleet_id] = fleet_flights
     return fleets
 
-def generate_routes():
+def generate_routes(vertiports):
     # Generate routes that connect all vertiports
     routes = []
     for origin_id, origin_data in vertiports.items():
@@ -162,9 +165,8 @@ def generate_routes():
     return routes
 
 # Write JSON data to dictionary
-flights = generate_flights()
+flights, routes = generate_flights()
 fleets = generate_fleets(list(flights.keys()))
-routes = generate_routes()
 json_data = {
     "timing_info": {"start_time": START_TIME, "end_time": END_TIME, "time_step": TIME_STEP},
     "fleets": fleets,
