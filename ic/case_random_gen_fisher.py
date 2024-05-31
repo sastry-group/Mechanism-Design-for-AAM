@@ -15,6 +15,8 @@ TIME_STEP = 1
 N_FLIGHTS = random.randint(10, 15)
 NUM_FLEETS = 10
 
+# change the request 000 for always be 0
+# routes must match travel time, arrival time not random, match the travel time + startime
 
 # List of vertiports
 # Project data: https://earth.google.com/earth/d/1bqXr8pgmjtshu5UKfT1zkq092Af36bQ0?usp=sharing
@@ -180,7 +182,7 @@ test_cases_directory = os.path.join(current_directory, 'test_cases')
 if not os.path.exists(test_cases_directory):
     os.makedirs(test_cases_directory)
 
-file_path = os.path.join(test_cases_directory, f'case_{formatted_datetime}.json')
+file_path = os.path.join(test_cases_directory, f'casef_{formatted_datetime}.json')
 with open(file_path, "w") as f:
     json.dump(json_data, f, indent=4)
 

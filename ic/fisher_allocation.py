@@ -468,7 +468,7 @@ def load_json(file=None):
 
 
 if __name__ == "__main__":
-    file_path = "test_cases/case2_fisher.json"
+    file_path = "test_cases/casef_20240530_135115.json"
     file_name = file_path.split("/")[-1].split(".")[0]
     data = load_json(file_path)
     output_folder = f"ic/results/{file_name}"
