@@ -19,6 +19,7 @@ sys.path.append(str(top_level_path))
 import bluesky as bs
 from ic.VertiportStatus import VertiportStatus, draw_graph
 from ic.allocation import allocation_and_payment
+from ic.fisher.fisher_allocation import fisher_allocation_and_payment
 
 # Bluesky settings
 T_STEP = 10000
@@ -39,6 +40,9 @@ parser.add_argument(
     "--force_overwrite",
     action="store_true",
     help="Flag for overwriting the scenario file(s).",
+)
+parser.add_argument(
+    "--method", type=str, help="The method used to allocate flights."
 )
 args = parser.parse_args()
 
@@ -225,7 +229,7 @@ def step_simulation(
     return vertiport_usage
 
 
-def run_scenario(data, scenario_path, scenario_name):
+def run_scenario(data, scenario_path, scenario_name, method="fisher"):
     """
     Create and run a scenario based on the given data. Save it to the specified path.
 
@@ -274,9 +278,14 @@ def run_scenario(data, scenario_path, scenario_name):
             "end_time": timing_info["end_time"],
             "time_step": timing_info["time_step"]
         }
-        allocated_flights, payments = allocation_and_payment(
-            vertiport_usage, current_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
-        )
+        if method == "fisher":
+            allocated_flights, payments = fisher_allocation_and_payment(
+                vertiport_usage, current_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
+            )
+        elif method == "vcg":
+            allocated_flights, payments = allocation_and_payment(
+                vertiport_usage, current_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
+            )
         if initial_allocation:
             initial_allocation = False
 
@@ -409,7 +418,7 @@ if __name__ == "__main__":
             sys.exit()
 
     # Create the scenario file and double check the correct path was used
-    path_to_scn_file = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME)
+    path_to_scn_file = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME, args.method)
     print(path_to_scn_file)
     assert path == path_to_scn_file, "An error occured while writing the scenario file."
 

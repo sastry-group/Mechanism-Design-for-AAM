@@ -9,12 +9,13 @@ from sampling_graph import build_edge_information, agent_probability_graph_exten
 from fisher_int_optimization import int_optimization
 from pathlib import Path
 import math
-
+from multiprocessing import Pool
 
 UPDATED_APPROACH = True
 TOL_ERROR = 1e-2
 MAX_NUM_ITERATIONS = 100
 BETA = 10
+epsilon = 0.05
 
 
 def build_graph(vertiport_status, timing_info):
@@ -150,7 +151,7 @@ def update_basic_market(x, values_k, market_settings, constraints):
     
     # Update consumption
     y = cp.Variable((num_agents, num_goods))
-    objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 2)) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply, 2)))
+    objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply, 2)))
     # cp_constraints = [y >= 0]
     # problem = cp.Problem(objective, cp_constraints)
     problem = cp.Problem(objective)
@@ -227,23 +228,29 @@ def update_basic_agents(w, u, p, r, constraints, y, beta, rational=False):
     return x
 
 
-def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, beta, rational=False):
-    """
-    (5)
-    """
-    num_agents = len(w)
-    num_goods = len(p)
-    x = np.zeros((num_agents, num_goods))
+def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, beta, rational=False, parallel=False):
+    num_agents, num_goods = len(w), len(p)
 
-    for i in range(num_agents):
-        agent_p = np.array([p[goods_list.index(good)] for good in agent_goods_lists[i]])
-        agent_u = np.array(u[i])
-        agent_y = np.array([y[i, goods_list.index(good)] for good in agent_goods_lists[i]])
-        agent_x = update_agent(w[i], agent_u, agent_p, r[i], constraints[i], agent_y, beta, rational=rational)
+    agent_indices = range(num_agents)
+    agent_prices = [np.array([p[goods_list.index(good)] for good in agent_goods_lists[i]]) for i in agent_indices]
+    agent_utilities = [np.array(u[i]) for i in agent_indices]
+    agent_ys = [np.array([y[i, goods_list.index(good)] for good in agent_goods_lists[i]]) for i in agent_indices]
+
+    args = [(w[i], agent_utilities[i], agent_prices[i], r[i], constraints[i], agent_ys[i], beta, rational) for i in agent_indices]
+
+    # Update agents in parallel or not depending on parallel flag
+    if not parallel:
+        results = [update_agent(*arg) for arg in args]
+    else:
+        num_processes = 4 # increase based on available resources
+        with Pool(num_processes) as pool:
+            results = pool.starmap(update_agent, args)
+
+    x = np.zeros((num_agents, num_goods))
+    for i, agent_x in zip(agent_indices, results):
         for good in goods_list:
             if good in agent_goods_lists[i]:
                 x[i, goods_list.index(good)] = agent_x[agent_goods_lists[i].index(good)]
-    # print(x)
     return x
 
 
@@ -273,8 +280,8 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
         # objective = cp.Maximize(u_i.T @ x_i)
         # cp_constraints = [x_i >= 0, p.T @ x_i <= w_adj, A_i @ x_i <= b_i]
     elif UPDATED_APPROACH:
-        regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.sum([cp.square(A_i[t] @ x_i - b_i[t]) for t in range(num_constraints)])
-        lagrangians = - p.T @ x_i - cp.sum([r_i[t] * (A_i[t] @ x_i - b_i[t]) for t in range(num_constraints)])
+        regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.square(cp.norm(A_i @ x_i - b_i, 2))
+        lagrangians = - p.T @ x_i - r_i.T @ (A_i @ x_i - b_i)
         nominal_objective = w_adj * cp.log(u_i.T @ x_i)
         objective = cp.Maximize(nominal_objective + lagrangians + regularizers)
         cp_constraints = [x_i >= 0]
@@ -465,6 +472,44 @@ def load_json(file=None):
         data = json.load(f)
         print(f"Opened file {file}")
     return data
+
+
+def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, save_file=None, initial_allocation=True):
+    # Build Fisher Graph
+    market_graph = build_graph(vertiport_usage, timing_info)
+
+    # Construct market
+    agent_information, market_information, bookkeeping = construct_market(market_graph, flights, timing_info)
+
+    # Run market
+    goods_list, times_list = bookkeeping
+    num_goods, num_agents = len(goods_list), len(flights)
+    u, agent_constraints, agent_goods_lists = agent_information
+    y = np.random.rand(num_agents, num_goods)*10
+    p = np.random.rand(num_goods)*10
+    r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
+    x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
+
+    allocation = []
+    for i, (flight_id, flight) in enumerate(flights.items()):
+        origin_vertiport = flight["origin_vertiport_id"]
+        added_request = False
+        for request_id, request in flight["requests"].items():
+            if request["request_departure_time"] == 0:
+                base_request_id = request_id
+                continue
+            dep_time = request["request_departure_time"]
+            arr_time = request["request_arrival_time"]
+            destination_vertiport = request["destination_vertiport_id"]
+            start_node, end_node = origin_vertiport + "_" + str(dep_time) + "_dep", destination_vertiport + "_" + str(arr_time) + "_arr"
+            good = (start_node, end_node)
+            if x[i][goods_list.index(good)] >= 1 - epsilon:
+                added_request = True
+                allocation.append((flight_id, request_id))
+        if not added_request:
+            allocation.append((flight_id, base_request_id))
+
+    return allocation, None
 
 
 if __name__ == "__main__":
