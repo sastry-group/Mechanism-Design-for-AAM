@@ -65,10 +65,11 @@ def custom_layout(G):
                     pos[node] = (time_step, -vertiport_number * 10 - layer_map[suffix])
     return pos
 
-def agent_probability_graph_extended(edge_information, x, output_folder=False):
+def agent_probability_graph_extended(edge_information, x, agent_number=1, output_folder=False):
     G = nx.DiGraph()
 
     # Add edges with weights and labels
+    agent_label = f"Agent_{agent_number}"
     agent_allocations = {}
     for (key, edge), weight in zip(edge_information.items(), x):
         if weight == 0:
@@ -88,8 +89,9 @@ def agent_probability_graph_extended(edge_information, x, output_folder=False):
     plt.title("Time Extended Decision Tree Graph with Branching and Constraints")
 
     if output_folder:
-        plt.savefig(f'{output_folder}/extended_graph.png')
+        plt.savefig(f'{output_folder}/extended_graph_{agent_label}.png')
     # plt.show()
+    plt.close()
 
     return G, agent_allocations
 
@@ -129,11 +131,11 @@ def sample_path(G, start_node, agent_allocations):
 
     agent_allocations = {key: 0 for key in agent_allocations}
     agent_allocations.update(allocation_updates)
-    agent_allocations = list(agent_allocations.values())
+    agent_int_allocations = list(agent_allocations.values())
 
     print(f"Time to sample: {time.time() - start_time_sample:.5f}")
 
-    return path, edges, agent_allocations
+    return path, edges, agent_int_allocations
 
 
 def plot_sample_path(G, sampled_path):
@@ -154,10 +156,10 @@ def plot_sample_path(G, sampled_path):
     # plt.show()
     return 
 
-def plot_sample_path_extended(G, sampled_path, output_folder=False):
+def plot_sample_path_extended(G, sampled_path, agent_number, output_folder=False):
     # Create a copy of the original graph to avoid modifying it
     H = G.copy()
-
+    agent_label = f"Agent_{agent_number}"
     # Add new path to the graph with a thicker edge to highlight the chosen path
     for i in range(len(sampled_path) - 1):
         origin_node = sampled_path[i]
@@ -178,8 +180,8 @@ def plot_sample_path_extended(G, sampled_path, output_folder=False):
     plt.title("Time Extended Decision Tree Graph with Highlighted Chosen Path")
     # plt.show()
     if output_folder:
-        plt.savefig(f'{output_folder}/sampled_graph.png')
-
+        plt.savefig(f'{output_folder}/sampled_graph_{agent_label}.png')
+    plt.close()
     return H
 
 
@@ -229,16 +231,18 @@ def build_agent_edge_utilities(edge_information, agents_goods_list, utility_valu
 def process_allocations(x, edge_information, agent_goods_lists):
     """
     Process the allocation matrix to output agent-specific goods allocations
-    and corresponding indices in goods_list.
+    and corresponding indices in goods_list (master list). We also remove the default good
+    for every agent to process sampling and integer allocaton
     
     Parameters:
     - x: np.ndarray of shape (len(goods_list), num_agents)
-    - edge_information: dictionary of edge information
+    - edge_information: dictionary of edge information ('edge_label': ('origin_node', 'destination_node')
     - agent_goods_lists: list of lists, each containing tuples of goods for each agent
     
     Returns:
-    - agent_allocations: list of np.ndarrays, each containing the allocations for an agent
-    - agent_indices: list of np.ndarrays, each containing the indices in goods_list for an agent
+    - agent_allocations: list of np.ndarrays, each containing the fractional allocations for an agent from the fisher market
+    - agent_indices: list of np.ndarrays, each containing the indices in goods_list for an agent to map the indices to the master list
+    - agent_edge_information: list of dictionaries, each containing the edge information for an agent goods  (edge_label: ('origin_node', 'destination_node'))
     """
     # Create a dictionary for quick lookup of goods in goods_list
     goods_index_map = {good: idx for idx, good in enumerate(edge_information.values())}
@@ -275,9 +279,18 @@ def mapping_agent_to_full_data(full_edge_information, sampled_edges):
     for edge in sampled_edges:
         if edge in edge_to_index:
             allocation_array[edge_to_index[edge]] = 1
-    allocation_indices = [i for i, allocation in enumerate(allocation_array) if allocation > 0]
-    return allocation_array, allocation_indices
+    
+    return allocation_array
 
+
+# def create_int_to_frac_datasize(agent_edge_information, sampled_edges):
+#     frac_to_int_index_mapping = [0] * len(agent_edge_information)
+#     for i, edge in enumerate(agent_edge_information.values()):
+#         if edge in sampled_edges:
+#             frac_to_int_index_mapping[i] = 1
+
+#     return frac_to_int_index_mapping
+    
 
 # edge_information = {
 #     'e1': ('V001_1', 'V001_2'),

@@ -11,7 +11,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
 from fisher_allocation import update_basic_agents, update_market, run_basic_market, run_market, build_graph, construct_market
-from VertiportStatus import VertiportStatus
+from ic.VertiportStatus import VertiportStatus
 
 
 # parser = argparse.ArgumentParser(description="Inputs to test Fisher market implementation.")

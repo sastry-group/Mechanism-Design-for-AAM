@@ -7,7 +7,7 @@ import pandas as pd
 import time
 
 
-def int_optimization(full_allocations, int_allocation_indices, capacity, budget, prices, utility, agents_constraints, agents_allocations, output_folder):
+def int_optimization(full_allocations, capacity, budget, prices, utility, agents_constraints, agent_indices, agents_allocations, output_folder):
     #int_optimization(int_allocations_full, capacity, budget, prices, u, agent_constraints, int_allocations, output_folder)
     """
     Function to solve an integer optimization problem
@@ -39,29 +39,15 @@ def int_optimization(full_allocations, int_allocation_indices, capacity, budget,
 
         # creating a new market - consider changing this to np.arrays for efficiency
         new_market_capacity = capacity - np.sum(full_allocations, axis=0)
-        new_market_capacity[contested_edges] = capacity[contested_edges] 
+        new_market_capacity[contested_edges] = capacity[contested_edges]  # +1  to account for the reduced capacity if substracted before
         new_market_A = []
         new_market_b = []
-        new_market_budget = []
-        new_market_utility = []
         prices = prices[:-1]
         for agent in agents_with_contested_allocations:
-            # new_market_budget = budget[agent]
-            new_market_budget.append(budget[agent])
-            # new_market_budget = new_market_budget.tolist()
-            new_market_utility.append(utility[agent])
             Aarray = agents_constraints[agent][0]
             new_market_A.append(Aarray[:,:-1])
             barray = agents_constraints[agent][1]
             new_market_b.append(barray)
-
-        # print("Starting information for new market:")
-        # print(f"New capacity: {new_market_capacity}") 
-        # print("Prices: ", prices)
-        # print("Utility: ", new_market_utility)
-        # print("Budget: ", new_market_budget)
-        # print("Capacity: ", new_market_capacity)
-        # print("Agents with contested allocations: ", agents_with_contested_allocations)
 
         # Setting up for optimization
         k = 0
@@ -72,10 +58,15 @@ def int_optimization(full_allocations, int_allocation_indices, capacity, budget,
         xi_values = np.zeros((n_agents, len(prices)))
         while not equilibrium_reached:
 
-            for i in range(n_agents):
+            for i, agent in enumerate(agents_with_contested_allocations):
                 # print(len(contested_agent_allocations[i]), new_market_utility,new_market_budget[i], Aprime[i], bprime[i])
-                xi_values[i,:] = find_optimal_xi(len(agents_allocations[i]), new_market_utility[i], new_market_A[i], new_market_b[i], prices, new_market_budget[i])
-               
+                agent_values = np.array([0]*len(agents_allocations[agent]))
+                agent_prices = prices[agent_indices[agent]]
+                agent_values = find_optimal_xi(len(agents_allocations[agent]), utility[agent][:-1], new_market_A[i], new_market_b[i], agent_prices, budget[agent])
+                if agent_values is None:
+                    print("Warning: Could not find optimal xi value for agent", agent)
+                    agent_values = np.array([0]*len(agents_allocations[i]))
+                xi_values[i,:] = map_agent_values(len(prices), agent_indices[agent], agent_values)
             
             demand = np.sum(xi_values, axis=0)
             for j in range(len(capacity)):
@@ -89,11 +80,11 @@ def int_optimization(full_allocations, int_allocation_indices, capacity, budget,
         print_equilibrium_results(k, equilibrium_reached, prices, xi_values, demand)
 
         print(f"Time taken to run integer optimization algorithm: {time.time() - start_time_int}")
-        return new_allocation
+        return new_allocation, prices
         
     else:
         print("No contested allocations")
-        return full_allocations
+        return full_allocations, prices
     
 
 def update_allocation(x_agents, xi_values, agents_with_contested_allocations):
@@ -143,12 +134,20 @@ def find_optimal_xi(n, utility, A, b, prices, budget):
     Returns:
     - numpy.ndarray: The optimal values of xi.
     """
-
     x = cp.Variable(n, integer=True)
     objective = cp.Maximize(cp.sum(cp.multiply(utility, x)))
     constraints = [A @ x == b, cp.sum(cp.matmul(prices, x)) <= budget, x >=0] 
     problem = cp.Problem(objective, constraints)
-    problem.solve()
+    result = problem.solve()
+    
+    # print("Problem status:", problem.status)
+    # print("Optimal value:", result)
+    
+    if problem.status not in ["optimal", "optimal_inaccurate"]:
+        message = f"Warning: The problem status is: {problem.status}"
+        print(message)
+        return None
+    
     return x.value
 
 
@@ -193,7 +192,19 @@ def contested_allocations(integer_allocations, capacity):
 
         return contested_edges, agents_with_contested_allocations, contested_agent_allocations
 
-
+def map_agent_values(full_x_array, agent_indices, agent_values):
+    """
+    Function to map agent values to the index in agent indices
+    Args:
+    agent_indices (list): list of indices corresponding to the agents
+    agent_values (list): list of values for each agent
+    Returns:
+    mapped_values (np.array): array of mapped values
+    """
+    mapped_values = np.zeros(full_x_array)
+    for agent_index, agent_value in zip(agent_indices, agent_values):
+        mapped_values[agent_index] = agent_value
+    return mapped_values
 
 # Test
 # num_agents, num_goods, constraints_per_agent = 5, 8, [6] * 5

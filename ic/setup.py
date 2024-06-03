@@ -8,7 +8,8 @@ setup(name='ic-bluesky',
     ],
     packages=find_packages(
         include=[
-            'ic.*'
+            'ic/*'
+            'ic/fisher/*'
         ]
     ),
 )

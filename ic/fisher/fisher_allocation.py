@@ -6,17 +6,23 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import time
 import json
-from ic.VertiportStatus import VertiportStatus
-from ic.sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, process_allocations, mapping_agent_to_full_data
-from fisher_int_optimization import int_optimization
-from pathlib import Path
 import math
+from pathlib import Path
 from multiprocessing import Pool
 
+# Add the bluesky package to the path
+top_level_path = Path(__file__).resolve().parent.parent
+print(str(top_level_path))
+sys.path.append(str(top_level_path))
+
+from ic.VertiportStatus import VertiportStatus
+from ic.fisher.sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, process_allocations, mapping_agent_to_full_data
+from ic.fisher.fisher_int_optimization import int_optimization
+
 UPDATED_APPROACH = True
-TOL_ERROR = 1e-2
+TOL_ERROR = 1e-3
 MAX_NUM_ITERATIONS = 100
-BETA = 10
+BETA = 10 # chante to 1/T
 epsilon = 0.05
 
 
@@ -60,7 +66,7 @@ def build_graph(vertiport_status, timing_info):
     return auxiliary_graph
 
 
-def construct_market(market_graph, flights, timing_info):
+def construct_market(market_graph, flights, timing_info, routes, vertiports):
     """
 
     """
@@ -136,13 +142,41 @@ def construct_market(market_graph, flights, timing_info):
         agent_goods_lists.append(goods)
 
         # supply = np.ones(len(goods_list)) 
-        supply = np.random.randint(1, 6, len(goods_list))
+        supply = find_capacity(goods_list, routes, vertiports)
+        # supply = np.random.randint(4, 7, len(goods_list)) - 1 # reduce to account for real capacity supply - 1
         supply[-1] = 100
         beta = BETA
 
     print(f"Time to construct market: {time.time() - start_time_market_construct}")
     return (u, agent_constraints, agent_goods_lists), (w, supply, beta), (goods_list, times_list)
 
+
+
+def find_capacity(goods_list, route_data, vertiport_data):
+    # Create a dictionary for route capacities
+    route_dict = {(route["origin_vertiport_id"], route["destination_vertiport_id"]): route["capacity"] for route in route_data}
+
+    capacities = np.zeros(len(goods_list))
+
+    for i, (origin, destination) in enumerate(goods_list[:-1]):
+        origin_base = origin.split("_")[0]
+        destination_base = destination.split("_")[0]
+
+        if origin_base != destination_base:
+            # Traveling between vertiports
+            capacity = route_dict.get((origin_base, destination_base), None)
+        else:
+            # Staying within a vertiport
+            if origin.endswith('_arr'):
+                capacity = vertiport_data[origin_base]["landing_capacity"]
+            elif destination.endswith('_dep'):
+                capacity = vertiport_data[origin_base]["takeoff_capacity"]
+            else:
+                capacity = vertiport_data[origin_base]["hold_capacity"]
+
+        capacities[i] = capacity
+
+    return capacities
 
 def update_basic_market(x, values_k, market_settings, constraints):
     '''Update market consumption, prices, and rebates'''
@@ -294,7 +328,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
         cp_constraints = [x_i >= 0]
     # check_time = time.time()
     problem = cp.Problem(objective, cp_constraints)
-    problem.solve(solver=solver, verbose=True)
+    problem.solve(solver=solver, verbose=False)
     # print(f"Solvers time: {time.time() - check_time}")
     return x_i.value
 
@@ -422,7 +456,6 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
         plt.title("Price evolution")
         # plt.legend(p[-1], title="Fake Good")
 
-
         plt.subplot(2, 3, 2)
         plt.plot(range(1, x_iter+1), overdemand)
         plt.xlabel('x_iter')
@@ -451,6 +484,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
         # plt.show()
         if output_folder:
             plt.savefig(f"{output_folder}/market_plot.png")
+        plt.close()
     
 
     last_prices = np.array(prices[-1])
@@ -475,7 +509,9 @@ def load_json(file=None):
     return data
 
 
-def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, save_file=None, initial_allocation=True):
+def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, output_folder=None, save_file=None, initial_allocation=True):
+
+    print("Running Fisher Allocation and Payment...")
     # Build Fisher Graph
     market_graph = build_graph(vertiport_usage, timing_info)
 
@@ -489,7 +525,50 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, save_fi
     y = np.random.rand(num_agents, num_goods)*10
     p = np.random.rand(num_goods)*10
     r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
-    x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
+    # x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
+    x, prices, r, overdemand, agent_constraints = run_market((y,p,r), agent_information, market_information, 
+                                                             bookkeeping, plotting=True, rational=False, output_folder=output_folder)
+    
+    data_to_output = [
+        "From Fisher Markets:\n",
+        "Allocations:\n", np.array2string(x, separator=', '), "\n",
+        "Prices:\n", np.array2string(prices, separator=', '), "\n",
+        "Constraints:\n"]
+
+    # Convert each matrix in agent_constraints to a string and add to data_to_output
+    for i, matrix in enumerate(agent_constraints):
+        data_to_output.append(f"Matrix {i+1}:\n")
+        data_to_output.append(np.array2string(matrix[0], separator=', '))
+        data_to_output.append(np.array2string(matrix[1], separator=', '))
+        data_to_output.append("\n")
+        output_data = ''.join(data_to_output)
+        write_to_output_file(output_folder, output_data)
+    
+    # Building edge information for mapping
+    edge_information = build_edge_information(goods_list)
+    agent_allocations, agent_indices, agent_edge_information = process_allocations(x, edge_information, agent_goods_lists)
+    
+    int_allocations = []
+    int_allocations_full = []
+    for i in range(num_agents):
+        agent_number = i + 1
+        frac_allocations = agent_allocations[i]
+        start_node= list(agent_edge_information[i].values())[0][0]
+        extended_graph, agent_allocation = agent_probability_graph_extended(agent_edge_information[i], frac_allocations, agent_number, output_folder)
+        sampled_path_extended, sampled_edges, int_allocation = sample_path(extended_graph, start_node, agent_allocation)
+        # print("Sampled Path:", sampled_path_extended)
+        # print("Sampled Edges:", sampled_edges)
+        plot_sample_path_extended(extended_graph, sampled_path_extended,agent_number, output_folder)
+        int_allocations.append(int_allocation)
+        int_allocation_full = mapping_agent_to_full_data(edge_information, sampled_edges)
+        int_allocations_full.append(int_allocation_full)
+
+
+    # IOP for contested goods
+    budget, capacity, _ = market_information
+    capacity = capacity[:-1]
+    new_allocations = int_optimization(int_allocations_full, capacity, budget, prices, u, agent_constraints, agent_indices, int_allocations, output_folder)
+
 
     allocation = []
     for i, (flight_id, flight) in enumerate(flights.items()):
@@ -513,8 +592,16 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, save_fi
     return allocation, None
 
 
+def write_to_output_file(output_folder, output_data):
+    output_file = f"{output_folder}/output.txt"
+    with open(output_file, "w") as f:
+        f.write(output_data)
+    print("Output written to", output_file)
+
+
+
 if __name__ == "__main__":
-    file_path = "test_cases/casef_20240531_105527.json"
+    file_path = "test_cases/casef_20240603_094428.json"
     file_name = file_path.split("/")[-1].split(".")[0]
     data = load_json(file_path)
     output_folder = f"ic/results/{file_name}"
@@ -524,15 +611,16 @@ if __name__ == "__main__":
     flights = data["flights"]
     vertiports = data["vertiports"]
     timing_info = data["timing_info"]
+    routes_data = data["routes"]
 
     # Create vertiport graph and add starting aircraft positions
-    vertiport_usage = VertiportStatus(vertiports, data["routes"], timing_info)
+    vertiport_usage = VertiportStatus(vertiports, routes_data, timing_info)
 
     # Build Fisher Graph
     market_graph = build_graph(vertiport_usage, timing_info)
 
     # Construct market
-    agent_information, market_information, bookkeeping = construct_market(market_graph, flights, timing_info)
+    agent_information, market_information, bookkeeping = construct_market(market_graph, flights, timing_info, routes_data, vertiports)
 
     # Run market
     goods_list, times_list = bookkeeping
@@ -560,28 +648,34 @@ if __name__ == "__main__":
         # print("Sampled Edges:", sampled_edges)
         plot_sample_path_extended(extended_graph, sampled_path_extended, output_folder)
         int_allocations.append(int_allocation)
-        int_allocation_full, int_allocation_indices = mapping_agent_to_full_data(edge_information, sampled_edges)
+        int_allocation_full = mapping_agent_to_full_data(edge_information, sampled_edges)
         int_allocations_full.append(int_allocation_full)
 
     # IOP for contested goods
     budget, capacity, _ = market_information
     capacity = capacity[:-1]
-    # print("Budget:", budget)
-    # print("Capacity:", capacity)
-    new_allocations = int_optimization(int_allocations_full, int_allocation_indices, capacity, budget, prices, u, agent_constraints, int_allocations, output_folder)
-    print(new_allocations)
+    new_allocations, prices = int_optimization(int_allocations_full, capacity, budget, prices, u, agent_constraints, agent_indices, int_allocations, output_folder)
 
-    # testing temp, remove later
+    # Convert each matrix in agent_constraints to a string and add to data_to_output
+    data_to_output = []
+    for i, matrix in enumerate(agent_constraints):
+        data_to_output.append(f"Matrix {i+1}:\n")
+        data_to_output.append(np.array2string(matrix[0], separator=', '))
+        data_to_output.append(np.array2string(matrix[1], separator=', '))
+        data_to_output.append("\n")
+        output_data = ''.join(data_to_output)
+
+
     output_file = f"{output_folder}/output.txt"
     with open(output_file, "w") as f:
-        f.write("From Fisher Markets:\n")
         f.write("Allocations:\n")
-        f.write(str(x))        
+        f.write(np.array2string(x, separator=', '))
+        f.write("\n")
         f.write("Prices:\n")
-        f.write(str(prices))
+        f.write(np.array2string(prices, separator=', '))
         f.write("\n")
         f.write("Constraints:\n")
-        f.write(str(agent_constraints))
+        f.write(output_data)
         f.write("\n------------------------------------------------\n")
         f.write("Agent Allocation:\n")
         f.write(str(agent_allocation))
@@ -596,5 +690,4 @@ if __name__ == "__main__":
         f.write(str(new_allocations))
     # For testing purposes
     print("Output written to", output_file)
-
 

@@ -229,7 +229,7 @@ def step_simulation(
     return vertiport_usage
 
 
-def run_scenario(data, scenario_path, scenario_name, method="fisher"):
+def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher"):
     """
     Create and run a scenario based on the given data. Save it to the specified path.
 
@@ -241,6 +241,13 @@ def run_scenario(data, scenario_path, scenario_name, method="fisher"):
     Returns:
         str: The path to the created scenario file.
     """
+    # added by Gaby, creating save folder path
+
+    file_name = file_path.split("/")[-1].split(".")[0]
+    data = load_json(file_path)
+    output_folder = f"ic/results/{file_name}"
+    Path(output_folder).mkdir(parents=True, exist_ok=True)
+
     flights = data["flights"]
     vertiports = data["vertiports"]
     timing_info = data["timing_info"]
@@ -264,6 +271,8 @@ def run_scenario(data, scenario_path, scenario_name, method="fisher"):
     start_time = time.time()
     initial_allocation = True
     # Iterate through each time flights appear
+    # I think we should change this to running the simulatin every n time steps and specify the
+    # frequency of fisher market run 
     for appearance_time in sorted(ordered_flights.keys()):
         # Get the current flights
         current_flight_ids = ordered_flights[appearance_time]
@@ -280,7 +289,7 @@ def run_scenario(data, scenario_path, scenario_name, method="fisher"):
         }
         if method == "fisher":
             allocated_flights, payments = fisher_allocation_and_payment(
-                vertiport_usage, current_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
+                vertiport_usage, current_flights, current_timing_info, output_folder, save_file=scenario_name, initial_allocation=initial_allocation
             )
         elif method == "vcg":
             allocated_flights, payments = allocation_and_payment(
@@ -418,7 +427,8 @@ if __name__ == "__main__":
             sys.exit()
 
     # Create the scenario file and double check the correct path was used
-    path_to_scn_file = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME, args.method)
+    # run_scenario(data, scenario_path, scenario_name, file_path, method="fisher")
+    path_to_scn_file = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME, file_path, args.method)
     print(path_to_scn_file)
     assert path == path_to_scn_file, "An error occured while writing the scenario file."
 
