@@ -98,7 +98,7 @@ def update_allocation(x_agents, xi_values, agents_with_contested_allocations):
     new_x_agents = x_agents
     for i in range(len(agents_with_contested_allocations)):
         new_x_agents[agents_with_contested_allocations[i]] = xi_values[i]
-    print("New allocation: ", new_x_agents)
+    # print("New allocation: ", new_x_agents)
     return new_x_agents
 
 
@@ -113,7 +113,7 @@ def print_equilibrium_results(iteration, equilibrium_reached, prices, xi_values,
     }
     df = pd.DataFrame(data)
     df = df.transpose()
-    print(df)
+    # print(df)
 
 
 

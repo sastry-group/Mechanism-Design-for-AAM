@@ -38,6 +38,19 @@ vertiports = {
     "V007": {"latitude": 38.58856301092047, "longitude": -121.5627454937505, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 5},
 }
 
+# This is for testing of case #3, similarly in generate_routes function set capacity = 0 to test convergence
+# vertiports = {
+#     "V001": {"latitude": 37.766699, "longitude": -122.3903664, "landing_capacity": 0, "takeoff_capacity": 0, "hold_capacity": 5},
+#     "V002": {"latitude": 37.8361761, "longitude": -122.2668028, "landing_capacity": 0, "takeoff_capacity": 0, "hold_capacity": 5},
+#     "V003": {"latitude": 37.7835538, "longitude": -122.5067642, "landing_capacity": 0, "takeoff_capacity": 0, "hold_capacity": 5},
+#     "V004": {"latitude": 37.9472484, "longitude": -122.4880737, "landing_capacity": 0, "takeoff_capacity": 0, "hold_capacity": 5},
+#     "V005": {"latitude": 37.38556649999999, "longitude": -121.9723564, "landing_capacity": 0, "takeoff_capacity": 0, "hold_capacity": 5},
+#     "V006": {"latitude": 37.25214395119753, "longitude": -122.4066509403772, "landing_capacity": 0, "takeoff_capacity": 0, "hold_capacity": 5},
+#     "V007": {"latitude": 38.58856301092047, "longitude": -121.5627454937505, "landing_capacity": 0, "takeoff_capacity": 0, "hold_capacity": 5},
+# }
+
+
+
 total_capacity = sum(vertiport["hold_capacity"] for vertiport in vertiports.values())
 # Assert that total holding capacity is greater than or equal to the number of flights
 assert total_capacity >= N_FLIGHTS, f"Total holding capacity ({total_capacity}) must be greater than or equal to the number of flights ({N_FLIGHTS})"
@@ -164,7 +177,7 @@ def generate_routes(vertiports):
                     "origin_vertiport_id": origin_id, 
                     "destination_vertiport_id": destination_id, 
                     "travel_time": travel_time,
-                    "capacity": random.randint(3, 5)
+                    "capacity": random.randint(2, 5),
                     }
                 routes.append(route)
     return routes

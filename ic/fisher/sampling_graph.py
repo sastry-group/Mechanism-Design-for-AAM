@@ -100,8 +100,8 @@ def agent_probability_graph_extended(edge_information, x, agent_number=1, output
 def sample_path(G, start_node, agent_allocations):
     """Sample a path in the graph G starting from the given node."""
 
-    start_time_sample = time.time()
-    print("Sampling edges ...")
+    # start_time_sample = time.time()
+    # print("Sampling edges ...")
 
     current_node = start_node
     path = [current_node]
@@ -133,7 +133,7 @@ def sample_path(G, start_node, agent_allocations):
     agent_allocations.update(allocation_updates)
     agent_int_allocations = list(agent_allocations.values())
 
-    print(f"Time to sample: {time.time() - start_time_sample:.5f}")
+    # print(f"Time to sample: {time.time() - start_time_sample:.5f}")
 
     return path, edges, agent_int_allocations
 
