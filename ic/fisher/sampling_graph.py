@@ -283,6 +283,17 @@ def mapping_agent_to_full_data(full_edge_information, sampled_edges):
     return allocation_array
 
 
+def mapping_goods_from_allocation(new_allocations, goods_list):
+    agent_goods = []
+
+    # Iterate over each array in new_allocations
+    for i in range(new_allocations.shape[0]):
+        indices = np.where(new_allocations[i] == 1)[0]
+        allocation_goods = [goods_list[idx] for idx in indices]
+        agent_goods.append(allocation_goods)
+    return agent_goods
+
+
 # def create_int_to_frac_datasize(agent_edge_information, sampled_edges):
 #     frac_to_int_index_mapping = [0] * len(agent_edge_information)
 #     for i, edge in enumerate(agent_edge_information.values()):

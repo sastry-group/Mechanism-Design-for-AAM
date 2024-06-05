@@ -16,12 +16,12 @@ print(str(top_level_path))
 sys.path.append(str(top_level_path))
 
 from VertiportStatus import VertiportStatus
-from sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, process_allocations, mapping_agent_to_full_data
+from sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, process_allocations, mapping_agent_to_full_data, mapping_goods_from_allocation
 from fisher_int_optimization import int_optimization
 
 UPDATED_APPROACH = True
 TOL_ERROR = 1e-3
-MAX_NUM_ITERATIONS = 100
+MAX_NUM_ITERATIONS = 500
 BETA = 10 # chante to 1/T
 epsilon = 0.05
 
@@ -410,12 +410,12 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
     error = [] * len(agent_constraints)
     
     # Algorithm 1
-    tolerance = len(agent_settings[0]) * np.sqrt(len(supply)-1) * TOL_ERROR
+    tolerance = len(agent_constraints[0]) * np.sqrt(len(supply)-1) * TOL_ERROR
     market_clearing_error = float('inf')
     x_iter = 0
     start_time_algorithm = time.time()
 
-    while x_iter <= 100:
+    while market_clearing_error > tolerance and x_iter <= MAX_NUM_ITERATIONS:
         # Update agents
         x = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, rational=rational)
         agent_allocations.append(x)
@@ -442,8 +442,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
         print("Iteration: ", x_iter)
         print("Market Clearing Error: ", market_clearing_error)
     
-        if market_clearing_error <= tolerance:
-            break
+        # if market_clearing_error <= tolerance:
+        #     break
 
     print(f"Time to run algorithm: {time.time() - start_time_algorithm}")
 
@@ -558,7 +558,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, output_
         sampled_path_extended, sampled_edges, int_allocation = sample_path(extended_graph, start_node, agent_allocation)
         # print("Sampled Path:", sampled_path_extended)
         # print("Sampled Edges:", sampled_edges)
-        plot_sample_path_extended(extended_graph, sampled_path_extended,agent_number, output_folder)
+        plot_sample_path_extended(extended_graph, sampled_path_extended, agent_number, output_folder)
         int_allocations.append(int_allocation)
         int_allocation_full = mapping_agent_to_full_data(edge_information, sampled_edges)
         int_allocations_full.append(int_allocation_full)
@@ -638,17 +638,19 @@ if __name__ == "__main__":
     agent_allocations, agent_indices, agent_edge_information = process_allocations(x, edge_information, agent_goods_lists)
     
     int_allocations = []
-    int_allocations_full = np.zeros((num_agents, num_goods - 1)) # removing default 
+    int_allocations_full = np.zeros((num_agents, num_goods - 1)) # removing default good
+    sampled_goods = []
     start_time_sample = time.time()
     print("Sampling edges ...")
     for i in range(num_agents):
+        agent_number = i + 1
         frac_allocations = agent_allocations[i]
         start_node= list(agent_edge_information[i].values())[0][0]
-        extended_graph, agent_allocation = agent_probability_graph_extended(agent_edge_information[i], frac_allocations, output_folder)
+        extended_graph, agent_allocation = agent_probability_graph_extended(agent_edge_information[i], frac_allocations, agent_number, output_folder)
         sampled_path_extended, sampled_edges, int_allocation = sample_path(extended_graph, start_node, agent_allocation)
         # print("Sampled Path:", sampled_path_extended)
         # print("Sampled Edges:", sampled_edges)
-        plot_sample_path_extended(extended_graph, sampled_path_extended, output_folder)
+        plot_sample_path_extended(extended_graph, sampled_path_extended, agent_number, output_folder)
         int_allocations.append(int_allocation)
         int_allocation_full = mapping_agent_to_full_data(edge_information, sampled_edges)
         int_allocations_full[i,:] = int_allocation_full
@@ -658,13 +660,15 @@ if __name__ == "__main__":
     # IOP for contested goods
     budget, capacity, _ = market_information
     capacity = capacity[:-1]
-    new_allocations, new_prices = int_optimization(int_allocations_full, capacity, budget, prices, u, agent_constraints, agent_indices, int_allocations, output_folder)
+    new_allocations, new_prices = int_optimization(int_allocations_full, capacity, budget, prices[:-1], u, agent_constraints, agent_indices, int_allocations, output_folder)
+    payment = np.sum(new_prices * new_allocations, axis=1)
 
+    new_allocations_goods = mapping_goods_from_allocation(new_allocations, goods_list)
 
     ####################################### Write output to file #######################################
     print("Writing output to file...")
     # mapping for easier writing of output file:
-    new_agent_allocations, new_agent_indices, new_agent_edge_information = process_allocations(new_allocations, edge_information, agent_goods_lists)
+    
     def full_list_string(lst):
         return ', '.join([str(item) for item in lst])
     
@@ -681,8 +685,23 @@ if __name__ == "__main__":
 
     # Set print options to avoid truncation
     np.set_printoptions(threshold=np.inf, linewidth=np.inf)
-    output_file = f"{output_folder}/output.txt"
-    with open(output_file, "w") as f:
+    market_output_file = f"{output_folder}/market_output.txt"
+    agent_output_file = f"{output_folder}/agent_output.txt"
+    
+    with open(market_output_file, "w") as f:
+        f.write("Prices:\n")
+        f.write(np.array2string(prices, separator='\n'))
+        f.write("\n")
+        f.write("New Prices:\n")
+        f.write(np.array2string(new_prices, separator='\n'))
+        f.write("\n")
+        f.write("Supply:\n")
+        f.write(np.array2string(capacity, separator='\n'))
+        f.write("\n")
+        f.write("Constraints:\n")
+        f.write(output_data)
+
+    with open(agent_output_file, "w") as f:
         f.write("Allocations:\n")
         for i in range(num_agents):
             f.write(f"Agent {i+1}:\n")
@@ -699,11 +718,7 @@ if __name__ == "__main__":
             f.write(full_list_string(int_allocations[i]))
             f.write("\n")
             f.write("Deconflicted: ")
-            f.write(full_list_string(new_agent_allocations[i]))
-            f.write("\n")
-            f.write(full_list_string(new_agent_indices[i]))
-            f.write("\n")
-            f.write(full_list_string(new_agent_edge_information[i]))
+            f.write(full_list_string(new_allocations_goods[i]))
             f.write("\n")
             f.write("Utility:\n")
             f.write(np.array2string(np.array(u[i]), separator=', '))
@@ -711,14 +726,9 @@ if __name__ == "__main__":
             f.write("Budget:\n")
             f.write(str(budget[i]))
             f.write("\n")
-        f.write("Prices:\n")
-        f.write(np.array2string(prices, separator=', '))
-        f.write("\n")
-        f.write("New Prices:\n")
-        f.write(np.array2string(new_prices, separator=', '))
-        f.write("\n")
-        f.write("Constraints:\n")
-        f.write(output_data)
+            f.write("Payment:\n")
+            f.write(str(payment[i]))
+            f.write("\n")
 
-    print("Output written to", output_file)
+    print("Output files written to", output_folder)
 

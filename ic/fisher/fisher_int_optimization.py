@@ -42,7 +42,6 @@ def int_optimization(full_allocations, capacity, budget, prices, utility, agents
         new_market_capacity[contested_edges] = capacity[contested_edges]  # +1  to account for the reduced capacity if substracted before
         new_market_A = []
         new_market_b = []
-        prices = prices[:-1]
         for agent in agents_with_contested_allocations:
             Aarray = agents_constraints[agent][0]
             new_market_A.append(Aarray[:,:-1])
