@@ -18,6 +18,7 @@ sys.path.append(str(top_level_path))
 from VertiportStatus import VertiportStatus
 from sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, process_allocations, mapping_agent_to_full_data, mapping_goods_from_allocation
 from fisher_int_optimization import int_optimization
+from write_output import write_output
 
 UPDATED_APPROACH = True
 TOL_ERROR = 1e-3
@@ -535,118 +536,13 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, output_
     x, prices, r, overdemand, agent_constraints, adjusted_budgets = run_market((y,p,r), agent_information, market_information, 
                                                              bookkeeping, plotting=True, rational=False, output_folder=output_folder)
     
-    data_to_output = [
-        "From Fisher Markets:\n",
-        "Allocations:\n", np.array2string(x, separator=', '), "\n",
-        "Prices:\n", np.array2string(prices, separator=', '), "\n",
-        "Constraints:\n"]
-
-    # Convert each matrix in agent_constraints to a string and add to data_to_output
-    for i, matrix in enumerate(agent_constraints):
-        data_to_output.append(f"Matrix {i+1}:\n")
-        data_to_output.append(np.array2string(matrix[0], separator=', '))
-        data_to_output.append(np.array2string(matrix[1], separator=', '))
-        data_to_output.append("\n")
-        output_data = ''.join(data_to_output)
-        write_to_output_file(output_folder, output_data)
     
     # Building edge information for mapping
     edge_information = build_edge_information(goods_list)
     agent_allocations, agent_indices, agent_edge_information = process_allocations(x, edge_information, agent_goods_lists)
     
     int_allocations = []
-    int_allocations_full = []
-    for i in range(num_agents):
-        agent_number = i + 1
-        frac_allocations = agent_allocations[i]
-        start_node= list(agent_edge_information[i].values())[0][0]
-        extended_graph, agent_allocation = agent_probability_graph_extended(agent_edge_information[i], frac_allocations, agent_number, output_folder)
-        sampled_path_extended, sampled_edges, int_allocation = sample_path(extended_graph, start_node, agent_allocation)
-        # print("Sampled Path:", sampled_path_extended)
-        # print("Sampled Edges:", sampled_edges)
-        plot_sample_path_extended(extended_graph, sampled_path_extended, agent_number, output_folder)
-        int_allocations.append(int_allocation)
-        int_allocation_full = mapping_agent_to_full_data(edge_information, sampled_edges)
-        int_allocations_full.append(int_allocation_full)
-
-
-    # IOP for contested goods
-    _ , capacity, _ = market_information
-    budget = adjusted_budgets
-    capacity = capacity[:-1]
-    new_allocations = int_optimization(int_allocations_full, capacity, budget, prices, u, agent_constraints, agent_indices, int_allocations, output_folder)
-
-
-    allocation = []
-    for i, (flight_id, flight) in enumerate(flights.items()):
-        origin_vertiport = flight["origin_vertiport_id"]
-        added_request = False
-        for request_id, request in flight["requests"].items():
-            if request["request_departure_time"] == 0:
-                base_request_id = request_id
-                continue
-            dep_time = request["request_departure_time"]
-            arr_time = request["request_arrival_time"]
-            destination_vertiport = request["destination_vertiport_id"]
-            start_node, end_node = origin_vertiport + "_" + str(dep_time) + "_dep", destination_vertiport + "_" + str(arr_time) + "_arr"
-            good = (start_node, end_node)
-            if x[i][goods_list.index(good)] >= 1 - epsilon:
-                added_request = True
-                allocation.append((flight_id, request_id))
-        if not added_request:
-            allocation.append((flight_id, base_request_id))
-
-    return allocation, None
-
-
-def write_to_output_file(output_folder, output_data):
-    output_file = f"{output_folder}/output.txt"
-    with open(output_file, "w") as f:
-        f.write(output_data)
-    print("Output written to", output_file)
-
-
-
-if __name__ == "__main__":
-    file_path = "test_cases/case4f_20240605_103345.json"
-    file_name = file_path.split("/")[-1].split(".")[0]
-    data = load_json(file_path)
-    output_folder = f"ic/results/{file_name}"
-    Path(output_folder).mkdir(parents=True, exist_ok=True)
-
-
-    flights = data["flights"]
-    vertiports = data["vertiports"]
-    timing_info = data["timing_info"]
-    routes_data = data["routes"]
-
-    # Create vertiport graph and add starting aircraft positions
-    vertiport_usage = VertiportStatus(vertiports, routes_data, timing_info)
-
-    # Build Fisher Graph
-    market_graph = build_graph(vertiport_usage, timing_info)
-
-    # Construct market
-    agent_information, market_information, bookkeeping = construct_market(market_graph, flights, timing_info, routes_data, vertiports)
-
-    # Run market
-    goods_list, times_list = bookkeeping
-    num_goods = len(goods_list)
-    num_agents = len(flights)
-    u, agent_constraints, agent_goods_lists = agent_information
-    y = np.random.rand(num_agents, num_goods)*10
-    p = np.random.rand(num_goods)*10
-    r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
-    x, prices, r, overdemand, agent_constraints, adjusted_budgets = run_market((y,p,r), agent_information, market_information, 
-                                                             bookkeeping, plotting=True, rational=False, output_folder=output_folder)
-
-    # Sampling fractional edges
-    edge_information = build_edge_information(goods_list)
-    agent_allocations, agent_indices, agent_edge_information = process_allocations(x, edge_information, agent_goods_lists)
-    
-    int_allocations = []
     int_allocations_full = np.zeros((num_agents, num_goods - 1)) # removing default good
-    sampled_goods = []
     start_time_sample = time.time()
     print("Sampling edges ...")
     for i in range(num_agents):
@@ -673,68 +569,167 @@ if __name__ == "__main__":
 
     new_allocations_goods = mapping_goods_from_allocation(new_allocations, goods_list)
 
-    ####################################### Write output to file #######################################
-    print("Writing output to file...")
-    # mapping for easier writing of output file:
+    write_output(agent_constraints, edge_information, prices, new_prices, capacity, 
+                 agent_allocations, agent_indices, agent_edge_information, agent_goods_lists, 
+                 int_allocations, new_allocations_goods, u, budget, payment, output_folder)
+
+
+
+    allocation = []
+    for i, (flight_id, flight) in enumerate(flights.items()):
+        origin_vertiport = flight["origin_vertiport_id"]
+        added_request = False
+        for request_id, request in flight["requests"].items():
+            if request["request_departure_time"] == 0:
+                base_request_id = request_id
+                continue
+            dep_time = request["request_departure_time"]
+            arr_time = request["request_arrival_time"]
+            destination_vertiport = request["destination_vertiport_id"]
+            start_node, end_node = origin_vertiport + "_" + str(dep_time) + "_dep", destination_vertiport + "_" + str(arr_time) + "_arr"
+            good = (start_node, end_node)
+            if x[i][goods_list.index(good)] >= 1 - epsilon:
+                added_request = True
+                allocation.append((flight_id, request_id))
+        if not added_request:
+            allocation.append((flight_id, base_request_id))
+
+    return allocation, None
+
+
+
+if __name__ == "__main__":
+    pass
+    # file_path = "test_cases/case4f_20240605_103345.json"
+    # file_name = file_path.split("/")[-1].split(".")[0]
+    # data = load_json(file_path)
+    # output_folder = f"ic/results/{file_name}"
+    # Path(output_folder).mkdir(parents=True, exist_ok=True)
+
+
+    # flights = data["flights"]
+    # vertiports = data["vertiports"]
+    # timing_info = data["timing_info"]
+    # routes_data = data["routes"]
+
+    # # Create vertiport graph and add starting aircraft positions
+    # vertiport_usage = VertiportStatus(vertiports, routes_data, timing_info)
+
+    # # Build Fisher Graph
+    # market_graph = build_graph(vertiport_usage, timing_info)
+
+    # # Construct market
+    # agent_information, market_information, bookkeeping = construct_market(market_graph, flights, timing_info, routes_data, vertiports)
+
+    # # Run market
+    # goods_list, times_list = bookkeeping
+    # num_goods = len(goods_list)
+    # num_agents = len(flights)
+    # u, agent_constraints, agent_goods_lists = agent_information
+    # y = np.random.rand(num_agents, num_goods)*10
+    # p = np.random.rand(num_goods)*10
+    # r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
+    # x, prices, r, overdemand, agent_constraints, adjusted_budgets = run_market((y,p,r), agent_information, market_information, 
+    #                                                          bookkeeping, plotting=True, rational=False, output_folder=output_folder)
+
+    # # Sampling fractional edges
+    # edge_information = build_edge_information(goods_list)
+    # agent_allocations, agent_indices, agent_edge_information = process_allocations(x, edge_information, agent_goods_lists)
     
-    def full_list_string(lst):
-        return ', '.join([str(item) for item in lst])
+    # int_allocations = []
+    # int_allocations_full = np.zeros((num_agents, num_goods - 1)) # removing default good
+    # start_time_sample = time.time()
+    # print("Sampling edges ...")
+    # for i in range(num_agents):
+    #     agent_number = i + 1
+    #     frac_allocations = agent_allocations[i]
+    #     start_node= list(agent_edge_information[i].values())[0][0]
+    #     extended_graph, agent_allocation = agent_probability_graph_extended(agent_edge_information[i], frac_allocations, agent_number, output_folder)
+    #     sampled_path_extended, sampled_edges, int_allocation = sample_path(extended_graph, start_node, agent_allocation)
+    #     # print("Sampled Path:", sampled_path_extended)
+    #     # print("Sampled Edges:", sampled_edges)
+    #     plot_sample_path_extended(extended_graph, sampled_path_extended, agent_number, output_folder)
+    #     int_allocations.append(int_allocation)
+    #     int_allocation_full = mapping_agent_to_full_data(edge_information, sampled_edges)
+    #     int_allocations_full[i,:] = int_allocation_full
+    # int_allocations_full = np.array(int_allocations_full)
+    # print(f"Time to sample: {time.time() - start_time_sample:.5f}")
+
+    # # IOP for contested goods
+    # _ , capacity, _ = market_information
+    # budget = adjusted_budgets
+    # capacity = capacity[:-1]
+    # new_allocations, new_prices = int_optimization(int_allocations_full, capacity, budget, prices[:-1], u, agent_constraints, agent_indices, int_allocations, output_folder)
+    # payment = np.sum(new_prices * new_allocations, axis=1)
+
+    # new_allocations_goods = mapping_goods_from_allocation(new_allocations, goods_list)
+
+    # write_output(agent_constraints, edge_information, prices, new_prices, capacity, 
+    #             agent_allocations, agent_indices, agent_edge_information, agent_goods_lists, 
+    #             int_allocations, new_allocations_goods, u, budget, payment, output_folder)
+
+    # ####################################### Write output to file #######################################
+    # print("Writing output to file...")
+    # # mapping for easier writing of output file:
     
-    # Convert each matrix in agent_constraints to a string and add to data_to_output
-    data_to_output = []
-    for i, matrix in enumerate(agent_constraints):
-        data_to_output.append(f"Matrix {i+1}:\n")
-        data_to_output.append(full_list_string(matrix[0]))
-        data_to_output.append("\n")
-        data_to_output.append(full_list_string(matrix[1]))
-        data_to_output.append("\n")
-    output_data = ''.join(data_to_output)
-
-
-    # Set print options to avoid truncation
-    np.set_printoptions(threshold=np.inf, linewidth=np.inf)
-    market_output_file = f"{output_folder}/market_output.txt"
-    agent_output_file = f"{output_folder}/agent_output.txt"
-    edge_key_file = f"{output_folder}/edge_key.txt"
+    # def full_list_string(lst):
+    #     return ', '.join([str(item) for item in lst])
     
-    with open(market_output_file, "w") as f:
-        f.write("Edge Label, Good, Fisher Prices, New Prices\n")
-        for i, (key, value) in enumerate(edge_information.items()):
-            line = f"{key}: {', '.join(value)}, {prices[i]}, {new_prices[i]}, {capacity[i]}\n"
-            f.write(line)
-            f.write("\n")
-
-    with open(agent_output_file, "w") as f:
-        f.write("Allocations:\n")
-        for i in range(num_agents):
-            f.write(f"Agent {i+1}:\n")
-            f.write("Fisher: ")
-            f.write(full_list_string(agent_allocations[i]))
-            f.write("\n")
-            f.write(full_list_string(agent_indices[i]))
-            f.write("\n")
-            f.write(full_list_string(agent_edge_information[i]))
-            f.write("\n")
-            f.write(full_list_string(agent_goods_lists[i]))
-            f.write("\n")
-            f.write("Sample and int: ")
-            f.write(full_list_string(int_allocations[i]))
-            f.write("\n")
-            f.write("Deconflicted: ")
-            f.write(full_list_string(new_allocations_goods[i]))
-            f.write("\n")
-            f.write("Utility:\n")
-            f.write(np.array2string(np.array(u[i]), separator=', '))
-            f.write("\n")
-            f.write("Budget:\n")
-            f.write(str(budget[i]))
-            f.write("\n")
-            f.write("Payment:\n")
-            f.write(str(payment[i]))
-            f.write("\n")
-            # f.write("Constraints:\n")
-            # f.write(output_data)
+    # # Convert each matrix in agent_constraints to a string and add to data_to_output
+    # data_to_output = []
+    # for i, matrix in enumerate(agent_constraints):
+    #     data_to_output.append(f"Matrix {i+1}:\n")
+    #     data_to_output.append(full_list_string(matrix[0]))
+    #     data_to_output.append("\n")
+    #     data_to_output.append(full_list_string(matrix[1]))
+    #     data_to_output.append("\n")
+    # output_data = ''.join(data_to_output)
 
 
-    print("Output files written to", output_folder)
+    # # Set print options to avoid truncation
+    # np.set_printoptions(threshold=np.inf, linewidth=np.inf)
+    # market_output_file = f"{output_folder}/market_output.txt"
+    # agent_output_file = f"{output_folder}/agent_output.txt"
+    # edge_key_file = f"{output_folder}/edge_key.txt"
+    
+    # with open(market_output_file, "w") as f:
+    #     f.write("Edge Label, Good, Fisher Prices, New Prices, Capacity\n")
+    #     for i, (key, value) in enumerate(edge_information.items()):
+    #         line = f"{key}: {', '.join(value)}, {prices[i]}, {new_prices[i]}, {capacity[i]}\n"
+    #         f.write(line)
+    #         f.write("\n")
+
+    # with open(agent_output_file, "w") as f:
+    #     f.write("Allocations:\n")
+    #     for i in range(num_agents):
+    #         f.write(f"Agent {i+1}:\n")
+    #         f.write("Fisher: ")
+    #         f.write(full_list_string(agent_allocations[i]))
+    #         f.write("\n")
+    #         f.write(full_list_string(agent_indices[i]))
+    #         f.write("\n")
+    #         f.write(full_list_string(agent_edge_information[i]))
+    #         f.write("\n")
+    #         f.write(full_list_string(agent_goods_lists[i]))
+    #         f.write("\n")
+    #         f.write("Sample and int: ")
+    #         f.write(full_list_string(int_allocations[i]))
+    #         f.write("\n")
+    #         f.write("Deconflicted: ")
+    #         f.write(full_list_string(new_allocations_goods[i]))
+    #         f.write("\n")
+    #         f.write("Utility:\n")
+    #         f.write(np.array2string(np.array(u[i]), separator=', '))
+    #         f.write("\n")
+    #         f.write("Budget:\n")
+    #         f.write(str(budget[i]))
+    #         f.write("\n")
+    #         f.write("Payment:\n")
+    #         f.write(str(payment[i]))
+    #         f.write("\n")
+    #         # f.write("Constraints:\n")
+    #         # f.write(output_data)
+
+
+    # print("Output files written to", output_folder)
 

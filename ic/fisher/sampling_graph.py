@@ -294,13 +294,6 @@ def mapping_goods_from_allocation(new_allocations, goods_list):
     return agent_goods
 
 
-# def create_int_to_frac_datasize(agent_edge_information, sampled_edges):
-#     frac_to_int_index_mapping = [0] * len(agent_edge_information)
-#     for i, edge in enumerate(agent_edge_information.values()):
-#         if edge in sampled_edges:
-#             frac_to_int_index_mapping[i] = 1
-
-#     return frac_to_int_index_mapping
     
 
 # edge_information = {
