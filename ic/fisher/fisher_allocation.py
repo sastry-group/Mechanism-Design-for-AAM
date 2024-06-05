@@ -21,7 +21,7 @@ from fisher_int_optimization import int_optimization
 
 UPDATED_APPROACH = True
 TOL_ERROR = 1e-3
-MAX_NUM_ITERATIONS = 500
+MAX_NUM_ITERATIONS = 300
 BETA = 10 # chante to 1/T
 epsilon = 0.05
 
@@ -276,7 +276,13 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
 
     # Update agents in parallel or not depending on parallel flag
     if not parallel:
-        results = [update_agent(*arg) for arg in args]
+        results = []
+        adjusted_budgets = []
+        for arg in args:
+            updates =  update_agent(*arg)
+            results.append(updates[0])
+            adjusted_budgets.append(updates[1]) 
+        # results = [update_agent(*arg) for arg in args]
     else:
         num_processes = 4 # increase based on available resources
         with Pool(num_processes) as pool:
@@ -287,7 +293,7 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
         for good in goods_list:
             if good in agent_goods_lists[i]:
                 x[i, goods_list.index(good)] = agent_x[agent_goods_lists[i].index(good)]
-    return x
+    return x, adjusted_budgets
 
 
 def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solver=cp.SCS):
@@ -330,7 +336,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
     problem = cp.Problem(objective, cp_constraints)
     problem.solve(solver=solver, verbose=False)
     # print(f"Solvers time: {time.time() - check_time}")
-    return x_i.value
+    return x_i.value, w_adj
 
 
 def run_basic_market(initial_values, agent_settings, market_settings, plotting=False, rational=False):
@@ -410,14 +416,14 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
     error = [] * len(agent_constraints)
     
     # Algorithm 1
-    tolerance = len(agent_constraints[0]) * np.sqrt(len(supply)-1) * TOL_ERROR
+    tolerance = len(agent_goods_lists) * np.sqrt(len(supply)-1) * TOL_ERROR
     market_clearing_error = float('inf')
     x_iter = 0
     start_time_algorithm = time.time()
 
     while market_clearing_error > tolerance and x_iter <= MAX_NUM_ITERATIONS:
         # Update agents
-        x = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, rational=rational)
+        x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, rational=rational)
         agent_allocations.append(x)
         overdemand.append(np.sum(x, axis=0) - supply.flatten())
         x_ij = np.sum(x, axis=0)
@@ -492,7 +498,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
 
     # print(f"Error: {[error[i][-1] for i in range(len(error))]}")
     # print(f"Overdemand: {overdemand[-1][:]}")
-    return x, last_prices, r, overdemand, agent_constraints
+    return x, last_prices, r, overdemand, agent_constraints, adjusted_budgets
 
 def load_json(file=None):
     """
@@ -526,7 +532,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, output_
     p = np.random.rand(num_goods)*10
     r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
     # x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
-    x, prices, r, overdemand, agent_constraints = run_market((y,p,r), agent_information, market_information, 
+    x, prices, r, overdemand, agent_constraints, adjusted_budgets = run_market((y,p,r), agent_information, market_information, 
                                                              bookkeeping, plotting=True, rational=False, output_folder=output_folder)
     
     data_to_output = [
@@ -565,7 +571,8 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, output_
 
 
     # IOP for contested goods
-    budget, capacity, _ = market_information
+    _ , capacity, _ = market_information
+    budget = adjusted_budgets
     capacity = capacity[:-1]
     new_allocations = int_optimization(int_allocations_full, capacity, budget, prices, u, agent_constraints, agent_indices, int_allocations, output_folder)
 
@@ -601,7 +608,7 @@ def write_to_output_file(output_folder, output_data):
 
 
 if __name__ == "__main__":
-    file_path = "test_cases/case3f_20240604_114041.json"
+    file_path = "test_cases/case4f_20240605_103345.json"
     file_name = file_path.split("/")[-1].split(".")[0]
     data = load_json(file_path)
     output_folder = f"ic/results/{file_name}"
@@ -630,7 +637,7 @@ if __name__ == "__main__":
     y = np.random.rand(num_agents, num_goods)*10
     p = np.random.rand(num_goods)*10
     r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
-    x, prices, r, overdemand, agent_constraints = run_market((y,p,r), agent_information, market_information, 
+    x, prices, r, overdemand, agent_constraints, adjusted_budgets = run_market((y,p,r), agent_information, market_information, 
                                                              bookkeeping, plotting=True, rational=False, output_folder=output_folder)
 
     # Sampling fractional edges
@@ -658,7 +665,8 @@ if __name__ == "__main__":
     print(f"Time to sample: {time.time() - start_time_sample:.5f}")
 
     # IOP for contested goods
-    budget, capacity, _ = market_information
+    _ , capacity, _ = market_information
+    budget = adjusted_budgets
     capacity = capacity[:-1]
     new_allocations, new_prices = int_optimization(int_allocations_full, capacity, budget, prices[:-1], u, agent_constraints, agent_indices, int_allocations, output_folder)
     payment = np.sum(new_prices * new_allocations, axis=1)
@@ -687,19 +695,14 @@ if __name__ == "__main__":
     np.set_printoptions(threshold=np.inf, linewidth=np.inf)
     market_output_file = f"{output_folder}/market_output.txt"
     agent_output_file = f"{output_folder}/agent_output.txt"
+    edge_key_file = f"{output_folder}/edge_key.txt"
     
     with open(market_output_file, "w") as f:
-        f.write("Prices:\n")
-        f.write(np.array2string(prices, separator='\n'))
-        f.write("\n")
-        f.write("New Prices:\n")
-        f.write(np.array2string(new_prices, separator='\n'))
-        f.write("\n")
-        f.write("Supply:\n")
-        f.write(np.array2string(capacity, separator='\n'))
-        f.write("\n")
-        f.write("Constraints:\n")
-        f.write(output_data)
+        f.write("Edge Label, Good, Fisher Prices, New Prices\n")
+        for i, (key, value) in enumerate(edge_information.items()):
+            line = f"{key}: {', '.join(value)}, {prices[i]}, {new_prices[i]}, {capacity[i]}\n"
+            f.write(line)
+            f.write("\n")
 
     with open(agent_output_file, "w") as f:
         f.write("Allocations:\n")
@@ -729,6 +732,9 @@ if __name__ == "__main__":
             f.write("Payment:\n")
             f.write(str(payment[i]))
             f.write("\n")
+            # f.write("Constraints:\n")
+            # f.write(output_data)
+
 
     print("Output files written to", output_folder)
 

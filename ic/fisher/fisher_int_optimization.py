@@ -139,7 +139,7 @@ def find_optimal_xi(n, utility, A, b, prices, budget):
     problem = cp.Problem(objective, constraints)
     result = problem.solve()
     
-    # print("Problem status:", problem.status)
+    print("Problem status:", problem.status)
     # print("Optimal value:", result)
     
     if problem.status not in ["optimal", "optimal_inaccurate"]:
