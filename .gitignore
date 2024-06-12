@@ -96,5 +96,6 @@ ssd.obj
 .ropeproject/config.py
 
 #testing files
-ic/output.txt
 ic/Picklerandomstate
+ic/results/*.png
+ic/results/*.txt

@@ -244,18 +244,21 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher")
     # added by Gaby, creating save folder path
 
     file_name = file_path.split("/")[-1].split(".")[0]
-    data = load_json(file_path)
+    # data = load_json(file_path)
     output_folder = f"ic/results/{file_name}"
     Path(output_folder).mkdir(parents=True, exist_ok=True)
 
     flights = data["flights"]
     vertiports = data["vertiports"]
     timing_info = data["timing_info"]
+    auction_freq = timing_info["auction_frequency"]
+    routes_data = data["routes"]
 
     # Create vertiport graph and add starting aircraft positions
     vertiport_usage = VertiportStatus(vertiports, data["routes"], timing_info)
     vertiport_usage.add_aircraft(flights)
 
+    
     # Sort arriving flights by appearance time
     ordered_flights = {}
     for flight_id, flight in flights.items():
@@ -265,47 +268,59 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher")
         else:
             ordered_flights[appearance_time].append(flight_id)
 
+    # Sort arriving flights by frequency time
+    start_time = timing_info["start_time"]
+    end_time = timing_info["end_time"]
+    auction_intervals = list(range(start_time, end_time, auction_freq))
+
+
     # Initialize stack commands
     stack_commands = ["00:00:00.00>TRAILS ON\n00:00:00.00>PAN OAK\n00:00:00.00>ZOOM 1\n00:00:00.00>CDMETHOD STATEBASED\n00:00:00.00>DTMULT 30\n"]
     
-    start_time = time.time()
+    simulation_start_time = time.time()
     initial_allocation = True
     # Iterate through each time flights appear
     # I think we should change this to running the simulatin every n time steps and specify the
     # frequency of fisher market run 
-    for appearance_time in sorted(ordered_flights.keys()):
-        # Get the current flights
-        current_flight_ids = ordered_flights[appearance_time]
-        current_flights = {
-            flight_id: flights[flight_id] for flight_id in current_flight_ids
-        }
+    for auction_start in auction_intervals:
+        auction_end = auction_start + auction_freq
+        interval_flights = {appearance_time: flight_ids for appearance_time, flight_ids in ordered_flights.items() if auction_start <= appearance_time < auction_end}
+        
+        print("Performing auction for interval: ", auction_start, " to ", auction_end)
+        for appearance_time in sorted(interval_flights.keys()):
+            # Get the current flights
+            current_flight_ids = interval_flights[appearance_time]
+            current_flights = {
+                flight_id: flights[flight_id] for flight_id in current_flight_ids
+            }
 
-        # Determine flight allocation and payment
-        current_timing_info = {
-            "start_time" : timing_info["start_time"],
-            "current_time" : appearance_time,
-            "end_time": timing_info["end_time"],
-            "time_step": timing_info["time_step"]
-        }
-        if method == "fisher":
-            allocated_flights, payments = fisher_allocation_and_payment(
-                vertiport_usage, current_flights, current_timing_info, output_folder, save_file=scenario_name, initial_allocation=initial_allocation
+            # Determine flight allocation and payment
+            current_timing_info = {
+                "start_time" : timing_info["start_time"],
+                "current_time" : appearance_time,
+                "end_time": timing_info["end_time"],
+                "time_step": timing_info["time_step"]
+            }
+            if method == "fisher":
+                allocated_flights, payments = fisher_allocation_and_payment(
+                    vertiport_usage, current_flights, current_timing_info, routes_data, vertiports,
+                    output_folder, save_file=scenario_name, initial_allocation=initial_allocation
+                )
+            elif method == "vcg":
+                allocated_flights, payments = allocation_and_payment(
+                    vertiport_usage, current_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
+                )
+            if initial_allocation:
+                initial_allocation = False
+
+            # Update system status based on allocation
+            vertiport_usage = step_simulation(
+                vertiport_usage, vertiports, flights, allocated_flights, stack_commands
             )
-        elif method == "vcg":
-            allocated_flights, payments = allocation_and_payment(
-                vertiport_usage, current_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
-            )
-        if initial_allocation:
-            initial_allocation = False
 
-        # Update system status based on allocation
-        vertiport_usage = step_simulation(
-            vertiport_usage, vertiports, flights, allocated_flights, stack_commands
-        )
-
-        end_time = time.time()
-        elapsed_time = end_time - start_time
-        print(f"Elapsed time: {elapsed_time} seconds")
+            auction_end_time = time.time()
+            elapsed_time = auction_end_time - simulation_start_time
+            print(f"Elapsed time: {elapsed_time} seconds")
 
     # Write the scenario to a file
     path_to_written_file = write_scenario(scenario_path, scenario_name, stack_commands)

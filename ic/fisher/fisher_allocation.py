@@ -16,8 +16,8 @@ print(str(top_level_path))
 sys.path.append(str(top_level_path))
 
 from VertiportStatus import VertiportStatus
-from sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, process_allocations, mapping_agent_to_full_data, mapping_goods_from_allocation
-from fisher_int_optimization import int_optimization
+from ic.fisher.sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, process_allocations, mapping_agent_to_full_data, mapping_goods_from_allocation
+from ic.fisher.fisher_int_optimization import int_optimization
 from write_output import write_output
 
 UPDATED_APPROACH = True
@@ -423,6 +423,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
     start_time_algorithm = time.time()
 
     while market_clearing_error > tolerance and x_iter <= MAX_NUM_ITERATIONS:
+    # while x_iter <= 100:
         # Update agents
         x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, rational=rational)
         agent_allocations.append(x)
@@ -455,12 +456,15 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
     print(f"Time to run algorithm: {time.time() - start_time_algorithm}")
 
     if plotting:
+        plt.figure(figsize=(20, 10))
         plt.subplot(2, 3, 1)
-        for good_index in range(len(p)):
+        for good_index in range(len(p)-1):
             plt.plot(range(1, x_iter+1), [prices[i][good_index] for i in range(len(prices))])
+        plt.plot(range(1, x_iter+1), [prices[i][-1] for i in range(len(prices))], 'b--' ,label="Default Good")
         plt.xlabel('x_iter')
         plt.ylabel('Prices')
         plt.title("Price evolution")
+        plt.legend()
         # plt.legend(p[-1], title="Fake Good")
 
         plt.subplot(2, 3, 2)
@@ -472,17 +476,22 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
         plt.subplot(2, 3, 3)
         for agent_index in range(len(agent_constraints)):
             plt.plot(range(1, x_iter+1), error[agent_index])
+        plt.ylabel('Constraint error')
         plt.title("Constraint error evolution")
 
         plt.subplot(2, 3, 4)
         for constraint_index in range(len(rebates[0])):
             plt.plot(range(1, x_iter+1), [rebates[i][constraint_index] for i in range(len(rebates))])
+        plt.xlabel('x_iter')
+        plt.ylabel('rebate')
         plt.title("Rebate evolution")
+        
 
         plt.subplot(2, 3, 5)
         for agent_index in range(len(agent_allocations[0])):
             plt.plot(range(1, x_iter+1), [agent_allocations[i][agent_index] for i in range(len(agent_allocations))])
         plt.title("Agent allocation evolution")
+        plt.xlabel('x_iter')
 
         plt.subplot(2, 3, 6)
         plt.plot(range(1, x_iter+1), market_clearing)
@@ -516,14 +525,15 @@ def load_json(file=None):
     return data
 
 
-def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, output_folder=None, save_file=None, initial_allocation=True):
+def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_data, vertiports, 
+                                  output_folder=None, save_file=None, initial_allocation=True):
 
     print("Running Fisher Allocation and Payment...")
     # Build Fisher Graph
     market_graph = build_graph(vertiport_usage, timing_info)
 
     # Construct market
-    agent_information, market_information, bookkeeping = construct_market(market_graph, flights, timing_info)
+    agent_information, market_information, bookkeeping = construct_market(market_graph, flights, timing_info, routes_data, vertiports)
 
     # Run market
     goods_list, times_list = bookkeeping
