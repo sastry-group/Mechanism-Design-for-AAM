@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['write_5fmarket_5finterval_123',['write_market_interval',['../namespacewrite__csv.html#acfac09536fe3bfd9cbd548e9c8c2770f',1,'write_csv.write_market_interval()'],['../namespacewrite__output.html#a49e041144b9b86e1979159049aed62b7',1,'write_output.write_market_interval()']]],
-  ['write_5foutput_124',['write_output',['../namespacewrite__csv.html#a935df625114ddbc756230a9cf1dd7315',1,'write_csv.write_output()'],['../namespacewrite__output.html#ac428f4a665fe86f2df11ff53f5221c87',1,'write_output.write_output()']]],
-  ['write_5fscenario_125',['write_scenario',['../namespacemain.html#a8b4943ade6382fe001851d6306f13cbd',1,'main']]]
+  ['run_5fbasic_5fmarket_227',['run_basic_market',['../namespacefisher__allocation.html#a37afa05968ed26e7b67cdffad7b1df59',1,'fisher_allocation']]],
+  ['run_5fmarket_228',['run_market',['../namespacefisher__allocation.html#a62ad2eced1cf263bb32f837dd88aeb13',1,'fisher_allocation']]],
+  ['run_5fscenario_229',['run_scenario',['../namespacemain.html#a44f8837fcfa92a578e919f429035f90b',1,'main']]]
 ];

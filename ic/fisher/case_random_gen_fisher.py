@@ -89,19 +89,20 @@ def generate_flights():
 
         # request_departure_time = appearance_time + random.randint(5, 10)
         request_departure_time = random.randint(auction_interval + AUCTION_DT, auction_interval + 2*AUCTION_DT)
-        delay = random.randint(1, 5)
-        second_departure_time = request_departure_time + delay
+        # delay = random.randint(1, 5)
+        # second_departure_time = request_departure_time + delay
         travel_time = route_dict.get((origin_vertiport_id , destination_vertiport_id), None)
         request_arrival_time = request_departure_time + travel_time
-        second_arrival_time = request_arrival_time + delay
+        # second_arrival_time = request_arrival_time + delay
 
         valuation = random.randint(70, 200)
         budget_constraint = random.randint(50, 200)
-        second_valuation = valuation - random.randint(5,10)
+        # second_valuation = valuation - random.randint(5,10)
         flight_info = { # change the request to be parking or move if nonalloc
             "appearance_time": appearance_time,
             "origin_vertiport_id": origin_vertiport_id,
             "budget_constraint": budget_constraint,
+            "decay_factor": 0.5,
             "requests": {
                 "000": {
                     "destination_vertiport_id": origin_vertiport_id,
@@ -115,13 +116,13 @@ def generate_flights():
                     "request_arrival_time": request_arrival_time,
                     "valuation": valuation,
                 },
-                "002": {
+                # "002": {
 
-                    "destination_vertiport_id": destination_vertiport_id,
-                    "request_departure_time": second_departure_time,
-                    "request_arrival_time": second_arrival_time,
-                    "valuation": second_valuation,  
-                }
+                #     "destination_vertiport_id": destination_vertiport_id,
+                #     "request_departure_time": second_departure_time,
+                #     "request_arrival_time": second_arrival_time,
+                #     "valuation": second_valuation,  
+                # }
             }
         }
         flights[flight_id] = flight_info

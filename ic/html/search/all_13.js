@@ -1,9 +1,10 @@
 var searchData=
 [
-  ['write_5fcsv_79',['write_csv',['../namespacewrite__csv.html',1,'']]],
-  ['write_5fcsv_2epy_80',['write_csv.py',['../write__csv_8py.html',1,'']]],
-  ['write_5fmarket_5finterval_81',['write_market_interval',['../namespacewrite__csv.html#acfac09536fe3bfd9cbd548e9c8c2770f',1,'write_csv.write_market_interval()'],['../namespacewrite__output.html#a49e041144b9b86e1979159049aed62b7',1,'write_output.write_market_interval()']]],
-  ['write_5foutput_82',['write_output',['../namespacewrite__output.html',1,'write_output'],['../namespacewrite__csv.html#a935df625114ddbc756230a9cf1dd7315',1,'write_csv.write_output()'],['../namespacewrite__output.html#ac428f4a665fe86f2df11ff53f5221c87',1,'write_output.write_output()']]],
-  ['write_5foutput_2epy_83',['write_output.py',['../write__output_8py.html',1,'']]],
-  ['write_5fscenario_84',['write_scenario',['../namespacemain.html#a8b4943ade6382fe001851d6306f13cbd',1,'main']]]
+  ['update_5fagent_134',['update_agent',['../namespacefisher__allocation.html#a287e45ef9adc06884d6faeab368a3769',1,'fisher_allocation']]],
+  ['update_5fagents_135',['update_agents',['../namespacefisher__allocation.html#a355802b551094276a41aaf9c65ccd695',1,'fisher_allocation']]],
+  ['update_5fallocation_136',['update_allocation',['../namespacefisher__int__optimization.html#aa49e328f21008e5a0f7bc3c46b805971',1,'fisher_int_optimization']]],
+  ['update_5fbasic_5fagents_137',['update_basic_agents',['../namespacefisher__allocation.html#af65811388487e0372eb53238e9daddc2',1,'fisher_allocation']]],
+  ['update_5fbasic_5fmarket_138',['update_basic_market',['../namespacefisher__allocation.html#a13185d853326fc308c1145d1745dac76',1,'fisher_allocation']]],
+  ['update_5fmarket_139',['update_market',['../namespacefisher__allocation.html#ac3b76e1179f3b4a7d50c16d32f294938',1,'fisher_allocation']]],
+  ['updated_5fapproach_140',['UPDATED_APPROACH',['../namespacefisher__allocation.html#ae0aebeda1a9032cdbbc3212c4382a4f2',1,'fisher_allocation']]]
 ];

@@ -1,8 +1,9 @@
 var searchData=
 [
-  ['scn_5ffolder_155',['SCN_FOLDER',['../namespacemain.html#a8eb551bfdf698c0dbc27ed3f4cd68bb6',1,'main']]],
-  ['scn_5fname_156',['SCN_NAME',['../namespacemain.html#a22c2a6dbfc9500343d1b762b1d544e35',1,'main']]],
-  ['simdt_157',['SIMDT',['../namespacemain.html#a7c8a4f30bc8040be08071aaf710fea3f',1,'main']]],
-  ['start_5ftime_158',['START_TIME',['../namespacecase__random__generator.html#af6bc1fc7a1509c63e9d9c2679edda475',1,'case_random_generator']]],
-  ['str_159',['str',['../namespacemain.html#a26f656d825a0ffd09a95f3e7953445e5',1,'main']]]
+  ['p_280',['p',['../namespacefisher.html#a0a7af14d563fcaaa178276864ad0eef6',1,'fisher.p()'],['../namespacefisher__nonlin.html#a2b167ca02f1a31eba997cd052c29fa05',1,'fisher_nonlin.p()']]],
+  ['packages_281',['packages',['../namespacesetup.html#aff2375a361fd5865c77bd9aa093be747',1,'setup']]],
+  ['parser_282',['parser',['../namespacemain.html#a9f3911118b78333a8f963e063f12c7ed',1,'main']]],
+  ['path_283',['path',['../namespacemain.html#ac5cfa575b843cf19d498d00e0dd89d9d',1,'main']]],
+  ['path_5fto_5fscn_5ffile_284',['path_to_scn_file',['../namespacemain.html#a6d1816eaf496b6ee02879666676d6d77',1,'main']]],
+  ['problem_285',['problem',['../namespacefisher.html#a5e9b680dd2414f8b5b772dc91a3cb61a',1,'fisher.problem()'],['../namespacefisher__nonlin.html#a707ab94c08730725a2ebebfbb6f758c1',1,'fisher_nonlin.problem()']]]
 ];

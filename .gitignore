@@ -99,3 +99,4 @@ ssd.obj
 ic/Picklerandomstate
 ic/results/*.png
 ic/results/*.txt
+ic/latex/*

@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['packages_47',['packages',['../namespacesetup.html#aff2375a361fd5865c77bd9aa093be747',1,'setup']]],
-  ['parser_48',['parser',['../namespacemain.html#a9f3911118b78333a8f963e063f12c7ed',1,'main']]],
-  ['path_49',['path',['../namespacemain.html#ac5cfa575b843cf19d498d00e0dd89d9d',1,'main']]],
-  ['path_5fto_5fscn_5ffile_50',['path_to_scn_file',['../namespacemain.html#a6d1816eaf496b6ee02879666676d6d77',1,'main']]]
+  ['objective_84',['objective',['../namespacefisher.html#aba2dd6fa27aaaf576c6787ab76c140ab',1,'fisher.objective()'],['../namespacefisher__nonlin.html#ad1b45651e0357f197bf260442d8fb96c',1,'fisher_nonlin.objective()']]],
+  ['opt_5fxi_85',['opt_xi',['../namespacefisher.html#a1abdb4a8607841cdec28d54694af40c0',1,'fisher.opt_xi()'],['../namespacefisher__nonlin.html#a9540e117d30af06ea47118af672141ca',1,'fisher_nonlin.opt_xi()']]]
 ];

@@ -1,10 +1,21 @@
 var searchData=
 [
-  ['f_22',['f',['../namespacecase__random__generator.html#a4949c206f589a7f314a5b9ab72cf427c',1,'case_random_generator']]],
-  ['file_5fname_23',['file_name',['../namespacemain.html#ae83d131f7f1e661ba03da60ed93f39cc',1,'main']]],
-  ['file_5fpath_24',['file_path',['../namespacecase__random__generator.html#a48859f6652d9dcab2c3ba19835581e4a',1,'case_random_generator.file_path()'],['../namespacemain.html#a05ac9790cc1390eb6166c450286392c2',1,'main.file_path()']]],
-  ['fleets_25',['fleets',['../namespacecase__random__generator.html#a4e2554aef199d36f402a12ef7dc2144d',1,'case_random_generator']]],
-  ['flights_26',['flights',['../namespacecase__random__generator.html#a0c3a2062cfee3aabefecb4d63a4f8585',1,'case_random_generator']]],
-  ['formatted_5fdatetime_27',['formatted_datetime',['../namespacecase__random__generator.html#a7d0f7248e86a39bb1529acdff513bace',1,'case_random_generator']]],
-  ['full_5flist_5fstring_28',['full_list_string',['../namespacewrite__csv.html#aeecfcbb9ec16dad9ff8e290ad5fae588',1,'write_csv.full_list_string()'],['../namespacewrite__output.html#aefb01763888139d7477459c608b541ce',1,'write_output.full_list_string()']]]
+  ['f_40',['f',['../namespacecase__random__generator.html#a4949c206f589a7f314a5b9ab72cf427c',1,'case_random_generator.f()'],['../namespacecase__random__gen__fisher.html#a20cbd0afce3a826b2ef3cecc90b814bb',1,'case_random_gen_fisher.f()']]],
+  ['file_5fname_41',['file_name',['../namespacemain.html#ae83d131f7f1e661ba03da60ed93f39cc',1,'main']]],
+  ['file_5fpath_42',['file_path',['../namespacemain.html#a05ac9790cc1390eb6166c450286392c2',1,'main.file_path()'],['../namespacetest__fisher__allocation.html#a582eccd3a758ce4589ed0fc9c8c2b7fb',1,'test_fisher_allocation.file_path()'],['../namespacecase__random__gen__fisher.html#a3dcdd0f320cbb881b3f0503d1244f13e',1,'case_random_gen_fisher.file_path()'],['../namespacecase__random__generator.html#a48859f6652d9dcab2c3ba19835581e4a',1,'case_random_generator.file_path()']]],
+  ['find_5fcapacity_43',['find_capacity',['../namespacefisher__allocation.html#aeda724769c2dd677c90bfb4729223cc5',1,'fisher_allocation']]],
+  ['find_5foptimal_5fxi_44',['find_optimal_xi',['../namespacefisher__int__optimization.html#a95426cd4632a77d80f1e3bc454c04b94',1,'fisher_int_optimization']]],
+  ['fisher_45',['fisher',['../namespacefisher.html',1,'']]],
+  ['fisher_2epy_46',['fisher.py',['../fisher_8py.html',1,'']]],
+  ['fisher_5fallocation_47',['fisher_allocation',['../namespacefisher__allocation.html',1,'']]],
+  ['fisher_5fallocation_2epy_48',['fisher_allocation.py',['../fisher__allocation_8py.html',1,'']]],
+  ['fisher_5fallocation_5fand_5fpayment_49',['fisher_allocation_and_payment',['../namespacefisher__allocation.html#a414a388eac772bbdb2f3721c938e5f74',1,'fisher_allocation']]],
+  ['fisher_5fint_5foptimization_50',['fisher_int_optimization',['../namespacefisher__int__optimization.html',1,'']]],
+  ['fisher_5fint_5foptimization_2epy_51',['fisher_int_optimization.py',['../fisher__int__optimization_8py.html',1,'']]],
+  ['fisher_5fnonlin_52',['fisher_nonlin',['../namespacefisher__nonlin.html',1,'']]],
+  ['fisher_5fnonlin_2epy_53',['fisher_nonlin.py',['../fisher__nonlin_8py.html',1,'']]],
+  ['fleets_54',['fleets',['../namespacecase__random__generator.html#a4e2554aef199d36f402a12ef7dc2144d',1,'case_random_generator.fleets()'],['../namespacecase__random__gen__fisher.html#a7688535b4d466de63dfcfdd410d5ad0e',1,'case_random_gen_fisher.fleets()']]],
+  ['flights_55',['flights',['../namespacecase__random__generator.html#a0c3a2062cfee3aabefecb4d63a4f8585',1,'case_random_generator']]],
+  ['formatted_5fdatetime_56',['formatted_datetime',['../namespacecase__random__generator.html#a7d0f7248e86a39bb1529acdff513bace',1,'case_random_generator.formatted_datetime()'],['../namespacecase__random__gen__fisher.html#ad691f6681f030628e3563667a32f76b6',1,'case_random_gen_fisher.formatted_datetime()']]],
+  ['full_5flist_5fstring_57',['full_list_string',['../namespacewrite__csv.html#aeecfcbb9ec16dad9ff8e290ad5fae588',1,'write_csv.full_list_string()'],['../namespacewrite__output.html#aefb01763888139d7477459c608b541ce',1,'write_output.full_list_string()']]]
 ];

@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['n_5fflights_144',['N_FLIGHTS',['../namespacecase__random__generator.html#a8b91a9b26dba93effd418cf6f977e79b',1,'case_random_generator']]],
-  ['name_145',['name',['../namespacesetup.html#ab3a7a0638d76a01367c5bc3cc699447f',1,'setup']]],
-  ['num_5ffleets_146',['NUM_FLEETS',['../namespacecase__random__generator.html#a89e5ff508d81144bcb5de4c723c93824',1,'case_random_generator']]]
+  ['maneuver_271',['MANEUVER',['../namespacemain.html#a6d1dc80d8f6e187a9d7209edd99e16e7',1,'main']]],
+  ['max_5fnum_5fiterations_272',['MAX_NUM_ITERATIONS',['../namespacefisher__allocation.html#affa48db32eac97d1e5383a59987e3510',1,'fisher_allocation']]]
 ];

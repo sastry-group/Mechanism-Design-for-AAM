@@ -1,7 +1,5 @@
 var searchData=
 [
-  ['required_151',['required',['../namespacemain.html#a1344c1e698a1e688c7ae0828f75d5a48',1,'main']]],
-  ['rho_152',['rho',['../namespaceallocation.html#acb32440a8bdd9deb4e31f5eaeebe262a',1,'allocation']]],
-  ['routes_153',['routes',['../namespacecase__random__generator.html#a7f952c03a3a66dec53cba54de1773734',1,'case_random_generator']]],
-  ['run_5fgui_154',['run_gui',['../namespacemain.html#a6be14f7f2f8cedfce33c85ab71d03e2e',1,'main']]]
+  ['objective_278',['objective',['../namespacefisher.html#aba2dd6fa27aaaf576c6787ab76c140ab',1,'fisher.objective()'],['../namespacefisher__nonlin.html#ad1b45651e0357f197bf260442d8fb96c',1,'fisher_nonlin.objective()']]],
+  ['opt_5fxi_279',['opt_xi',['../namespacefisher.html#a1abdb4a8607841cdec28d54694af40c0',1,'fisher.opt_xi()'],['../namespacefisher__nonlin.html#a9540e117d30af06ea47118af672141ca',1,'fisher_nonlin.opt_xi()']]]
 ];

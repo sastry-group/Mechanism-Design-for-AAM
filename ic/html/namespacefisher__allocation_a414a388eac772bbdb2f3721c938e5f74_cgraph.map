@@ -1,0 +1,25 @@
+<map id="fisher_allocation.fisher_allocation_and_payment" name="fisher_allocation.fisher_allocation_and_payment">
+<area shape="rect" id="node1" title=" " alt="" coords="5,300,175,341"/>
+<area shape="rect" id="node2" href="$namespacesampling__graph.html#a21871a8f763d4de2fa1f022c7bf97c25" title=" " alt="" coords="225,5,411,47"/>
+<area shape="rect" id="node5" href="$namespacesampling__graph.html#aa84b8ac6c269a41dda8ca3bd1a6a9b7d" title=" " alt="" coords="246,71,390,112"/>
+<area shape="rect" id="node6" href="$namespacefisher__allocation.html#a5984c4e964f0c00cc76ff995cb522ad7" title=" " alt="" coords="245,136,391,177"/>
+<area shape="rect" id="node7" href="$namespacefisher__allocation.html#aa4ab1bf9e9022278f3a29f574065cc47" title=" " alt="" coords="231,201,405,243"/>
+<area shape="rect" id="node9" href="$namespacefisher__int__optimization.html#a522dab6ec1360abea71bf8d9dd3bed76" title=" " alt="" coords="233,267,403,308"/>
+<area shape="rect" id="node16" href="$namespacesampling__graph.html#a15b93c822aac24aaca67238fda9a87fd" title=" " alt="" coords="235,332,401,373"/>
+<area shape="rect" id="node17" href="$namespacesampling__graph.html#a076191b964763e6de1ab1052437b9232" title=" " alt="" coords="235,397,401,439"/>
+<area shape="rect" id="node18" href="$namespacesampling__graph.html#ace21282317e2fb5912b6915f09e31219" title=" " alt="" coords="237,463,399,504"/>
+<area shape="rect" id="node19" href="$namespacefisher__allocation.html#a62ad2eced1cf263bb32f837dd88aeb13" title=" " alt="" coords="249,528,387,569"/>
+<area shape="rect" id="node23" href="$namespacesampling__graph.html#ac2a8b051cc472aa14ab2f647245eb5bb" title=" " alt="" coords="223,594,413,621"/>
+<area shape="rect" id="node3" href="$namespacesampling__graph.html#ad59ff5199920ade7cb1eb12310d0c731" title=" " alt="" coords="488,5,648,47"/>
+<area shape="rect" id="node4" href="$namespacesampling__graph.html#a4089bafdbdc5a523e8ec0267d4a57c55" title=" " alt="" coords="727,5,877,47"/>
+<area shape="rect" id="node8" href="$namespacefisher__allocation.html#aeda724769c2dd677c90bfb4729223cc5" title=" " alt="" coords="497,71,639,112"/>
+<area shape="rect" id="node10" href="$namespacefisher__int__optimization.html#a08ead41267f292f6b4f4192c646a4116" title=" " alt="" coords="473,136,663,177"/>
+<area shape="rect" id="node11" href="$namespacefisher__int__optimization.html#a2e39c53a4017ff1e028f631ec9f7ff6e" title=" " alt="" coords="461,201,675,243"/>
+<area shape="rect" id="node12" href="$namespacefisher__int__optimization.html#a95426cd4632a77d80f1e3bc454c04b94" title=" " alt="" coords="479,267,657,308"/>
+<area shape="rect" id="node13" href="$namespacefisher__int__optimization.html#a19973ced79d890100b2daf4b85d9bf65" title=" " alt="" coords="477,332,659,373"/>
+<area shape="rect" id="node14" href="$namespacefisher__int__optimization.html#aa787441acb9314ac1fa057f157058373" title=" " alt="" coords="477,397,659,439"/>
+<area shape="rect" id="node15" href="$namespacefisher__int__optimization.html#aa49e328f21008e5a0f7bc3c46b805971" title=" " alt="" coords="471,463,665,504"/>
+<area shape="rect" id="node20" href="$namespacefisher__allocation.html#a355802b551094276a41aaf9c65ccd695" title=" " alt="" coords="489,528,647,569"/>
+<area shape="rect" id="node22" href="$namespacefisher__allocation.html#ac3b76e1179f3b4a7d50c16d32f294938" title=" " alt="" coords="489,593,647,635"/>
+<area shape="rect" id="node21" href="$namespacefisher__allocation.html#a287e45ef9adc06884d6faeab368a3769" title=" " alt="" coords="723,528,881,569"/>
+</map>

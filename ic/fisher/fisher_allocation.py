@@ -100,13 +100,15 @@ def construct_market(market_graph, flights, timing_info, routes, vertiports):
                 dep_time = request["request_departure_time"]
                 arr_time = request["request_arrival_time"]
                 destination_vertiport = request["destination_vertiport_id"]
-                start_node, end_node = origin_vertiport + "_" + str(dep_time) + "_dep", destination_vertiport + "_" + str(arr_time) + "_arr"
-                attributes = {"valuation": request["valuation"]}
-                agent_graph.add_edge(start_node, end_node, **attributes)
-                dep_start_node, dep_end_node = origin_vertiport + "_" + str(dep_time), origin_vertiport + "_" + str(dep_time) + "_dep"
-                arr_start_node, arr_end_node = destination_vertiport + "_" + str(arr_time) + "_arr", destination_vertiport + "_" + str(arr_time)
-                agent_graph.add_edge(dep_start_node, dep_end_node, **{"valuation": 0})
-                agent_graph.add_edge(arr_start_node, arr_end_node, **{"valuation": 0})
+                for i, decay in enumerate(np.linspace(0.5, 0.1, 5)):
+                    start_node, end_node = origin_vertiport + "_" + str(dep_time + i) + "_dep", destination_vertiport + "_" + str(arr_time+i) + "_arr"
+                    valuation = request["valuation"] * (1 - decay*i)
+                    attributes = {"valuation": valuation}
+                    agent_graph.add_edge(start_node, end_node, **attributes)
+                    dep_start_node, dep_end_node = origin_vertiport + "_" + str(dep_time + i), origin_vertiport + "_" + str(dep_time + i) + "_dep"
+                    arr_start_node, arr_end_node = destination_vertiport + "_" + str(arr_time + i) + "_arr", destination_vertiport + "_" + str(arr_time + i)
+                    agent_graph.add_edge(dep_start_node, dep_end_node, **{"valuation": 0})
+                    agent_graph.add_edge(arr_start_node, arr_end_node, **{"valuation": 0})
                 stationary_times = [time for time in times_list if time >= arr_time]
                 for start_time, end_time in zip(stationary_times[:-1], stationary_times[1:]):
                     start_node, end_node = destination_vertiport + "_" + str(start_time), destination_vertiport + "_" + str(end_time)
@@ -420,7 +422,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
     tolerance = len(agent_goods_lists) * np.sqrt(len(supply)-1) * TOL_ERROR
     market_clearing_error = float('inf')
     x_iter = 0
-    start_time_algorithm = time.time()
+    start_time_algorithm = time.time()  
 
     while market_clearing_error > tolerance and x_iter <= MAX_NUM_ITERATIONS:
     # while x_iter <= 100:
@@ -454,6 +456,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
         #     break
 
     print(f"Time to run algorithm: {time.time() - start_time_algorithm}")
+
 
     if plotting:
         plt.figure(figsize=(20, 10))
@@ -498,8 +501,11 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
         plt.xlabel('x_iter')
         plt.title("Market Clearing Error")
         # plt.show()
-        if output_folder:
-            plt.savefig(f"{output_folder}/market_plot.png")
+        # if output_folder:
+            # save_file = f"{output_folder}/market_plot.png" 
+            # if Path(save_file).is_file():
+            #     save_file = f"{output_folder}/market_plot_{time.time()}.png"
+            # plt.savefig(save_file)
         plt.close()
     
 
