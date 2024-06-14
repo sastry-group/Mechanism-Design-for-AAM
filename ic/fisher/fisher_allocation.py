@@ -16,9 +16,9 @@ print(str(top_level_path))
 sys.path.append(str(top_level_path))
 
 from VertiportStatus import VertiportStatus
-from ic.fisher.sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, process_allocations, mapping_agent_to_full_data, mapping_goods_from_allocation
-from ic.fisher.fisher_int_optimization import int_optimization
-from write_output import write_output
+from fisher.sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, process_allocations, mapping_agent_to_full_data, mapping_goods_from_allocation
+from fisher.fisher_int_optimization import int_optimization
+from write_csv import write_output
 
 UPDATED_APPROACH = True
 TOL_ERROR = 1e-3
@@ -563,7 +563,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
         sampled_path_extended, sampled_edges, int_allocation = sample_path(extended_graph, start_node, agent_allocation)
         # print("Sampled Path:", sampled_path_extended)
         # print("Sampled Edges:", sampled_edges)
-        plot_sample_path_extended(extended_graph, sampled_path_extended, agent_number, output_folder)
+        # plot_sample_path_extended(extended_graph, sampled_path_extended, agent_number, output_folder)
         int_allocations.append(int_allocation)
         int_allocation_full = mapping_agent_to_full_data(edge_information, sampled_edges)
         int_allocations_full[i,:] = int_allocation_full
@@ -579,12 +579,13 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
 
     new_allocations_goods = mapping_goods_from_allocation(new_allocations, goods_list)
 
-    write_output(agent_constraints, edge_information, prices, new_prices, capacity, 
-                 agent_allocations, agent_indices, agent_edge_information, agent_goods_lists, 
-                 int_allocations, new_allocations_goods, u, budget, payment, output_folder)
 
+    ### To check allocations from fisher
+    # goodlis = np.array(goods_list[:-1]) This will narrow down the goods list
+    # allocated = goodlis[agent_indices[index_of_agent]]] # this will show you the fisher allocation
+    # the int allocation will be on new_allocations_goods[index_of_agent]
 
-
+    # To mobve into next auction window
     allocation = []
     for i, (flight_id, flight) in enumerate(flights.items()):
         origin_vertiport = flight["origin_vertiport_id"]
@@ -598,11 +599,15 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
             destination_vertiport = request["destination_vertiport_id"]
             start_node, end_node = origin_vertiport + "_" + str(dep_time) + "_dep", destination_vertiport + "_" + str(arr_time) + "_arr"
             good = (start_node, end_node)
-            if x[i][goods_list.index(good)] >= 1 - epsilon:
+            if new_allocations[i][goods_list[:-1].index(good)] >= 1 - epsilon:
                 added_request = True
                 allocation.append((flight_id, request_id))
-        if not added_request:
-            allocation.append((flight_id, base_request_id))
+        # if not added_request:
+        #     allocation.append((flight_id, base_request_id))
+
+    write_output(list(flights.keys()), agent_constraints, edge_information, prices, new_prices, capacity, 
+                agent_allocations, agent_indices, agent_edge_information, agent_goods_lists, 
+                int_allocations, new_allocations_goods, u, budget, payment, output_folder)
 
     return allocation, None
 
@@ -610,7 +615,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
 
 if __name__ == "__main__":
     pass
-    # file_path = "test_cases/case4f_20240605_103345.json"
+    # file_path = "test_cases/casef_20240612_144207_0.json"
     # file_name = file_path.split("/")[-1].split(".")[0]
     # data = load_json(file_path)
     # output_folder = f"ic/results/{file_name}"

@@ -20,6 +20,7 @@ import bluesky as bs
 from ic.VertiportStatus import VertiportStatus, draw_graph
 from ic.allocation import allocation_and_payment
 from ic.fisher.fisher_allocation import fisher_allocation_and_payment
+from ic.write_csv import write_market_interval
 
 # Bluesky settings
 T_STEP = 10000
@@ -258,17 +259,15 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher")
     vertiport_usage = VertiportStatus(vertiports, data["routes"], timing_info)
     vertiport_usage.add_aircraft(flights)
 
-    
-    # Sort arriving flights by appearance time
-    ordered_flights = {}
-    for flight_id, flight in flights.items():
-        appearance_time = flight["appearance_time"]
-        if appearance_time not in ordered_flights:
-            ordered_flights[appearance_time] = [flight_id]
-        else:
-            ordered_flights[appearance_time].append(flight_id)
+    # # Sort arriving flights by appearance time
+    # ordered_flights = {}
+    # for flight_id, flight in flights.items():
+    #     appearance_time = flight["appearance_time"]
+    #     if appearance_time not in ordered_flights:
+    #         ordered_flights[appearance_time] = [flight_id]
+    #     else:
+    #         ordered_flights[appearance_time].append(flight_id)
 
-    # Sort arriving flights by frequency time
     start_time = timing_info["start_time"]
     end_time = timing_info["end_time"]
     auction_intervals = list(range(start_time, end_time, auction_freq))
@@ -279,51 +278,53 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher")
     
     simulation_start_time = time.time()
     initial_allocation = True
-    # Iterate through each time flights appear
-    # I think we should change this to running the simulatin every n time steps and specify the
-    # frequency of fisher market run 
+
     for auction_start in auction_intervals:
         auction_end = auction_start + auction_freq
-        interval_flights = {appearance_time: flight_ids for appearance_time, flight_ids in ordered_flights.items() if auction_start <= appearance_time < auction_end}
-        
+        interval_flights = {
+            flight_id: flight
+            for flight_id, flight in flights.items()
+            if auction_start <= flight["appearance_time"] < auction_end
+        }
+
         print("Performing auction for interval: ", auction_start, " to ", auction_end)
-        for appearance_time in sorted(interval_flights.keys()):
-            # Get the current flights
-            current_flight_ids = interval_flights[appearance_time]
-            current_flights = {
-                flight_id: flights[flight_id] for flight_id in current_flight_ids
-            }
+        write_market_interval(auction_start, auction_end, interval_flights, output_folder)
 
-            # Determine flight allocation and payment
-            current_timing_info = {
-                "start_time" : timing_info["start_time"],
-                "current_time" : appearance_time,
-                "end_time": timing_info["end_time"],
-                "time_step": timing_info["time_step"]
-            }
-            if method == "fisher":
-                allocated_flights, payments = fisher_allocation_and_payment(
-                    vertiport_usage, current_flights, current_timing_info, routes_data, vertiports,
-                    output_folder, save_file=scenario_name, initial_allocation=initial_allocation
-                )
-            elif method == "vcg":
-                allocated_flights, payments = allocation_and_payment(
-                    vertiport_usage, current_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
-                )
-            if initial_allocation:
-                initial_allocation = False
 
-            # Update system status based on allocation
-            vertiport_usage = step_simulation(
-                vertiport_usage, vertiports, flights, allocated_flights, stack_commands
+        if not interval_flights:
+            continue
+
+        # Determine flight allocation and payment
+        # check with Victori this info wont bug
+        current_timing_info = {
+            "start_time" : timing_info["start_time"],
+            "end_time": timing_info["end_time"],
+            "time_step": timing_info["time_step"]
+        }
+        if method == "fisher":
+            allocated_flights, payments = fisher_allocation_and_payment(
+                vertiport_usage, interval_flights, current_timing_info, routes_data, vertiports,
+                output_folder, save_file=scenario_name, initial_allocation=initial_allocation
             )
+        elif method == "vcg":
+            allocated_flights, payments = allocation_and_payment(
+                vertiport_usage, interval_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
+            )
+        if initial_allocation:
+            initial_allocation = False
 
-            auction_end_time = time.time()
-            elapsed_time = auction_end_time - simulation_start_time
-            print(f"Elapsed time: {elapsed_time} seconds")
+        # Update system status based on allocation
+        vertiport_usage = step_simulation(
+            vertiport_usage, vertiports, flights, allocated_flights, stack_commands
+        )
+
+        auction_end_time = time.time()
+        elapsed_time = auction_end_time - simulation_start_time
+        print(f"Elapsed time: {elapsed_time} seconds")
 
     # Write the scenario to a file
     path_to_written_file = write_scenario(scenario_path, scenario_name, stack_commands)
+
 
     # Visualize the graph
     if VISUALIZE:

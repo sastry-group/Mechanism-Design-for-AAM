@@ -4,6 +4,18 @@ def full_list_string(lst):
     return ', '.join([str(item) for item in lst])
 
 
+def write_market_interval(auction_start, auction_end, interval_flights, output_folder):
+    """
+    """
+    print("Writing market interval to file...")
+    market_interval_file = f"{output_folder}/market_output.txt"
+    with open(market_interval_file, "a") as f:
+        f.write(f"Market interval: {auction_start} to {auction_end}\n")
+        f.write("Flights in interval:\n")
+        for flight in interval_flights:
+            f.write(f"{flight}\n")
+        f.write("\n")
+    print("Market interval written to", market_interval_file)
 
 def write_output(agent_constraints, edge_information, prices, new_prices, capacity, 
                  agent_allocations, agent_indices, agent_edge_information, agent_goods_lists, 
@@ -31,15 +43,22 @@ def write_output(agent_constraints, edge_information, prices, new_prices, capaci
     market_output_file = f"{output_folder}/market_output.txt"
     agent_output_file = f"{output_folder}/agent_output.txt"
     edge_key_file = f"{output_folder}/edge_key.txt"
-    
-    with open(market_output_file, "w") as f:
+
+    # with open(edge_key_file, "a") as f:
+    #     f.write("Edge Label, Good, Fisher Prices, New Prices, Capacity\n")
+    #     for i, (key, value) in enumerate(edge_information.items()):
+    #         line = f"{key}: {', '.join(value)}, {prices[i]}, {new_prices[i]}, {capacity[i]}\n"
+    #         f.write(line)
+    #         f.write("\n")
+
+
+    with open(market_output_file, "a") as f:
         f.write("Edge Label, Good, Fisher Prices, New Prices, Capacity\n")
         for i, (key, value) in enumerate(edge_information.items()):
             line = f"{key}: {', '.join(value)}, {prices[i]}, {new_prices[i]}, {capacity[i]}\n"
             f.write(line)
-            f.write("\n")
 
-    with open(agent_output_file, "w") as f:
+    with open(agent_output_file, "a") as f:
         f.write("Allocations:\n")
         for i in range(num_agents):
             f.write(f"Agent {i+1}:\n")

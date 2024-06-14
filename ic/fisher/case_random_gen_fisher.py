@@ -1,6 +1,7 @@
 import json
 import random
 from datetime import datetime, timedelta
+import numpy as np
 import sys
 import os
 import math
@@ -10,7 +11,7 @@ from math import radians, sin, cos, sqrt, atan2
 START_TIME = 1 # multiple of timestep
 END_TIME = 100
 TIME_STEP = 1
-AUCTION_DT = 20 # every 20 timesteps there is an auction
+AUCTION_DT = 10 # every 15 timesteps there is an auction
 
 # Case study settings
 N_FLIGHTS = random.randint(10, 15)
@@ -56,7 +57,6 @@ total_capacity = sum(vertiport["hold_capacity"] for vertiport in vertiports.valu
 # Assert that total holding capacity is greater than or equal to the number of flights
 assert total_capacity >= N_FLIGHTS, f"Total holding capacity ({total_capacity}) must be greater than or equal to the number of flights ({N_FLIGHTS})"
 
-auction_intervals = list(range(START_TIME, END_TIME, AUCTION_DT))
 
 # Function to generate random flights
 def generate_flights():
@@ -67,11 +67,16 @@ def generate_flights():
     routes = generate_routes(vertiports)
     route_dict = {(route["origin_vertiport_id"], route["destination_vertiport_id"]): route["travel_time"] for route in routes}
 
+    max_travel_time = route_dict[max(route_dict, key=route_dict.get)]
+    last_auction =  END_TIME - max_travel_time - AUCTION_DT
+    auction_intervals = list(range(START_TIME, END_TIME, AUCTION_DT))
+
     for i in range(N_FLIGHTS):  
         flight_id = f"AC{i+1:03d}"
         
         # Select a random auction interval for the appearance time
-        appearance_time = random.choice(auction_intervals[:-1]) # to avoid flights appearing after the last auction
+        auction_interval = random.choice(auction_intervals[:(np.abs(np.array(auction_intervals) - last_auction)).argmin()])
+        appearance_time = random.randint(auction_interval, auction_interval + AUCTION_DT) # to avoid flights appearing after the last auction, this is also constraint by the maximu travel time for node creation
         # appearance_time = random.randint(1, 50) #needs to be changes using end time variable
 
         # Choose origin vertiport
@@ -83,7 +88,7 @@ def generate_flights():
             destination_vertiport_id = random.choice(vertiports_list)
 
         # request_departure_time = appearance_time + random.randint(5, 10)
-        request_departure_time = random.randint(appearance_time, appearance_time + AUCTION_DT - 1)
+        request_departure_time = random.randint(auction_interval + AUCTION_DT, auction_interval + 2*AUCTION_DT)
         delay = random.randint(1, 5)
         second_departure_time = request_departure_time + delay
         travel_time = route_dict.get((origin_vertiport_id , destination_vertiport_id), None)

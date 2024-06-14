@@ -82,16 +82,16 @@ def agent_probability_graph_extended(edge_information, x, agent_number=1, output
 
     # Create custom layout and plot the graph
     pos = custom_layout(G)
-    plt.figure(figsize=(12, 8))
     nx.draw(G, pos, with_labels=True, node_size=700, node_color='lightblue', edge_color='#909090', font_size=9)
     edge_labels = {(u, v): f"{d['label']} ({d['weight']:.4f})" for u, v, d in G.edges(data=True)}
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, label_pos=0.5, font_color='red')
-    plt.title("Time Extended Decision Tree Graph with Branching and Constraints")
+    # plt.figure(figsize=(12, 8))
+    # plt.title("Time Extended Decision Tree Graph with Branching and Constraints")
 
-    if output_folder:
-        plt.savefig(f'{output_folder}/extended_graph_{agent_label}.png')
-    # plt.show()
-    plt.close()
+    # if output_folder:
+    #     plt.savefig(f'{output_folder}/extended_graph_{agent_label}.png')
+    # # plt.show()
+    # plt.close()
 
     return G, agent_allocations
 
@@ -171,17 +171,17 @@ def plot_sample_path_extended(G, sampled_path, agent_number, output_folder=False
 
     # Draw the updated graph
     pos = custom_layout(H)  # Use the same layout as the original graph
-    plt.figure(figsize=(12, 8))
     nx.draw(H, pos, with_labels=True, node_size=700, node_color='lightblue')
     edge_labels = {(u, v): f"{d['label']} ({d['weight']:.2f})" for u, v, d in H.edges(data=True)}
     nx.draw_networkx_edge_labels(H, pos, edge_labels=edge_labels)
     highlighted_edges = [(u, v) for u, v, d in H.edges(data=True) if 'style' in d and d['style'] == 'highlighted']
     nx.draw_networkx_edges(H, pos, edgelist=highlighted_edges, width=3, edge_color='red')
-    plt.title("Time Extended Decision Tree Graph with Highlighted Chosen Path")
-    # plt.show()
-    if output_folder:
-        plt.savefig(f'{output_folder}/sampled_graph_{agent_label}.png')
-    plt.close()
+    # plt.figure(figsize=(12, 8))
+    # plt.title("Time Extended Decision Tree Graph with Highlighted Chosen Path")
+    # # plt.show()
+    # if output_folder:
+    #     plt.savefig(f'{output_folder}/sampled_graph_{agent_label}.png')
+    # plt.close()
     return H
 
 
