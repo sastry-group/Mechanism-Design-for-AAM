@@ -1,0 +1,234 @@
+\hypertarget{namespacecase__random__generator}{}\doxysection{case\+\_\+random\+\_\+generator Namespace Reference}
+\label{namespacecase__random__generator}\index{case\_random\_generator@{case\_random\_generator}}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacecase__random__generator_a61baadd79f905837955d2c10a1b5310f}{generate\+\_\+flights}} ()
+\item 
+def \mbox{\hyperlink{namespacecase__random__generator_a8b866a1f626b227c288db4ebfde86774}{calculate\+\_\+distance}} (origin, destination)
+\item 
+def \mbox{\hyperlink{namespacecase__random__generator_a69bcabe197853cfd58186e4075041064}{generate\+\_\+fleets}} (flights\+\_\+data)
+\item 
+def \mbox{\hyperlink{namespacecase__random__generator_a16ce89f1b91f7434e78ecdbf6056a877}{generate\+\_\+routes}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{namespacecase__random__generator_af6bc1fc7a1509c63e9d9c2679edda475}{START\+\_\+\+TIME}} = 1
+\item 
+int \mbox{\hyperlink{namespacecase__random__generator_ad98ce24e12b62e718e84272174b92b39}{END\+\_\+\+TIME}} = 100
+\item 
+int \mbox{\hyperlink{namespacecase__random__generator_a528f29e22c7f73d5563c636e668e0f1e}{TIME\+\_\+\+STEP}} = 1
+\item 
+\mbox{\hyperlink{namespacecase__random__generator_a8b91a9b26dba93effd418cf6f977e79b}{N\+\_\+\+FLIGHTS}} = random.\+randint(10, 15)
+\item 
+int \mbox{\hyperlink{namespacecase__random__generator_a89e5ff508d81144bcb5de4c723c93824}{NUM\+\_\+\+FLEETS}} = 10
+\item 
+dictionary \mbox{\hyperlink{namespacecase__random__generator_a4f501f6c057d3862af5cd3e988ce86d7}{vertiports}}
+\item 
+\mbox{\hyperlink{namespacecase__random__generator_a1708a7aabb36a1a0191a416309bda192}{total\+\_\+capacity}} = sum(vertiport\mbox{[}\char`\"{}hold\+\_\+capacity\char`\"{}\mbox{]} for vertiport in vertiports.\+values())
+\item 
+def \mbox{\hyperlink{namespacecase__random__generator_a0c3a2062cfee3aabefecb4d63a4f8585}{flights}} = \mbox{\hyperlink{namespacecase__random__generator_a61baadd79f905837955d2c10a1b5310f}{generate\+\_\+flights}}()
+\item 
+def \mbox{\hyperlink{namespacecase__random__generator_a4e2554aef199d36f402a12ef7dc2144d}{fleets}} = \mbox{\hyperlink{namespacecase__random__generator_a69bcabe197853cfd58186e4075041064}{generate\+\_\+fleets}}(list(flights.\+keys()))
+\item 
+def \mbox{\hyperlink{namespacecase__random__generator_a7f952c03a3a66dec53cba54de1773734}{routes}} = \mbox{\hyperlink{namespacecase__random__generator_a16ce89f1b91f7434e78ecdbf6056a877}{generate\+\_\+routes}}()
+\item 
+dictionary \mbox{\hyperlink{namespacecase__random__generator_ad7bc263dd1a0ddb145da38121ef7b42d}{json\+\_\+data}}
+\item 
+\mbox{\hyperlink{namespacecase__random__generator_aeefd37c3ebdbbb909e78448c9e5c1d26}{current\+\_\+datetime}} = datetime.\+now()
+\item 
+\mbox{\hyperlink{namespacecase__random__generator_a7d0f7248e86a39bb1529acdff513bace}{formatted\+\_\+datetime}} = current\+\_\+datetime.\+strftime(\char`\"{}\%Y\%m\%d\+\_\+\%H\%M\%S\char`\"{})
+\item 
+\mbox{\hyperlink{namespacecase__random__generator_ae079b5b9cdcef550e0d34e7f900952a9}{current\+\_\+directory}} = os.\+getcwd()
+\item 
+\mbox{\hyperlink{namespacecase__random__generator_ad6b59c13f2c53885c09df808bd9dbf43}{test\+\_\+cases\+\_\+directory}} = os.\+path.\+join(\mbox{\hyperlink{namespacecase__random__generator_ae079b5b9cdcef550e0d34e7f900952a9}{current\+\_\+directory}}, \textquotesingle{}test\+\_\+cases\textquotesingle{})
+\item 
+\mbox{\hyperlink{namespacecase__random__generator_a48859f6652d9dcab2c3ba19835581e4a}{file\+\_\+path}} = os.\+path.\+join(\mbox{\hyperlink{namespacecase__random__generator_ad6b59c13f2c53885c09df808bd9dbf43}{test\+\_\+cases\+\_\+directory}}, \mbox{\hyperlink{namespacecase__random__generator_a4949c206f589a7f314a5b9ab72cf427c}{f}}\textquotesingle{}case\+\_\+\{\mbox{\hyperlink{namespacecase__random__generator_a7d0f7248e86a39bb1529acdff513bace}{formatted\+\_\+datetime}}\}.json\textquotesingle{})
+\item 
+\mbox{\hyperlink{namespacecase__random__generator_a4949c206f589a7f314a5b9ab72cf427c}{f}}
+\item 
+\mbox{\hyperlink{namespacecase__random__generator_adcf0787600660b49296f14e484e6bd9b}{indent}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacecase__random__generator_a8b866a1f626b227c288db4ebfde86774}\label{namespacecase__random__generator_a8b866a1f626b227c288db4ebfde86774}} 
+\index{case\_random\_generator@{case\_random\_generator}!calculate\_distance@{calculate\_distance}}
+\index{calculate\_distance@{calculate\_distance}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{calculate\_distance()}{calculate\_distance()}}
+{\footnotesize\ttfamily def case\+\_\+random\+\_\+generator.\+calculate\+\_\+distance (\begin{DoxyParamCaption}\item[{}]{origin,  }\item[{}]{destination }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}This function calculates distance from two vertiports
+input:
+output: distance in km
+\end{DoxyVerb}
+ Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecase__random__generator_a8b866a1f626b227c288db4ebfde86774_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacecase__random__generator_a69bcabe197853cfd58186e4075041064}\label{namespacecase__random__generator_a69bcabe197853cfd58186e4075041064}} 
+\index{case\_random\_generator@{case\_random\_generator}!generate\_fleets@{generate\_fleets}}
+\index{generate\_fleets@{generate\_fleets}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{generate\_fleets()}{generate\_fleets()}}
+{\footnotesize\ttfamily def case\+\_\+random\+\_\+generator.\+generate\+\_\+fleets (\begin{DoxyParamCaption}\item[{}]{flights\+\_\+data }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecase__random__generator_a61baadd79f905837955d2c10a1b5310f}\label{namespacecase__random__generator_a61baadd79f905837955d2c10a1b5310f}} 
+\index{case\_random\_generator@{case\_random\_generator}!generate\_flights@{generate\_flights}}
+\index{generate\_flights@{generate\_flights}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{generate\_flights()}{generate\_flights()}}
+{\footnotesize\ttfamily def case\+\_\+random\+\_\+generator.\+generate\+\_\+flights (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{namespacecase__random__generator_a16ce89f1b91f7434e78ecdbf6056a877}\label{namespacecase__random__generator_a16ce89f1b91f7434e78ecdbf6056a877}} 
+\index{case\_random\_generator@{case\_random\_generator}!generate\_routes@{generate\_routes}}
+\index{generate\_routes@{generate\_routes}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{generate\_routes()}{generate\_routes()}}
+{\footnotesize\ttfamily def case\+\_\+random\+\_\+generator.\+generate\+\_\+routes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacecase__random__generator_a16ce89f1b91f7434e78ecdbf6056a877_cgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{namespacecase__random__generator_aeefd37c3ebdbbb909e78448c9e5c1d26}\label{namespacecase__random__generator_aeefd37c3ebdbbb909e78448c9e5c1d26}} 
+\index{case\_random\_generator@{case\_random\_generator}!current\_datetime@{current\_datetime}}
+\index{current\_datetime@{current\_datetime}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{current\_datetime}{current\_datetime}}
+{\footnotesize\ttfamily case\+\_\+random\+\_\+generator.\+current\+\_\+datetime = datetime.\+now()}
+
+\mbox{\Hypertarget{namespacecase__random__generator_ae079b5b9cdcef550e0d34e7f900952a9}\label{namespacecase__random__generator_ae079b5b9cdcef550e0d34e7f900952a9}} 
+\index{case\_random\_generator@{case\_random\_generator}!current\_directory@{current\_directory}}
+\index{current\_directory@{current\_directory}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{current\_directory}{current\_directory}}
+{\footnotesize\ttfamily case\+\_\+random\+\_\+generator.\+current\+\_\+directory = os.\+getcwd()}
+
+\mbox{\Hypertarget{namespacecase__random__generator_ad98ce24e12b62e718e84272174b92b39}\label{namespacecase__random__generator_ad98ce24e12b62e718e84272174b92b39}} 
+\index{case\_random\_generator@{case\_random\_generator}!END\_TIME@{END\_TIME}}
+\index{END\_TIME@{END\_TIME}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{END\_TIME}{END\_TIME}}
+{\footnotesize\ttfamily int case\+\_\+random\+\_\+generator.\+END\+\_\+\+TIME = 100}
+
+\mbox{\Hypertarget{namespacecase__random__generator_a4949c206f589a7f314a5b9ab72cf427c}\label{namespacecase__random__generator_a4949c206f589a7f314a5b9ab72cf427c}} 
+\index{case\_random\_generator@{case\_random\_generator}!f@{f}}
+\index{f@{f}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{f}{f}}
+{\footnotesize\ttfamily case\+\_\+random\+\_\+generator.\+f}
+
+\mbox{\Hypertarget{namespacecase__random__generator_a48859f6652d9dcab2c3ba19835581e4a}\label{namespacecase__random__generator_a48859f6652d9dcab2c3ba19835581e4a}} 
+\index{case\_random\_generator@{case\_random\_generator}!file\_path@{file\_path}}
+\index{file\_path@{file\_path}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{file\_path}{file\_path}}
+{\footnotesize\ttfamily case\+\_\+random\+\_\+generator.\+file\+\_\+path = os.\+path.\+join(\mbox{\hyperlink{namespacecase__random__generator_ad6b59c13f2c53885c09df808bd9dbf43}{test\+\_\+cases\+\_\+directory}}, \mbox{\hyperlink{namespacecase__random__generator_a4949c206f589a7f314a5b9ab72cf427c}{f}}\textquotesingle{}case\+\_\+\{\mbox{\hyperlink{namespacecase__random__generator_a7d0f7248e86a39bb1529acdff513bace}{formatted\+\_\+datetime}}\}.json\textquotesingle{})}
+
+\mbox{\Hypertarget{namespacecase__random__generator_a4e2554aef199d36f402a12ef7dc2144d}\label{namespacecase__random__generator_a4e2554aef199d36f402a12ef7dc2144d}} 
+\index{case\_random\_generator@{case\_random\_generator}!fleets@{fleets}}
+\index{fleets@{fleets}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{fleets}{fleets}}
+{\footnotesize\ttfamily def case\+\_\+random\+\_\+generator.\+fleets = \mbox{\hyperlink{namespacecase__random__generator_a69bcabe197853cfd58186e4075041064}{generate\+\_\+fleets}}(list(flights.\+keys()))}
+
+\mbox{\Hypertarget{namespacecase__random__generator_a0c3a2062cfee3aabefecb4d63a4f8585}\label{namespacecase__random__generator_a0c3a2062cfee3aabefecb4d63a4f8585}} 
+\index{case\_random\_generator@{case\_random\_generator}!flights@{flights}}
+\index{flights@{flights}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{flights}{flights}}
+{\footnotesize\ttfamily def case\+\_\+random\+\_\+generator.\+flights = \mbox{\hyperlink{namespacecase__random__generator_a61baadd79f905837955d2c10a1b5310f}{generate\+\_\+flights}}()}
+
+\mbox{\Hypertarget{namespacecase__random__generator_a7d0f7248e86a39bb1529acdff513bace}\label{namespacecase__random__generator_a7d0f7248e86a39bb1529acdff513bace}} 
+\index{case\_random\_generator@{case\_random\_generator}!formatted\_datetime@{formatted\_datetime}}
+\index{formatted\_datetime@{formatted\_datetime}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{formatted\_datetime}{formatted\_datetime}}
+{\footnotesize\ttfamily case\+\_\+random\+\_\+generator.\+formatted\+\_\+datetime = current\+\_\+datetime.\+strftime(\char`\"{}\%Y\%m\%d\+\_\+\%H\%M\%S\char`\"{})}
+
+\mbox{\Hypertarget{namespacecase__random__generator_adcf0787600660b49296f14e484e6bd9b}\label{namespacecase__random__generator_adcf0787600660b49296f14e484e6bd9b}} 
+\index{case\_random\_generator@{case\_random\_generator}!indent@{indent}}
+\index{indent@{indent}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{indent}{indent}}
+{\footnotesize\ttfamily case\+\_\+random\+\_\+generator.\+indent}
+
+\mbox{\Hypertarget{namespacecase__random__generator_ad7bc263dd1a0ddb145da38121ef7b42d}\label{namespacecase__random__generator_ad7bc263dd1a0ddb145da38121ef7b42d}} 
+\index{case\_random\_generator@{case\_random\_generator}!json\_data@{json\_data}}
+\index{json\_data@{json\_data}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{json\_data}{json\_data}}
+{\footnotesize\ttfamily case\+\_\+random\+\_\+generator.\+json\+\_\+data}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     \textcolor{stringliteral}{"{}timing\_info"{}}: \{\textcolor{stringliteral}{"{}start\_time"{}}: START\_TIME, \textcolor{stringliteral}{"{}end\_time"{}}: END\_TIME, \textcolor{stringliteral}{"{}time\_step"{}}: TIME\_STEP\},}
+\DoxyCodeLine{3     \textcolor{stringliteral}{"{}fleets"{}}: fleets,}
+\DoxyCodeLine{4     \textcolor{stringliteral}{"{}flights"{}}: flights,}
+\DoxyCodeLine{5     \textcolor{stringliteral}{"{}vertiports"{}}: vertiports,}
+\DoxyCodeLine{6     \textcolor{stringliteral}{"{}routes"{}}: routes}
+\DoxyCodeLine{7 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{namespacecase__random__generator_a8b91a9b26dba93effd418cf6f977e79b}\label{namespacecase__random__generator_a8b91a9b26dba93effd418cf6f977e79b}} 
+\index{case\_random\_generator@{case\_random\_generator}!N\_FLIGHTS@{N\_FLIGHTS}}
+\index{N\_FLIGHTS@{N\_FLIGHTS}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{N\_FLIGHTS}{N\_FLIGHTS}}
+{\footnotesize\ttfamily case\+\_\+random\+\_\+generator.\+N\+\_\+\+FLIGHTS = random.\+randint(10, 15)}
+
+\mbox{\Hypertarget{namespacecase__random__generator_a89e5ff508d81144bcb5de4c723c93824}\label{namespacecase__random__generator_a89e5ff508d81144bcb5de4c723c93824}} 
+\index{case\_random\_generator@{case\_random\_generator}!NUM\_FLEETS@{NUM\_FLEETS}}
+\index{NUM\_FLEETS@{NUM\_FLEETS}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{NUM\_FLEETS}{NUM\_FLEETS}}
+{\footnotesize\ttfamily int case\+\_\+random\+\_\+generator.\+NUM\+\_\+\+FLEETS = 10}
+
+\mbox{\Hypertarget{namespacecase__random__generator_a7f952c03a3a66dec53cba54de1773734}\label{namespacecase__random__generator_a7f952c03a3a66dec53cba54de1773734}} 
+\index{case\_random\_generator@{case\_random\_generator}!routes@{routes}}
+\index{routes@{routes}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{routes}{routes}}
+{\footnotesize\ttfamily def case\+\_\+random\+\_\+generator.\+routes = \mbox{\hyperlink{namespacecase__random__generator_a16ce89f1b91f7434e78ecdbf6056a877}{generate\+\_\+routes}}()}
+
+\mbox{\Hypertarget{namespacecase__random__generator_af6bc1fc7a1509c63e9d9c2679edda475}\label{namespacecase__random__generator_af6bc1fc7a1509c63e9d9c2679edda475}} 
+\index{case\_random\_generator@{case\_random\_generator}!START\_TIME@{START\_TIME}}
+\index{START\_TIME@{START\_TIME}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{START\_TIME}{START\_TIME}}
+{\footnotesize\ttfamily int case\+\_\+random\+\_\+generator.\+START\+\_\+\+TIME = 1}
+
+\mbox{\Hypertarget{namespacecase__random__generator_ad6b59c13f2c53885c09df808bd9dbf43}\label{namespacecase__random__generator_ad6b59c13f2c53885c09df808bd9dbf43}} 
+\index{case\_random\_generator@{case\_random\_generator}!test\_cases\_directory@{test\_cases\_directory}}
+\index{test\_cases\_directory@{test\_cases\_directory}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{test\_cases\_directory}{test\_cases\_directory}}
+{\footnotesize\ttfamily case\+\_\+random\+\_\+generator.\+test\+\_\+cases\+\_\+directory = os.\+path.\+join(\mbox{\hyperlink{namespacecase__random__generator_ae079b5b9cdcef550e0d34e7f900952a9}{current\+\_\+directory}}, \textquotesingle{}test\+\_\+cases\textquotesingle{})}
+
+\mbox{\Hypertarget{namespacecase__random__generator_a528f29e22c7f73d5563c636e668e0f1e}\label{namespacecase__random__generator_a528f29e22c7f73d5563c636e668e0f1e}} 
+\index{case\_random\_generator@{case\_random\_generator}!TIME\_STEP@{TIME\_STEP}}
+\index{TIME\_STEP@{TIME\_STEP}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{TIME\_STEP}{TIME\_STEP}}
+{\footnotesize\ttfamily int case\+\_\+random\+\_\+generator.\+TIME\+\_\+\+STEP = 1}
+
+\mbox{\Hypertarget{namespacecase__random__generator_a1708a7aabb36a1a0191a416309bda192}\label{namespacecase__random__generator_a1708a7aabb36a1a0191a416309bda192}} 
+\index{case\_random\_generator@{case\_random\_generator}!total\_capacity@{total\_capacity}}
+\index{total\_capacity@{total\_capacity}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{total\_capacity}{total\_capacity}}
+{\footnotesize\ttfamily case\+\_\+random\+\_\+generator.\+total\+\_\+capacity = sum(vertiport\mbox{[}\char`\"{}hold\+\_\+capacity\char`\"{}\mbox{]} for vertiport in vertiports.\+values())}
+
+\mbox{\Hypertarget{namespacecase__random__generator_a4f501f6c057d3862af5cd3e988ce86d7}\label{namespacecase__random__generator_a4f501f6c057d3862af5cd3e988ce86d7}} 
+\index{case\_random\_generator@{case\_random\_generator}!vertiports@{vertiports}}
+\index{vertiports@{vertiports}!case\_random\_generator@{case\_random\_generator}}
+\doxysubsubsection{\texorpdfstring{vertiports}{vertiports}}
+{\footnotesize\ttfamily dictionary case\+\_\+random\+\_\+generator.\+vertiports}
+
+{\bfseries Initial value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 =  \{}
+\DoxyCodeLine{2     \textcolor{stringliteral}{"{}V001"{}}: \{\textcolor{stringliteral}{"{}latitude"{}}: 37.766699, \textcolor{stringliteral}{"{}longitude"{}}: -\/122.3903664, \textcolor{stringliteral}{"{}landing\_capacity"{}}: random.randint(1, 3), \textcolor{stringliteral}{"{}takeoff\_capacity"{}}: random.randint(1, 5), \textcolor{stringliteral}{"{}hold\_capacity"{}}: 5\},}
+\DoxyCodeLine{3     \textcolor{stringliteral}{"{}V002"{}}: \{\textcolor{stringliteral}{"{}latitude"{}}: 37.8361761, \textcolor{stringliteral}{"{}longitude"{}}: -\/122.2668028, \textcolor{stringliteral}{"{}landing\_capacity"{}}: random.randint(1, 3), \textcolor{stringliteral}{"{}takeoff\_capacity"{}}: random.randint(1, 5), \textcolor{stringliteral}{"{}hold\_capacity"{}}: 5\},}
+\DoxyCodeLine{4     \textcolor{stringliteral}{"{}V003"{}}: \{\textcolor{stringliteral}{"{}latitude"{}}: 37.7835538, \textcolor{stringliteral}{"{}longitude"{}}: -\/122.5067642, \textcolor{stringliteral}{"{}landing\_capacity"{}}: random.randint(1, 3), \textcolor{stringliteral}{"{}takeoff\_capacity"{}}: random.randint(1, 5), \textcolor{stringliteral}{"{}hold\_capacity"{}}: 5\},}
+\DoxyCodeLine{5     \textcolor{stringliteral}{"{}V004"{}}: \{\textcolor{stringliteral}{"{}latitude"{}}: 37.9472484, \textcolor{stringliteral}{"{}longitude"{}}: -\/122.4880737, \textcolor{stringliteral}{"{}landing\_capacity"{}}: random.randint(1, 3), \textcolor{stringliteral}{"{}takeoff\_capacity"{}}: random.randint(1, 5), \textcolor{stringliteral}{"{}hold\_capacity"{}}: 5\},}
+\DoxyCodeLine{6     \textcolor{stringliteral}{"{}V005"{}}: \{\textcolor{stringliteral}{"{}latitude"{}}: 37.38556649999999, \textcolor{stringliteral}{"{}longitude"{}}: -\/121.9723564, \textcolor{stringliteral}{"{}landing\_capacity"{}}: random.randint(1, 3), \textcolor{stringliteral}{"{}takeoff\_capacity"{}}: random.randint(1, 5), \textcolor{stringliteral}{"{}hold\_capacity"{}}: 5\},}
+\DoxyCodeLine{7     \textcolor{stringliteral}{"{}V006"{}}: \{\textcolor{stringliteral}{"{}latitude"{}}: 37.25214395119753, \textcolor{stringliteral}{"{}longitude"{}}: -\/122.4066509403772, \textcolor{stringliteral}{"{}landing\_capacity"{}}: random.randint(1, 3), \textcolor{stringliteral}{"{}takeoff\_capacity"{}}: random.randint(1, 5), \textcolor{stringliteral}{"{}hold\_capacity"{}}: 5\},}
+\DoxyCodeLine{8     \textcolor{stringliteral}{"{}V007"{}}: \{\textcolor{stringliteral}{"{}latitude"{}}: 38.58856301092047, \textcolor{stringliteral}{"{}longitude"{}}: -\/121.5627454937505, \textcolor{stringliteral}{"{}landing\_capacity"{}}: random.randint(1, 3), \textcolor{stringliteral}{"{}takeoff\_capacity"{}}: random.randint(1, 5), \textcolor{stringliteral}{"{}hold\_capacity"{}}: 5\},}
+\DoxyCodeLine{9 \}}
+
+\end{DoxyCode}

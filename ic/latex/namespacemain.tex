@@ -1,0 +1,468 @@
+\hypertarget{namespacemain}{}\doxysection{main Namespace Reference}
+\label{namespacemain}\index{main@{main}}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacemain_a5fca69960fbbd1933ee0b8cdfbe3de4f}{load\+\_\+json}} (file=None)
+\item 
+def \mbox{\hyperlink{namespacemain_abd724801d6a338fdbc6a7eebe63bc51b}{get\+\_\+vehicle\+\_\+info}} (flight, lat1, lon1, lat2, lon2)
+\item 
+def \mbox{\hyperlink{namespacemain_a16ddff81dd96d575337ea741dfd89fdf}{get\+\_\+lat\+\_\+lon}} (vertiport)
+\item 
+def \mbox{\hyperlink{namespacemain_aece3c882749514d2e33b2e9b9411d815}{calculate\+\_\+bearing}} (lat1, lon1, lat2, lon2)
+\item 
+def \mbox{\hyperlink{namespacemain_aa723bd31dea0844e032d1421aa1e6e8e}{create\+\_\+allocated\+\_\+area}} (lat1, lon1, lat2, lon2, width)
+\item 
+def \mbox{\hyperlink{namespacemain_aa73cdb55c4c781bc476b86e013da934d}{add\+\_\+commands\+\_\+for\+\_\+flight}} (flight\+\_\+id, flight, request, origin\+\_\+vertiport, destination\+\_\+vertiport, stack\+\_\+commands)
+\item 
+def \mbox{\hyperlink{namespacemain_a0974df1bb3aebffd79a0f84278cd3394}{step\+\_\+simulation}} (vertiport\+\_\+usage, vertiports, flights, allocated\+\_\+flights, stack\+\_\+commands)
+\item 
+def \mbox{\hyperlink{namespacemain_a44f8837fcfa92a578e919f429035f90b}{run\+\_\+scenario}} (data, scenario\+\_\+path, scenario\+\_\+name, \mbox{\hyperlink{namespacemain_a05ac9790cc1390eb6166c450286392c2}{file\+\_\+path}}, method=\char`\"{}fisher\char`\"{})
+\item 
+def \mbox{\hyperlink{namespacemain_adb152bd1404612315b9f5e50a284eb08}{evaluate\+\_\+scenario}} (path\+\_\+to\+\_\+scenario\+\_\+file, \mbox{\hyperlink{namespacemain_a6be14f7f2f8cedfce33c85ab71d03e2e}{run\+\_\+gui}}=False)
+\item 
+def \mbox{\hyperlink{namespacemain_aa4e275f5197b9fbfc23b0cd9b7632c57}{convert\+\_\+time}} (time)
+\item 
+def \mbox{\hyperlink{namespacemain_a8b4943ade6382fe001851d6306f13cbd}{write\+\_\+scenario}} (scenario\+\_\+folder, scenario\+\_\+name, stack\+\_\+commands)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacemain_a9cfe362268fd6a2b8c4268ea6a9e0699}{top\+\_\+level\+\_\+path}} = Path(\+\_\+\+\_\+file\+\_\+\+\_\+).resolve().parent.\+parent
+\item 
+int \mbox{\hyperlink{namespacemain_a5065e9c833ad1c4931d0ddfd145698ac}{T\+\_\+\+STEP}} = 10000
+\item 
+bool \mbox{\hyperlink{namespacemain_a6d1dc80d8f6e187a9d7209edd99e16e7}{MANEUVER}} = \mbox{\hyperlink{namespacemain_a0c5b8ab1603c8c5b8db5e1128a757fea}{True}}
+\item 
+bool \mbox{\hyperlink{namespacemain_a4dc90e275dae34ba42b761ed33e83a41}{VISUALIZE}} = False
+\item 
+bool \mbox{\hyperlink{namespacemain_a252c4581ae0c850ad41fcb1fab8b2332}{LOG}} = \mbox{\hyperlink{namespacemain_a0c5b8ab1603c8c5b8db5e1128a757fea}{True}}
+\item 
+int \mbox{\hyperlink{namespacemain_a7c8a4f30bc8040be08071aaf710fea3f}{SIMDT}} = 1
+\item 
+\mbox{\hyperlink{namespacemain_a9f3911118b78333a8f963e063f12c7ed}{parser}} = argparse.\+Argument\+Parser(description=\char`\"{}Process a true/false argument.\char`\"{})
+\item 
+\mbox{\hyperlink{namespacemain_a8bdc3f0ab6b56e404da0a4da489942ae}{action}}
+\item 
+\mbox{\hyperlink{namespacemain_a1fdabe2077f86bd72dbb433530b1f192}{help}}
+\item 
+\mbox{\hyperlink{namespacemain_add4e4c9e96030cc8c55af23e1b21a1c1}{type}}
+\item 
+\mbox{\hyperlink{namespacemain_a26f656d825a0ffd09a95f3e7953445e5}{str}}
+\item 
+\mbox{\hyperlink{namespacemain_a1344c1e698a1e688c7ae0828f75d5a48}{required}}
+\item 
+\mbox{\hyperlink{namespacemain_a0c5b8ab1603c8c5b8db5e1128a757fea}{True}}
+\item 
+\mbox{\hyperlink{namespacemain_a10926d7b7053badc9647defe0abb8adc}{args}} = parser.\+parse\+\_\+args()
+\item 
+\mbox{\hyperlink{namespacemain_a05ac9790cc1390eb6166c450286392c2}{file\+\_\+path}} = args.\+file
+\item 
+def \mbox{\hyperlink{namespacemain_a20bd89ef6e41cb2fdf7db251a4c62814}{test\+\_\+case\+\_\+data}} = \mbox{\hyperlink{namespacemain_a5fca69960fbbd1933ee0b8cdfbe3de4f}{load\+\_\+json}}(\mbox{\hyperlink{namespacemain_a05ac9790cc1390eb6166c450286392c2}{file\+\_\+path}})
+\item 
+\mbox{\hyperlink{namespacemain_ae83d131f7f1e661ba03da60ed93f39cc}{file\+\_\+name}} = Path(\mbox{\hyperlink{namespacemain_a05ac9790cc1390eb6166c450286392c2}{file\+\_\+path}}).name
+\item 
+\mbox{\hyperlink{namespacemain_a8eb551bfdf698c0dbc27ed3f4cd68bb6}{SCN\+\_\+\+FOLDER}} = \mbox{\hyperlink{namespacemain_a26f656d825a0ffd09a95f3e7953445e5}{str}}(\mbox{\hyperlink{namespacemain_a9cfe362268fd6a2b8c4268ea6a9e0699}{top\+\_\+level\+\_\+path}}) + args.\+scn\+\_\+folder
+\item 
+\mbox{\hyperlink{namespacemain_a22c2a6dbfc9500343d1b762b1d544e35}{SCN\+\_\+\+NAME}} = file\+\_\+name.\+split(\char`\"{}.\char`\"{})\mbox{[}0\mbox{]}
+\item 
+string \mbox{\hyperlink{namespacemain_ac5cfa575b843cf19d498d00e0dd89d9d}{path}} = f\char`\"{}\{SCN\+\_\+\+FOLDER\}/\{\mbox{\hyperlink{namespacemain_a22c2a6dbfc9500343d1b762b1d544e35}{SCN\+\_\+\+NAME}}\}.scn\char`\"{}
+\item 
+def \mbox{\hyperlink{namespacemain_a6d1816eaf496b6ee02879666676d6d77}{path\+\_\+to\+\_\+scn\+\_\+file}} = \mbox{\hyperlink{namespacemain_a44f8837fcfa92a578e919f429035f90b}{run\+\_\+scenario}}(\mbox{\hyperlink{namespacemain_a20bd89ef6e41cb2fdf7db251a4c62814}{test\+\_\+case\+\_\+data}}, \mbox{\hyperlink{namespacemain_a8eb551bfdf698c0dbc27ed3f4cd68bb6}{SCN\+\_\+\+FOLDER}}, \mbox{\hyperlink{namespacemain_a22c2a6dbfc9500343d1b762b1d544e35}{SCN\+\_\+\+NAME}}, \mbox{\hyperlink{namespacemain_a05ac9790cc1390eb6166c450286392c2}{file\+\_\+path}}, args.\+method)
+\item 
+\mbox{\hyperlink{namespacemain_a6be14f7f2f8cedfce33c85ab71d03e2e}{run\+\_\+gui}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Incentive Compatible Fleet Level Strategic Allocation
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespacemain_aa73cdb55c4c781bc476b86e013da934d}\label{namespacemain_aa73cdb55c4c781bc476b86e013da934d}} 
+\index{main@{main}!add\_commands\_for\_flight@{add\_commands\_for\_flight}}
+\index{add\_commands\_for\_flight@{add\_commands\_for\_flight}!main@{main}}
+\doxysubsubsection{\texorpdfstring{add\_commands\_for\_flight()}{add\_commands\_for\_flight()}}
+{\footnotesize\ttfamily def main.\+add\+\_\+commands\+\_\+for\+\_\+flight (\begin{DoxyParamCaption}\item[{}]{flight\+\_\+id,  }\item[{}]{flight,  }\item[{}]{request,  }\item[{}]{origin\+\_\+vertiport,  }\item[{}]{destination\+\_\+vertiport,  }\item[{}]{stack\+\_\+commands }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Add the necessary stack commands for a given allocated request to the stack commands list.
+
+Args:
+    flight_id (str): The flight ID.
+    flight (dict): The flight information.
+    request (dict): The request information.
+    origin_vertiport (dict): The origin vertiport information.
+    destination_vertiport (dict): The destination vertiport information.
+    stack_commands (list): The list of stack commands to add to.
+\end{DoxyVerb}
+ Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacemain_aa73cdb55c4c781bc476b86e013da934d_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacemain_aa73cdb55c4c781bc476b86e013da934d_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemain_aece3c882749514d2e33b2e9b9411d815}\label{namespacemain_aece3c882749514d2e33b2e9b9411d815}} 
+\index{main@{main}!calculate\_bearing@{calculate\_bearing}}
+\index{calculate\_bearing@{calculate\_bearing}!main@{main}}
+\doxysubsubsection{\texorpdfstring{calculate\_bearing()}{calculate\_bearing()}}
+{\footnotesize\ttfamily def main.\+calculate\+\_\+bearing (\begin{DoxyParamCaption}\item[{}]{lat1,  }\item[{}]{lon1,  }\item[{}]{lat2,  }\item[{}]{lon2 }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Calculate the initial bearing between two points 
+to determine the orientation of the strategic region
+with respect to the trajectory.
+
+input: lat1, lon1, lat2, lon2
+output: initial bearing
+\end{DoxyVerb}
+ Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacemain_aece3c882749514d2e33b2e9b9411d815_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemain_aa4e275f5197b9fbfc23b0cd9b7632c57}\label{namespacemain_aa4e275f5197b9fbfc23b0cd9b7632c57}} 
+\index{main@{main}!convert\_time@{convert\_time}}
+\index{convert\_time@{convert\_time}!main@{main}}
+\doxysubsubsection{\texorpdfstring{convert\_time()}{convert\_time()}}
+{\footnotesize\ttfamily def main.\+convert\+\_\+time (\begin{DoxyParamCaption}\item[{}]{time }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Convert a time in seconds to a timestamp in the format HH:MM:SS.SS.
+
+Args:
+    time (int): The time in seconds.
+\end{DoxyVerb}
+ Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacemain_aa4e275f5197b9fbfc23b0cd9b7632c57_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemain_aa723bd31dea0844e032d1421aa1e6e8e}\label{namespacemain_aa723bd31dea0844e032d1421aa1e6e8e}} 
+\index{main@{main}!create\_allocated\_area@{create\_allocated\_area}}
+\index{create\_allocated\_area@{create\_allocated\_area}!main@{main}}
+\doxysubsubsection{\texorpdfstring{create\_allocated\_area()}{create\_allocated\_area()}}
+{\footnotesize\ttfamily def main.\+create\+\_\+allocated\+\_\+area (\begin{DoxyParamCaption}\item[{}]{lat1,  }\item[{}]{lon1,  }\item[{}]{lat2,  }\item[{}]{lon2,  }\item[{}]{width }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Create a rectangular shape surrounding a trajectory given two points and width.
+
+input: lat1, lon1, lat2, lon2, width (in kilometers)
+ourtput: string of coordinates for the polygon
+\end{DoxyVerb}
+ Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacemain_aa723bd31dea0844e032d1421aa1e6e8e_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacemain_aa723bd31dea0844e032d1421aa1e6e8e_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemain_adb152bd1404612315b9f5e50a284eb08}\label{namespacemain_adb152bd1404612315b9f5e50a284eb08}} 
+\index{main@{main}!evaluate\_scenario@{evaluate\_scenario}}
+\index{evaluate\_scenario@{evaluate\_scenario}!main@{main}}
+\doxysubsubsection{\texorpdfstring{evaluate\_scenario()}{evaluate\_scenario()}}
+{\footnotesize\ttfamily def main.\+evaluate\+\_\+scenario (\begin{DoxyParamCaption}\item[{}]{path\+\_\+to\+\_\+scenario\+\_\+file,  }\item[{}]{run\+\_\+gui = {\ttfamily False} }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Evaluate the scenario by running the BlueSky simulation.
+
+Args:
+    path_to_scenario_file (str): The path to the scenario file to run.
+    run_gui (bool): Flag for running the simulation with the GUI (default is False)
+\end{DoxyVerb}
+ \mbox{\Hypertarget{namespacemain_a16ddff81dd96d575337ea741dfd89fdf}\label{namespacemain_a16ddff81dd96d575337ea741dfd89fdf}} 
+\index{main@{main}!get\_lat\_lon@{get\_lat\_lon}}
+\index{get\_lat\_lon@{get\_lat\_lon}!main@{main}}
+\doxysubsubsection{\texorpdfstring{get\_lat\_lon()}{get\_lat\_lon()}}
+{\footnotesize\ttfamily def main.\+get\+\_\+lat\+\_\+lon (\begin{DoxyParamCaption}\item[{}]{vertiport }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Get the latitude and longitude of a vertiport.
+
+Args:
+    vertiport (dict): The vertiport information.
+
+Returns:
+    float: The latitude of the vertiport.
+    float: The longitude of the vertiport.
+\end{DoxyVerb}
+ Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacemain_a16ddff81dd96d575337ea741dfd89fdf_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemain_abd724801d6a338fdbc6a7eebe63bc51b}\label{namespacemain_abd724801d6a338fdbc6a7eebe63bc51b}} 
+\index{main@{main}!get\_vehicle\_info@{get\_vehicle\_info}}
+\index{get\_vehicle\_info@{get\_vehicle\_info}!main@{main}}
+\doxysubsubsection{\texorpdfstring{get\_vehicle\_info()}{get\_vehicle\_info()}}
+{\footnotesize\ttfamily def main.\+get\+\_\+vehicle\+\_\+info (\begin{DoxyParamCaption}\item[{}]{flight,  }\item[{}]{lat1,  }\item[{}]{lon1,  }\item[{}]{lat2,  }\item[{}]{lon2 }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Get the vehicle information for a given flight.
+
+Args:
+    flight (dict): The flight information.
+
+Returns:
+    str: The vehicle type.
+    str: The altitude.
+    int: The speed.
+    int: The heading.
+\end{DoxyVerb}
+ Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=343pt]{namespacemain_abd724801d6a338fdbc6a7eebe63bc51b_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacemain_abd724801d6a338fdbc6a7eebe63bc51b_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemain_a5fca69960fbbd1933ee0b8cdfbe3de4f}\label{namespacemain_a5fca69960fbbd1933ee0b8cdfbe3de4f}} 
+\index{main@{main}!load\_json@{load\_json}}
+\index{load\_json@{load\_json}!main@{main}}
+\doxysubsubsection{\texorpdfstring{load\_json()}{load\_json()}}
+{\footnotesize\ttfamily def main.\+load\+\_\+json (\begin{DoxyParamCaption}\item[{}]{file = {\ttfamily None} }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Load a case file for a bluesky simulation from a JSON file.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{namespacemain_a44f8837fcfa92a578e919f429035f90b}\label{namespacemain_a44f8837fcfa92a578e919f429035f90b}} 
+\index{main@{main}!run\_scenario@{run\_scenario}}
+\index{run\_scenario@{run\_scenario}!main@{main}}
+\doxysubsubsection{\texorpdfstring{run\_scenario()}{run\_scenario()}}
+{\footnotesize\ttfamily def main.\+run\+\_\+scenario (\begin{DoxyParamCaption}\item[{}]{data,  }\item[{}]{scenario\+\_\+path,  }\item[{}]{scenario\+\_\+name,  }\item[{}]{file\+\_\+path,  }\item[{}]{method = {\ttfamily \char`\"{}fisher\char`\"{}} }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Create and run a scenario based on the given data. Save it to the specified path.
+
+Args:
+    data (dict): The data containing information about flights, vertiports, routes, timing, etc.
+    scenario_path (str): The path where the scenario file will be saved.
+    scenario_name (str): The name of the scenario file.
+
+Returns:
+    str: The path to the created scenario file.
+\end{DoxyVerb}
+ Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacemain_a44f8837fcfa92a578e919f429035f90b_cgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemain_a0974df1bb3aebffd79a0f84278cd3394}\label{namespacemain_a0974df1bb3aebffd79a0f84278cd3394}} 
+\index{main@{main}!step\_simulation@{step\_simulation}}
+\index{step\_simulation@{step\_simulation}!main@{main}}
+\doxysubsubsection{\texorpdfstring{step\_simulation()}{step\_simulation()}}
+{\footnotesize\ttfamily def main.\+step\+\_\+simulation (\begin{DoxyParamCaption}\item[{}]{vertiport\+\_\+usage,  }\item[{}]{vertiports,  }\item[{}]{flights,  }\item[{}]{allocated\+\_\+flights,  }\item[{}]{stack\+\_\+commands }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Step the simulation forward based on the allocated flights.
+
+Args:
+    vertiport_usage (VertiportStatus): The current status of the vertiports.
+    vertiports (dict): The vertiports information.
+    flights (dict): The flights information.
+    allocated_flights (list): The list of allocated flights.
+    stack_commands (list): The list of stack commands to add to.
+\end{DoxyVerb}
+ Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespacemain_a0974df1bb3aebffd79a0f84278cd3394_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=321pt]{namespacemain_a0974df1bb3aebffd79a0f84278cd3394_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespacemain_a8b4943ade6382fe001851d6306f13cbd}\label{namespacemain_a8b4943ade6382fe001851d6306f13cbd}} 
+\index{main@{main}!write\_scenario@{write\_scenario}}
+\index{write\_scenario@{write\_scenario}!main@{main}}
+\doxysubsubsection{\texorpdfstring{write\_scenario()}{write\_scenario()}}
+{\footnotesize\ttfamily def main.\+write\+\_\+scenario (\begin{DoxyParamCaption}\item[{}]{scenario\+\_\+folder,  }\item[{}]{scenario\+\_\+name,  }\item[{}]{stack\+\_\+commands }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Write the stack commands to a scenario file.
+
+Args:
+    scenario_folder (str): The folder where the scenario file will be saved.
+    scenario_name (str): The desired name of the scenario file.
+    stack_commands (list): A list of stack commands to write to the scenario file.
+\end{DoxyVerb}
+ Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=316pt]{namespacemain_a8b4943ade6382fe001851d6306f13cbd_icgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{namespacemain_a8bdc3f0ab6b56e404da0a4da489942ae}\label{namespacemain_a8bdc3f0ab6b56e404da0a4da489942ae}} 
+\index{main@{main}!action@{action}}
+\index{action@{action}!main@{main}}
+\doxysubsubsection{\texorpdfstring{action}{action}}
+{\footnotesize\ttfamily main.\+action}
+
+\mbox{\Hypertarget{namespacemain_a10926d7b7053badc9647defe0abb8adc}\label{namespacemain_a10926d7b7053badc9647defe0abb8adc}} 
+\index{main@{main}!args@{args}}
+\index{args@{args}!main@{main}}
+\doxysubsubsection{\texorpdfstring{args}{args}}
+{\footnotesize\ttfamily main.\+args = parser.\+parse\+\_\+args()}
+
+\mbox{\Hypertarget{namespacemain_ae83d131f7f1e661ba03da60ed93f39cc}\label{namespacemain_ae83d131f7f1e661ba03da60ed93f39cc}} 
+\index{main@{main}!file\_name@{file\_name}}
+\index{file\_name@{file\_name}!main@{main}}
+\doxysubsubsection{\texorpdfstring{file\_name}{file\_name}}
+{\footnotesize\ttfamily main.\+file\+\_\+name = Path(\mbox{\hyperlink{namespacemain_a05ac9790cc1390eb6166c450286392c2}{file\+\_\+path}}).name}
+
+\mbox{\Hypertarget{namespacemain_a05ac9790cc1390eb6166c450286392c2}\label{namespacemain_a05ac9790cc1390eb6166c450286392c2}} 
+\index{main@{main}!file\_path@{file\_path}}
+\index{file\_path@{file\_path}!main@{main}}
+\doxysubsubsection{\texorpdfstring{file\_path}{file\_path}}
+{\footnotesize\ttfamily main.\+file\+\_\+path = args.\+file}
+
+\mbox{\Hypertarget{namespacemain_a1fdabe2077f86bd72dbb433530b1f192}\label{namespacemain_a1fdabe2077f86bd72dbb433530b1f192}} 
+\index{main@{main}!help@{help}}
+\index{help@{help}!main@{main}}
+\doxysubsubsection{\texorpdfstring{help}{help}}
+{\footnotesize\ttfamily main.\+help}
+
+\mbox{\Hypertarget{namespacemain_a252c4581ae0c850ad41fcb1fab8b2332}\label{namespacemain_a252c4581ae0c850ad41fcb1fab8b2332}} 
+\index{main@{main}!LOG@{LOG}}
+\index{LOG@{LOG}!main@{main}}
+\doxysubsubsection{\texorpdfstring{LOG}{LOG}}
+{\footnotesize\ttfamily bool main.\+LOG = \mbox{\hyperlink{namespacemain_a0c5b8ab1603c8c5b8db5e1128a757fea}{True}}}
+
+\mbox{\Hypertarget{namespacemain_a6d1dc80d8f6e187a9d7209edd99e16e7}\label{namespacemain_a6d1dc80d8f6e187a9d7209edd99e16e7}} 
+\index{main@{main}!MANEUVER@{MANEUVER}}
+\index{MANEUVER@{MANEUVER}!main@{main}}
+\doxysubsubsection{\texorpdfstring{MANEUVER}{MANEUVER}}
+{\footnotesize\ttfamily bool main.\+MANEUVER = \mbox{\hyperlink{namespacemain_a0c5b8ab1603c8c5b8db5e1128a757fea}{True}}}
+
+\mbox{\Hypertarget{namespacemain_a9f3911118b78333a8f963e063f12c7ed}\label{namespacemain_a9f3911118b78333a8f963e063f12c7ed}} 
+\index{main@{main}!parser@{parser}}
+\index{parser@{parser}!main@{main}}
+\doxysubsubsection{\texorpdfstring{parser}{parser}}
+{\footnotesize\ttfamily main.\+parser = argparse.\+Argument\+Parser(description=\char`\"{}Process a true/false argument.\char`\"{})}
+
+\mbox{\Hypertarget{namespacemain_ac5cfa575b843cf19d498d00e0dd89d9d}\label{namespacemain_ac5cfa575b843cf19d498d00e0dd89d9d}} 
+\index{main@{main}!path@{path}}
+\index{path@{path}!main@{main}}
+\doxysubsubsection{\texorpdfstring{path}{path}}
+{\footnotesize\ttfamily string main.\+path = f\char`\"{}\{SCN\+\_\+\+FOLDER\}/\{\mbox{\hyperlink{namespacemain_a22c2a6dbfc9500343d1b762b1d544e35}{SCN\+\_\+\+NAME}}\}.scn\char`\"{}}
+
+\mbox{\Hypertarget{namespacemain_a6d1816eaf496b6ee02879666676d6d77}\label{namespacemain_a6d1816eaf496b6ee02879666676d6d77}} 
+\index{main@{main}!path\_to\_scn\_file@{path\_to\_scn\_file}}
+\index{path\_to\_scn\_file@{path\_to\_scn\_file}!main@{main}}
+\doxysubsubsection{\texorpdfstring{path\_to\_scn\_file}{path\_to\_scn\_file}}
+{\footnotesize\ttfamily main.\+path\+\_\+to\+\_\+scn\+\_\+file = \mbox{\hyperlink{namespacemain_a44f8837fcfa92a578e919f429035f90b}{run\+\_\+scenario}}(\mbox{\hyperlink{namespacemain_a20bd89ef6e41cb2fdf7db251a4c62814}{test\+\_\+case\+\_\+data}}, \mbox{\hyperlink{namespacemain_a8eb551bfdf698c0dbc27ed3f4cd68bb6}{SCN\+\_\+\+FOLDER}}, \mbox{\hyperlink{namespacemain_a22c2a6dbfc9500343d1b762b1d544e35}{SCN\+\_\+\+NAME}}, \mbox{\hyperlink{namespacemain_a05ac9790cc1390eb6166c450286392c2}{file\+\_\+path}}, args.\+method)}
+
+\mbox{\Hypertarget{namespacemain_a1344c1e698a1e688c7ae0828f75d5a48}\label{namespacemain_a1344c1e698a1e688c7ae0828f75d5a48}} 
+\index{main@{main}!required@{required}}
+\index{required@{required}!main@{main}}
+\doxysubsubsection{\texorpdfstring{required}{required}}
+{\footnotesize\ttfamily main.\+required}
+
+\mbox{\Hypertarget{namespacemain_a6be14f7f2f8cedfce33c85ab71d03e2e}\label{namespacemain_a6be14f7f2f8cedfce33c85ab71d03e2e}} 
+\index{main@{main}!run\_gui@{run\_gui}}
+\index{run\_gui@{run\_gui}!main@{main}}
+\doxysubsubsection{\texorpdfstring{run\_gui}{run\_gui}}
+{\footnotesize\ttfamily main.\+run\+\_\+gui}
+
+\mbox{\Hypertarget{namespacemain_a8eb551bfdf698c0dbc27ed3f4cd68bb6}\label{namespacemain_a8eb551bfdf698c0dbc27ed3f4cd68bb6}} 
+\index{main@{main}!SCN\_FOLDER@{SCN\_FOLDER}}
+\index{SCN\_FOLDER@{SCN\_FOLDER}!main@{main}}
+\doxysubsubsection{\texorpdfstring{SCN\_FOLDER}{SCN\_FOLDER}}
+{\footnotesize\ttfamily string main.\+SCN\+\_\+\+FOLDER = \mbox{\hyperlink{namespacemain_a26f656d825a0ffd09a95f3e7953445e5}{str}}(\mbox{\hyperlink{namespacemain_a9cfe362268fd6a2b8c4268ea6a9e0699}{top\+\_\+level\+\_\+path}}) + args.\+scn\+\_\+folder}
+
+\mbox{\Hypertarget{namespacemain_a22c2a6dbfc9500343d1b762b1d544e35}\label{namespacemain_a22c2a6dbfc9500343d1b762b1d544e35}} 
+\index{main@{main}!SCN\_NAME@{SCN\_NAME}}
+\index{SCN\_NAME@{SCN\_NAME}!main@{main}}
+\doxysubsubsection{\texorpdfstring{SCN\_NAME}{SCN\_NAME}}
+{\footnotesize\ttfamily main.\+SCN\+\_\+\+NAME = file\+\_\+name.\+split(\char`\"{}.\char`\"{})\mbox{[}0\mbox{]}}
+
+\mbox{\Hypertarget{namespacemain_a7c8a4f30bc8040be08071aaf710fea3f}\label{namespacemain_a7c8a4f30bc8040be08071aaf710fea3f}} 
+\index{main@{main}!SIMDT@{SIMDT}}
+\index{SIMDT@{SIMDT}!main@{main}}
+\doxysubsubsection{\texorpdfstring{SIMDT}{SIMDT}}
+{\footnotesize\ttfamily int main.\+SIMDT = 1}
+
+\mbox{\Hypertarget{namespacemain_a26f656d825a0ffd09a95f3e7953445e5}\label{namespacemain_a26f656d825a0ffd09a95f3e7953445e5}} 
+\index{main@{main}!str@{str}}
+\index{str@{str}!main@{main}}
+\doxysubsubsection{\texorpdfstring{str}{str}}
+{\footnotesize\ttfamily main.\+str}
+
+\mbox{\Hypertarget{namespacemain_a5065e9c833ad1c4931d0ddfd145698ac}\label{namespacemain_a5065e9c833ad1c4931d0ddfd145698ac}} 
+\index{main@{main}!T\_STEP@{T\_STEP}}
+\index{T\_STEP@{T\_STEP}!main@{main}}
+\doxysubsubsection{\texorpdfstring{T\_STEP}{T\_STEP}}
+{\footnotesize\ttfamily int main.\+T\+\_\+\+STEP = 10000}
+
+\mbox{\Hypertarget{namespacemain_a20bd89ef6e41cb2fdf7db251a4c62814}\label{namespacemain_a20bd89ef6e41cb2fdf7db251a4c62814}} 
+\index{main@{main}!test\_case\_data@{test\_case\_data}}
+\index{test\_case\_data@{test\_case\_data}!main@{main}}
+\doxysubsubsection{\texorpdfstring{test\_case\_data}{test\_case\_data}}
+{\footnotesize\ttfamily def main.\+test\+\_\+case\+\_\+data = \mbox{\hyperlink{namespacemain_a5fca69960fbbd1933ee0b8cdfbe3de4f}{load\+\_\+json}}(\mbox{\hyperlink{namespacemain_a05ac9790cc1390eb6166c450286392c2}{file\+\_\+path}})}
+
+\mbox{\Hypertarget{namespacemain_a9cfe362268fd6a2b8c4268ea6a9e0699}\label{namespacemain_a9cfe362268fd6a2b8c4268ea6a9e0699}} 
+\index{main@{main}!top\_level\_path@{top\_level\_path}}
+\index{top\_level\_path@{top\_level\_path}!main@{main}}
+\doxysubsubsection{\texorpdfstring{top\_level\_path}{top\_level\_path}}
+{\footnotesize\ttfamily main.\+top\+\_\+level\+\_\+path = Path(\+\_\+\+\_\+file\+\_\+\+\_\+).resolve().parent.\+parent}
+
+\mbox{\Hypertarget{namespacemain_a0c5b8ab1603c8c5b8db5e1128a757fea}\label{namespacemain_a0c5b8ab1603c8c5b8db5e1128a757fea}} 
+\index{main@{main}!True@{True}}
+\index{True@{True}!main@{main}}
+\doxysubsubsection{\texorpdfstring{True}{True}}
+{\footnotesize\ttfamily main.\+True}
+
+\mbox{\Hypertarget{namespacemain_add4e4c9e96030cc8c55af23e1b21a1c1}\label{namespacemain_add4e4c9e96030cc8c55af23e1b21a1c1}} 
+\index{main@{main}!type@{type}}
+\index{type@{type}!main@{main}}
+\doxysubsubsection{\texorpdfstring{type}{type}}
+{\footnotesize\ttfamily main.\+type}
+
+\mbox{\Hypertarget{namespacemain_a4dc90e275dae34ba42b761ed33e83a41}\label{namespacemain_a4dc90e275dae34ba42b761ed33e83a41}} 
+\index{main@{main}!VISUALIZE@{VISUALIZE}}
+\index{VISUALIZE@{VISUALIZE}!main@{main}}
+\doxysubsubsection{\texorpdfstring{VISUALIZE}{VISUALIZE}}
+{\footnotesize\ttfamily bool main.\+VISUALIZE = False}
+

@@ -1,0 +1,124 @@
+\hypertarget{namespaceallocation}{}\doxysection{allocation Namespace Reference}
+\label{namespaceallocation}\index{allocation@{allocation}}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespaceallocation_a2ad1833ac179e8e35ed90e2f14cd28fb}{build\+\_\+auxiliary}} (vertiport\+\_\+status, flights, timing\+\_\+info)
+\item 
+def \mbox{\hyperlink{namespaceallocation_a5eb6ea3ceeba25854565d85a97eee83a}{determine\+\_\+allocation}} (vertiport\+\_\+usage, flights, auxiliary\+\_\+graph, unique\+\_\+departure\+\_\+times)
+\item 
+def \mbox{\hyperlink{namespaceallocation_a47bc74cdc92839d80ec4db70d2953432}{save\+\_\+allocation}} (allocation, save\+\_\+file, start\+\_\+time, initial\+\_\+allocation=False)
+\item 
+def \mbox{\hyperlink{namespaceallocation_a268fba2fcc770237e195488f46da0f89}{allocation\+\_\+and\+\_\+payment}} (vertiport\+\_\+usage, flights, timing\+\_\+info, save\+\_\+file, initial\+\_\+allocation)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \mbox{\hyperlink{namespaceallocation_acb32440a8bdd9deb4e31f5eaeebe262a}{rho}} = 1
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{namespaceallocation_a268fba2fcc770237e195488f46da0f89}\label{namespaceallocation_a268fba2fcc770237e195488f46da0f89}} 
+\index{allocation@{allocation}!allocation\_and\_payment@{allocation\_and\_payment}}
+\index{allocation\_and\_payment@{allocation\_and\_payment}!allocation@{allocation}}
+\doxysubsubsection{\texorpdfstring{allocation\_and\_payment()}{allocation\_and\_payment()}}
+{\footnotesize\ttfamily def allocation.\+allocation\+\_\+and\+\_\+payment (\begin{DoxyParamCaption}\item[{}]{vertiport\+\_\+usage,  }\item[{}]{flights,  }\item[{}]{timing\+\_\+info,  }\item[{}]{save\+\_\+file,  }\item[{}]{initial\+\_\+allocation }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Allocate flights for a given time and set of requests.
+
+Args:
+    graph (VertiportStatus): Graph from which to allocate flights.
+    time (int): Time step for which to allocate flights.
+    flights (list): List of flights making requests at this time step.
+\end{DoxyVerb}
+ Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespaceallocation_a268fba2fcc770237e195488f46da0f89_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=314pt]{namespaceallocation_a268fba2fcc770237e195488f46da0f89_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespaceallocation_a2ad1833ac179e8e35ed90e2f14cd28fb}\label{namespaceallocation_a2ad1833ac179e8e35ed90e2f14cd28fb}} 
+\index{allocation@{allocation}!build\_auxiliary@{build\_auxiliary}}
+\index{build\_auxiliary@{build\_auxiliary}!allocation@{allocation}}
+\doxysubsubsection{\texorpdfstring{build\_auxiliary()}{build\_auxiliary()}}
+{\footnotesize\ttfamily def allocation.\+build\+\_\+auxiliary (\begin{DoxyParamCaption}\item[{}]{vertiport\+\_\+status,  }\item[{}]{flights,  }\item[{}]{timing\+\_\+info }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Build auxiliary graph for a given time and set of requests.
+
+Args:
+    graph (VertiportStatus): Graph from which to build the auxiliary graph.
+    flights (list): List of flights making requests at this time step.
+    time (int): Time step for which to build the auxiliary graph.
+    max_time (int): The max time step value of the vertiport graph.
+    time_steps (list): List of time steps for the graph.
+\end{DoxyVerb}
+ Here is the call graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=344pt]{namespaceallocation_a2ad1833ac179e8e35ed90e2f14cd28fb_cgraph}
+\end{center}
+\end{figure}
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespaceallocation_a2ad1833ac179e8e35ed90e2f14cd28fb_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespaceallocation_a5eb6ea3ceeba25854565d85a97eee83a}\label{namespaceallocation_a5eb6ea3ceeba25854565d85a97eee83a}} 
+\index{allocation@{allocation}!determine\_allocation@{determine\_allocation}}
+\index{determine\_allocation@{determine\_allocation}!allocation@{allocation}}
+\doxysubsubsection{\texorpdfstring{determine\_allocation()}{determine\_allocation()}}
+{\footnotesize\ttfamily def allocation.\+determine\+\_\+allocation (\begin{DoxyParamCaption}\item[{}]{vertiport\+\_\+usage,  }\item[{}]{flights,  }\item[{}]{auxiliary\+\_\+graph,  }\item[{}]{unique\+\_\+departure\+\_\+times }\end{DoxyParamCaption})}
+
+Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespaceallocation_a5eb6ea3ceeba25854565d85a97eee83a_icgraph}
+\end{center}
+\end{figure}
+\mbox{\Hypertarget{namespaceallocation_a47bc74cdc92839d80ec4db70d2953432}\label{namespaceallocation_a47bc74cdc92839d80ec4db70d2953432}} 
+\index{allocation@{allocation}!save\_allocation@{save\_allocation}}
+\index{save\_allocation@{save\_allocation}!allocation@{allocation}}
+\doxysubsubsection{\texorpdfstring{save\_allocation()}{save\_allocation()}}
+{\footnotesize\ttfamily def allocation.\+save\+\_\+allocation (\begin{DoxyParamCaption}\item[{}]{allocation,  }\item[{}]{save\+\_\+file,  }\item[{}]{start\+\_\+time,  }\item[{}]{initial\+\_\+allocation = {\ttfamily False} }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Save the allocation to a file.
+
+Args:
+    allocation (list): List of tuples with flight ID and request ID.
+    save_file (str): Name of the file to save the allocation.
+\end{DoxyVerb}
+ Here is the caller graph for this function\+:
+\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=350pt]{namespaceallocation_a47bc74cdc92839d80ec4db70d2953432_icgraph}
+\end{center}
+\end{figure}
+
+
+\doxysubsection{Variable Documentation}
+\mbox{\Hypertarget{namespaceallocation_acb32440a8bdd9deb4e31f5eaeebe262a}\label{namespaceallocation_acb32440a8bdd9deb4e31f5eaeebe262a}} 
+\index{allocation@{allocation}!rho@{rho}}
+\index{rho@{rho}!allocation@{allocation}}
+\doxysubsubsection{\texorpdfstring{rho}{rho}}
+{\footnotesize\ttfamily int allocation.\+rho = 1}
+
