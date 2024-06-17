@@ -42,7 +42,7 @@
             "appearance_time": 19,
             "origin_vertiport_id": "V002",
             "budget_constraint": 162,
-            "decay_factor": 0.5,
+            "decay_factor": 0.95,
             "requests": {
                 "000": {
                     "destination_vertiport_id": "V002",
@@ -62,7 +62,7 @@
             "appearance_time": 18,
             "origin_vertiport_id": "V007",
             "budget_constraint": 149,
-            "decay_factor": 0.5,
+            "decay_factor": 0.95,
             "requests": {
                 "000": {
                     "destination_vertiport_id": "V007",
@@ -82,7 +82,7 @@
             "appearance_time": 16,
             "origin_vertiport_id": "V001",
             "budget_constraint": 168,
-            "decay_factor": 0.5,
+            "decay_factor": 0.95,
             "requests": {
                 "000": {
                     "destination_vertiport_id": "V001",
@@ -102,7 +102,7 @@
             "appearance_time": 1,
             "origin_vertiport_id": "V001",
             "budget_constraint": 100,
-            "decay_factor": 0.5,
+            "decay_factor": 0.95,
             "requests": {
                 "000": {
                     "destination_vertiport_id": "V001",
@@ -122,7 +122,7 @@
             "appearance_time": 9,
             "origin_vertiport_id": "V007",
             "budget_constraint": 125,
-            "decay_factor": 0.5,
+            "decay_factor": 0.95,
             "requests": {
                 "000": {
                     "destination_vertiport_id": "V007",
@@ -142,7 +142,7 @@
             "appearance_time": 21,
             "origin_vertiport_id": "V005",
             "budget_constraint": 81,
-            "decay_factor": 0.5,
+            "decay_factor": 0.95,
             "requests": {
                 "000": {
                     "destination_vertiport_id": "V005",
@@ -162,7 +162,7 @@
             "appearance_time": 29,
             "origin_vertiport_id": "V003",
             "budget_constraint": 123,
-            "decay_factor": 0.5,
+            "decay_factor": 0.95,
             "requests": {
                 "000": {
                     "destination_vertiport_id": "V003",
@@ -182,7 +182,7 @@
             "appearance_time": 5,
             "origin_vertiport_id": "V003",
             "budget_constraint": 69,
-            "decay_factor": 0.5,
+            "decay_factor": 0.95,
             "requests": {
                 "000": {
                     "destination_vertiport_id": "V003",
@@ -202,7 +202,7 @@
             "appearance_time": 28,
             "origin_vertiport_id": "V002",
             "budget_constraint": 121,
-            "decay_factor": 0.5,
+            "decay_factor": 0.95,
             "requests": {
                 "000": {
                     "destination_vertiport_id": "V002",
@@ -222,7 +222,7 @@
             "appearance_time": 25,
             "origin_vertiport_id": "V004",
             "budget_constraint": 174,
-            "decay_factor": 0.5,
+            "decay_factor": 0.95,
             "requests": {
                 "000": {
                     "destination_vertiport_id": "V004",
@@ -242,7 +242,7 @@
             "appearance_time": 11,
             "origin_vertiport_id": "V004",
             "budget_constraint": 175,
-            "decay_factor": 0.5,
+            "decay_factor": 0.95,
             "requests": {
                 "000": {
                     "destination_vertiport_id": "V004",
@@ -262,7 +262,7 @@
             "appearance_time": 21,
             "origin_vertiport_id": "V005",
             "budget_constraint": 116,
-            "decay_factor": 0.5,
+            "decay_factor": 0.95,
             "requests": {
                 "000": {
                     "destination_vertiport_id": "V005",

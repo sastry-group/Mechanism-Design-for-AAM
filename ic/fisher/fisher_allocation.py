@@ -23,7 +23,7 @@ from write_csv import write_output
 UPDATED_APPROACH = True
 TOL_ERROR = 1e-3
 MAX_NUM_ITERATIONS = 300
-BETA = 10 # chante to 1/T
+BETA = 5 # chante to 1/T
 epsilon = 0.05
 
 
@@ -100,16 +100,18 @@ def construct_market(market_graph, flights, timing_info, routes, vertiports):
                 dep_time = request["request_departure_time"]
                 arr_time = request["request_arrival_time"]
                 destination_vertiport = request["destination_vertiport_id"]
-                for i, decay in enumerate(np.linspace(0.5, 0.1, 5)):
+                decay = flights[flight_id]["decay_factor"]
+                for i in range(5):
                     start_node, end_node = origin_vertiport + "_" + str(dep_time + i) + "_dep", destination_vertiport + "_" + str(arr_time+i) + "_arr"
-                    valuation = request["valuation"] * (1 - decay*i)
+                    valuation = request["valuation"] * decay**i
                     attributes = {"valuation": valuation}
                     agent_graph.add_edge(start_node, end_node, **attributes)
                     dep_start_node, dep_end_node = origin_vertiport + "_" + str(dep_time + i), origin_vertiport + "_" + str(dep_time + i) + "_dep"
                     arr_start_node, arr_end_node = destination_vertiport + "_" + str(arr_time + i) + "_arr", destination_vertiport + "_" + str(arr_time + i)
                     agent_graph.add_edge(dep_start_node, dep_end_node, **{"valuation": 0})
                     agent_graph.add_edge(arr_start_node, arr_end_node, **{"valuation": 0})
-                stationary_times = [time for time in times_list if time >= arr_time]
+                # stationary_times = [time for time in times_list if time >= (arr_time)]
+                stationary_times = times_list[times_list.index(arr_time):]
                 for start_time, end_time in zip(stationary_times[:-1], stationary_times[1:]):
                     start_node, end_node = destination_vertiport + "_" + str(start_time), destination_vertiport + "_" + str(end_time)
                     attributes = {"valuation": 0}
@@ -449,8 +451,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
         rebates.append([rebate_list for rebate_list in r])
         prices.append(p)
         x_iter += 1
-        print("Iteration: ", x_iter)
-        print("Market Clearing Error: ", market_clearing_error)
+        print("Iteration: ", x_iter, "- Market Clearing Error: ", market_clearing_error, " - Tolerance: ", tolerance)
     
         # if market_clearing_error <= tolerance:
         #     break
@@ -531,6 +532,20 @@ def load_json(file=None):
     return data
 
 
+def find_dep_and_arrival_nodes(edges):
+    dep_node_found = False
+    arrival_node_found = False
+    
+    for edge in edges:
+        if "dep" in edge[0]:
+            dep_node_found = edge[0]
+            arrival_node_found = edge[1]
+            assert "arr" in arrival_node_found, f"Arrival node not found: {arrival_node_found}"
+            return dep_node_found, arrival_node_found
+    
+    return dep_node_found, arrival_node_found
+
+
 def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_data, vertiports, 
                                   output_folder=None, save_file=None, initial_allocation=True):
 
@@ -550,7 +565,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
     # x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
     x, prices, r, overdemand, agent_constraints, adjusted_budgets = run_market((y,p,r), agent_information, market_information, 
-                                                             bookkeeping, plotting=True, rational=False, output_folder=output_folder)
+                                                             bookkeeping, plotting=False, rational=False, output_folder=output_folder)
     
     
     # Building edge information for mapping
@@ -591,31 +606,45 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     # allocated = goodlis[agent_indices[index_of_agent]]] # this will show you the fisher allocation
     # the int allocation will be on new_allocations_goods[index_of_agent]
 
-    # To mobve into next auction window
+    # # To mobve into next auction window
+    # allocation = []
+    # for i, (flight_id, flight) in enumerate(flights.items()):
+    #     origin_vertiport = flight["origin_vertiport_id"]
+    #     added_request = False
+    #     for request_id, request in flight["requests"].items():
+    #         if request["request_departure_time"] == 0:
+    #             base_request_id = request_id
+    #             continue
+    #         dep_time = request["request_departure_time"]
+    #         arr_time = request["request_arrival_time"]
+    #         destination_vertiport = request["destination_vertiport_id"]
+    #         start_node, end_node = origin_vertiport + "_" + str(dep_time) + "_dep", destination_vertiport + "_" + str(arr_time) + "_arr"
+    #         good = (start_node, end_node)
+    #         if new_allocations[i][goods_list[:-1].index(good)] >= 1 - epsilon:
+    #             added_request = True
+    #             allocation.append((flight_id, request_id))
+    #     # if not added_request:
+    #     #     allocation.append((flight_id, base_request_id))
+        # To mobve into next auction window
     allocation = []
+    rebased = []
     for i, (flight_id, flight) in enumerate(flights.items()):
-        origin_vertiport = flight["origin_vertiport_id"]
-        added_request = False
-        for request_id, request in flight["requests"].items():
-            if request["request_departure_time"] == 0:
-                base_request_id = request_id
-                continue
-            dep_time = request["request_departure_time"]
-            arr_time = request["request_arrival_time"]
-            destination_vertiport = request["destination_vertiport_id"]
-            start_node, end_node = origin_vertiport + "_" + str(dep_time) + "_dep", destination_vertiport + "_" + str(arr_time) + "_arr"
-            good = (start_node, end_node)
-            if new_allocations[i][goods_list[:-1].index(good)] >= 1 - epsilon:
-                added_request = True
-                allocation.append((flight_id, request_id))
-        # if not added_request:
-        #     allocation.append((flight_id, base_request_id))
+        dep_node, arrival_node = find_dep_and_arrival_nodes(new_allocations_goods[i])
+        # added_request = False
+        if dep_node:
+            good = (dep_node, arrival_node)
+            # if new_allocations[i][goods_list[:-1].index(good)] >= 1 - epsilon:
+            #     # added_request = True
+            allocation.append((flight_id, good))
+        else:
+            rebased.append((flight_id, '000'))
+
 
     write_output(list(flights.keys()), agent_constraints, edge_information, prices, new_prices, capacity, 
                 agent_allocations, agent_indices, agent_edge_information, agent_goods_lists, 
                 int_allocations, new_allocations_goods, u, budget, payment, output_folder)
 
-    return allocation, None
+    return allocation, rebased, None
 
 
 

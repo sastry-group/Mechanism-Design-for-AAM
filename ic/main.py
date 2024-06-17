@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 import time
 import math
+import re
 
 
 # Add the bluesky package to the path
@@ -229,6 +230,52 @@ def step_simulation(
 
     return vertiport_usage
 
+def adjust_interval_flights(allocated_flights, flights):
+    """
+    This function adjusts the allocated flights based on the departure time of the flight 
+    and adds a new request to the flight dictionary to tracj on vertiport status.
+
+    Args:
+        allocated_flights (list): The list of allocated flights ids and their departure and arrival good tuple
+        flights (dict): The flights information.
+
+    Returns:
+        list: The adjusted list of allocated flights, dictionary with f
+    """
+    adjusted_flights = []
+    for i, (flight_id, dept_arr_tuple) in enumerate(allocated_flights):
+        flight = flights[flight_id]
+        allocated_dep_time = int(re.search(r'_(\d+)_', dept_arr_tuple[0]).group(1)) 
+        allocated_arr_time = int(re.search(r'_(\d+)_', dept_arr_tuple[1]).group(1))
+        requested_dep_time = flight["requests"]['001']['request_departure_time']
+        if requested_dep_time == allocated_dep_time:
+            adjusted_flights.append((flight_id, '001'))
+        else:
+            adjusted_flights.append((flight_id, '002'))
+            # change the valuatin, create a new function for it
+            decay = flights[flight_id]["decay_factor"]
+            flight["requests"]['002'] = {
+                "destination_vertiport_id": flight["requests"]['001']['destination_vertiport_id'],
+                "request_departure_time": allocated_dep_time,
+                "request_arrival_time": allocated_arr_time,
+                'valuation': flight["requests"]['001']["valuation"] * decay**i
+            }
+
+    return adjusted_flights, flights
+
+def adjust_rebased_flights(rebased_flights, flights, auction_start, auction_end):
+    for i, (flight_id, _) in enumerate(rebased_flights):
+        flights[flight_id]["appearance_time"] = auction_start
+        valuation = flights[flight_id]["requests"]['001']["valuation"]
+        decay = flights[flight_id]["decay_factor"]
+        travel_time = flights[flight_id]["requests"]['001']['request_arrival_time'] - flights[flight_id]["requests"]['001']['request_departure_time']
+        new_requested_dep_time = auction_end + 1
+        flights[flight_id]["requests"]['001']['request_departure_time'] = new_requested_dep_time
+        flights[flight_id]["requests"]['001']['request_arrival_time'] = new_requested_dep_time + travel_time
+        flights[flight_id]['valuation']= valuation*decay**i #change decay
+
+    return flights
+
 
 def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher"):
     """
@@ -255,9 +302,9 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher")
     auction_freq = timing_info["auction_frequency"]
     routes_data = data["routes"]
 
-    # Create vertiport graph and add starting aircraft positions
-    vertiport_usage = VertiportStatus(vertiports, data["routes"], timing_info)
-    vertiport_usage.add_aircraft(flights)
+    # # Create vertiport graph and add starting aircraft positions
+    # vertiport_usage = VertiportStatus(vertiports, data["routes"], timing_info)
+    # vertiport_usage.add_aircraft(flights)
 
     # # Sort arriving flights by appearance time
     # ordered_flights = {}
@@ -278,14 +325,39 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher")
     
     simulation_start_time = time.time()
     initial_allocation = True
+    rebased_flights = None
 
     for auction_start in auction_intervals:
         auction_end = auction_start + auction_freq
+
+        if rebased_flights:
+            flights = adjust_rebased_flights(rebased_flights, flights, auction_start, auction_end)
+
+        # Filter flights, vertiports, and routes for the current auction interval
         interval_flights = {
             flight_id: flight
             for flight_id, flight in flights.items()
             if auction_start <= flight["appearance_time"] < auction_end
         }
+
+        unique_vertiport_ids = set()
+        interval_routes = set()
+        for flight in interval_flights.values():
+            origin = flight['origin_vertiport_id']
+            unique_vertiport_ids.add(origin)
+            # Assuming there's also a destination_vertiport_id in the flight data
+            for request in flight['requests'].values():
+                destination = request['destination_vertiport_id']
+                unique_vertiport_ids.add(destination)
+                interval_routes.add((origin, destination))
+        
+        # Filter vertiport data
+        filtered_vertiports = {vid: vertiports[vid] for vid in unique_vertiport_ids}
+        filtered_routes = [route for route in routes_data if (route['origin_vertiport_id'], route['destination_vertiport_id']) in interval_routes]
+    
+        # Create vertiport graph and add starting aircraft positions
+        filtered_vertiport_usage = VertiportStatus(filtered_vertiports, filtered_routes, timing_info)
+        filtered_vertiport_usage.add_aircraft(interval_flights)
 
         print("Performing auction for interval: ", auction_start, " to ", auction_end)
         write_market_interval(auction_start, auction_end, interval_flights, output_folder)
@@ -297,25 +369,29 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher")
         # Determine flight allocation and payment
         # check with Victori this info wont bug
         current_timing_info = {
-            "start_time" : timing_info["start_time"],
+            "start_time" : auction_start,
             "end_time": timing_info["end_time"],
             "time_step": timing_info["time_step"]
         }
         if method == "fisher":
-            allocated_flights, payments = fisher_allocation_and_payment(
-                vertiport_usage, interval_flights, current_timing_info, routes_data, vertiports,
+            allocated_flights, rebased_flights, payments = fisher_allocation_and_payment(
+                filtered_vertiport_usage, interval_flights, current_timing_info, filtered_routes, filtered_vertiports,
                 output_folder, save_file=scenario_name, initial_allocation=initial_allocation
             )
         elif method == "vcg":
             allocated_flights, payments = allocation_and_payment(
-                vertiport_usage, interval_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
+                filtered_vertiport_usage, interval_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
             )
         if initial_allocation:
             initial_allocation = False
 
         # Update system status based on allocation
-        vertiport_usage = step_simulation(
-            vertiport_usage, vertiports, flights, allocated_flights, stack_commands
+        if allocated_flights:
+            allocated_flights, interval_flights = adjust_interval_flights(allocated_flights, interval_flights)
+
+
+        filtered_vertiport_usage = step_simulation(
+            filtered_vertiport_usage, filtered_vertiports, interval_flights, allocated_flights, stack_commands
         )
 
         auction_end_time = time.time()
@@ -328,7 +404,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher")
 
     # Visualize the graph
     if VISUALIZE:
-        draw_graph(vertiport_usage)
+        draw_graph(filtered_vertiport_usage)
 
     return path_to_written_file
 

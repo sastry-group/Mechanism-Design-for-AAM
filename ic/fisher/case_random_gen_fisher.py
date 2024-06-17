@@ -65,6 +65,7 @@ def generate_flights():
     allowed_origin_vertiport = [vertiport_id for vertiport_id in vertiports_list for _ in range(vertiports[vertiport_id]["hold_capacity"])]
     # appearance_time = 0
     routes = generate_routes(vertiports)
+    # change this in how the file is generated
     route_dict = {(route["origin_vertiport_id"], route["destination_vertiport_id"]): route["travel_time"] for route in routes}
 
     max_travel_time = route_dict[max(route_dict, key=route_dict.get)]
@@ -102,7 +103,7 @@ def generate_flights():
             "appearance_time": appearance_time,
             "origin_vertiport_id": origin_vertiport_id,
             "budget_constraint": budget_constraint,
-            "decay_factor": 0.5,
+            "decay_factor": 0.95,
             "requests": {
                 "000": {
                     "destination_vertiport_id": origin_vertiport_id,
