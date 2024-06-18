@@ -81,8 +81,8 @@ def get_vehicle_info(flight, lat1, lon1, lat2, lon2):
     true_heading = calculate_bearing(lat1, lon1, lat2, lon2) % 360
     
 
-    # Predefined placeholders as constants for now
-    return "B744", "FL250", 200, true_heading
+    # Predefined placeholders as constants for now, the initial speed must be 0 to gete average of 90ish in flight
+    return "B744", "FL250", 0, true_heading
 
 
 def get_lat_lon(vertiport):
@@ -187,10 +187,10 @@ def add_commands_for_flight(
         [
             f"{time_stamp}>CRE {flight_id} {veh_type} {or_lat} {or_lon} {head} {alt} {spd}\n",
             f"{time_stamp}>DEST {flight_id} {des_lat}, {des_lon}\n",
-            # f"{time_stamp}>SCHEDULE {arrival_time_stamp}, DEL {flight_id}\n",
-            f"{time_stamp}>POLY {poly_name},{strategic_area_string}\n",
-            f"{time_stamp}>AREA, {poly_name}\n",
-            f"{time_stamp}>SCHEDULE {arrival_time_stamp}, DEL {poly_name}\n",
+            f"{time_stamp}>SCHEDULE {arrival_time_stamp}, DEL {flight_id}\n",
+            # f"{time_stamp}>POLY {poly_name},{strategic_area_string}\n",
+            # f"{time_stamp}>AREA, {poly_name}\n",
+            # f"{time_stamp}>SCHEDULE {arrival_time_stamp}, DEL {poly_name}\n",
         ]
     
     )
@@ -319,10 +319,18 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher")
     end_time = timing_info["end_time"]
     auction_intervals = list(range(start_time, end_time, auction_freq))
 
+    max_travel_time = 60
+    last_auction =  end_time - max_travel_time - auction_freq
+
 
     # Initialize stack commands
-    stack_commands = ["00:00:00.00>TRAILS ON\n00:00:00.00>PAN OAK\n00:00:00.00>ZOOM 1\n00:00:00.00>CDMETHOD STATEBASED\n00:00:00.00>DTMULT 30\n"]
-    
+    stack_commands = ["00:00:00.00>TRAILS OFF\n00:00:00.00>PAN CCR\n00:00:00.00>ZOOM 1\n00:00:00.00>CDMETHOD STATEBASED\n00:00:00.00>DTMULT 30\n"]
+    colors = ["blue", "red", "green", "yellow", "pink", "orange", "cyan", "magenta", "white"]
+    for i, vertiport_id in enumerate(vertiports.keys()):
+        vertiport_lat, vertiport_lon = get_lat_lon(vertiports[vertiport_id])
+        stack_commands.append(f"00:00:00.00>CIRCLE {vertiport_id},{vertiport_lat},{vertiport_lon},1,\n") # in nm
+        stack_commands.append(f"00:00:00.00>COLOR {vertiport_id} {colors[i]}\n") # in nm 
+
     simulation_start_time = time.time()
     initial_allocation = True
     rebased_flights = None
@@ -330,7 +338,8 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher")
     for auction_start in auction_intervals:
         auction_end = auction_start + auction_freq
 
-        if rebased_flights:
+        # This is to ensure it doest not rebase the flights beyond simulation end time
+        if rebased_flights and auction_end <= last_auction + 1:
             flights = adjust_rebased_flights(rebased_flights, flights, auction_start, auction_end)
 
         # Filter flights, vertiports, and routes for the current auction interval

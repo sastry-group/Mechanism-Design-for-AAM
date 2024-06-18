@@ -95,7 +95,7 @@ def construct_market(market_graph, flights, timing_info, routes, vertiports):
                         attributes = {"valuation": request["valuation"]}
                     else:
                         attributes = {"valuation": 0}
-                    agent_graph.add_edge(start_node, end_node, **attributes)
+                        agent_graph.add_edge(start_node, end_node, **attributes)
             else:
                 dep_time = request["request_departure_time"]
                 arr_time = request["request_arrival_time"]
@@ -403,7 +403,7 @@ def run_basic_market(initial_values, agent_settings, market_settings, plotting=F
 
 
 
-def run_market(initial_values, agent_settings, market_settings, bookkeeping, plotting=True, rational=False, output_folder=False):
+def run_market(initial_values, agent_settings, market_settings, bookkeeping, rational=False):
     """
     
     """
@@ -458,64 +458,66 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, plo
 
     print(f"Time to run algorithm: {time.time() - start_time_algorithm}")
 
-
-    if plotting:
-        plt.figure(figsize=(20, 10))
-        plt.subplot(2, 3, 1)
-        for good_index in range(len(p)-1):
-            plt.plot(range(1, x_iter+1), [prices[i][good_index] for i in range(len(prices))])
-        plt.plot(range(1, x_iter+1), [prices[i][-1] for i in range(len(prices))], 'b--' ,label="Default Good")
-        plt.xlabel('x_iter')
-        plt.ylabel('Prices')
-        plt.title("Price evolution")
-        plt.legend()
-        # plt.legend(p[-1], title="Fake Good")
-
-        plt.subplot(2, 3, 2)
-        plt.plot(range(1, x_iter+1), overdemand)
-        plt.xlabel('x_iter')
-        plt.ylabel('Demand - Supply')
-        plt.title("Overdemand evolution")
-
-        plt.subplot(2, 3, 3)
-        for agent_index in range(len(agent_constraints)):
-            plt.plot(range(1, x_iter+1), error[agent_index])
-        plt.ylabel('Constraint error')
-        plt.title("Constraint error evolution")
-
-        plt.subplot(2, 3, 4)
-        for constraint_index in range(len(rebates[0])):
-            plt.plot(range(1, x_iter+1), [rebates[i][constraint_index] for i in range(len(rebates))])
-        plt.xlabel('x_iter')
-        plt.ylabel('rebate')
-        plt.title("Rebate evolution")
-        
-
-        plt.subplot(2, 3, 5)
-        for agent_index in range(len(agent_allocations[0])):
-            plt.plot(range(1, x_iter+1), [agent_allocations[i][agent_index] for i in range(len(agent_allocations))])
-        plt.title("Agent allocation evolution")
-        plt.xlabel('x_iter')
-
-        plt.subplot(2, 3, 6)
-        plt.plot(range(1, x_iter+1), market_clearing)
-        plt.xlabel('x_iter')
-        plt.title("Market Clearing Error")
-        # plt.show()
-        # if output_folder:
-            # save_file = f"{output_folder}/market_plot.png" 
-            # if Path(save_file).is_file():
-            #     save_file = f"{output_folder}/market_plot_{time.time()}.png"
-            # plt.savefig(save_file)
-        plt.close()
-    
+    data_to_plot = [x_iter, prices, p, overdemand, error, rebates, agent_allocations, market_clearing, agent_constraints]
 
     last_prices = np.array(prices[-1])
     # final_prices = last_prices[last_prices > 0]
 
     # print(f"Error: {[error[i][-1] for i in range(len(error))]}")
     # print(f"Overdemand: {overdemand[-1][:]}")
-    return x, last_prices, r, overdemand, agent_constraints, adjusted_budgets
+    return x, last_prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot
+
+def plotting_market(data_to_plot, output_folder, market_auction_time=None):
+    x_iter, prices, p, overdemand, error, rebates, agent_allocations, market_clearing, agent_constraints = data_to_plot
+    plt.figure(figsize=(20, 20))
+    plt.subplot(2, 3, 1)
+    for good_index in range(len(p)-1):
+        plt.plot(range(1, x_iter+1), [prices[i][good_index] for i in range(len(prices))])
+    plt.plot(range(1, x_iter+1), [prices[i][-1] for i in range(len(prices))], 'b--' ,label="Default Good")
+    plt.xlabel('x_iter')
+    plt.ylabel('Prices')
+    plt.title("Price evolution")
+    plt.legend()
+    # plt.legend(p[-1], title="Fake Good")
+
+    plt.subplot(2, 3, 2)
+    plt.plot(range(1, x_iter+1), overdemand)
+    plt.xlabel('x_iter')
+    plt.ylabel('Demand - Supply')
+    plt.title("Overdemand evolution")
+
+    plt.subplot(2, 3, 3)
+    for agent_index in range(len(agent_constraints)):
+        plt.plot(range(1, x_iter+1), error[agent_index])
+    plt.ylabel('Constraint error')
+    plt.title("Constraint error evolution")
+
+    plt.subplot(2, 3, 4)
+    for constraint_index in range(len(rebates[0])):
+        plt.plot(range(1, x_iter+1), [rebates[i][constraint_index] for i in range(len(rebates))])
+    plt.xlabel('x_iter')
+    plt.ylabel('rebate')
+    plt.title("Rebate evolution")
+    
+
+    plt.subplot(2, 3, 5)
+    for agent_index in range(len(agent_allocations[0])):
+        plt.plot(range(1, x_iter+1), [agent_allocations[i][agent_index] for i in range(len(agent_allocations))])
+    plt.title("Agent allocation evolution")
+    plt.xlabel('x_iter')
+
+    plt.subplot(2, 3, 6)
+    plt.plot(range(1, x_iter+1), market_clearing)
+    plt.xlabel('x_iter')
+    plt.title("Market Clearing Error")
+    # plt.show()
+    if market_auction_time:
+        save_file = f"{output_folder}/market_plot_a{market_auction_time}.png" 
+    else:
+        save_file = f"{output_folder}/market_plot.png"
+    plt.savefig(save_file)
+    plt.close()
+
 
 def load_json(file=None):
     """
@@ -564,9 +566,11 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     p = np.random.rand(num_goods)*10
     r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
     # x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
-    x, prices, r, overdemand, agent_constraints, adjusted_budgets = run_market((y,p,r), agent_information, market_information, 
-                                                             bookkeeping, plotting=False, rational=False, output_folder=output_folder)
+    x, prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot = run_market((y,p,r), agent_information, market_information, 
+                                                             bookkeeping, rational=False)
     
+    
+    plotting_market(data_to_plot, output_folder, market_auction_time=timing_info["start_time"])
     
     # Building edge information for mapping
     edge_information = build_edge_information(goods_list)

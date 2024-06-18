@@ -68,10 +68,10 @@ def int_optimization(full_allocations, capacity, budget, prices, utility, agents
                 xi_values[i,:] = map_agent_values(len(prices), agent_indices[agent], agent_values)
             
             demand = np.sum(xi_values, axis=0)
-            for j in range(len(capacity)):
-                if demand[j] > capacity[j]:
+            for j in range(len(new_market_capacity)):
+                if demand[j] > new_market_capacity[j]:
                     prices[j] = prices[j] + ALPHA
-            equilibrium_reached = check_equilibrium(demand, capacity)
+            equilibrium_reached = check_equilibrium(demand, new_market_capacity)
             
             k += 1
 
