@@ -67,7 +67,7 @@ def build_graph(vertiport_status, timing_info):
     return auxiliary_graph
 
 
-def construct_market(market_graph, flights, timing_info, routes, vertiports):
+def construct_market(market_graph, flights, timing_info, routes, vertiport_usage):
     """
 
     """
@@ -147,7 +147,7 @@ def construct_market(market_graph, flights, timing_info, routes, vertiports):
         agent_goods_lists.append(goods)
 
         # supply = np.ones(len(goods_list)) 
-        supply = find_capacity(goods_list, routes, vertiports)
+        supply = find_capacity(goods_list, routes, vertiport_usage)
         # supply = np.random.randint(4, 7, len(goods_list)) - 1 # reduce to account for real capacity supply - 1
         supply[-1] = 100
         beta = BETA
@@ -158,26 +158,29 @@ def construct_market(market_graph, flights, timing_info, routes, vertiports):
 
 
 def find_capacity(goods_list, route_data, vertiport_data):
-    # Create a dictionary for route capacities
+    # Create a dictionary for route capacities, for now just connectin between diff vertiports
     route_dict = {(route["origin_vertiport_id"], route["destination_vertiport_id"]): route["capacity"] for route in route_data}
 
     capacities = np.zeros(len(goods_list))
-
-    for i, (origin, destination) in enumerate(goods_list[:-1]):
+    for i, (origin, destination) in enumerate(goods_list[:-1]): # excluding default good
         origin_base = origin.split("_")[0]
         destination_base = destination.split("_")[0]
-
         if origin_base != destination_base:
-            # Traveling between vertiports
+            # Traveling between vertiport
             capacity = route_dict.get((origin_base, destination_base), None)
         else:
             # Staying within a vertiport
             if origin.endswith('_arr'):
-                capacity = vertiport_data[origin_base]["landing_capacity"]
+                origin_time = origin.replace('_arr', '')
+                node = vertiport_data._node.get(origin_time)
+                capacity = node.get('landing_capacity') - node.get('landing_usage') 
             elif destination.endswith('_dep'):
-                capacity = vertiport_data[origin_base]["takeoff_capacity"]
+                destination_time = destination.replace('_dep', '')
+                node = vertiport_data._node.get(destination_time)
+                capacity = node.get('takeoff_capacity') - node.get('takeoff_usage') 
             else:
-                capacity = vertiport_data[origin_base]["hold_capacity"]
+                node = vertiport_data._node.get(origin)
+                capacity = node.get('hold_capacity') - node.get('hold_usage') 
 
         capacities[i] = capacity
 
@@ -551,12 +554,13 @@ def find_dep_and_arrival_nodes(edges):
 def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_data, vertiports, 
                                   output_folder=None, save_file=None, initial_allocation=True):
 
-    print("Running Fisher Allocation and Payment...")
+    market_auction_time=timing_info["start_time"]
+    print(f"Running Fisher Allocation and Payment for {market_auction_time}")
     # Build Fisher Graph
     market_graph = build_graph(vertiport_usage, timing_info)
 
     # Construct market
-    agent_information, market_information, bookkeeping = construct_market(market_graph, flights, timing_info, routes_data, vertiports)
+    agent_information, market_information, bookkeeping = construct_market(market_graph, flights, timing_info, routes_data, vertiport_usage)
 
     # Run market
     goods_list, times_list = bookkeeping
@@ -570,7 +574,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
                                                              bookkeeping, rational=False)
     
     
-    plotting_market(data_to_plot, output_folder, market_auction_time=timing_info["start_time"])
+    plotting_market(data_to_plot, output_folder, market_auction_time)
     
     # Building edge information for mapping
     edge_information = build_edge_information(goods_list)
@@ -634,7 +638,6 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     rebased = []
     for i, (flight_id, flight) in enumerate(flights.items()):
         dep_node, arrival_node = find_dep_and_arrival_nodes(new_allocations_goods[i])
-        # added_request = False
         if dep_node:
             good = (dep_node, arrival_node)
             # if new_allocations[i][goods_list[:-1].index(good)] >= 1 - epsilon:
@@ -644,9 +647,11 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
             rebased.append((flight_id, '000'))
 
 
-    write_output(list(flights.keys()), agent_constraints, edge_information, prices, new_prices, capacity, 
+
+    write_output(flights, agent_constraints, edge_information, prices, new_prices, capacity,
                 agent_allocations, agent_indices, agent_edge_information, agent_goods_lists, 
-                int_allocations, new_allocations_goods, u, budget, payment, output_folder)
+                int_allocations, new_allocations_goods, u, budget, payment, allocation, rebased, market_auction_time, output_folder)
+    
 
     return allocation, rebased, None
 

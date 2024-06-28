@@ -376,7 +376,6 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher")
             continue
 
         # Determine flight allocation and payment
-        # check with Victori this info wont bug
         current_timing_info = {
             "start_time" : auction_start,
             "end_time": timing_info["end_time"],
@@ -403,12 +402,14 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher")
             filtered_vertiport_usage, filtered_vertiports, interval_flights, allocated_flights, stack_commands
         )
 
+        
         auction_end_time = time.time()
         elapsed_time = auction_end_time - simulation_start_time
         print(f"Elapsed time: {elapsed_time} seconds")
 
     # Write the scenario to a file
     path_to_written_file = write_scenario(scenario_path, scenario_name, stack_commands)
+
 
 
     # Visualize the graph

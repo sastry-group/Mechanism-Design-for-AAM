@@ -48,7 +48,7 @@
                     "destination_vertiport_id": "V002",
                     "request_departure_time": 0,
                     "request_arrival_time": 0,
-                    "valuation": 30
+                    "valuation": 1
                 },
                 "001": {
                     "destination_vertiport_id": "V007",
@@ -68,13 +68,13 @@
                     "destination_vertiport_id": "V007",
                     "request_departure_time": 0,
                     "request_arrival_time": 0,
-                    "valuation": 30
+                    "valuation": 1
                 },
                 "001": {
                     "destination_vertiport_id": "V002",
                     "request_departure_time": 21,
                     "request_arrival_time": 59,
-                    "valuation": 76
+                    "valuation": 180
                 }
             }
         },
@@ -88,13 +88,13 @@
                     "destination_vertiport_id": "V001",
                     "request_departure_time": 0,
                     "request_arrival_time": 0,
-                    "valuation": 30
+                    "valuation": 1
                 },
                 "001": {
                     "destination_vertiport_id": "V003",
                     "request_departure_time": 23,
                     "request_arrival_time": 27,
-                    "valuation": 80
+                    "valuation": 168
                 }
             }
         },
@@ -108,7 +108,7 @@
                     "destination_vertiport_id": "V001",
                     "request_departure_time": 0,
                     "request_arrival_time": 0,
-                    "valuation": 30
+                    "valuation": 1
                 },
                 "001": {
                     "destination_vertiport_id": "V002",
@@ -128,13 +128,13 @@
                     "destination_vertiport_id": "V007",
                     "request_departure_time": 0,
                     "request_arrival_time": 0,
-                    "valuation": 30
+                    "valuation": 1
                 },
                 "001": {
                     "destination_vertiport_id": "V002",
                     "request_departure_time": 15,
                     "request_arrival_time": 53,
-                    "valuation": 71
+                    "valuation": 155
                 }
             }
         },
@@ -148,7 +148,7 @@
                     "destination_vertiport_id": "V005",
                     "request_departure_time": 0,
                     "request_arrival_time": 0,
-                    "valuation": 30
+                    "valuation": 1
                 },
                 "001": {
                     "destination_vertiport_id": "V004",
@@ -168,13 +168,13 @@
                     "destination_vertiport_id": "V003",
                     "request_departure_time": 0,
                     "request_arrival_time": 0,
-                    "valuation": 30
+                    "valuation": 1
                 },
                 "001": {
                     "destination_vertiport_id": "V007",
                     "request_departure_time": 39,
                     "request_arrival_time": 83,
-                    "valuation": 138
+                    "valuation": 158
                 }
             }
         },
@@ -188,13 +188,13 @@
                     "destination_vertiport_id": "V003",
                     "request_departure_time": 0,
                     "request_arrival_time": 0,
-                    "valuation": 30
+                    "valuation": 1
                 },
                 "001": {
                     "destination_vertiport_id": "V006",
                     "request_departure_time": 20,
                     "request_arrival_time": 42,
-                    "valuation": 106
+                    "valuation": 171
                 }
             }
         },
@@ -208,13 +208,13 @@
                     "destination_vertiport_id": "V002",
                     "request_departure_time": 0,
                     "request_arrival_time": 0,
-                    "valuation": 30
+                    "valuation": 1
                 },
                 "001": {
                     "destination_vertiport_id": "V006",
                     "request_departure_time": 33,
                     "request_arrival_time": 57,
-                    "valuation": 94
+                    "valuation": 169
                 }
             }
         },
@@ -228,13 +228,13 @@
                     "destination_vertiport_id": "V004",
                     "request_departure_time": 0,
                     "request_arrival_time": 0,
-                    "valuation": 30
+                    "valuation": 1
                 },
                 "001": {
                     "destination_vertiport_id": "V002",
                     "request_departure_time": 35,
                     "request_arrival_time": 44,
-                    "valuation": 133
+                    "valuation": 167
                 }
             }
         },
@@ -248,13 +248,13 @@
                     "destination_vertiport_id": "V004",
                     "request_departure_time": 0,
                     "request_arrival_time": 0,
-                    "valuation": 30
+                    "valuation": 1
                 },
                 "001": {
                     "destination_vertiport_id": "V001",
                     "request_departure_time": 21,
                     "request_arrival_time": 29,
-                    "valuation": 77
+                    "valuation": 160
                 }
             }
         },
@@ -268,13 +268,13 @@
                     "destination_vertiport_id": "V005",
                     "request_departure_time": 0,
                     "request_arrival_time": 0,
-                    "valuation": 30
+                    "valuation": 1
                 },
                 "001": {
                     "destination_vertiport_id": "V003",
                     "request_departure_time": 30,
                     "request_arrival_time": 54,
-                    "valuation": 77
+                    "valuation": 150
                 }
             }
         }

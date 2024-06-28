@@ -96,7 +96,7 @@ def generate_flights():
         request_arrival_time = request_departure_time + travel_time
         # second_arrival_time = request_arrival_time + delay
 
-        valuation = random.randint(70, 200)
+        valuation = random.randint(100, 200)
         budget_constraint = random.randint(50, 200)
         # second_valuation = valuation - random.randint(5,10)
         flight_info = { # change the request to be parking or move if nonalloc
@@ -109,7 +109,7 @@ def generate_flights():
                     "destination_vertiport_id": origin_vertiport_id,
                     "request_departure_time": 0,
                     "request_arrival_time": 0,
-                    "valuation": 30,
+                    "valuation": 1,
                 },
                 "001": {
                     "destination_vertiport_id": destination_vertiport_id,
