@@ -23,7 +23,7 @@ from write_csv import write_output
 UPDATED_APPROACH = True
 TOL_ERROR = 1e-3
 MAX_NUM_ITERATIONS = 300
-BETA = 5 # chante to 1/T
+BETA = 2 # chante to 1/T
 epsilon = 0.05
 
 
@@ -555,7 +555,6 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
                                   output_folder=None, save_file=None, initial_allocation=True):
 
     market_auction_time=timing_info["start_time"]
-    print(f"Running Fisher Allocation and Payment for {market_auction_time}")
     # Build Fisher Graph
     market_graph = build_graph(vertiport_usage, timing_info)
 
@@ -605,6 +604,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     capacity = capacity[:-1]
     new_allocations, new_prices = int_optimization(int_allocations_full, capacity, budget, prices[:-1], u, agent_constraints, agent_indices, int_allocations, output_folder)
     payment = np.sum(new_prices * new_allocations, axis=1)
+    end_capacity = capacity - np.sum(new_allocations, axis=0)
 
     new_allocations_goods = mapping_goods_from_allocation(new_allocations, goods_list)
 
@@ -648,7 +648,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
 
 
 
-    write_output(flights, agent_constraints, edge_information, prices, new_prices, capacity,
+    write_output(flights, agent_constraints, edge_information, prices, new_prices, capacity, end_capacity,
                 agent_allocations, agent_indices, agent_edge_information, agent_goods_lists, 
                 int_allocations, new_allocations_goods, u, budget, payment, allocation, rebased, market_auction_time, output_folder)
     
