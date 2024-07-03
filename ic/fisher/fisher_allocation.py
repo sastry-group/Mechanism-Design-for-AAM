@@ -23,7 +23,7 @@ from write_csv import write_output
 UPDATED_APPROACH = True
 TOL_ERROR = 1e-3
 MAX_NUM_ITERATIONS = 300
-BETA = 2 # chante to 1/T
+BETA = 5 # chante to 1/T
 epsilon = 0.05
 
 
@@ -76,7 +76,7 @@ def construct_market(market_graph, flights, timing_info, routes, vertiport_usage
 
     print("Constructing market...")
     start_time_market_construct = time.time()
-    goods_list = list(market_graph.edges) + ['default_good']
+    goods_list = list(market_graph.edges) + ['default_good'] + ['dropout_good']
     w = []
     u = []
     agent_constraints = []
@@ -133,36 +133,39 @@ def construct_market(market_graph, flights, timing_info, routes, vertiport_usage
         valuations = []
         for edge in edges:
             valuations.append(agent_graph.edges[edge]["valuation"])
-        valuations.append(1) # Small positive valuation for default good
 
         b = np.zeros(len(A))
         b[0] = 1
         
-        A_with_default_good = np.hstack((A, np.zeros((A.shape[0], 1))))
-        goods = edges + ['default_good']
+        # A_with_default_good = np.hstack((A, np.zeros((A.shape[0], 1)), np.zeros((A.shape[0], 1)))) # outside/default good
+        # A_with_default_good[0, -1] = 1
+        A_with_default_good = np.hstack((A, np.zeros((A.shape[0], 1)))) # outside/default good
+        goods = edges + ['default_good'] + ['dropout_good']
+        # Appending values for default and dropout goods
+        valuations.append(1) # Small positive valuation for default good
+        valuations.append(0) # Zero valuation for dropout good
 
         w.append(flight["budget_constraint"])
         u.append(valuations)
         agent_constraints.append((A_with_default_good, b))
         agent_goods_lists.append(goods)
 
-        # supply = np.ones(len(goods_list)) 
-        supply = find_capacity(goods_list, routes, vertiport_usage)
-        # supply = np.random.randint(4, 7, len(goods_list)) - 1 # reduce to account for real capacity supply - 1
-        supply[-1] = 100
-        beta = BETA
+
+    # supply = np.ones(len(goods_list)) 
+    supply = find_capacity(goods_list, routes, vertiport_usage)
+  
+    beta = BETA
 
     print(f"Time to construct market: {time.time() - start_time_market_construct}")
     return (u, agent_constraints, agent_goods_lists), (w, supply, beta), (goods_list, times_list)
-
 
 
 def find_capacity(goods_list, route_data, vertiport_data):
     # Create a dictionary for route capacities, for now just connectin between diff vertiports
     route_dict = {(route["origin_vertiport_id"], route["destination_vertiport_id"]): route["capacity"] for route in route_data}
 
-    capacities = np.zeros(len(goods_list))
-    for i, (origin, destination) in enumerate(goods_list[:-1]): # excluding default good
+    capacities = np.zeros(len(goods_list)) 
+    for i, (origin, destination) in enumerate(goods_list[:-2]): # excluding default/outside good - consider changing this to remove "dropout_good" and "default_good"
         origin_base = origin.split("_")[0]
         destination_base = destination.split("_")[0]
         if origin_base != destination_base:
@@ -183,6 +186,9 @@ def find_capacity(goods_list, route_data, vertiport_data):
                 capacity = node.get('hold_capacity') - node.get('hold_usage') 
 
         capacities[i] = capacity
+    
+    capacities[-2] = 100 # default/outside good
+    capacities[-1] = 10 # dropout good
 
     return capacities
 
@@ -251,9 +257,10 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
     r_k_plus_1 = []
     for i in range(num_agents):
         agent_constraints = constraints[i]
-        agent_x = np.array([x[i, goods_list.index(good)] for good in agent_goods_lists[i]])
+        # Why are we doing this twice?
+        agent_x = np.array([x[i, goods_list[:-1].index(good)] for good in agent_goods_lists[i][:-1]])
         if UPDATED_APPROACH:
-            agent_x = np.array([x[i, goods_list.index(good)] for good in agent_goods_lists[i]])
+            agent_x = np.array([x[i, goods_list[:-1].index(good)] for good in agent_goods_lists[i][:-1]])
             constraint_violations = np.array([agent_constraints[0][j] @ agent_x - agent_constraints[1][j] for j in range(len(agent_constraints[1]))])
 
         else:
@@ -310,8 +317,15 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
     """
     # Individual agent optimization
     A_i, b_i = constraints
+    A_bar = A_i[0][:-1]
     num_constraints = len(b_i)
     num_goods = len(p)
+
+    # Separating drop-out and outside options
+    v_i = u_i[:-2]  # regular goods
+    v_i_o = u_i[-2]  # outside-option
+    v_i_d = u_i[-1]  # drop-out option
+
 
     budget_adjustment = r_i.T @ b_i
     w_adj = w_i + budget_adjustment
@@ -329,11 +343,12 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
         # objective = cp.Maximize(u_i.T @ x_i)
         # cp_constraints = [x_i >= 0, p.T @ x_i <= w_adj, A_i @ x_i <= b_i]
     elif UPDATED_APPROACH:
-        regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.square(cp.norm(A_i @ x_i - b_i, 2))
-        lagrangians = - p.T @ x_i - r_i.T @ (A_i @ x_i - b_i)
-        nominal_objective = w_adj * cp.log(u_i.T @ x_i)
+        objective_terms = v_i.T @ x_i[:-2] + v_i_o * x_i[-2] + v_i_d * x_i[-1]
+        regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.square(cp.norm(A_i @ x_i[:-1] - b_i, 2)) 
+        lagrangians = - (p[:-2].T @ x_i[:-2] + p[-2].T * x_i[-2]) - r_i.T @ (A_i @ x_i[:-1] - b_i)
+        nominal_objective = w_adj * cp.log(objective_terms)
         objective = cp.Maximize(nominal_objective + lagrangians + regularizers)
-        cp_constraints = [x_i >= 0]
+        cp_constraints = [x_i >= 0, A_bar @ x_i[:-2] + x_i[-2] >= 0]
     else:
         regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.sum([cp.square(cp.maximum(A_i[t] @ x_i - b_i[t], 0)) for t in range(num_constraints)])
         lagrangians = - p.T @ x_i - cp.sum([r_i[t] * cp.maximum(A_i[t] @ x_i - b_i[t], 0) for t in range(num_constraints)])
@@ -424,7 +439,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
     error = [] * len(agent_constraints)
     
     # Algorithm 1
-    tolerance = len(agent_goods_lists) * np.sqrt(len(supply)-1) * TOL_ERROR
+    num_agents = len(agent_goods_lists)
+    tolerance = num_agents * np.sqrt(len(supply)-2) * TOL_ERROR  # -2 to ignore default and dropout goods
     market_clearing_error = float('inf')
     x_iter = 0
     start_time_algorithm = time.time()  
@@ -433,16 +449,16 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
     # while x_iter <= 100:
         # Update agents
         x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, rational=rational)
-        agent_allocations.append(x)
-        overdemand.append(np.sum(x, axis=0) - supply.flatten())
-        x_ij = np.sum(x, axis=0)
-        excess_demand = x_ij[:-1] - supply[:-1]
-        clipped_excess_demand = np.where(p[:-1] > 0,excess_demand, np.maximum(0, excess_demand))
+        agent_allocations.append(x[:,:-1]) # removing dropout good
+        overdemand.append(np.sum(x[:,:-1], axis=0) - supply[:-1].flatten())
+        x_ij = np.sum(x[:,:-2], axis=0)
+        excess_demand = x_ij - supply[:-2]
+        clipped_excess_demand = np.where(p[:-2] > 0,excess_demand, np.maximum(0, excess_demand))
         market_clearing_error = np.linalg.norm(clipped_excess_demand, ord=2)
         market_clearing.append(market_clearing_error)
 
         for agent_index in range(len(agent_constraints)):
-            agent_x = np.array([x[agent_index, goods_list.index(good)] for good in agent_goods_lists[agent_index]])
+            agent_x = np.array([x[agent_index, goods_list[:-1].index(good)] for good in agent_goods_lists[agent_index][:-1]])
             constraint_error = agent_constraints[agent_index][0] @ agent_x - agent_constraints[agent_index][1]
             if x_iter == 0:
                 error.append([constraint_error])

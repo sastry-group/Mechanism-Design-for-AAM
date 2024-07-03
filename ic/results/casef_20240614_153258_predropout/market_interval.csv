@@ -1,7 +1,7 @@
 Auction Start,Auction End,Flights in Interval
 1,11,"AC004, AC005, AC008"
-11,21,"AC001, AC002, AC003, AC005, AC011"
-21,31,"AC001, AC002, AC006, AC007, AC009, AC010, AC012"
+11,21,"AC001, AC002, AC003, AC008, AC011"
+21,31,"AC006, AC007, AC009, AC010, AC012"
 31,41,
 41,51,
 51,61,
@@ -9,3 +9,4 @@ Auction Start,Auction End,Flights in Interval
 71,81,
 81,91,
 91,101,
+1,11,"AC004, AC005, AC008"
