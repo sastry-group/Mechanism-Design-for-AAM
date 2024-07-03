@@ -61,7 +61,7 @@ def int_optimization(full_allocations, capacity, budget, prices, utility, agents
                 # print(len(contested_agent_allocations[i]), new_market_utility,new_market_budget[i], Aprime[i], bprime[i])
                 agent_values = np.array([0]*len(agents_allocations[agent]))
                 agent_prices = prices[agent_indices[agent]]
-                agent_values = find_optimal_xi(len(agents_allocations[agent]), utility[agent][:-1], new_market_A[i], new_market_b[i], agent_prices, budget[agent])
+                agent_values = find_optimal_xi(len(agents_allocations[agent]), utility[agent][:-2], new_market_A[i], new_market_b[i], agent_prices, budget[agent])
                 if agent_values is None:
                     print("Warning: Could not find optimal xi value for agent", agent)
                     agent_values = np.array([0]*len(agents_allocations[i]))
