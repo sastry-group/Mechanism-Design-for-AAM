@@ -44,7 +44,7 @@ def int_optimization(full_allocations, capacity, budget, prices, utility, agents
         new_market_b = []
         for agent in agents_with_contested_allocations:
             Aarray = agents_constraints[agent][0]
-            new_market_A.append(Aarray[:,:-1])
+            new_market_A.append(Aarray[:,:-2]) #removing default and dropout goods
             barray = agents_constraints[agent][1]
             new_market_b.append(barray)
 

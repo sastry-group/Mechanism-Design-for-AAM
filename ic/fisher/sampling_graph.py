@@ -67,11 +67,14 @@ def custom_layout(G):
 
 def agent_probability_graph_extended(edge_information, x, agent_number=1, output_folder=False):
     G = nx.DiGraph()
-
+    
     # Add edges with weights and labels
     agent_label = f"Agent_{agent_number}"
     agent_allocations = {}
     for (key, edge), weight in zip(edge_information.items(), x):
+        if key == 'default_good' or "dropout_good":
+            agent_allocations[key] = weight
+            continue
         if weight == 0:
             agent_allocations[key] = 0
             continue
@@ -97,16 +100,14 @@ def agent_probability_graph_extended(edge_information, x, agent_number=1, output
 
 
 
-def sample_path(G, start_node, agent_allocations):
+def sample_path(G, start_node, agent_allocations, dropout_good_allocation=False):
     """Sample a path in the graph G starting from the given node."""
-
-    # start_time_sample = time.time()
-    # print("Sampling edges ...")
 
     current_node = start_node
     path = [current_node]
     edges = []
     allocation_updates = {}
+    dropout_flag = False
 
     while True:
         possible_edges = list(G.out_edges(current_node, data=True))
@@ -117,6 +118,14 @@ def sample_path(G, start_node, agent_allocations):
         total_weight = sum(edge[2]['weight'] for edge in possible_edges)
         weights = [edge[2]['weight'] / total_weight for edge in possible_edges]
         next_nodes = [edge[1] for edge in possible_edges]
+
+        # Dropout probability
+        dropout_probability = dropout_good_allocation / (dropout_good_allocation + total_weight)
+        
+        # Decide whether to drop out or choose the next node
+        if random.random() < dropout_probability:
+            dropout_flag = True
+            break
 
         # Select next node based on normalized weights
         chosen_edge = random.choices(possible_edges, weights=weights, k=1)[0]
@@ -135,7 +144,7 @@ def sample_path(G, start_node, agent_allocations):
 
     # print(f"Time to sample: {time.time() - start_time_sample:.5f}")
 
-    return path, edges, agent_int_allocations
+    return path, edges, agent_int_allocations, dropout_flag
 
 
 def plot_sample_path(G, sampled_path):
@@ -188,12 +197,14 @@ def plot_sample_path_extended(G, sampled_path, agent_number, output_folder=False
 def build_edge_information(goods_list):
     """
     Build edge information from goods list.
-    The last good is the default good so it is removed
     Outputs: a dictionary with all the labeled edges. This would a master list.
     """
     edge_information = {}
-    for i, goods in enumerate(goods_list[:-1], start=1):
+    for i, goods in enumerate(goods_list[:-2], start=1): # without default and dropout good
         edge_information[f"e{i}"] = (goods[0], goods[1])
+    edge_information['default_good'] = ('default_good')
+    edge_information['dropout_good'] = ('dropout_good')
+
     return edge_information
 
 
@@ -209,7 +220,7 @@ def build_agent_edge_utilities(edge_information, agents_goods_list, utility_valu
     # Iterate over each agent's goods list and utility values
     for agent_goods, utilities in zip(agents_goods_list, utility_values):
         # Create a set of agent's goods for quick lookup
-        agent_goods_set = set(agent_goods[:-1])  # Exclude the default good
+        agent_goods_set = set(agent_goods[:-2])  # Exclude the default and drouput good
 
         # Initialize a list to store utility values in the order of edge_information
         agent_utilities = []
@@ -251,10 +262,12 @@ def process_allocations(x, edge_information, agent_goods_lists):
     agent_indices = []
     agent_edge_information = []
     edge_labels_list = list(edge_information.keys())
+    agents_dropout_allocations = []
     
     for agent, agent_data in enumerate(agent_goods_lists):
         # Remove 'default_good' if it exists
-        agent_goods = [good for good in agent_data if good != 'default_good']
+        agent_goods = [good for good in agent_data if good not in ['default_good', 'dropout_good']]
+        agents_dropout_allocations.append(x[agent][goods_index_map[('dropout_good')]])
         
         # Find indices of agent_goods in goods_list
         indices = [goods_index_map[good] for good in agent_goods if good in goods_index_map]
@@ -270,11 +283,13 @@ def process_allocations(x, edge_information, agent_goods_lists):
         agent_indices.append(np.array(indices))
         agent_edge_information.append(agent_edges)
     
-    return agent_allocations, agent_indices, agent_edge_information
+    return agent_allocations, agents_dropout_allocations, agent_indices, agent_edge_information
 
 
 def mapping_agent_to_full_data(full_edge_information, sampled_edges):
-    allocation_array = [0] * len(full_edge_information)
+    full_edge_information.pop('default_good',None)
+    full_edge_information.pop('dropout_good', None)
+    allocation_array = [0] * len(full_edge_information) 
     edge_to_index = {edge: index for index, edge in enumerate(full_edge_information)}
     for edge in sampled_edges:
         if edge in edge_to_index:
@@ -294,47 +309,4 @@ def mapping_goods_from_allocation(new_allocations, goods_list):
     return agent_goods
 
 
-    
-
-# edge_information = {
-#     'e1': ('V001_1', 'V001_2'),
-#     'e2': ('V001_1', 'V002_2'),
-#     'e3': ('V001_2', 'V001_3'),
-#     'e4': ('V001_2', 'V002_3'),
-#     'e5': ('V002_2', 'V002_3')
-# }
-
-# edge_information_extended = {
-#     'e1': ('V001_1', 'V001_2'),
-#     'e2': ('V001_1_dep', 'V002_2_arr'),
-#     'e3': ('V001_2', 'V001_2_dep'),
-#     'e4': ('V002_2_arr', 'V002_2'),
-#     'e5': ('V002_2', 'V002_2_dep'),
-#     'e6': ('V001_2', 'V001_3'),
-#     'e7': ('V001_2_dep', 'V002_3_arr'),
-#     'e8': ('V002_2_dep', 'V002_3_arr')
-# }
-
-# # constrain, flow matrix
-# A = np.array([[1, 1, 0, 0, 0],
-#               [1, 0, -1, -1,0],
-#               [0, 1, 0, 0, -1],
-#               [0, 0, 1, 1, 1]])
-# # x = np.array([0.3, 0.7, 0.1, 0.2, 0.7])  # probabilities or weights of edges
-# x2 = np.array([0.3, 0.7, 0.2, 0.7, 0.7, 0.1,0.2,0.7])  # probabilities or weights of edges
-
-
-## Simple graph
-# start_node = edge_information['e1'][0]
-# graph = agent_probability_graph(edge_information, x)
-# sampled_path = sample_path(graph, start_node)
-# print("Sampled Path:", sampled_path)
-# plot_sample_path(graph, sampled_path)
-
-# # Extended graph
-# extended_graph = agent_probability_graph_extended(edge_information_extended, x2)
-# sampled_path_extended, sampled_edges = sample_path(extended_graph, edge_information_extended['e1'][0])
-# print("Sampled Path:", sampled_path_extended)
-# print("Sampled Edges:", sampled_edges)
-# plot_sample_path_extended(extended_graph, sampled_path_extended)
 

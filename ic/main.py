@@ -46,6 +46,17 @@ parser.add_argument(
 parser.add_argument(
     "--method", type=str, help="The method used to allocate flights."
 )
+##### Running from configurations
+
+# parser = argparse.ArgumentParser()
+# parser.add_argument('--file', type=str, required=True)
+# parser.add_argument('--method', type=str, default='fisher')
+# parser.add_argument('--force_overwrite', action='store_true')
+parser.add_argument('--BETA', type=float, default=1)
+parser.add_argument('--dropout_good_valuation', type=float, default=-1)
+parser.add_argument('--default_good_valuation', type=float, default=1)
+parser.add_argument('--price_default_good', type=float, default=10)
+
 args = parser.parse_args()
 
 
@@ -277,7 +288,7 @@ def adjust_rebased_flights(rebased_flights, flights, auction_start, auction_end)
     return flights
 
 
-def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher"):
+def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher", design_parameters=None):
     """
     Create and run a scenario based on the given data. Save it to the specified path.
 
@@ -293,7 +304,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher")
 
     file_name = file_path.split("/")[-1].split(".")[0]
     # data = load_json(file_path)
-    output_folder = f"ic/results/{file_name}"
+    output_folder = f"ic/results/{file_name}_{design_parameters['beta']}_{design_parameters['dropout_good_valuation']}_{design_parameters['default_good_valuation']}_{design_parameters['price_default_good']}_3"
     Path(output_folder).mkdir(parents=True, exist_ok=True)
 
     flights = data["flights"]
@@ -301,19 +312,6 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher")
     timing_info = data["timing_info"]
     auction_freq = timing_info["auction_frequency"]
     routes_data = data["routes"]
-
-    # # Create vertiport graph and add starting aircraft positions
-    # vertiport_usage = VertiportStatus(vertiports, data["routes"], timing_info)
-    # vertiport_usage.add_aircraft(flights)
-
-    # # Sort arriving flights by appearance time
-    # ordered_flights = {}
-    # for flight_id, flight in flights.items():
-    #     appearance_time = flight["appearance_time"]
-    #     if appearance_time not in ordered_flights:
-    #         ordered_flights[appearance_time] = [flight_id]
-    #     else:
-    #         ordered_flights[appearance_time].append(flight_id)
 
     start_time = timing_info["start_time"]
     end_time = timing_info["end_time"]
@@ -384,7 +382,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher")
         if method == "fisher":
             allocated_flights, rebased_flights, payments = fisher_allocation_and_payment(
                 filtered_vertiport_usage, interval_flights, current_timing_info, filtered_routes, filtered_vertiports,
-                output_folder, save_file=scenario_name, initial_allocation=initial_allocation
+                output_folder, save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
             )
         elif method == "vcg":
             allocated_flights, payments = allocation_and_payment(
@@ -498,7 +496,21 @@ if __name__ == "__main__":
     # Example call:
     # python3 main.py --file /path/to/test_case.json
     # python3 ic/main.py --file test_cases/case1.json --scn_folder /scenario/TEST_IC
-    file_path = args.file
+
+    
+    # Extract design parameters
+    BETA = args.BETA
+    dropout_good_valuation = args.dropout_good_valuation
+    default_good_valuation = args.default_good_valuation
+    price_default_good = args.price_default_good
+    design_parameters = {
+        "beta": BETA,
+        "dropout_good_valuation": dropout_good_valuation,
+        "default_good_valuation": default_good_valuation,
+        "price_default_good": price_default_good}
+
+    # running from launch
+    file_path = args.file 
     assert Path(file_path).is_file(), f"File at {file_path} does not exist."
     test_case_data = load_json(file_path)
     file_name = Path(file_path).name
@@ -530,7 +542,7 @@ if __name__ == "__main__":
 
     # Create the scenario file and double check the correct path was used
     # run_scenario(data, scenario_path, scenario_name, file_path, method="fisher")
-    path_to_scn_file = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME, file_path, args.method)
+    path_to_scn_file = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME, file_path, args.method, design_parameters)
     print(path_to_scn_file)
     assert path == path_to_scn_file, "An error occured while writing the scenario file."
 

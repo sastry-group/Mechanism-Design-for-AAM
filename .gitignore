@@ -98,5 +98,5 @@ ssd.obj
 #testing files
 ic/Picklerandomstate
 ic/results/*.png
-ic/results/*.txt
+ic/results/*
 ic/latex/*

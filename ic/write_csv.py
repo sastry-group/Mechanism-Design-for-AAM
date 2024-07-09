@@ -47,19 +47,23 @@ def write_market_data(edge_information, prices, new_prices, capacity, end_capaci
 
 def write_output(flights, agent_constraints, edge_information, prices, new_prices, capacity, end_capacity, 
                  agent_allocations, agent_indices, agent_edge_information, agent_goods_lists, 
-                 int_allocations, new_allocations_goods, u, budget, payment,allocations, rebased, market_auction_time, output_folder):
+                 int_allocations, new_allocations_goods, utilities, budget, payment, end_agent_status_data, market_auction_time, output_folder):
     """
+
     """
     print("Writing output to file...")
     # we need to separate this data writing later
 
-    write_results_table(flights, allocations, budget, payment, rebased, output_folder)
+    write_results_table(flights, end_agent_status_data, budget, payment, output_folder)
     write_market_data(edge_information, prices, new_prices, capacity, end_capacity, market_auction_time, output_folder)
 
 
 
     # Agent data
+    dropouts = end_agent_status_data[2]
     for i, flight_id in enumerate(list(flights.keys())):
+        if flight_id in dropouts:
+            continue
         agent_data = {
             "Allocations": agent_allocations[i],
             "Indices": agent_indices[i],
@@ -67,7 +71,7 @@ def write_output(flights, agent_constraints, edge_information, prices, new_price
             "Goods Lists": agent_goods_lists[i][:-1],
             "Sample and Int Allocations": int_allocations[i],
             "Deconflicted Allocations": new_allocations_goods[i],
-            "Utility": u[i],
+            "Utility": utilities[i],
             "Budget": str(budget[i]),
             "Payment": str(payment[i])
         }
@@ -81,23 +85,38 @@ def write_output(flights, agent_constraints, edge_information, prices, new_price
 
     print("Output files written to", output_folder)
 
-def write_results_table(flights, allocations, budget, payment, rebased_allocations, output_folder):
+def write_results_table(flights, end_agent_status_data, budget, payment, output_folder):
     """
     """
 
+    allocations, rebased_allocations, dropout_agents = end_agent_status_data
+
+
     market_results_data = []
     for i, flight_id in enumerate(list(flights.keys())):
-        rebased = any(flight_id == allocation[0] for allocation in rebased_allocations)
-        allocated_flight = next((allocation[1] for allocation in allocations if flight_id == allocation[0]), None)
         flight = flights[flight_id]
         request_dep_time = flight["requests"]["001"]["request_departure_time"]
         original_budget = flight["budget_constraint"]
         valuation = flight['requests']["001"]["valuation"]
         origin_destination_tuple = (flight["origin_vertiport_id"], flight['requests']["001"]["destination_vertiport_id"])
-        market_results_data.append([flight_id, budget[i], original_budget, valuation, origin_destination_tuple, 
-                        request_dep_time, allocated_flight, payment[i], rebased])
-    market_results_df = pd.DataFrame(market_results_data, columns=["Agent", "Mod. Budget", "Ori. Budget", "Valuation", "(O,D)", "Desired Departure (ts)",
-                                                            "Allocation (ts)", "Price", "Rebased Allocation"])
+
+        rebased = any(flight_id == allocation[0] for allocation in rebased_allocations)
+        dropouts = any(flight_id == dropout for dropout in dropout_agents)
+        if rebased:
+            status = "Rebased"
+            agent_payment = payment[i]
+        elif dropouts:
+            status = "DroppedOut"
+            agent_payment = 0
+        else:
+            status = "Allocated"  
+            agent_payment = payment[i]
+          
+        allocated_flight = next((allocation[1] for allocation in allocations if flight_id == allocation[0]), None)
+        market_results_data.append([flight_id, status, budget[i], original_budget, valuation, origin_destination_tuple, 
+                        request_dep_time, allocated_flight, agent_payment])
+    market_results_df = pd.DataFrame(market_results_data, columns=["Agent", "Status", "Mod. Budget", "Ori. Budget", "Valuation", "(O,D)", "Desired Departure (ts)",
+                                                            "Allocation (ts)", "Payment"])
 
     market_results_file = os.path.join(output_folder, "market_results_table.csv")
     if not os.path.isfile(market_results_file):
