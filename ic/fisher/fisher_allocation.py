@@ -27,8 +27,8 @@ from fisher.fisher_int_optimization import int_optimization
 from write_csv import write_output
 
 UPDATED_APPROACH = True
-TOL_ERROR = 1e-3
-MAX_NUM_ITERATIONS = 300
+TOL_ERROR = 1e-6
+MAX_NUM_ITERATIONS = 1000
 # BETA = 1
 # dropout_good_valuation = -1
 # default_good_valuation = 1
@@ -245,14 +245,17 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
     supply, beta = market_settings
     
     # Update consumption
-    y = cp.Variable((num_agents, num_goods - 2)) # dropout and default removed
-    # y = cp.Variable((num_agents, num_goods- 1)) # dropout removed
-    # y = cp.Variable((num_agents, num_goods)) 
+    # y = cp.Variable((num_agents, num_goods - 2)) # dropout and default removed
+    # y = cp.Variable((num_agents, num_goods - 1)) # dropout removed (4)
+    y = cp.Variable((num_agents, num_goods)) 
+    y_bar = cp.Variable(num_goods)
     # Do we remove drop out here or not? - remove the default and dropout good
-    # objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x[:,:-1] - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply[:-1], 2)))
-    objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x[:,:-2] - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply[:-2], 2)))
+    # objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x[:,:-1] - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply[:-1], 2))) # (4) (5)
+    # objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x[:,:-2] - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply[:-2], 2)))
     # objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply, 2)))
-    cp_constraints = [y >= 0] 
+    y_sum = cp.sum(y, axis=0)
+    objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 'fro')) - (beta / 2) * cp.square(cp.norm(y_sum + y_bar - supply, 2))  - p_k.T @ y_bar)
+    cp_constraints = [y_bar >= 0] 
     problem = cp.Problem(objective, cp_constraints)
     # problem = cp.Problem(objective)
 
@@ -279,11 +282,13 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
 
     # Update prices
     # p_k_plus_1 = np.zeros(p_k.shape)
-    # try the options: 
-    # (4) do not update price but dont add it in optimization, 
-    # (5) update price and add it in optimization, 
-    # (6) dont update price but add it in optimization
-    p_k_plus_1 = p_k[:-2] + beta * (np.sum(y_k_plus_1, axis=0) - supply[:-2])
+    # try the options (default good): 
+    # (3) do not update price, dont add it in optimization, 
+    # (4) update price and add it in optimization, 
+    # (5) dont update price but add it in optimization
+    p_k_plus_1 = p_k[:-2] + beta * (np.sum(y_k_plus_1[:,:-2], axis=0) - supply[:-2]) #(3)
+    # p_k_plus_1 = p_k[:-1] + beta * (np.sum(y_k_plus_1, axis=0) - supply[:-1]) #(4)
+    # p_k_plus_1 = p_k[:-2] + beta * (np.sum(y_k_plus_1[:,:-2], axis=0) - supply[:-2]) #(5)
     # p_k_plus_1 = p_k + beta * (np.sum(y_k_plus_1, axis=0) - supply)
     for i in range(len(p_k_plus_1)):
         if p_k_plus_1[i] < 0:
@@ -291,12 +296,13 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
     # p_k_plus_1[-1] = 0  # dropout good
     # p_k_plus_1[-2] = price_default_good  # default good
     p_k_plus_1 = np.append(p_k_plus_1, [price_default_good,0]) # default and dropout good
+    # p_k_plus_1 = np.append(p_k_plus_1, 0)  #  (4) update default good
+
 
     # Update each agent's rebates
     r_k_plus_1 = []
     for i in range(num_agents):
         agent_constraints = constraints[i]
-        # Why are we doing this twice?
         agent_x = np.array([x[i, goods_list.index(good)] for good in agent_goods_lists[i]])
         if UPDATED_APPROACH:
             # agent_x = np.array([x[i, goods_list[:-1].index(good)] for good in agent_goods_lists[i][:-1]])
@@ -323,9 +329,9 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
     agent_indices = range(num_agents)
     agent_prices = [np.array([p[goods_list.index(good)] for good in agent_goods_lists[i]]) for i in agent_indices]
     agent_utilities = [np.array(u[i]) for i in agent_indices]
-    # agent_ys = [np.array([y[i, goods_list.index(good)] for good in agent_goods_lists[i]]) for i in agent_indices]
-    agent_ys = [np.array([y[i, goods_list[:-2].index(good)] for good in agent_goods_lists[i][:-2]]) for i in agent_indices] # removing dropout and detault good
-
+    agent_ys = [np.array([y[i, goods_list.index(good)] for good in agent_goods_lists[i]]) for i in agent_indices]
+    # agent_ys = [np.array([y[i, goods_list[:-2].index(good)] for good in agent_goods_lists[i][:-2]]) for i in agent_indices] # removing dropout and detault good (3)
+    # agent_ys = [np.array([y[i, goods_list[:-1].index(good)] for good in agent_goods_lists[i][:-1]]) for i in agent_indices] # removing dropout (4)
     args = [(w[i], agent_utilities[i], agent_prices[i], r[i], constraints[i], agent_ys[i], beta, rational) for i in agent_indices]
 
     # Update agents in parallel or not depending on parallel flag
@@ -356,14 +362,15 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
     """
     # Individual agent optimization
     A_i, b_i = constraints
-    # A_bar = np.hstack((A_i, np.zeros((len(A_i), 1))))
-    # A_bar[0, -1] = 1
+    # A_bar = A_i[0]
+
     num_constraints = len(b_i)
     num_goods = len(p)
 
     budget_adjustment = r_i.T @ b_i
     w_adj = w_i + budget_adjustment
     w_adj = max(w_adj, 0)
+    # w_adj = abs(w_adj) 
 
     # print(f"Adjusted budget: {w_adj}")
     # optimizer check
@@ -379,9 +386,10 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
     elif UPDATED_APPROACH:
         # objective_terms = v_i.T @ x_i[:-2] + v_i_o * x_i[-2] + v_i_d * x_i[-1]
         objective_terms = u_i.T @ x_i
-        regularizers = - (beta / 2) * cp.square(cp.norm(x_i[:-2] - y_i, 2)) - (beta / 2) * cp.square(cp.norm(A_i @ x_i - b_i, 2)) 
+        # regularizers = - (beta / 2) * cp.square(cp.norm(x_i[:-1] - y_i, 2)) - (beta / 2) * cp.square(cp.norm(A_i @ x_i - b_i, 2))  #(4)
+        regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.square(cp.norm(A_i @ x_i - b_i, 2))        
         # regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.square(cp.norm(A_i @ x_i - b_i, 2)) 
-        lagrangians = - p.T @ x_i - r_i.T @ (A_i @ x_i - b_i)
+        lagrangians = - p.T @ x_i - r_i.T @ (A_i @ x_i - b_i) # the price of dropout good is 0
         nominal_objective = w_adj * cp.log(objective_terms)
         objective = cp.Maximize(nominal_objective + lagrangians + regularizers)
         cp_constraints = [x_i >= 0]
@@ -396,7 +404,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
     problem = cp.Problem(objective, cp_constraints)
     # problem.solve(solver=solver, verbose=False)
 
-    solvers = [cp.SCS,cp.CLARABEL, cp.OSQP, cp.ECOS, cp.CVXOPT]
+    solvers = [cp.SCS, cp.CLARABEL, cp.MOSEK, cp.OSQP, cp.ECOS, cp.CVXOPT]
     for solver in solvers:
         try:
             result = problem.solve(solver=solver)
@@ -495,6 +503,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
     agent_allocations = []
     market_clearing = []
     error = [] * len(agent_constraints)
+    abs_error = [] * len(agent_constraints)
     
     # Algorithm 1
     num_agents = len(agent_goods_lists)
@@ -505,9 +514,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
 
     while market_clearing_error > tolerance and x_iter <= MAX_NUM_ITERATIONS:
     # while x_iter <= 100:
-        # Update agents
         x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, rational=rational)
-        agent_allocations.append(x[:,:-1]) # removing dropout good
+        agent_allocations.append(x) # 
         overdemand.append(np.sum(x[:,:-2], axis=0) - supply[:-2].flatten())
         x_ij = np.sum(x[:,:-2], axis=0) # removing default and dropout good
         excess_demand = x_ij - supply[:-2]
@@ -517,17 +525,24 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
 
         for agent_index in range(len(agent_constraints)):
             agent_x = np.array([x[agent_index, goods_list.index(good)] for good in agent_goods_lists[agent_index]])
+            agent_y = np.array([y[agent_index, goods_list.index(good)] for good in agent_goods_lists[agent_index]])
             constraint_error = agent_constraints[agent_index][0] @ agent_x - agent_constraints[agent_index][1]
+            agent_error = np.sum(np.square(agent_x - agent_y)) +  np.sum(np.square(constraint_error))  
             if x_iter == 0:
                 error.append([constraint_error])
+                abs_error.append([agent_error])
             else:
                 error[agent_index].append(constraint_error)
+                abs_error[agent_index].append(agent_error)
+        
 
         # Update market
         k, y, p, r = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, price_default_good)
         rebates.append([rebate_list for rebate_list in r])
         prices.append(p)
         x_iter += 1
+
+
         print("Iteration: ", x_iter, "- Market Clearing Error: ", market_clearing_error, " - Tolerance: ", tolerance)
         logging.info(f"Iteration: {x_iter}, Market Clearing Error: {market_clearing_error}, Tolerance: {tolerance}")
     
@@ -536,7 +551,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
 
     print(f"Time to run algorithm: {time.time() - start_time_algorithm}")
 
-    data_to_plot = [x_iter, prices, p, overdemand, error, rebates, agent_allocations, market_clearing, agent_constraints]
+    data_to_plot = [x_iter, prices, p, overdemand, error, abs_error, rebates, agent_allocations, market_clearing, agent_constraints]
 
     last_prices = np.array(prices[-1])
     # final_prices = last_prices[last_prices > 0]
@@ -546,9 +561,9 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
     return x, last_prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot
 
 def plotting_market(data_to_plot, output_folder, market_auction_time=None):
-    x_iter, prices, p, overdemand, error, rebates, agent_allocations, market_clearing, agent_constraints = data_to_plot
+    x_iter, prices, p, overdemand, error, abs_error, rebates, agent_allocations, market_clearing, agent_constraints = data_to_plot
     plt.figure(figsize=(20, 20))
-    plt.subplot(2, 3, 1)
+    plt.subplot(2, 4, 1)
     for good_index in range(len(p)-2):
         plt.plot(range(1, x_iter+1), [prices[i][good_index] for i in range(len(prices))])
     plt.plot(range(1, x_iter+1), [prices[i][-2] for i in range(len(prices))], 'b--' ,label="Default Good")
@@ -558,19 +573,25 @@ def plotting_market(data_to_plot, output_folder, market_auction_time=None):
     plt.title("Price evolution")
     plt.legend()
 
-    plt.subplot(2, 3, 2)
+    plt.subplot(2, 4, 2)
     plt.plot(range(1, x_iter+1), overdemand)
     plt.xlabel('x_iter')
     plt.ylabel('Demand - Supply')
     plt.title("Overdemand evolution")
 
-    plt.subplot(2, 3, 3)
+    plt.subplot(2, 4, 3)
     for agent_index in range(len(agent_constraints)):
         plt.plot(range(1, x_iter+1), error[agent_index])
     plt.ylabel('Constraint error')
     plt.title("Constraint error evolution")
 
-    plt.subplot(2, 3, 4)
+    plt.subplot(2, 4, 4)
+    for agent_index in range(len(agent_constraints)):
+        plt.plot(range(1, x_iter+1), abs_error[agent_index])
+    plt.ylabel('Constraint error')
+    plt.title("Constraint error evolution")
+
+    plt.subplot(2, 4, 5)
     for constraint_index in range(len(rebates[0])):
         plt.plot(range(1, x_iter+1), [rebates[i][constraint_index] for i in range(len(rebates))])
     plt.xlabel('x_iter')
@@ -578,13 +599,15 @@ def plotting_market(data_to_plot, output_folder, market_auction_time=None):
     plt.title("Rebate evolution")
     
 
-    plt.subplot(2, 3, 5)
+    plt.subplot(2, 4, 6)
     for agent_index in range(len(agent_allocations[0])):
         plt.plot(range(1, x_iter+1), [agent_allocations[i][agent_index] for i in range(len(agent_allocations))])
+        # plt.plot(range(1, x_iter+1), agent_allocations[-2][agent_index], 'b--' ,label="Default Good")
+        # plt.plot(range(1, x_iter+1), agent_allocations[-1][agent_index], 'r-.' ,label="Dropout Good")
     plt.title("Agent allocation evolution")
     plt.xlabel('x_iter')
 
-    plt.subplot(2, 3, 6)
+    plt.subplot(2, 4, 7)
     plt.plot(range(1, x_iter+1), market_clearing)
     plt.xlabel('x_iter')
     plt.title("Market Clearing Error")
