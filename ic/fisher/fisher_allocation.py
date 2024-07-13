@@ -589,7 +589,7 @@ def plotting_market(data_to_plot, output_folder, market_auction_time=None):
     for agent_index in range(len(agent_constraints)):
         plt.plot(range(1, x_iter+1), abs_error[agent_index])
     plt.ylabel('Constraint error')
-    plt.title("Constraint error evolution")
+    plt.title("Absolute error evolution")
 
     plt.subplot(2, 4, 5)
     for constraint_index in range(len(rebates[0])):
