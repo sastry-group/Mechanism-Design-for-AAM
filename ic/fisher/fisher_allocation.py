@@ -27,8 +27,8 @@ from fisher.fisher_int_optimization import int_optimization
 from write_csv import write_output
 
 UPDATED_APPROACH = True
-TOL_ERROR = 1e-6
-MAX_NUM_ITERATIONS = 1000
+TOL_ERROR = 1e-9
+MAX_NUM_ITERATIONS = 6000
 # BETA = 1
 # dropout_good_valuation = -1
 # default_good_valuation = 1
@@ -234,7 +234,7 @@ def update_basic_market(x, values_k, market_settings, constraints):
     return k + 1, y_k_plus_1, p_k_plus_1, r_k_plus_1
 
 
-def update_market(x, values_k, market_settings, constraints, agent_goods_lists, goods_list, price_default_good):
+def update_market(x, values_k, market_settings, constraints, agent_goods_lists, goods_list, price_default_good, update_rebates=False):
     '''
     Update market consumption, prices, and rebates
     '''
@@ -300,16 +300,19 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
 
 
     # Update each agent's rebates
-    r_k_plus_1 = []
-    for i in range(num_agents):
-        agent_constraints = constraints[i]
-        agent_x = np.array([x[i, goods_list.index(good)] for good in agent_goods_lists[i]])
-        if UPDATED_APPROACH:
-            # agent_x = np.array([x[i, goods_list[:-1].index(good)] for good in agent_goods_lists[i][:-1]])
-            constraint_violations = np.array([agent_constraints[0][j] @ agent_x - agent_constraints[1][j] for j in range(len(agent_constraints[1]))])
-        else:
-            constraint_violations = np.array([max(agent_constraints[0][j] @ agent_x - agent_constraints[1][j], 0) for j in range(len(agent_constraints[1]))])
-        r_k_plus_1.append(r_k[i] + beta * constraint_violations)
+    if update_rebates:
+        r_k_plus_1 = []
+        for i in range(num_agents):
+            agent_constraints = constraints[i]
+            agent_x = np.array([x[i, goods_list.index(good)] for good in agent_goods_lists[i]])
+            if UPDATED_APPROACH:
+                # agent_x = np.array([x[i, goods_list[:-1].index(good)] for good in agent_goods_lists[i][:-1]])
+                constraint_violations = np.array([agent_constraints[0][j] @ agent_x - agent_constraints[1][j] for j in range(len(agent_constraints[1]))])
+            else:
+                constraint_violations = np.array([max(agent_constraints[0][j] @ agent_x - agent_constraints[1][j], 0) for j in range(len(agent_constraints[1]))])
+            r_k_plus_1.append(r_k[i] + beta * constraint_violations)
+    else:
+        r_k_plus_1 = r_k
     return k + 1, y_k_plus_1, p_k_plus_1, r_k_plus_1
 
 
@@ -512,8 +515,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
     x_iter = 0
     start_time_algorithm = time.time()  
 
-    while market_clearing_error > tolerance and x_iter <= MAX_NUM_ITERATIONS:
-    # while x_iter <= 100:
+    # while market_clearing_error > tolerance and x_iter <= MAX_NUM_ITERATIONS:
+    while x_iter <= MAX_NUM_ITERATIONS:
         x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, rational=rational)
         agent_allocations.append(x) # 
         overdemand.append(np.sum(x[:,:-2], axis=0) - supply[:-2].flatten())
@@ -535,9 +538,12 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
                 error[agent_index].append(constraint_error)
                 abs_error[agent_index].append(agent_error)
         
-
+        if x_iter % 100 == 0:
+            update_rebates = True
+        else:
+            update_rebates = False
         # Update market
-        k, y, p, r = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, price_default_good)
+        k, y, p, r = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, price_default_good, update_rebates=update_rebates)
         rebates.append([rebate_list for rebate_list in r])
         prices.append(p)
         x_iter += 1
