@@ -69,10 +69,10 @@ def agent_probability_graph_extended(edge_information, x, agent_number=1, output
     G = nx.DiGraph()
     
     # Add edges with weights and labels
-    agent_label = f"Agent_{agent_number}"
+    agent_label = f"f_{agent_number}"
     agent_allocations = {}
     for (key, edge), weight in zip(edge_information.items(), x):
-        if key == 'default_good' or "dropout_good":
+        if key == 'default_good' or key == "dropout_good":
             agent_allocations[key] = weight
             continue
         if weight == 0:
@@ -88,6 +88,35 @@ def agent_probability_graph_extended(edge_information, x, agent_number=1, output
     nx.draw(G, pos, with_labels=True, node_size=700, node_color='lightblue', edge_color='#909090', font_size=9)
     edge_labels = {(u, v): f"{d['label']} ({d['weight']:.4f})" for u, v, d in G.edges(data=True)}
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, label_pos=0.5, font_color='red')
+    # plt.figure(figsize=(12, 8))
+    # plt.title("Time Extended Decision Tree Graph with Branching and Constraints")
+
+    # if output_folder:
+    #     plt.savefig(f'{output_folder}/extended_graph_{agent_label}.png')
+    # # plt.show()
+    # plt.close()
+
+
+        # origin_node, destination_node = edge
+        # # G.add_edge(origin_node, destination_node, weight=x[list(edge_information.keys()).index(key)], label=key)
+        # origin_v, origin_t, origin_s = parse_node_label(origin_node)
+        # dest_v, dest_t, dest_s = parse_node_label(destination_node)
+
+        # if origin_s == 'mid' and dest_s in ['mid', 'dep'] and dest_t == origin_t + 1:
+        #     G.add_edge(origin_node, destination_node, weight=weight, label=key)
+        # elif origin_s == 'dep' and dest_s == 'arr' and dest_v != origin_v:
+        #     G.add_edge(origin_node, destination_node, weight=weight, label=key)
+        # elif origin_s == 'arr' and dest_s == 'mid' and dest_t == origin_t and dest_v == origin_v:
+        #     G.add_edge(origin_node, destination_node, weight=weight, label=key)
+
+        # G.add_edge(origin_node, destination_node, weight=weight, label=key)
+    #     agent_allocations[key] = weight
+
+    # # Create custom layout and plot the graph
+    # pos = custom_layout(G)
+    # nx.draw(G, pos, with_labels=True, node_size=700, node_color='lightblue', edge_color='#909090', font_size=9)
+    # edge_labels = {(u, v): f"{d['label']} ({d['weight']:.4f})" for u, v, d in G.edges(data=True)}
+    # nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, label_pos=0.5, font_color='red')
     # plt.figure(figsize=(12, 8))
     # plt.title("Time Extended Decision Tree Graph with Branching and Constraints")
 

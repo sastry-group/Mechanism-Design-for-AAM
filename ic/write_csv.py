@@ -65,8 +65,8 @@ def write_output(flights, agent_constraints, edge_information, prices, new_price
         if flight_id in dropouts:
             continue
         agent_data = {
-            "Allocations": agent_allocations[i],
-            "Indices": agent_indices[i],
+            "Allocations": [f"{x:.4f}" for x in agent_allocations[i]],
+            "Indices": agent_indices[i].astype(int),
             "Edge Information": agent_edge_information[i],
             "Goods Lists": agent_goods_lists[i][:-1],
             "Sample and Int Allocations": int_allocations[i],
