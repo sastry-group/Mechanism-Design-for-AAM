@@ -3,11 +3,11 @@ import os
 from itertools import product
 
 # Define the parameter values to vary
-BETA_values = [2000]
+BETA_values = [1000, 100, 10]
 dropout_good_valuation_values = [1]
 default_good_valuation_values = [1]
 price_default_good_values = [10]
-rebate_frequency_values = [200,400]
+rebate_frequency_values = [500]
 
 # Generate all combinations of the parameter values
 parameter_combinations = list(product(BETA_values, dropout_good_valuation_values, default_good_valuation_values, price_default_good_values, rebate_frequency_values))

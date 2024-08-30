@@ -138,6 +138,25 @@ def sample_path(G, start_node, agent_allocations, dropout_good_allocation=False)
     allocation_updates = {}
     dropout_flag = False
 
+    # Get possible edges from the current node
+    possible_edges = list(G.out_edges(current_node, data=True))
+    
+    if not possible_edges:
+        return [], [], [0]*len(agent_allocations), True
+
+    # Take the first edge
+    first_edge = possible_edges[0]
+    first_edge_weight = first_edge[2]['weight']
+
+    # Calculate dropout probability based on the dropout edge
+    total_weight = first_edge_weight + dropout_good_allocation
+    dropout_probability = dropout_good_allocation / total_weight
+    if random.random() < dropout_probability:
+        # Dropout is chosen
+        dropout_flag = True
+        return [], [], [0]*len(agent_allocations), dropout_flag
+
+    # This is if the agent does not dropout
     while True:
         possible_edges = list(G.out_edges(current_node, data=True))
         if not possible_edges:
@@ -146,15 +165,6 @@ def sample_path(G, start_node, agent_allocations, dropout_good_allocation=False)
         # Normalize weights
         total_weight = sum(edge[2]['weight'] for edge in possible_edges)
         weights = [edge[2]['weight'] / total_weight for edge in possible_edges]
-        next_nodes = [edge[1] for edge in possible_edges]
-
-        # Dropout probability
-        dropout_probability = dropout_good_allocation / (dropout_good_allocation + total_weight)
-        
-        # Decide whether to drop out or choose the next node
-        if random.random() < dropout_probability:
-            dropout_flag = True
-            break
 
         # Select next node based on normalized weights
         chosen_edge = random.choices(possible_edges, weights=weights, k=1)[0]
@@ -170,8 +180,6 @@ def sample_path(G, start_node, agent_allocations, dropout_good_allocation=False)
     agent_allocations = {key: 0 for key in agent_allocations}
     agent_allocations.update(allocation_updates)
     agent_int_allocations = list(agent_allocations.values())
-
-    # print(f"Time to sample: {time.time() - start_time_sample:.5f}")
 
     return path, edges, agent_int_allocations, dropout_flag
 
