@@ -508,6 +508,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
     yplot= []
     error = [] * len(agent_constraints)
     abs_error = [] * len(agent_constraints)
+    social_welfare_vector = []
     
     # Algorithm 1
     num_agents = len(agent_goods_lists)
@@ -515,6 +516,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
     market_clearing_error = float('inf')
     x_iter = 0
     start_time_algorithm = time.time()  
+    
 
     while market_clearing_error > tolerance and x_iter <= MAX_NUM_ITERATIONS:
     # while x_iter <= MAX_NUM_ITERATIONS:
@@ -538,6 +540,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
             else:
                 error[agent_index].append(constraint_error)
                 abs_error[agent_index].append(agent_error)
+            agent_allocations.append(agent_x)
         
         if x_iter % rebate_frequency == 0:
             update_rebates = True
@@ -548,6 +551,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         yplot.append(y)
         rebates.append([rebate_list for rebate_list in r])
         prices.append(p)
+        current_social_welfare = social_welfare(agent_allocations, p, u, supply)
+        social_welfare_vector.append(current_social_welfare)
         x_iter += 1
 
 
@@ -567,6 +572,20 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
     # print(f"Error: {[error[i][-1] for i in range(len(error))]}")
     # print(f"Overdemand: {overdemand[-1][:]}")
     return x, last_prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot
+
+
+def social_welfare(x, p, u, supply):
+
+    welfare = 0
+    current_capacity = supply[:-2] - np.sum(x[:,:-2], axis=0)
+    
+    for i in range(len(u)):
+        agent_welfare = np.dot(u[i], x[i]) - np.dot(p, x[i])
+        welfare += agent_welfare
+
+    return welfare
+
+
 
 def plotting_market(data_to_plot, output_folder, market_auction_time=None):
     x_iter, prices, p, overdemand, error, abs_error, rebates, agent_allocations, market_clearing, agent_constraints, yplot = data_to_plot
@@ -638,6 +657,18 @@ def plotting_market(data_to_plot, output_folder, market_auction_time=None):
     plt.savefig(get_filename("agent_allocation_evolution"))
     plt.close()
 
+    # Desired goods evolution
+    plt.figure(figsize=(10, 5))
+    for agent_index in range(len(agent_allocations[0])):
+        plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_index][:-2] for i in range(len(agent_allocations))])
+        plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_index][-2] for i in range(len(agent_allocations))], 'b--', label=f"{agent_index} - Default Good")
+        plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_index][-1] for i in range(len(agent_allocations))], 'r-.', label=f"{agent_index} - Dropout Good")
+    plt.legend()
+    plt.xlabel('x_iter')
+    plt.title("Desired Goods Agent allocation evolution")
+    plt.savefig(get_filename("desired_goods_allocation_evolution"))
+    plt.close()
+
     # Market Clearing Error
     plt.figure(figsize=(10, 5))
     plt.plot(range(1, x_iter + 1), market_clearing)
@@ -658,6 +689,15 @@ def plotting_market(data_to_plot, output_folder, market_auction_time=None):
     plt.savefig(get_filename("y-values"))
     plt.close()
 
+
+    # Social Welfare
+    plt.figure(figsize=(10, 5))
+    plt.plot(range(1, x_iter + 1), overdemand)
+    plt.xlabel('x_iter')
+    plt.ylabel('Social Welfare')
+    plt.title("Social Welfare")
+    plt.savefig(get_filename("social_welfare"))
+    plt.close()
 
 def load_json(file=None):
     """
