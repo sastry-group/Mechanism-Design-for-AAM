@@ -76,7 +76,7 @@ def get_vehicle_info(flight, lat1, lon1, lat2, lon2):
     
 
     # Predefined placeholders as constants for now
-    return "B744", "FL250", 200, true_heading
+    return "B744", "FL250", 0, true_heading
 
 
 def get_lat_lon(vertiport):
@@ -181,10 +181,10 @@ def add_commands_for_flight(
         [
             f"{time_stamp}>CRE {flight_id} {veh_type} {or_lat} {or_lon} {head} {alt} {spd}\n",
             f"{time_stamp}>DEST {flight_id} {des_lat}, {des_lon}\n",
-            # f"{time_stamp}>SCHEDULE {arrival_time_stamp}, DEL {flight_id}\n",
-            f"{time_stamp}>POLY {poly_name},{strategic_area_string}\n",
-            f"{time_stamp}>AREA, {poly_name}\n",
-            f"{time_stamp}>SCHEDULE {arrival_time_stamp}, DEL {poly_name}\n",
+            f"{time_stamp}>SCHEDULE {arrival_time_stamp}, DEL {flight_id}\n",
+            # f"{time_stamp}>POLY {poly_name},{strategic_area_string}\n",
+            # f"{time_stamp}>AREA, {poly_name}\n",
+            # f"{time_stamp}>SCHEDULE {arrival_time_stamp}, DEL {poly_name}\n",
         ]
     
     )
