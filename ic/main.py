@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 import time
 import math
+import numpy as np
 
 
 # Add the bluesky package to the path
@@ -254,15 +255,22 @@ def run_scenario(data, scenario_path, scenario_name):
         else:
             ordered_flights[appearance_time].append(flight_id)
 
+    auction_times = list(np.arange(0, timing_info["end_time"], timing_info["auction_frequency"]))
+
     # Initialize stack commands
     stack_commands = ["00:00:00.00>TRAILS ON\n00:00:00.00>PAN OAK\n00:00:00.00>ZOOM 1\n00:00:00.00>CDMETHOD STATEBASED\n00:00:00.00>DTMULT 30\n"]
     
     start_time = time.time()
     initial_allocation = True
     # Iterate through each time flights appear
-    for appearance_time in sorted(ordered_flights.keys()):
+    # for appearance_time in sorted(ordered_flights.keys()):
+    for prev_auction_time, auction_time in zip(auction_times[:-1], auction_times[1:]):
         # Get the current flights
-        current_flight_ids = ordered_flights[appearance_time]
+        # current_flight_ids = ordered_flights[appearance_time]
+        relevant_appearances = [key for key in ordered_flights.keys() if key >= prev_auction_time and key < auction_time]
+        current_flight_ids = sum([ordered_flights[appearance_time] for appearance_time in relevant_appearances], [])
+        if len(current_flight_ids) == 0:
+            continue
         current_flights = {
             flight_id: flights[flight_id] for flight_id in current_flight_ids
         }
