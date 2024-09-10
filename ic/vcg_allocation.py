@@ -290,7 +290,7 @@ def save_allocation(allocation, save_file, start_time, initial_allocation=False)
             f.write(f"    {flight_id}, {request_id}\n")
 
 
-def allocation_and_payment(vertiport_usage, flights, timing_info, save_file, initial_allocation):
+def vcg_allocation_and_payment(vertiport_usage, flights, timing_info, save_file, initial_allocation):
     """
     Allocate flights for a given time and set of requests.
 

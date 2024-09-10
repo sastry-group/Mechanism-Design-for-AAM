@@ -19,7 +19,8 @@ sys.path.append(str(top_level_path))
 
 import bluesky as bs
 from ic.VertiportStatus import VertiportStatus, draw_graph
-from ic.allocation import allocation_and_payment
+from ic.vcg_allocation import vcg_allocation_and_payment
+from ic.ff_allocation import ff_allocation_and_payment
 
 # Bluesky settings
 T_STEP = 10000
@@ -40,6 +41,11 @@ parser.add_argument(
     "--force_overwrite",
     action="store_true",
     help="Flag for overwriting the scenario file(s).",
+)
+parser.add_argument(
+    "--method",
+    type=str,
+    help="The method for allocation and payment (vcg or ff).",
 )
 args = parser.parse_args()
 
@@ -226,7 +232,7 @@ def step_simulation(
     return vertiport_usage
 
 
-def run_scenario(data, scenario_path, scenario_name):
+def run_scenario(data, scenario_path, scenario_name, method):
     """
     Create and run a scenario based on the given data. Save it to the specified path.
 
@@ -234,6 +240,7 @@ def run_scenario(data, scenario_path, scenario_name):
         data (dict): The data containing information about flights, vertiports, routes, timing, etc.
         scenario_path (str): The path where the scenario file will be saved.
         scenario_name (str): The name of the scenario file.
+        method (str): Allocation and payment calculation method to use.
 
     Returns:
         str: The path to the created scenario file.
@@ -282,9 +289,14 @@ def run_scenario(data, scenario_path, scenario_name):
             "end_time": timing_info["end_time"],
             "time_step": timing_info["time_step"]
         }
-        allocated_flights, payments = allocation_and_payment(
-            vertiport_usage, current_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
-        )
+        if method == "vcg":
+            allocated_flights, payments = vcg_allocation_and_payment(
+                vertiport_usage, current_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
+            )
+        elif method == "ff":
+            allocated_flights, payments = ff_allocation_and_payment(
+                vertiport_usage, current_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
+            )
         if initial_allocation:
             initial_allocation = False
 
@@ -417,7 +429,7 @@ if __name__ == "__main__":
             sys.exit()
 
     # Create the scenario file and double check the correct path was used
-    path_to_scn_file = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME)
+    path_to_scn_file = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME, args.method)
     print(path_to_scn_file)
     assert path == path_to_scn_file, "An error occured while writing the scenario file."
 
