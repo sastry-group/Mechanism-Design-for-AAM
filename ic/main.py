@@ -28,6 +28,7 @@ MANEUVER = True
 VISUALIZE = False
 LOG = True
 SIMDT = 1
+EQUITABLE_FLEETS = True
 
 parser = argparse.ArgumentParser(description="Process a true/false argument.")
 parser.add_argument("--gui", action="store_true", help="Flag for running with gui.")
@@ -245,13 +246,29 @@ def run_scenario(data, scenario_path, scenario_name, method):
     Returns:
         str: The path to the created scenario file.
     """
+    fleets = data["fleets"]
     flights = data["flights"]
     vertiports = data["vertiports"]
     timing_info = data["timing_info"]
+    congestion_params = data["congestion_params"]
+
+    def C(q):
+        assert q.is_integer() and q >= 0 and q < len(congestion_params["C"]), "q must be a non-negative integer."
+        return congestion_params["C"][q]
+    congestion_info = {"lambda": congestion_params["lambda"], "C": C}
 
     # Create vertiport graph and add starting aircraft positions
     vertiport_usage = VertiportStatus(vertiports, data["routes"], timing_info)
     vertiport_usage.add_aircraft(flights)
+
+    # Add fleet weighting information to flights
+    for fleet_id, fleet in fleets.items():
+        for flight_id in fleet["members"]:
+            if EQUITABLE_FLEETS:
+                flights[flight_id]["rho"] = fleet["rho"]
+            else:
+                flights[flight_id]["rho"] = 1
+    
 
     # Sort arriving flights by appearance time
     ordered_flights = {}
@@ -291,7 +308,7 @@ def run_scenario(data, scenario_path, scenario_name, method):
         }
         if method == "vcg":
             allocated_flights, payments = vcg_allocation_and_payment(
-                vertiport_usage, current_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
+                vertiport_usage, current_flights, current_timing_info, congestion_info, save_file=scenario_name, initial_allocation=initial_allocation
             )
         elif method == "ff":
             allocated_flights, payments = ff_allocation_and_payment(

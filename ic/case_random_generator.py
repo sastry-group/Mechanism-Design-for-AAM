@@ -186,7 +186,7 @@ def generate_fleets(flights_data):
     for i in range(NUM_FLEETS):
         fleet_id = f"F{i+1:03d}"
         fleet_flights = flights[i * split: (i + 1) * split]
-        fleets[fleet_id] = fleet_flights
+        fleets[fleet_id] = { "members": fleet_flights, "rho": random.randint(1, 3) }
     return fleets
 
 def generate_routes(vertiports):
@@ -214,6 +214,7 @@ flights, routes = generate_flights()
 fleets = generate_fleets(list(flights.keys()))
 json_data = {
     "timing_info": {"start_time": START_TIME, "end_time": END_TIME, "time_step": TIME_STEP, "auction_frequency": AUCTION_DT},
+    "congestion_params": {"lambda": 0.1, "C": [0, 0.1, 0.3, 0.6, 1, 1.5, 2.1, 2.8, 3.6, 4.5, 5.5]},
     "fleets": fleets,
     "flights": flights,
     "vertiports": vertiports,
