@@ -270,7 +270,7 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
         print("Optimization was not successful.")
         allocation = None
 
-    return allocation
+    return allocation, m.ObjVal
 
 
 def save_allocation(allocation, save_file, start_time, initial_allocation=False):
@@ -301,7 +301,17 @@ def vcg_allocation_and_payment(vertiport_usage, flights, timing_info, congestion
     # Create auxiliary graph and determine allocation
     # Todo: Also determine payment here
     auxiliary_graph, unique_departure_times = build_auxiliary(vertiport_usage, flights, timing_info, congestion_info)
-    allocation = determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_departure_times)
+    allocation, SW = determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_departure_times)
+    for flight_id, request_id in allocation:
+        # Get the objective value for the allocation without the flight
+        other_flights = {other_id: other_flight for other_id, other_flight in flights.items() if other_id != flight_id}
+        auxiliary_graph, unique_departure_times = build_auxiliary(vertiport_usage, other_flights, timing_info, congestion_info)
+        _, SW_alternate_allocation = determine_allocation(vertiport_usage, other_flights, auxiliary_graph, unique_departure_times)
+        
+        # Find social welfare excluding the flight
+        SW_minus_i = SW - flights[flight_id]["requests"][request_id]["bid"] # Get the opt objective and subtract the flight's bid
+
+        payment = 1/flights[flight_id]["rho"] * (SW_alternate_allocation - SW_minus_i)
     save_allocation(allocation, save_file, timing_info["current_time"], initial_allocation=initial_allocation)
 
     # Print outputs
