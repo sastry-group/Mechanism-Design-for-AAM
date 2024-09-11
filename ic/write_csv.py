@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import os
+import pickle
 
 def full_list_string(lst):
     return ', '.join([str(item) for item in lst])
@@ -45,38 +46,46 @@ def write_market_data(edge_information, prices, new_prices, capacity, end_capaci
     
 
 
-def write_output(flights, agent_constraints, edge_information, prices, new_prices, capacity, end_capacity, 
-                 agent_allocations, agent_indices, agent_edge_information, agent_goods_lists, 
-                 int_allocations, new_allocations_goods, utilities, budget, payment, end_agent_status_data, market_auction_time, output_folder):
+def write_output(flights, edge_information, prices, new_prices, capacity, end_capacity, 
+                agents_data, market_auction_time, output_folder):
     """
 
     """
     print("Writing output to file...")
     # we need to separate this data writing later
 
-    write_results_table(flights, end_agent_status_data, budget, payment, output_folder)
+
+    write_results_table(flights, agents_data, output_folder)
     write_market_data(edge_information, prices, new_prices, capacity, end_capacity, market_auction_time, output_folder)
+
+    # extra_data = {
+    #     "capacity": capacity,
+    #     "end Capacity": end_capacity,
+    #     "prices": new_prices,
+    #     "agents_data": agents_data
+    # }
+    # save_data(output_folder, "animation", market_auction_time, **extra_data)
 
 
 
     # Agent data
-    dropouts = end_agent_status_data[2]
-    for i, flight_id in enumerate(list(flights.keys())):
-        if flight_id in dropouts:
+    for key, value in agents_data.items():
+        if agents_data[key]['status'] == 'dropped':
             continue
-        agent_data = {
-            "Allocations": agent_allocations[i],
-            "Indices": agent_indices[i],
-            "Edge Information": agent_edge_information[i],
-            "Goods Lists": agent_goods_lists[i][:-1],
-            "Sample and Int Allocations": int_allocations[i],
-            "Deconflicted Allocations": new_allocations_goods[i],
-            "Utility": utilities[i],
-            "Budget": str(budget[i]),
-            "Payment": str(payment[i])
+        data_to_write = {
+            # "Fisher Allocations": [f"{x:.4f}" for x in agent_allocations[i]],
+            "Fishers Allocations": agents_data[key]["fisher_allocation"],
+            "Indices": agents_data[key]['agent_edge_indices'],
+            # "Edge Information": agent_edge_information[i],
+            "Goods Lists": agents_data[key]["agent_goods_list"],
+            "Sample and Int Allocations": agents_data[key]["int_allocation"],
+            "Deconflicted Allocations": agents_data[key]["deconflicted_goods"],
+            "Utility": agents_data[key]["utility"],
+            "Budget": agents_data[key]["adjusted_budget"],
+            "Payment": agents_data[key]["payment"]
         }
-        agent_df = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in agent_data.items()]))
-        agent_file = os.path.join(output_folder, f"{flight_id}.csv")
+        agent_df = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in data_to_write.items()]))
+        agent_file = os.path.join(output_folder, f"{key}.csv")
 
         if not os.path.isfile(agent_file):
             agent_df.to_csv(agent_file, index=False, mode='w')
@@ -85,35 +94,25 @@ def write_output(flights, agent_constraints, edge_information, prices, new_price
 
     print("Output files written to", output_folder)
 
-def write_results_table(flights, end_agent_status_data, budget, payment, output_folder):
+def write_results_table(flights, agents_data, output_folder):
     """
     """
-
-    allocations, rebased_allocations, dropout_agents = end_agent_status_data
 
 
     market_results_data = []
-    for i, flight_id in enumerate(list(flights.keys())):
-        flight = flights[flight_id]
-        request_dep_time = flight["requests"]["001"]["request_departure_time"]
-        original_budget = flight["budget_constraint"]
-        valuation = flight['requests']["001"]["valuation"]
-        origin_destination_tuple = (flight["origin_vertiport_id"], flight['requests']["001"]["destination_vertiport_id"])
-
-        rebased = any(flight_id == allocation[0] for allocation in rebased_allocations)
-        dropouts = any(flight_id == dropout for dropout in dropout_agents)
-        if rebased:
-            status = "Rebased"
-            agent_payment = payment[i]
-        elif dropouts:
-            status = "DroppedOut"
-            agent_payment = 0
-        else:
-            status = "Allocated"  
-            agent_payment = payment[i]
+    for key, value in flights.items():
+        agent_flight_data = key
+        request_dep_time = value["requests"]["001"]["request_departure_time"]
+        original_budget = value["budget_constraint"]
+        valuation = value['requests']["001"]["valuation"]
+        modified_budget = agents_data[key]["adjusted_budget"]
+        allocated_flight = agents_data[key]["good_allocated"]
+        agent_payment = agents_data[key]["payment"]
+        origin_destination_tuple = (value["origin_vertiport_id"], value['requests']["001"]["destination_vertiport_id"])
+        status = agents_data[key]["status"]
           
-        allocated_flight = next((allocation[1] for allocation in allocations if flight_id == allocation[0]), None)
-        market_results_data.append([flight_id, status, budget[i], original_budget, valuation, origin_destination_tuple, 
+        # allocated_flight = next((allocation[1] for allocation in allocations if flight_id == allocation[0]), None)
+        market_results_data.append([agent_flight_data, status, modified_budget, original_budget, valuation, origin_destination_tuple, 
                         request_dep_time, allocated_flight, agent_payment])
     market_results_df = pd.DataFrame(market_results_data, columns=["Agent", "Status", "Mod. Budget", "Ori. Budget", "Valuation", "(O,D)", "Desired Departure (ts)",
                                                             "Allocation (ts)", "Payment"])
@@ -127,3 +126,7 @@ def write_results_table(flights, end_agent_status_data, budget, payment, output_
     print("Market interval written to", market_results_file)
 
 
+
+def save_data(output_folder, file_name, market_auction_time, **kwargs):
+    with open(f'{output_folder}/{file_name}_{market_auction_time}.pkl', 'wb') as f:
+        pickle.dump(kwargs, f)

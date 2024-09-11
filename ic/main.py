@@ -54,10 +54,10 @@ parser.add_argument(
 # parser.add_argument('--method', type=str, default='fisher')
 # parser.add_argument('--force_overwrite', action='store_true')
 parser.add_argument('--BETA', type=float, default=1)
-parser.add_argument('--dropout_good_valuation', type=float, default=-1)
+parser.add_argument('--dropout_good_valuation', type=float, default=1)
 parser.add_argument('--default_good_valuation', type=float, default=1)
 parser.add_argument('--price_default_good', type=float, default=10)
-
+parser.add_argument('--rebate_frequency', type=float, default=1)
 args = parser.parse_args()
 
 
@@ -305,7 +305,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher",
 
     file_name = file_path.split("/")[-1].split(".")[0]
     # data = load_json(file_path)
-    output_folder = f"ic/results/{file_name}_{design_parameters['beta']}_{design_parameters['dropout_good_valuation']}_{design_parameters['default_good_valuation']}_{design_parameters['price_default_good']}"
+    output_folder = f"ic/results/{file_name}_{design_parameters['beta']}_{design_parameters['dropout_good_valuation']}_{design_parameters['default_good_valuation']}_{design_parameters['price_default_good']}_{design_parameters['rebate_frequency']}"
     Path(output_folder).mkdir(parents=True, exist_ok=True)
 
     flights = data["flights"]
@@ -335,79 +335,83 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher",
     rebased_flights = None
 
     for auction_start in auction_intervals:
-        auction_end = auction_start + auction_freq
 
-        # This is to ensure it doest not rebase the flights beyond simulation end time
-        if rebased_flights and auction_end <= last_auction + 1:
-            flights = adjust_rebased_flights(rebased_flights, flights, auction_start, auction_end)
+        if auction_start >= 11: # remove this to run the full simulation, this is just to run the first auction
+            break
+        else: 
+            auction_end = auction_start + auction_freq
 
-        # Filter flights, vertiports, and routes for the current auction interval
-        interval_flights = {
-            flight_id: flight
-            for flight_id, flight in flights.items()
-            if auction_start <= flight["appearance_time"] < auction_end
-        }
+            # This is to ensure it doest not rebase the flights beyond simulation end time
+            if rebased_flights and auction_end <= last_auction + 1:
+                flights = adjust_rebased_flights(rebased_flights, flights, auction_start, auction_end)
 
-        unique_vertiport_ids = set()
-        interval_routes = set()
-        for flight in interval_flights.values():
-            origin = flight['origin_vertiport_id']
-            unique_vertiport_ids.add(origin)
-            # Assuming there's also a destination_vertiport_id in the flight data
-            for request in flight['requests'].values():
-                destination = request['destination_vertiport_id']
-                unique_vertiport_ids.add(destination)
-                interval_routes.add((origin, destination))
+            # Filter flights, vertiports, and routes for the current auction interval
+            interval_flights = {
+                flight_id: flight
+                for flight_id, flight in flights.items()
+                if auction_start <= flight["appearance_time"] < auction_end
+            }
+
+            unique_vertiport_ids = set()
+            interval_routes = set()
+            for flight in interval_flights.values():
+                origin = flight['origin_vertiport_id']
+                unique_vertiport_ids.add(origin)
+                # Assuming there's also a destination_vertiport_id in the flight data
+                for request in flight['requests'].values():
+                    destination = request['destination_vertiport_id']
+                    unique_vertiport_ids.add(destination)
+                    interval_routes.add((origin, destination))
+            
+            # Filter vertiport data
+            filtered_vertiports = {vid: vertiports[vid] for vid in unique_vertiport_ids}
+            filtered_routes = [route for route in routes_data if (route['origin_vertiport_id'], route['destination_vertiport_id']) in interval_routes]
         
-        # Filter vertiport data
-        filtered_vertiports = {vid: vertiports[vid] for vid in unique_vertiport_ids}
-        filtered_routes = [route for route in routes_data if (route['origin_vertiport_id'], route['destination_vertiport_id']) in interval_routes]
-    
-        # Create vertiport graph and add starting aircraft positions
-        filtered_vertiport_usage = VertiportStatus(filtered_vertiports, filtered_routes, timing_info)
-        filtered_vertiport_usage.add_aircraft(interval_flights)
+            # Create vertiport graph and add starting aircraft positions
+            filtered_vertiport_usage = VertiportStatus(filtered_vertiports, filtered_routes, timing_info)
+            filtered_vertiport_usage.add_aircraft(interval_flights)
 
-        print("Performing auction for interval: ", auction_start, " to ", auction_end)
-        write_market_interval(auction_start, auction_end, interval_flights, output_folder)
+            print("Performing auction for interval: ", auction_start, " to ", auction_end)
+            write_market_interval(auction_start, auction_end, interval_flights, output_folder)
 
-        if not interval_flights:
-            continue
 
-        # Determine flight allocation and payment
-        current_timing_info = {
-            "start_time" : auction_start,
-            "end_time": timing_info["end_time"],
-            "time_step": timing_info["time_step"]
-        }
-        if method == "fisher":
-            allocated_flights, rebased_flights, payments = fisher_allocation_and_payment(
-                filtered_vertiport_usage, interval_flights, current_timing_info, filtered_routes, filtered_vertiports,
-                output_folder, save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
+            if not interval_flights:
+                continue
+
+            # Determine flight allocation and payment
+            current_timing_info = {
+                "start_time" : auction_start,
+                "end_time": timing_info["end_time"],
+                "time_step": timing_info["time_step"]
+            }
+            if method == "fisher":
+                allocated_flights, rebased_flights, payments = fisher_allocation_and_payment(
+                    filtered_vertiport_usage, interval_flights, current_timing_info, filtered_routes, filtered_vertiports,
+                    output_folder, save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
+                )
+            elif method == "vcg":
+                allocated_flights, payments = allocation_and_payment(
+                    filtered_vertiport_usage, interval_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
+                )
+            elif method == "ascending-auction":
+                allocated_flights, payments = ascending_auc_allocation_and_payment(
+                    filtered_vertiport_usage, interval_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
+                )
+            if initial_allocation:
+                initial_allocation = False
+
+            # Update system status based on allocation
+            if allocated_flights:
+                allocated_flights, interval_flights = adjust_interval_flights(allocated_flights, interval_flights)
+
+
+            filtered_vertiport_usage = step_simulation(
+                filtered_vertiport_usage, filtered_vertiports, interval_flights, allocated_flights, stack_commands
             )
-        elif method == "vcg":
-            allocated_flights, payments = allocation_and_payment(
-                filtered_vertiport_usage, interval_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
-            )
-        elif method == "ascending-auction":
-            allocated_flights, payments = ascending_auc_allocation_and_payment(
-                filtered_vertiport_usage, interval_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
-            )
-        if initial_allocation:
-            initial_allocation = False
-
-        # Update system status based on allocation
-        if allocated_flights:
-            allocated_flights, interval_flights = adjust_interval_flights(allocated_flights, interval_flights)
-
-
-        filtered_vertiport_usage = step_simulation(
-            filtered_vertiport_usage, filtered_vertiports, interval_flights, allocated_flights, stack_commands
-        )
-
-        
-        auction_end_time = time.time()
-        elapsed_time = auction_end_time - simulation_start_time
-        print(f"Elapsed time: {elapsed_time} seconds")
+            
+            auction_end_time = time.time()
+            elapsed_time = auction_end_time - simulation_start_time
+            print(f"Elapsed time: {elapsed_time} seconds")
 
     # Write the scenario to a file
     path_to_written_file = write_scenario(scenario_path, scenario_name, stack_commands)
@@ -507,11 +511,15 @@ if __name__ == "__main__":
     dropout_good_valuation = args.dropout_good_valuation
     default_good_valuation = args.default_good_valuation
     price_default_good = args.price_default_good
+    rebate_frequency = args.rebate_frequency
     design_parameters = {
         "beta": BETA,
         "dropout_good_valuation": dropout_good_valuation,
         "default_good_valuation": default_good_valuation,
-        "price_default_good": price_default_good}
+        "price_default_good": price_default_good,
+        "rebate_frequency": rebate_frequency
+        }
+    
 
     # running from launch
     file_path = args.file 
