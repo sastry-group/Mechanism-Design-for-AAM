@@ -11,7 +11,7 @@ from math import radians, sin, cos, sqrt, atan2
 START_TIME = 1 # multiple of timestep
 END_TIME = 90
 TIME_STEP = 1
-AUCTION_DT = 12 # every 15 timesteps there is an auction
+AUCTION_DT = 30 # every 15 timesteps there is an auction
 RUNWAY_PERIOD = 6 # time between takeoff/landing
 
 # Case study settings
@@ -80,14 +80,18 @@ def generate_flights():
 
     max_travel_time = route_dict[max(route_dict, key=route_dict.get)]
     last_auction =  END_TIME - max_travel_time - AUCTION_DT
-    auction_intervals = list(range(START_TIME - 1, END_TIME, AUCTION_DT))
+    auction_intervals = list(range(START_TIME - 1, END_TIME + 1, AUCTION_DT))
+    # print(auction_intervals)
     runway_times = list(range(START_TIME, END_TIME, RUNWAY_PERIOD))
 
     for i in range(N_FLIGHTS):  
         flight_id = f"AC{i+1:03d}"
         
         # Select a random auction interval for the appearance time
-        auction_interval = random.choice(auction_intervals[:(np.abs(np.array(auction_intervals) - last_auction)).argmin()])
+        valid_auction_times = [time for time in auction_intervals if time + AUCTION_DT + max_travel_time <= END_TIME]
+        auction_interval = random.choice(valid_auction_times)
+        # auction_interval = random.choice(auction_intervals[:(np.abs(np.array(auction_intervals) - last_auction)).argmin()+1])
+        # print(auction_interval)
         appearance_time = random.randint(auction_interval, auction_interval + AUCTION_DT - 1) # to avoid flights appearing after the last auction, this is also constraint by the maximu travel time for node creation
         # appearance_time = random.randint(1, 50) #needs to be changes using end time variable
 

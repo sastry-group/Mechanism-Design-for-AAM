@@ -3,7 +3,7 @@ from VertiportStatus import draw_graph
 import numpy as np
 import gurobipy as gp
 import time
-
+import copy
 
 rho = 1
 
@@ -67,8 +67,8 @@ def build_auxiliary(vertiport_status, flights, timing_info, congestion_info):
         # E3. Connect time steps together for each vertiport
         if vertiport_status.nodes[node]["time"] == max_time:
             continue
-        for val in range(1, vertiport_status.nodes[node]["hold_capacity"]):
-            weight = lambda_val * (C(val) - C(val - 1))
+        for val in range(1, vertiport_status.nodes[node]["hold_capacity"] + 1):
+            weight = - lambda_val * (C(val) - C(val - 1))
             attributes = {"upper_capacity": 1,
                         "lower_capacity": 0,
                         "weight": weight,
@@ -127,8 +127,8 @@ def build_auxiliary(vertiport_status, flights, timing_info, congestion_info):
         auxiliary_graph.add_edge("source", vertiport[0] + "_" + str(time_step), **attributes)
 
         # E8. Connect each node at the last time step to sink per park allowance
-        for val in range(1, vertiport[1]["hold_capacity"]):
-            weight = lambda_val * (C(val) - C(val - 1))
+        for val in range(1, vertiport[1]["hold_capacity"] + 1):
+            weight = - lambda_val * (C(val) - C(val - 1))
             attributes = {"upper_capacity": 1,
                         "lower_capacity": 0,
                         "weight": weight,
@@ -266,6 +266,9 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
         for _, _, attr in allocated_edges:
             if attr["edge_group"] == "E5":
                 allocation.append((attr["flight_id"], attr["request_id"]))
+                # print(f"Allocated flight {attr['flight_id']} has weight {attr['weight']}")
+            # else:
+                # print(f"Other allocated edge: {attr}")
     else:
         print("Optimization was not successful.")
         allocation = None
@@ -289,7 +292,7 @@ def save_allocation(allocation, save_file, start_time, initial_allocation=False)
             f.write(f"    {flight_id}, {request_id}\n")
 
 
-def vcg_allocation_and_payment(vertiport_usage, flights, timing_info, congestion_info, save_file, initial_allocation):
+def vcg_allocation_and_payment(vertiport_usage, flights, timing_info, congestion_info, fleets, save_file, initial_allocation, payment_calc=True, save=True):
     """
     Allocate flights for a given time and set of requests.
 
@@ -302,21 +305,44 @@ def vcg_allocation_and_payment(vertiport_usage, flights, timing_info, congestion
     # Todo: Also determine payment here
     auxiliary_graph, unique_departure_times = build_auxiliary(vertiport_usage, flights, timing_info, congestion_info)
     allocation, SW = determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_departure_times)
-    for flight_id, request_id in allocation:
-        # Get the objective value for the allocation without the flight
-        other_flights = {other_id: other_flight for other_id, other_flight in flights.items() if other_id != flight_id}
-        auxiliary_graph, unique_departure_times = build_auxiliary(vertiport_usage, other_flights, timing_info, congestion_info)
-        _, SW_alternate_allocation = determine_allocation(vertiport_usage, other_flights, auxiliary_graph, unique_departure_times)
-        
-        # Find social welfare excluding the flight
-        SW_minus_i = SW - flights[flight_id]["requests"][request_id]["bid"] # Get the opt objective and subtract the flight's bid
-
-        payment = 1/flights[flight_id]["rho"] * (SW_alternate_allocation - SW_minus_i)
-    save_allocation(allocation, save_file, timing_info["current_time"], initial_allocation=initial_allocation)
-
+    flights_allocated = {flight_id: request_id for flight_id, request_id in allocation}
+    fleet_members_allocated = {fleet_id: [] for fleet_id in fleets.keys()}
     # Print outputs
     print(f"Allocation\n{allocation}")
-    payment = None
-    print(f"\nPayment\n{payment}")
+    print(f"Original Social Welfare: {SW}")
 
-    return allocation, payment
+    payment = []
+    if payment_calc:
+        alternate_SWs = []
+        for fleet_id, fleet in fleets.items():
+            # Determine which fleet members were allocated
+            SW_minus_i = SW
+            for flight_id in fleet["members"]:
+                if flight_id in flights_allocated.keys():
+                    fleet_members_allocated[fleet_id].append(flight_id)
+                    # Find social welfare excluding the allocated members of the fleet
+                    allocated_request_id = flights_allocated[flight_id]
+                    SW_minus_i -= fleet["rho"] * flights[flight_id]["requests"][allocated_request_id]["bid"]
+                else:
+                    SW_minus_i -= fleet["rho"] * flights[flight_id]["requests"]["000"]["bid"]
+
+            # Get the objective value for the allocation without the complete fleet
+            adjusted_flights = copy.deepcopy(flights)
+            for flight_id in fleet["members"]:
+                adjusted_flight_requests = copy.deepcopy(flights[flight_id]["requests"])
+                for request_id in adjusted_flight_requests.keys():
+                    adjusted_flight_requests[request_id]["bid"] = 0
+                adjusted_flights[flight_id]["requests"] = adjusted_flight_requests
+            # print(f"Adjusted flights for fleet {fleet_id}: {adjusted_flights} given allocation {allocation}")
+            auxiliary_graph, unique_departure_times = build_auxiliary(vertiport_usage, adjusted_flights, timing_info, congestion_info)
+            _, SW_alternate_allocation = determine_allocation(vertiport_usage, adjusted_flights, auxiliary_graph, unique_departure_times)
+            alternate_SWs.append(SW_alternate_allocation)
+
+            # Calculate the payment for the fleet
+            payment.append( (fleet_id, 1/fleet["rho"] * (SW_alternate_allocation - SW_minus_i)))
+        print(f"Social welfares without each fleet: {alternate_SWs}")
+        print(f"\nPayment\n{payment}")
+    if save:
+        save_allocation(allocation, save_file, timing_info["current_time"], initial_allocation=initial_allocation)
+
+    return allocation, payment, SW

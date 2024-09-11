@@ -175,7 +175,7 @@ def add_commands_for_flight(
 
     # Get vehicle information
     veh_type, alt, spd, head = get_vehicle_info(flight, or_lat, or_lon, des_lat, des_lon)
-    print(request)
+    # print(request)
 
     # Timestamps
     time_stamp = convert_time(request["request_departure_time"]*60)
@@ -233,7 +233,7 @@ def step_simulation(
     return vertiport_usage
 
 
-def run_scenario(data, scenario_path, scenario_name, method):
+def run_scenario(data, scenario_path, scenario_name, method, save_scenario=True, payment_calc=True):
     """
     Create and run a scenario based on the given data. Save it to the specified path.
 
@@ -245,6 +245,7 @@ def run_scenario(data, scenario_path, scenario_name, method):
 
     Returns:
         str: The path to the created scenario file.
+        results (list): List of tuples containing allocated flights, payments, valuation, and congestion costs.
     """
     fleets = data["fleets"]
     flights = data["flights"]
@@ -288,6 +289,7 @@ def run_scenario(data, scenario_path, scenario_name, method):
     initial_allocation = True
     # Iterate through each time flights appear
     # for appearance_time in sorted(ordered_flights.keys()):
+    results = []
     for prev_auction_time, auction_time in zip(auction_times[:-1], auction_times[1:]):
         # Get the current flights
         # current_flight_ids = ordered_flights[appearance_time]
@@ -307,8 +309,8 @@ def run_scenario(data, scenario_path, scenario_name, method):
             "time_step": timing_info["time_step"]
         }
         if method == "vcg":
-            allocated_flights, payments = vcg_allocation_and_payment(
-                vertiport_usage, current_flights, current_timing_info, congestion_info, save_file=scenario_name, initial_allocation=initial_allocation
+            allocated_flights, payments, sw = vcg_allocation_and_payment(
+                vertiport_usage, current_flights, current_timing_info, congestion_info, fleets, save_file=scenario_name, initial_allocation=initial_allocation, payment_calc=payment_calc, save=save_scenario
             )
         elif method == "ff":
             allocated_flights, payments = ff_allocation_and_payment(
@@ -326,14 +328,26 @@ def run_scenario(data, scenario_path, scenario_name, method):
         elapsed_time = end_time - start_time
         print(f"Elapsed time: {elapsed_time} seconds")
 
+        # Evaluate the allocation
+        allocated_valuation = {flight_id: current_flights[flight_id]["requests"][request_id]["valuation"] for flight_id, request_id in allocated_flights}
+        parked_valuation = {flight_id: flight["requests"]["000"]["valuation"] for flight_id, flight in current_flights.items() if flight_id not in [flight_id for flight_id, _ in allocated_flights]}
+        valuation = sum([current_flights[flight_id]["rho"] * val for flight_id, val in allocated_valuation.items()]) + sum([current_flights[flight_id]["rho"] * val for flight_id, val in parked_valuation.items()])
+        congestion_costs = congestion_info["lambda"] * sum([C(vertiport_usage.nodes[node]["hold_usage"]) for node in vertiport_usage.nodes])
+        if method == "vcg":
+            assert sw - (valuation - congestion_costs) <= 0.01, "Social welfare calculation incorrect."
+        results.append((allocated_flights, payments, valuation, congestion_costs))
+
     # Write the scenario to a file
-    path_to_written_file = write_scenario(scenario_path, scenario_name, stack_commands)
+    if save_scenario:
+        path_to_written_file = write_scenario(scenario_path, scenario_name, stack_commands)
+    else:
+        path_to_written_file = None
 
     # Visualize the graph
     if VISUALIZE:
         draw_graph(vertiport_usage)
 
-    return path_to_written_file
+    return path_to_written_file, results
 
 
 def evaluate_scenario(path_to_scenario_file, run_gui=False):
@@ -446,7 +460,7 @@ if __name__ == "__main__":
             sys.exit()
 
     # Create the scenario file and double check the correct path was used
-    path_to_scn_file = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME, args.method)
+    path_to_scn_file, results = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME, args.method)
     print(path_to_scn_file)
     assert path == path_to_scn_file, "An error occured while writing the scenario file."
 
