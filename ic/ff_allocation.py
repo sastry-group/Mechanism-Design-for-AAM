@@ -1,4 +1,4 @@
-def determine_allocation(vertiport_usage, flights):
+def determine_allocation(vertiport_usage, flights, timing_info):
     """
     Determine the allocation of flights to vertiports.
 
@@ -9,6 +9,7 @@ def determine_allocation(vertiport_usage, flights):
     Returns:
         dict: Flights allocated.
     """
+    max_time, time_step = timing_info["end_time"], timing_info["time_step"]
     allocation = []
     # Order flights by appearance time
     ordered_flights = {}
@@ -30,6 +31,7 @@ def determine_allocation(vertiport_usage, flights):
 
             # Check if landing, take-off, and parking capacity is available
             for request_id in sorted_requests:
+                print(sorted_requests)
                 request = flight["requests"][request_id]
                 if request["request_departure_time"] == 0:
                     break
@@ -38,11 +40,15 @@ def determine_allocation(vertiport_usage, flights):
                 time_extended_landing_id = request["destination_vertiport_id"] + "_" + str(request["request_arrival_time"])
                 takeoff_space = vertiport_usage.nodes[time_extended_takeoff_id]["takeoff_capacity"] - vertiport_usage.nodes[time_extended_takeoff_id]["takeoff_usage"]
                 landing_space = vertiport_usage.nodes[time_extended_landing_id]["landing_capacity"] - vertiport_usage.nodes[time_extended_landing_id]["landing_usage"]
-                # print(f"Space for {takeoff_space} takeoffs and {landing_space} landings at {origin} and {request['destination_vertiport_id']}")
-                if not (takeoff_space > 0 and landing_space > 0):
+                parking_request_times = [time for time in range(request["request_arrival_time"], max_time + 1, time_step)]
+                parking_request_ids = [request["destination_vertiport_id"] + "_" + str(time) for time in parking_request_times]
+                hold_space = [vertiport_usage.nodes[landing_time_id]["hold_capacity"] - vertiport_usage.nodes[landing_time_id]["hold_usage"] for landing_time_id in parking_request_ids]
+                print(f"Space for {takeoff_space} takeoffs and {landing_space} landings at {origin} and {request['destination_vertiport_id']} for time {request['request_departure_time']} and {request['request_arrival_time']}")
+                if not (takeoff_space > 0 and landing_space > 0 and all([hold > 0 for hold in hold_space])):
                     continue
                 else:
                     # If so, allocate the flight and move to next flight
+                    print(f"Allocating flight {flight_id} with request {request_id}")
                     vertiport_usage.move_aircraft(flight["origin_vertiport_id"], request)
                     allocation.append((flight_id, request_id))
                     break
@@ -61,7 +67,7 @@ def ff_allocation_and_payment(vertiport_usage, flights, timing_info, save_file, 
     """
     # Create auxiliary graph and determine allocation
     # Todo: Also determine payment here
-    allocation = determine_allocation(vertiport_usage, flights)
+    allocation = determine_allocation(vertiport_usage, flights, timing_info)
     # save_allocation(allocation, save_file, timing_info["current_time"], initial_allocation=initial_allocation)
 
     # Print outputs

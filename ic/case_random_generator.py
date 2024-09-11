@@ -11,7 +11,7 @@ from math import radians, sin, cos, sqrt, atan2
 START_TIME = 1 # multiple of timestep
 END_TIME = 90
 TIME_STEP = 1
-AUCTION_DT = 30 # every 15 timesteps there is an auction
+AUCTION_DT = 15 # every 15 timesteps there is an auction
 RUNWAY_PERIOD = 6 # time between takeoff/landing
 
 # Case study settings
@@ -88,7 +88,7 @@ def generate_flights():
         flight_id = f"AC{i+1:03d}"
         
         # Select a random auction interval for the appearance time
-        valid_auction_times = [time for time in auction_intervals if time + AUCTION_DT + max_travel_time <= END_TIME]
+        valid_auction_times = [time for time in auction_intervals if time + 2* AUCTION_DT + max_travel_time <= END_TIME]
         auction_interval = random.choice(valid_auction_times)
         # auction_interval = random.choice(auction_intervals[:(np.abs(np.array(auction_intervals) - last_auction)).argmin()+1])
         # print(auction_interval)
@@ -106,7 +106,7 @@ def generate_flights():
 
         # request_departure_time = appearance_time + random.randint(5, 10)
         first_valid_departure = math.ceil((auction_interval + AUCTION_DT) / RUNWAY_PERIOD) * RUNWAY_PERIOD
-        request_departure_time = random.choice(list(range(first_valid_departure, first_valid_departure + 10, RUNWAY_PERIOD)))
+        request_departure_time = random.choice(list(range(first_valid_departure, first_valid_departure + AUCTION_DT, RUNWAY_PERIOD)))
         # delay = random.randint(1, 5)
         # second_departure_time = request_departure_time + delay
         travel_time = route_dict.get((origin_vertiport_id , destination_vertiport_id), None)
@@ -218,7 +218,7 @@ flights, routes = generate_flights()
 fleets = generate_fleets(list(flights.keys()))
 json_data = {
     "timing_info": {"start_time": START_TIME, "end_time": END_TIME, "time_step": TIME_STEP, "auction_frequency": AUCTION_DT},
-    "congestion_params": {"lambda": 0.1, "C": [0, 0.1, 0.3, 0.6, 1, 1.5, 2.1, 2.8, 3.6, 4.5, 5.5]},
+    "congestion_params": {"lambda": 0.1, "C": {vertiport: list(np.array([0, 0.1, 0.3, 0.6, 1, 1.5, 2.1, 2.8, 3.6, 4.5, 5.5])*random.randint(1,4)) for vertiport in vertiports.keys()}},
     "fleets": fleets,
     "flights": flights,
     "vertiports": vertiports,

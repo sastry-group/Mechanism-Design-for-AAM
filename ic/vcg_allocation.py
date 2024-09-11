@@ -68,12 +68,12 @@ def build_auxiliary(vertiport_status, flights, timing_info, congestion_info):
         if vertiport_status.nodes[node]["time"] == max_time:
             continue
         for val in range(1, vertiport_status.nodes[node]["hold_capacity"] + 1):
-            weight = - lambda_val * (C(val) - C(val - 1))
+            vertiport_id = vertiport_status.nodes[node]["vertiport_id"]
+            weight = - lambda_val * (C(vertiport_id, val) - C(vertiport_id, val - 1))
             attributes = {"upper_capacity": 1,
                         "lower_capacity": 0,
                         "weight": weight,
                         "edge_group": "E3_" + str(val + 1)}
-            vertiport_id = vertiport_status.nodes[node]["vertiport_id"]
             next_time = vertiport_status.nodes[node]["time"] + time_step
             auxiliary_graph.add_edge(node, vertiport_id + "_" + str(next_time), **attributes)
 
@@ -128,7 +128,7 @@ def build_auxiliary(vertiport_status, flights, timing_info, congestion_info):
 
         # E8. Connect each node at the last time step to sink per park allowance
         for val in range(1, vertiport[1]["hold_capacity"] + 1):
-            weight = - lambda_val * (C(val) - C(val - 1))
+            weight = - lambda_val * (C(vertiport[0], val) - C(vertiport[0], val - 1))
             attributes = {"upper_capacity": 1,
                         "lower_capacity": 0,
                         "weight": weight,

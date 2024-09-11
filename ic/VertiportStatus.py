@@ -95,7 +95,11 @@ class VertiportStatus(nx.DiGraph):
         time_extended_origin = origin_vertiport + "_" + str(departure_time)
         time_extended_destination = destination_vertiport + "_" + str(arrival_time)
         self.nodes[time_extended_origin]["takeoff_usage"] += 1
+        assert self.nodes[time_extended_origin]["takeoff_usage"] <= self.nodes[time_extended_origin]["takeoff_capacity"], \
+            f"Vertiport {origin_vertiport} at time {departure_time} over takeoff capacity."
         self.nodes[time_extended_destination]["landing_usage"] += 1
+        assert self.nodes[time_extended_destination]["landing_usage"] <= self.nodes[time_extended_destination]["landing_capacity"], \
+            f"Vertiport {destination_vertiport} at time {arrival_time} over landing capacity."
 
 
 def draw_graph(graph):

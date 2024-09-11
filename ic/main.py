@@ -253,9 +253,16 @@ def run_scenario(data, scenario_path, scenario_name, method, save_scenario=True,
     timing_info = data["timing_info"]
     congestion_params = data["congestion_params"]
 
-    def C(q):
-        assert q.is_integer() and q >= 0 and q < len(congestion_params["C"]), "q must be a non-negative integer."
-        return congestion_params["C"][q]
+    def C(vertiport, q):
+        """
+        Congestion cost function for a vertiport.
+        
+        Args:
+            vertiport (str): The vertiport id.
+            q (int): The number of aircraft in the hold.
+        """
+        assert q.is_integer() and q >= 0 and q < len(congestion_params["C"][vertiport]), "q must be a non-negative integer."
+        return congestion_params["C"][vertiport][q]
     congestion_info = {"lambda": congestion_params["lambda"], "C": C}
 
     # Create vertiport graph and add starting aircraft positions
@@ -312,17 +319,17 @@ def run_scenario(data, scenario_path, scenario_name, method, save_scenario=True,
             allocated_flights, payments, sw = vcg_allocation_and_payment(
                 vertiport_usage, current_flights, current_timing_info, congestion_info, fleets, save_file=scenario_name, initial_allocation=initial_allocation, payment_calc=payment_calc, save=save_scenario
             )
+            # Update system status based on allocation
+            vertiport_usage = step_simulation(
+                vertiport_usage, vertiports, flights, allocated_flights, stack_commands
+            )
         elif method == "ff":
             allocated_flights, payments = ff_allocation_and_payment(
                 vertiport_usage, current_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
             )
+            # System status updated as part of allocation
         if initial_allocation:
             initial_allocation = False
-
-        # Update system status based on allocation
-        vertiport_usage = step_simulation(
-            vertiport_usage, vertiports, flights, allocated_flights, stack_commands
-        )
 
         end_time = time.time()
         elapsed_time = end_time - start_time
@@ -332,7 +339,7 @@ def run_scenario(data, scenario_path, scenario_name, method, save_scenario=True,
         allocated_valuation = {flight_id: current_flights[flight_id]["requests"][request_id]["valuation"] for flight_id, request_id in allocated_flights}
         parked_valuation = {flight_id: flight["requests"]["000"]["valuation"] for flight_id, flight in current_flights.items() if flight_id not in [flight_id for flight_id, _ in allocated_flights]}
         valuation = sum([current_flights[flight_id]["rho"] * val for flight_id, val in allocated_valuation.items()]) + sum([current_flights[flight_id]["rho"] * val for flight_id, val in parked_valuation.items()])
-        congestion_costs = congestion_info["lambda"] * sum([C(vertiport_usage.nodes[node]["hold_usage"]) for node in vertiport_usage.nodes])
+        congestion_costs = congestion_info["lambda"] * sum([C(vertiport_usage.nodes[node]["vertiport_id"], vertiport_usage.nodes[node]["hold_usage"]) for node in vertiport_usage.nodes])
         if method == "vcg":
             assert sw - (valuation - congestion_costs) <= 0.01, "Social welfare calculation incorrect."
         results.append((allocated_flights, payments, valuation, congestion_costs))
