@@ -21,6 +21,7 @@ import bluesky as bs
 from ic.VertiportStatus import VertiportStatus, draw_graph
 from ic.allocation import allocation_and_payment
 from ic.fisher.fisher_allocation import fisher_allocation_and_payment
+from ic.ascending_auc.asc_auc_allocation import  asc_auc_allocation_and_payment
 from ic.write_csv import write_market_interval
 
 # Bluesky settings
@@ -369,7 +370,6 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher",
         print("Performing auction for interval: ", auction_start, " to ", auction_end)
         write_market_interval(auction_start, auction_end, interval_flights, output_folder)
 
-
         if not interval_flights:
             continue
 
@@ -386,6 +386,10 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher",
             )
         elif method == "vcg":
             allocated_flights, payments = allocation_and_payment(
+                filtered_vertiport_usage, interval_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
+            )
+        elif method == "ascending-auction":
+            allocated_flights, payments = ascending_auc_allocation_and_payment(
                 filtered_vertiport_usage, interval_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
             )
         if initial_allocation:

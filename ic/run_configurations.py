@@ -3,7 +3,7 @@ import os
 from itertools import product
 
 # Define the parameter values to vary
-BETA_values = [1, 5, 10, 30]
+BETA_values = [30]
 dropout_good_valuation_values = [1]
 default_good_valuation_values = [1]
 price_default_good_values = [10]
@@ -12,6 +12,7 @@ price_default_good_values = [10]
 parameter_combinations = list(product(BETA_values, dropout_good_valuation_values, default_good_valuation_values, price_default_good_values))
 
 main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
+
 
 # Iterate through each combination and run the main script
 for idx, (BETA, dropout_good_valuation, default_good_valuation, price_default_good) in enumerate(parameter_combinations):

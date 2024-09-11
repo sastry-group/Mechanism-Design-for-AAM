@@ -23,7 +23,7 @@ sys.path.append(str(top_level_path))
 
 from VertiportStatus import VertiportStatus
 from fisher.sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, process_allocations, mapping_agent_to_full_data, mapping_goods_from_allocation
-from fisher.fisher_int_optimization import int_optimization
+from ascending_auc.asc_auc_int_optimization import int_optimization
 from write_csv import write_output
 
 UPDATED_APPROACH = True
@@ -649,7 +649,7 @@ def find_dep_and_arrival_nodes(edges):
     return dep_node_found, arrival_node_found
 
 
-def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_data, vertiports, 
+def asc_auc_allocation_and_payment(vertiport_usage, flights, timing_info, routes_data, vertiports, 
                                   output_folder=None, save_file=None, initial_allocation=True, design_parameters=None):
 
     market_auction_time=timing_info["start_time"]
