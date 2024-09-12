@@ -3,6 +3,8 @@
 This is a fork of the Bluesky repo for Air Traffic Simulation. This fork implements an incentive compatible
 approach to air traffic management.
 
+Note: Make sure you have Python 3 and pip installed on your system before proceeding with the installation.
+
 ## Installation
 You need to get a [Gurobi](https://www.gurobi.com/) license, there is a free regular academic version.
 You can follow their steps to get their license installed in the system.
@@ -45,19 +47,13 @@ To install and run the BlueSky simulator, follow these steps:
    1. Create database in .test_cases
    2. cd ic/
    3. To create the scenario based on the case run python3 ic/case_random_generator.py
-   4. python3 ic/main.py --file test_cases/case1.json --scn_folder /scenario/TEST_IC
+   4. python3 ic/main.py --file test_cases/case1.json --scn_folder /scenario/TEST_IC --method "vcg"
    5. Run ```python3 Bluesky.py``` and load the scenario
 
+7. To compare First-come, First-served to our approach, run ```python3 plot_sw_and_congestion_vs_lambda_ff_and_vcg.py```, which will use stored data.
+    To recreate the data, delete the file ```ic/results/sw_and_congestion_vs_lambda_ff_and_vcg.pkl``` and rerun.
 
-Note: Make sure you have Python 3 and pip installed on your system before proceeding with the installation.
-
-## Code Quality
-
-```black``` and ```pylint``` are included for assistance with good code writing. 
-Black will reformat your code according to standard Python guidelines, and pylint will make code reformatting suggestions.
-These can be run with ```black <filename>``` and ```pylint <filename>```.
-We recommend running each of these in this order on any files you are making changes to.
-
+Below are Bluesky instructions.
 
 For more detailed installation instructions and troubleshooting, please refer to the [BlueSky Wiki](https://github.com/TUDelft-CNS-ATM/bluesky/wiki).
 

@@ -342,6 +342,7 @@ def run_scenario(data, scenario_path, scenario_name, method, save_scenario=True,
         congestion_costs = congestion_info["lambda"] * sum([C(vertiport_usage.nodes[node]["vertiport_id"], vertiport_usage.nodes[node]["hold_usage"]) for node in vertiport_usage.nodes])
         if method == "vcg":
             assert sw - (valuation - congestion_costs) <= 0.01, "Social welfare calculation incorrect."
+        print(f"Social welfare: {valuation - congestion_costs}")
         results.append((allocated_flights, payments, valuation, congestion_costs))
 
     # Write the scenario to a file
