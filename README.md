@@ -56,7 +56,7 @@ To install and run the BlueSky simulator, follow these steps:
     ```
     which will use stored data.
     To recreate the data, delete the file ```ic/results/sw_and_congestion_vs_lambda_ff_and_vcg.pkl``` and rerun. The output is shown below.
-    ![First-come, first-served vs vcg (our) approach](SW_congestion_vs_lambda_pareto.png)
+    ![First-come, first-served vs vcg (our) approach](https://github.com/victoria-tuck/IC-vertiport-reservation/blob/main/SW_congestion_vs_lambda_pareto.png)
     Figure 1. We compare our approach to a first-come, first-served approach across different values of lambda (trade-off between minimizing congestion costs and maximizing sum of valuations). Our approach creates a Pareto frontier of the trade-off, which the other approach is inside of. Congestion costs are the sum of C() for all vertiports and times, and the sum of valuations is the sum of the valuations of the allocated requests.
 
 
