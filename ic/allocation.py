@@ -96,7 +96,7 @@ def build_auxiliary(vertiport_status, flights, timing_info):
             if request["request_departure_time"] == 0:
                 attributes = {"upper_capacity": f"d_{flight_id}_0",
                             "lower_capacity": f"d_{flight_id}_0",
-                            "weight": rho * request["bid"], # rho * b, rho=1 for now
+                            "weight": rho * request["valuation"], # rho * b, rho=1 for now
                             "edge_group": "E7"}
                 auxiliary_graph.add_edge("source", flight_id + "_0", **attributes)
             else:
@@ -106,7 +106,7 @@ def build_auxiliary(vertiport_status, flights, timing_info):
                 arrival_time = request["request_arrival_time"]
                 attributes = {"upper_capacity": 1,
                             "lower_capacity": 0,
-                            "weight": rho * request["bid"],  # rho * b, rho=1 for now
+                            "weight": rho * request["valuation"],  # rho * b, rho=1 for now
                             "edge_group": "E5",
                             "flight_id": flight_id,
                             "request_id": request_id}

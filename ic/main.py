@@ -21,7 +21,7 @@ import bluesky as bs
 from ic.VertiportStatus import VertiportStatus, draw_graph
 from ic.allocation import allocation_and_payment
 from ic.fisher.fisher_allocation import fisher_allocation_and_payment
-from ic.ascending_auc.asc_auc_allocation import  asc_auc_allocation_and_payment
+from ic.ascending_auc.asc_auc_allocation import  ascending_auc_allocation_and_payment
 from ic.write_csv import write_market_interval
 
 # Bluesky settings
@@ -336,9 +336,9 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher",
 
     for auction_start in auction_intervals:
 
-        if auction_start >= 11: # remove this to run the full simulation, this is just to run the first auction
-            break
-        else: 
+        #if auction_start >= 11: # remove this to run the full simulation, this is just to run the first auction
+        #    break
+        #else: 
             auction_end = auction_start + auction_freq
 
             # This is to ensure it doest not rebase the flights beyond simulation end time
@@ -375,12 +375,28 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher",
             write_market_interval(auction_start, auction_end, interval_flights, output_folder)
 
 
+
+
+
+
+            print()
+            print('====')
+            print()
+            print(json.dumps(interval_flights, indent = 4))
+            print()
+            print()
+            print('beginning auction =====')
+            print()
+
+            allocated_flights = None
+
             if not interval_flights:
                 continue
 
             # Determine flight allocation and payment
             current_timing_info = {
                 "start_time" : auction_start,
+                "auction_end_time": auction_end,
                 "end_time": timing_info["end_time"],
                 "time_step": timing_info["time_step"]
             }
@@ -393,10 +409,27 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher",
                 allocated_flights, payments = allocation_and_payment(
                     filtered_vertiport_usage, interval_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
                 )
-            elif method == "ascending-auction":
+            elif method == "ascending_auction":
                 allocated_flights, payments = ascending_auc_allocation_and_payment(
-                    filtered_vertiport_usage, interval_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
+                    filtered_vertiport_usage, interval_flights, current_timing_info, filtered_routes, filtered_vertiports,
+                    output_folder, save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
                 )
+
+            print()
+            print('finished allocation: ------')
+            print()
+            #print(allocated_flights)
+            print()
+            print()
+            print('Y: ------')
+            print()
+            print()
+            print()
+            #print(payments)
+            print()
+            print()
+            print('Z: ------')
+
             if initial_allocation:
                 initial_allocation = False
 

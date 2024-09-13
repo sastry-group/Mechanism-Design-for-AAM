@@ -3,11 +3,7 @@ import os
 from itertools import product
 
 # Define the parameter values to vary
-<<<<<<< HEAD
-BETA_values = [30]
-=======
-BETA_values = [1000, 100, 10]
->>>>>>> equilibrium-dropout
+BETA_values = [100]
 dropout_good_valuation_values = [1]
 default_good_valuation_values = [1]
 price_default_good_values = [10]

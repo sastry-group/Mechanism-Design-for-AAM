@@ -35,7 +35,6 @@ MAX_NUM_ITERATIONS = 1000
 # price_default_good = 10
 
 
-
 def build_graph(vertiport_status, timing_info):
     """
 
@@ -648,8 +647,176 @@ def find_dep_and_arrival_nodes(edges):
     
     return dep_node_found, arrival_node_found
 
+class time_step:
+    flight_id = ""
+    time_no = -1
+    spot = ""
+    price = 0
+    def __init__(self, id_, time_, spot_):
+        self.time_no = time_
+        self.flight_id = id_
+        self.spot = spot_
+    def raise_val(self):
+        self.price += 1
 
-def asc_auc_allocation_and_payment(vertiport_usage, flights, timing_info, routes_data, vertiports, 
+class bundle:
+    flight_id = ""
+    time = -1
+    flight = ()
+    times = []
+    value = 0
+    def __init__(self, id_, start, end, price, spot):
+        flight_id = id_
+        value = price
+        for i in range(start,end):
+            self.times += [time_step(flight_id, i, spot)]
+    def update_flight_path(self, depart_time, depart_port, arrive_time, arrive_port):
+        dep_id = depart_port + '_' + str(depart_time) + '_dep'
+        arr_id = arrive_port + '_' + str(arrive_time) + '_arr'
+        self.flight = (self.flight_id, (dep_id, arr_id))
+        return self.flight
+    
+    def __init__(self, f,t,v):
+        self.flight_id = f
+        self.times = t
+        self.value =v
+    
+    
+    def findCost(self, current_time):
+        tot = 0
+        for i in range(current_time,len(self.times)):
+            tot += self.times[i].price
+        return tot
+
+
+#[('AC004', ('V001_13_dep', 'V002_18_arr')), ('AC005', ('V007_17_dep', 'V002_55_arr')), ('AC008', ('V003_20_dep', 'V006_42_arr'))]
+
+def process_request(id_, depart_port, arrive_port, depart_time, arrive_time, maxBid, start_time, end_time, step, decay):
+    reqs = []
+    if(depart_port == arrive_port):
+        reqs += [bundle(id_, 1, 100, maxBid, depart_port)]
+        return reqs
+    curtimesarray = [time_step(id_, i, 'NA') for i in range(start_time, end_time + 1, step)]
+
+    for i in range(start_time, depart_time, step):
+        curtimesarray[i].spot =  depart_port
+
+    curtimesarray[depart_time].spot = depart_port+'_dep'
+
+    for i in range(depart_time + 1, arrive_time, step):
+        curtimesarray[i].spot = depart_port+arrive_port
+
+    curtimesarray[arrive_time].spot += arrive_port+'_arr'
+
+    for i in range(arrive_time + 1, end_time, step):
+        curtimesarray[i].spot = arrive_port
+    
+
+    delayed_dep_t = depart_time 
+    delayed_arr_t = arrive_time
+    
+    nb = bundle(id_, curtimesarray, maxBid)
+    nb.update_flight_path(depart_time, depart_port, arrive_time, arrive_port)
+    reqs += [nb]
+    while(delayed_arr_t + 1 < end_time): # arrive_port + _arr on last timestep
+        c2 = [tm for tm in reqs[-1].times]
+        c2[delayed_dep_t].spot = depart_port
+        c2[delayed_dep_t + 1].spot = depart_port + '_dep'
+        c2[delayed_arr_t].spot = depart_port + arrive_port
+        c2[delayed_arr_t + 1].spot = arrive_port + '_arr'
+        delayedBundle = bundle(id_, c2, maxBid * decay)
+        delayedBundle.update_flight_path(delayed_dep_t, depart_port, delayed_arr_t, arrive_port)
+        reqs += [delayedBundle]
+        decay *= 0.95
+        delayed_dep_t += 1
+        delayed_arr_t += 1
+    return reqs 
+
+def multiplicitiesDict(vals): # can optimize
+    print(vals)
+    k = set(vals)
+    s = {}
+    for i in k:
+        s[i] = vals.count(i)
+    return s
+
+def run_auction(reqs, start_time, end_time, capacities):
+    numreq = len(reqs)
+    price_per_req = [0] * numreq
+    final = False
+    pplcnt_log = []
+    maxprice_log = []
+    while(not final):
+        final = True
+        print(numreq)
+        print(price_per_req)
+        for t in range(start_time, end_time):
+            print(t)
+            #look through all requests at a time step
+            spots_reqs = []
+            for r in reqs:
+                #print(type(r.times[t]))
+                spots_reqs += [[r.times[t].spot, r.flight_id]]
+            
+
+            print()
+
+            spots_reqs = [e[0] for e in list({tuple(i) for i in spots_reqs})] # ensuring same flights arent competing by creating set of used spots including flight ids
+            print('A  -----------------')
+            multiplicities = multiplicitiesDict(spots_reqs)
+            print('B ----------')
+            pricedOut = []
+            for r_ix in range(len(reqs)):
+                r = reqs[r_ix]
+                #compare each request size to capacity
+                #print(r.times[t].spot,multiplicities[r.times[t].spot], capacities[r.times[t].spot])
+                if(multiplicities[r.times[t].spot] > capacities[r.times[t].spot]): # contested
+                    final = False
+                     #if larger increase price of time step at each request & total flight price
+                    r.times[t].raise_val()
+                    price_per_req[r_ix] += 1
+                    if(price_per_req[r_ix] >= r.value):
+                        pricedOut += [r_ix]
+            for n in pricedOut[::-1]:
+                reqs.pop(n)
+                price_per_req.pop(n)
+            pplcnt_log += [[t, len(price_per_req)]]
+            maxprice_log += [[t, max(price_per_req)]]
+            numreq = len(reqs)
+    
+    return reqs, price_per_req, pplcnt_log, maxprice_log
+
+
+def define_capacities(vertiport_data, route_data):
+    capacities = {}
+    for i in route_data:
+        dep_port = i["origin_vertiport_id"]
+        arr_port = i["destination_vertiport_id"]
+        capacities[dep_port+arr_port] = i["capacity"]
+    for i in vertiport_data:
+        capacities[i] = vertiport_data[i]["hold_capacity"]
+        capacities[i+i] = vertiport_data[i]["hold_capacity"] #route to self
+        capacities[i+'_dep'] = vertiport_data[i]["takeoff_capacity"]
+        capacities[i+'_arr'] = vertiport_data[i]["landing_capacity"]
+
+
+    return capacities
+
+def pickHighest(requests, start_time):
+    mxMap = {}
+    mxReq = {}
+    for r in requests:
+        mxMap[r.flight_id] = -1
+        mxReq[r.flight_id] = None
+    for r in requests:
+        tot = r.findCost(start_time)
+        if(tot>mxMap[r.flight_id]):
+            mxMap[r.flight_id] = tot 
+            mxReq[r.flight_id] = r
+    return mxReq.values()
+
+
+def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, routes_data, vertiports, 
                                   output_folder=None, save_file=None, initial_allocation=True, design_parameters=None):
 
     market_auction_time=timing_info["start_time"]
@@ -668,93 +835,50 @@ def asc_auc_allocation_and_payment(vertiport_usage, flights, timing_info, routes
         default_good_valuation = 1
         price_default_good = 10
 
-    # Construct market
-    agent_information, market_information, bookkeeping = construct_market(market_graph, flights, timing_info, routes_data, vertiport_usage, 
-                                                                          default_good_valuation=default_good_valuation, 
-                                                                          dropout_good_valuation=dropout_good_valuation, BETA=BETA)
 
-    # Run market
-    goods_list, times_list = bookkeeping
-    num_goods, num_agents = len(goods_list), len(flights)
-    u, agent_constraints, agent_goods_lists = agent_information
-    # y = np.random.rand(num_agents, num_goods-2)*10
-    y = np.random.rand(num_agents, num_goods)*10
-    p = np.random.rand(num_goods)*10
-    p[-2] = price_default_good 
-    p[-1] = 0 # dropout good
-    r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
-    # x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
-    x, prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot = run_market((y,p,r), agent_information, market_information, 
-                                                             bookkeeping, rational=False, price_default_good=price_default_good)
+
+    capacities = define_capacities(vertiport_usage.vertiports, routes_data)
+
+    requests = []
+    for f in flights.keys():
+        flight_data = flights[f]
+        origin_vp = flight_data["origin_vertiport_id"]
+        flight_req = flight_data["requests"]
+        decay = flight_data["decay_factor"]
+        for req_index in flight_req.keys():
+            fr = flight_req[req_index]
+            dest_vp = fr["destination_vertiport_id"]
+            if(origin_vp == dest_vp):
+                continue
+            dep_time = fr["request_departure_time"]
+            arr_time = fr["request_arrival_time"]
+            val = fr["valuation"]
+            requests += process_request(f, origin_vp, dest_vp, dep_time, arr_time, val, timing_info["start_time"], timing_info["end_time"], timing_info["time_step"], decay)
     
+    #for i in requests:
+    #    print(i.flight)
+
+
+    allocated_requests, final_prices_per_req, agents_left_time, price_change = run_auction(requests, timing_info["start_time"], timing_info["auction_end_time"], capacities)
+
+    allocated_requests = pickHighest(allocated_requests, market_auction_time)
+
+    print('FINAL')
+
+    #print(allocated_requests)
     
-    plotting_market(data_to_plot, output_folder, market_auction_time)
-    
-    # Building edge information for mapping - move this to separate function
-    edge_information = build_edge_information(goods_list)
-    agent_allocations, agent_dropout_x, agent_indices, agent_edge_information = process_allocations(x, edge_information, agent_goods_lists)
-    
-    int_allocations = []
-    utilities = []
-    dropouts = []
-    budgets = []
-    constraints = []
-    agents_indices = []
-    int_allocations_full = []
-    start_time_sample = time.time()
-    print("Sampling edges ...")
-    for i in range(num_agents):
-        agent_number = i + 1
-        frac_allocations = agent_allocations[i]
-        start_node= list(agent_edge_information[i].values())[0][0]
-        extended_graph, agent_allocation = agent_probability_graph_extended(agent_edge_information[i], frac_allocations, agent_number, output_folder)
-        sampled_path_extended, sampled_edges, int_allocation, dropout_flag = sample_path(extended_graph, start_node, agent_allocation, agent_dropout_x[i])
-        if dropout_flag:
-            dropouts.append(flights[i]["flight_id"])
-        else:
-            # print("Sampled Path:", sampled_path_extended)
-            # print("Sampled Edges:", sampled_edges)
-            # plot_sample_path_extended(extended_graph, sampled_path_extended, agent_number, output_folder)
-            int_allocations.append(int_allocation)
-            int_allocation_full = mapping_agent_to_full_data(edge_information, sampled_edges)
-            int_allocations_full.append(int_allocation_full)
-            utilities.append(u[i]) # removing default and dropout good
-            budgets.append(adjusted_budgets[i])
-            constraints.append(agent_constraints[i])
-            agents_indices.append(agent_indices)
-
-    int_allocations_full = np.array(int_allocations_full)
-    print(f"Time to sample: {time.time() - start_time_sample:.5f}")
-
-    # IOP for contested goods
-    _ , capacity, _ = market_information
-    capacity = capacity[:-2] # removing default and dropout good
-    prices = prices[:-2] # removing default and dropout good
-    new_allocations, new_prices = int_optimization(int_allocations_full, capacity, budgets, prices, utilities, constraints, agents_indices, int_allocations, output_folder)
-    payment = np.sum(new_prices * new_allocations, axis=1)
-    end_capacity = capacity - np.sum(new_allocations, axis=0)
-
-    new_allocations_goods = mapping_goods_from_allocation(new_allocations, goods_list)
-
-    # Allocation and Rebased
     allocation = []
-    rebased = []
-    for i, (flight_id, flight) in enumerate(flights.items()):
-        dep_node, arrival_node = find_dep_and_arrival_nodes(new_allocations_goods[i])
-        if dep_node:
-            good = (dep_node, arrival_node)
-            allocation.append((flight_id, good))
-        else:
-            rebased.append((flight_id, '000'))
-    end_agent_status_data = (allocation, rebased, dropouts)
 
+    #print(allocated_requests)                                       
 
+    allocation = [ar.flight for ar in allocated_requests]
+    rebased = None
 
-    write_output(flights, agent_constraints, edge_information, prices, new_prices, capacity, end_capacity,
-                agent_allocations, agent_indices, agent_edge_information, agent_goods_lists, 
-                int_allocations, new_allocations_goods, u, adjusted_budgets, payment, end_agent_status_data, market_auction_time, output_folder)
+    #write_output(flights, agent_constraints, edge_information, prices, new_prices, capacity, end_capacity,
+    #            agent_allocations, agent_indices, agent_edge_information, agent_goods_lists, 
+    #            int_allocations, new_allocations_goods, u, adjusted_budgets, payment, end_agent_status_data, market_auction_time, output_folder)
     
-    return allocation, rebased, None
+    return allocation, None
 
 
 

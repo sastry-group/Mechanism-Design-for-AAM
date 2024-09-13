@@ -8478,3 +8478,1726 @@
 2024-09-11 16:25:12,240 - INFO - NumExpr defaulting to 8 threads.
 2024-09-11 16:25:16,933 - INFO - NumExpr defaulting to 8 threads.
 2024-09-11 16:34:12,948 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:06:59,018 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:07:01,006 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:07:02,522 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:08:44,740 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:08:46,582 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:08:48,085 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:09:53,727 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:09:55,292 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:09:56,824 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:10:15,458 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:10:17,006 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:10:18,512 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:11:18,793 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:11:20,331 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:11:21,820 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:37:50,776 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:37:52,596 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 20:37:54,107 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 21:00:18,833 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 21:03:45,827 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 21:32:30,763 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 21:58:47,563 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 22:05:12,994 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 22:09:05,987 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 22:10:39,289 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 22:11:40,925 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 22:33:14,796 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 22:39:16,166 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 22:41:56,486 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 23:17:39,738 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 23:18:57,578 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 23:18:59,491 - INFO - NumExpr defaulting to 8 threads.
+2024-09-11 23:24:00,526 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:00,527 - INFO - Agent opt - Optimization result: -58614.906902244446
+2024-09-11 23:24:00,569 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:00,569 - INFO - Agent opt - Optimization result: -45979.26748456217
+2024-09-11 23:24:00,607 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:00,607 - INFO - Agent opt - Optimization result: -53682.52582085495
+2024-09-11 23:24:00,782 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:00,782 - INFO - Optimization result: -27642.0671864293
+2024-09-11 23:24:00,798 - INFO - Iteration: 1, Market Clearing Error: 124.285881582897, Tolerance: 0.12477980605851254
+2024-09-11 23:24:01,069 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:01,069 - INFO - Agent opt - Optimization result: -25201.404311953283
+2024-09-11 23:24:01,353 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:01,353 - INFO - Agent opt - Optimization result: -15379.746168813139
+2024-09-11 23:24:01,739 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:01,739 - INFO - Agent opt - Optimization result: -7480.208041456823
+2024-09-11 23:24:01,908 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:01,908 - INFO - Optimization result: -1989.3436982121407
+2024-09-11 23:24:01,924 - INFO - Iteration: 2, Market Clearing Error: 11.575900225401107, Tolerance: 0.12477980605851254
+2024-09-11 23:24:02,145 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:02,145 - INFO - Agent opt - Optimization result: -4622.80519527752
+2024-09-11 23:24:02,388 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:02,388 - INFO - Agent opt - Optimization result: -2793.95103339766
+2024-09-11 23:24:02,513 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:02,513 - INFO - Agent opt - Optimization result: 3279.46955283516
+2024-09-11 23:24:02,688 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:02,688 - INFO - Optimization result: -2760.749412181107
+2024-09-11 23:24:02,704 - INFO - Iteration: 3, Market Clearing Error: 13.646777207704682, Tolerance: 0.12477980605851254
+2024-09-11 23:24:02,883 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:02,883 - INFO - Agent opt - Optimization result: -552.0570197544735
+2024-09-11 23:24:02,969 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:02,969 - INFO - Agent opt - Optimization result: -612.0117737775821
+2024-09-11 23:24:03,090 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:03,090 - INFO - Agent opt - Optimization result: 1092.886477493936
+2024-09-11 23:24:03,251 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:03,251 - INFO - Optimization result: -1507.6242765356276
+2024-09-11 23:24:03,267 - INFO - Iteration: 4, Market Clearing Error: 8.13889911784475, Tolerance: 0.12477980605851254
+2024-09-11 23:24:03,407 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:03,407 - INFO - Agent opt - Optimization result: 674.6414653013508
+2024-09-11 23:24:03,655 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:03,655 - INFO - Agent opt - Optimization result: 492.4284668804936
+2024-09-11 23:24:03,747 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:03,747 - INFO - Agent opt - Optimization result: 651.1484558849561
+2024-09-11 23:24:03,913 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:03,913 - INFO - Optimization result: -950.0434435860644
+2024-09-11 23:24:03,929 - INFO - Iteration: 5, Market Clearing Error: 3.718681536156687, Tolerance: 0.12477980605851254
+2024-09-11 23:24:04,185 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:04,185 - INFO - Agent opt - Optimization result: 929.1258936858837
+2024-09-11 23:24:04,481 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:04,481 - INFO - Agent opt - Optimization result: 707.6187540154087
+2024-09-11 23:24:04,684 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:04,684 - INFO - Agent opt - Optimization result: 923.8069415819314
+2024-09-11 23:24:04,842 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:04,842 - INFO - Optimization result: -866.6270520942004
+2024-09-11 23:24:04,858 - INFO - Iteration: 6, Market Clearing Error: 2.7114876621846586, Tolerance: 0.12477980605851254
+2024-09-11 23:24:05,033 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:05,033 - INFO - Agent opt - Optimization result: 833.327329658309
+2024-09-11 23:24:05,324 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:05,324 - INFO - Agent opt - Optimization result: 967.5075865067095
+2024-09-11 23:24:05,364 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:05,364 - INFO - Agent opt - Optimization result: 1205.907438820509
+2024-09-11 23:24:05,563 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:05,563 - INFO - Optimization result: -861.7812391640721
+2024-09-11 23:24:05,579 - INFO - Iteration: 7, Market Clearing Error: 2.543774098490476, Tolerance: 0.12477980605851254
+2024-09-11 23:24:05,716 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:05,716 - INFO - Agent opt - Optimization result: 488.32591037157727
+2024-09-11 23:24:06,024 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:06,024 - INFO - Agent opt - Optimization result: 966.2173732446302
+2024-09-11 23:24:06,118 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:06,118 - INFO - Agent opt - Optimization result: 1302.664085424371
+2024-09-11 23:24:06,283 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:06,283 - INFO - Optimization result: -875.0325600195162
+2024-09-11 23:24:06,299 - INFO - Iteration: 8, Market Clearing Error: 2.854312301932496, Tolerance: 0.12477980605851254
+2024-09-11 23:24:06,653 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:06,653 - INFO - Agent opt - Optimization result: 262.31479712595683
+2024-09-11 23:24:06,959 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:06,960 - INFO - Agent opt - Optimization result: 780.4007214318294
+2024-09-11 23:24:07,116 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:07,116 - INFO - Agent opt - Optimization result: 1292.230846199077
+2024-09-11 23:24:07,274 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:07,274 - INFO - Optimization result: -861.6677821478054
+2024-09-11 23:24:07,291 - INFO - Iteration: 9, Market Clearing Error: 2.494811338103749, Tolerance: 0.12477980605851254
+2024-09-11 23:24:07,726 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:07,726 - INFO - Agent opt - Optimization result: 374.9530297749138
+2024-09-11 23:24:08,107 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:08,107 - INFO - Agent opt - Optimization result: 680.9888290382265
+2024-09-11 23:24:08,560 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:08,560 - INFO - Agent opt - Optimization result: 1035.4766661342971
+2024-09-11 23:24:08,720 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:08,720 - INFO - Optimization result: -835.3363396071858
+2024-09-11 23:24:08,736 - INFO - Iteration: 10, Market Clearing Error: 2.1777183406384157, Tolerance: 0.12477980605851254
+2024-09-11 23:24:08,921 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:08,921 - INFO - Agent opt - Optimization result: 569.1092242490819
+2024-09-11 23:24:09,322 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:09,322 - INFO - Agent opt - Optimization result: 813.5462533030226
+2024-09-11 23:24:09,435 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:09,436 - INFO - Agent opt - Optimization result: 813.3076335830243
+2024-09-11 23:24:09,583 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:09,583 - INFO - Optimization result: -803.9921640838309
+2024-09-11 23:24:09,599 - INFO - Iteration: 11, Market Clearing Error: 1.587282268405169, Tolerance: 0.12477980605851254
+2024-09-11 23:24:10,030 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:10,030 - INFO - Agent opt - Optimization result: 916.4213773750723
+2024-09-11 23:24:10,182 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:10,182 - INFO - Agent opt - Optimization result: 993.559114789723
+2024-09-11 23:24:10,640 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:10,641 - INFO - Agent opt - Optimization result: 644.3357541783199
+2024-09-11 23:24:10,787 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:10,787 - INFO - Optimization result: -803.976475355991
+2024-09-11 23:24:10,803 - INFO - Iteration: 12, Market Clearing Error: 1.2311911442800099, Tolerance: 0.12477980605851254
+2024-09-11 23:24:11,347 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:11,348 - INFO - Agent opt - Optimization result: 1347.2673149523407
+2024-09-11 23:24:11,728 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:11,728 - INFO - Agent opt - Optimization result: 1226.1510532310635
+2024-09-11 23:24:12,192 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:12,193 - INFO - Agent opt - Optimization result: 559.9062932028911
+2024-09-11 23:24:12,339 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:12,339 - INFO - Optimization result: -800.6883378251471
+2024-09-11 23:24:12,355 - INFO - Iteration: 13, Market Clearing Error: 1.1989173926054417, Tolerance: 0.12477980605851254
+2024-09-11 23:24:12,854 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:12,854 - INFO - Agent opt - Optimization result: 1712.551894979225
+2024-09-11 23:24:13,233 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:13,233 - INFO - Agent opt - Optimization result: 1440.1080016195287
+2024-09-11 23:24:13,684 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:13,684 - INFO - Agent opt - Optimization result: 571.730095061708
+2024-09-11 23:24:13,839 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:13,839 - INFO - Optimization result: -803.2714193658089
+2024-09-11 23:24:13,855 - INFO - Iteration: 14, Market Clearing Error: 1.2251654223290172, Tolerance: 0.12477980605851254
+2024-09-11 23:24:14,305 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:14,305 - INFO - Agent opt - Optimization result: 1937.9518105990835
+2024-09-11 23:24:14,643 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:14,643 - INFO - Agent opt - Optimization result: 1623.4269996158139
+2024-09-11 23:24:14,836 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:14,836 - INFO - Agent opt - Optimization result: 677.4474606761246
+2024-09-11 23:24:14,984 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:14,984 - INFO - Optimization result: -794.5526619158579
+2024-09-11 23:24:15,001 - INFO - Iteration: 15, Market Clearing Error: 0.9105222949110203, Tolerance: 0.12477980605851254
+2024-09-11 23:24:15,508 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:15,508 - INFO - Agent opt - Optimization result: 2022.7310750600955
+2024-09-11 23:24:15,896 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:15,897 - INFO - Agent opt - Optimization result: 1801.022419650229
+2024-09-11 23:24:16,102 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:16,102 - INFO - Agent opt - Optimization result: 858.8948711836124
+2024-09-11 23:24:16,248 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:16,248 - INFO - Optimization result: -789.1040358433489
+2024-09-11 23:24:16,264 - INFO - Iteration: 16, Market Clearing Error: 0.6530911544516723, Tolerance: 0.12477980605851254
+2024-09-11 23:24:16,694 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:16,695 - INFO - Agent opt - Optimization result: 2018.4500999875772
+2024-09-11 23:24:16,996 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:16,996 - INFO - Agent opt - Optimization result: 1986.733924895706
+2024-09-11 23:24:17,209 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:17,210 - INFO - Agent opt - Optimization result: 1097.6951159700993
+2024-09-11 23:24:17,359 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:17,359 - INFO - Optimization result: -789.0180061666008
+2024-09-11 23:24:17,375 - INFO - Iteration: 17, Market Clearing Error: 0.7601677076623548, Tolerance: 0.12477980605851254
+2024-09-11 23:24:17,828 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:17,829 - INFO - Agent opt - Optimization result: 1990.8303332890805
+2024-09-11 23:24:18,112 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:18,112 - INFO - Agent opt - Optimization result: 2177.7132027018056
+2024-09-11 23:24:18,697 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:18,698 - INFO - Agent opt - Optimization result: 1361.6051483934993
+2024-09-11 23:24:18,847 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:18,847 - INFO - Optimization result: -784.6355820515129
+2024-09-11 23:24:18,863 - INFO - Iteration: 18, Market Clearing Error: 0.6845970866381926, Tolerance: 0.12477980605851254
+2024-09-11 23:24:19,260 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:19,260 - INFO - Agent opt - Optimization result: 1978.5197012682436
+2024-09-11 23:24:19,582 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:19,582 - INFO - Agent opt - Optimization result: 2358.4915208737652
+2024-09-11 23:24:20,131 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:20,131 - INFO - Agent opt - Optimization result: 1619.9642231660137
+2024-09-11 23:24:20,276 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:20,277 - INFO - Optimization result: -783.9811298171142
+2024-09-11 23:24:20,293 - INFO - Iteration: 19, Market Clearing Error: 0.36964139617878766, Tolerance: 0.12477980605851254
+2024-09-11 23:24:20,643 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:20,643 - INFO - Agent opt - Optimization result: 1987.8832500988124
+2024-09-11 23:24:20,989 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:20,989 - INFO - Agent opt - Optimization result: 2520.8658488834612
+2024-09-11 23:24:21,459 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:21,459 - INFO - Agent opt - Optimization result: 1843.8892704831653
+2024-09-11 23:24:21,612 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:21,612 - INFO - Optimization result: -784.1557044206544
+2024-09-11 23:24:21,629 - INFO - Iteration: 20, Market Clearing Error: 0.4433964755364565, Tolerance: 0.12477980605851254
+2024-09-11 23:24:21,885 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:21,885 - INFO - Agent opt - Optimization result: 2008.5399591291914
+2024-09-11 23:24:22,197 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:22,197 - INFO - Agent opt - Optimization result: 2654.7562994759323
+2024-09-11 23:24:22,831 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:22,831 - INFO - Agent opt - Optimization result: 2017.8673534577138
+2024-09-11 23:24:22,980 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:22,980 - INFO - Optimization result: -784.3321520008678
+2024-09-11 23:24:22,996 - INFO - Iteration: 21, Market Clearing Error: 0.5114018067607362, Tolerance: 0.12477980605851254
+2024-09-11 23:24:23,203 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:23,203 - INFO - Agent opt - Optimization result: 2030.6908988026419
+2024-09-11 23:24:23,434 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:23,434 - INFO - Agent opt - Optimization result: 2752.8280364584894
+2024-09-11 23:24:23,945 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:23,945 - INFO - Agent opt - Optimization result: 2141.5052499158646
+2024-09-11 23:24:24,097 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:24,097 - INFO - Optimization result: -781.9483074611252
+2024-09-11 23:24:24,113 - INFO - Iteration: 22, Market Clearing Error: 0.34622120650516786, Tolerance: 0.12477980605851254
+2024-09-11 23:24:24,518 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:24,519 - INFO - Agent opt - Optimization result: 2005.6895848692238
+2024-09-11 23:24:24,743 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:24,743 - INFO - Agent opt - Optimization result: 2795.9319687461434
+2024-09-11 23:24:25,318 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:25,318 - INFO - Agent opt - Optimization result: 2221.3329137747496
+2024-09-11 23:24:25,472 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:25,472 - INFO - Optimization result: -781.3616978303171
+2024-09-11 23:24:25,489 - INFO - Iteration: 23, Market Clearing Error: 0.3515593214711574, Tolerance: 0.12477980605851254
+2024-09-11 23:24:25,673 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:25,673 - INFO - Agent opt - Optimization result: 1941.7326246167913
+2024-09-11 23:24:25,891 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:25,891 - INFO - Agent opt - Optimization result: 2796.8338278892243
+2024-09-11 23:24:26,150 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:26,151 - INFO - Agent opt - Optimization result: 2276.208673768711
+2024-09-11 23:24:26,301 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:26,301 - INFO - Optimization result: -781.2475296903783
+2024-09-11 23:24:26,318 - INFO - Iteration: 24, Market Clearing Error: 0.4092054214734565, Tolerance: 0.12477980605851254
+2024-09-11 23:24:26,688 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:26,688 - INFO - Agent opt - Optimization result: 1853.2801579954091
+2024-09-11 23:24:26,926 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:26,926 - INFO - Agent opt - Optimization result: 2768.4705707430107
+2024-09-11 23:24:27,414 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:27,415 - INFO - Agent opt - Optimization result: 2320.2008781784616
+2024-09-11 23:24:27,563 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:27,563 - INFO - Optimization result: -781.1993154889694
+2024-09-11 23:24:27,579 - INFO - Iteration: 25, Market Clearing Error: 0.4665324606261641, Tolerance: 0.12477980605851254
+2024-09-11 23:24:27,723 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:27,723 - INFO - Agent opt - Optimization result: 1757.9565266454765
+2024-09-11 23:24:27,927 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:27,927 - INFO - Agent opt - Optimization result: 2715.957567556918
+2024-09-11 23:24:28,409 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:28,409 - INFO - Agent opt - Optimization result: 2363.68341500155
+2024-09-11 23:24:28,565 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:28,565 - INFO - Optimization result: -780.1338975823164
+2024-09-11 23:24:28,581 - INFO - Iteration: 26, Market Clearing Error: 0.5095960833580782, Tolerance: 0.12477980605851254
+2024-09-11 23:24:28,968 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:28,968 - INFO - Agent opt - Optimization result: 1657.810633114319
+2024-09-11 23:24:29,175 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:29,175 - INFO - Agent opt - Optimization result: 2639.3426735734474
+2024-09-11 23:24:29,578 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:24:29,578 - INFO - Agent opt - Optimization result: 2408.675955636268
+2024-09-11 23:24:29,724 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:24:29,724 - INFO - Optimization result: -777.1865401356382
+2024-09-11 23:24:29,741 - INFO - Iteration: 27, Market Clearing Error: 0.08698890594807134, Tolerance: 0.12477980605851254
+2024-09-11 23:28:52,532 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:52,533 - INFO - Agent opt - Optimization result: -58924.632116983325
+2024-09-11 23:28:52,566 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:52,566 - INFO - Agent opt - Optimization result: -54699.760754609844
+2024-09-11 23:28:52,596 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:52,596 - INFO - Agent opt - Optimization result: -49936.08865325902
+2024-09-11 23:28:52,745 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:28:52,745 - INFO - Optimization result: -27102.541624212136
+2024-09-11 23:28:52,760 - INFO - Iteration: 1, Market Clearing Error: 126.60550711534218, Tolerance: 0.12477980605851254
+2024-09-11 23:28:52,826 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:52,826 - INFO - Agent opt - Optimization result: -21920.378476773192
+2024-09-11 23:28:53,021 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:53,021 - INFO - Agent opt - Optimization result: -19979.081297097033
+2024-09-11 23:28:53,153 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:53,153 - INFO - Agent opt - Optimization result: -10409.066822610523
+2024-09-11 23:28:53,289 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:28:53,289 - INFO - Optimization result: -2159.2194296325056
+2024-09-11 23:28:53,304 - INFO - Iteration: 2, Market Clearing Error: 11.47281630894234, Tolerance: 0.12477980605851254
+2024-09-11 23:28:53,462 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:53,462 - INFO - Agent opt - Optimization result: -3121.203836494364
+2024-09-11 23:28:53,567 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:53,567 - INFO - Agent opt - Optimization result: -6063.9863902558845
+2024-09-11 23:28:53,725 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:53,726 - INFO - Agent opt - Optimization result: 1514.3415790487647
+2024-09-11 23:28:53,894 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:28:53,897 - INFO - Optimization result: -2450.4751677581344
+2024-09-11 23:28:53,913 - INFO - Iteration: 3, Market Clearing Error: 12.610458964833672, Tolerance: 0.12477980605851254
+2024-09-11 23:28:53,980 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:53,980 - INFO - Agent opt - Optimization result: -2137.12313144415
+2024-09-11 23:28:54,075 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:54,075 - INFO - Agent opt - Optimization result: -2420.7345548084713
+2024-09-11 23:28:54,100 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:54,100 - INFO - Agent opt - Optimization result: 579.555576891217
+2024-09-11 23:28:54,268 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:28:54,268 - INFO - Optimization result: -1559.8867909436237
+2024-09-11 23:28:54,283 - INFO - Iteration: 4, Market Clearing Error: 8.15089172800838, Tolerance: 0.12477980605851254
+2024-09-11 23:28:54,334 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:54,334 - INFO - Agent opt - Optimization result: -1435.1126948946044
+2024-09-11 23:28:54,396 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:54,396 - INFO - Agent opt - Optimization result: -207.39846054684494
+2024-09-11 23:28:54,513 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:54,513 - INFO - Agent opt - Optimization result: 634.9016327460939
+2024-09-11 23:28:54,653 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:28:54,653 - INFO - Optimization result: -1113.3428716948158
+2024-09-11 23:28:54,668 - INFO - Iteration: 5, Market Clearing Error: 4.505956574102566, Tolerance: 0.12477980605851254
+2024-09-11 23:28:54,797 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:54,797 - INFO - Agent opt - Optimization result: -472.19133991914623
+2024-09-11 23:28:54,823 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:54,823 - INFO - Agent opt - Optimization result: 187.64985883104214
+2024-09-11 23:28:54,971 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:54,971 - INFO - Agent opt - Optimization result: 1073.3829233294978
+2024-09-11 23:28:55,110 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:28:55,111 - INFO - Optimization result: -994.3147605307421
+2024-09-11 23:28:55,125 - INFO - Iteration: 6, Market Clearing Error: 2.999829453762262, Tolerance: 0.12477980605851254
+2024-09-11 23:28:55,257 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:55,257 - INFO - Agent opt - Optimization result: 407.57683797623866
+2024-09-11 23:28:55,301 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:55,301 - INFO - Agent opt - Optimization result: 232.31260787456728
+2024-09-11 23:28:55,357 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:55,358 - INFO - Agent opt - Optimization result: 1483.0227774501182
+2024-09-11 23:28:55,494 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:28:55,495 - INFO - Optimization result: -982.4246737466686
+2024-09-11 23:28:55,509 - INFO - Iteration: 7, Market Clearing Error: 2.7342562671908768, Tolerance: 0.12477980605851254
+2024-09-11 23:28:55,725 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:55,725 - INFO - Agent opt - Optimization result: 850.1696970575484
+2024-09-11 23:28:55,776 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:55,777 - INFO - Agent opt - Optimization result: 359.64964625245045
+2024-09-11 23:28:55,907 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:55,907 - INFO - Agent opt - Optimization result: 1570.2356159419387
+2024-09-11 23:28:56,047 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:28:56,047 - INFO - Optimization result: -952.2925794154145
+2024-09-11 23:28:56,062 - INFO - Iteration: 8, Market Clearing Error: 2.223080231513904, Tolerance: 0.12477980605851254
+2024-09-11 23:28:56,199 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:56,199 - INFO - Agent opt - Optimization result: 1056.9833794150788
+2024-09-11 23:28:56,223 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:56,223 - INFO - Agent opt - Optimization result: 376.08346465156416
+2024-09-11 23:28:56,301 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:56,301 - INFO - Agent opt - Optimization result: 1360.3802069486796
+2024-09-11 23:28:56,437 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:28:56,437 - INFO - Optimization result: -947.5034071653868
+2024-09-11 23:28:56,451 - INFO - Iteration: 9, Market Clearing Error: 1.9582666111293163, Tolerance: 0.12477980605851254
+2024-09-11 23:28:56,580 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:56,580 - INFO - Agent opt - Optimization result: 1216.027158166841
+2024-09-11 23:28:56,660 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:56,660 - INFO - Agent opt - Optimization result: 464.39889821313056
+2024-09-11 23:28:57,012 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:57,012 - INFO - Agent opt - Optimization result: 1060.5313440156076
+2024-09-11 23:28:57,138 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:28:57,138 - INFO - Optimization result: -931.4417936943049
+2024-09-11 23:28:57,152 - INFO - Iteration: 10, Market Clearing Error: 1.8665142661373588, Tolerance: 0.12477980605851254
+2024-09-11 23:28:57,279 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:57,279 - INFO - Agent opt - Optimization result: 1289.5436459248886
+2024-09-11 23:28:57,376 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:57,377 - INFO - Agent opt - Optimization result: 599.6156843471683
+2024-09-11 23:28:57,667 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:57,667 - INFO - Agent opt - Optimization result: 788.9224553598078
+2024-09-11 23:28:57,793 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:28:57,793 - INFO - Optimization result: -919.4405660799811
+2024-09-11 23:28:57,808 - INFO - Iteration: 11, Market Clearing Error: 1.264025147222995, Tolerance: 0.12477980605851254
+2024-09-11 23:28:58,079 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:58,079 - INFO - Agent opt - Optimization result: 1385.399244301553
+2024-09-11 23:28:58,139 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:58,139 - INFO - Agent opt - Optimization result: 776.6395871987451
+2024-09-11 23:28:58,325 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:58,325 - INFO - Agent opt - Optimization result: 559.0657226922601
+2024-09-11 23:28:58,452 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:28:58,452 - INFO - Optimization result: -916.0216467441583
+2024-09-11 23:28:58,466 - INFO - Iteration: 12, Market Clearing Error: 1.2646329454215761, Tolerance: 0.12477980605851254
+2024-09-11 23:28:58,814 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:58,814 - INFO - Agent opt - Optimization result: 1586.8311786537201
+2024-09-11 23:28:58,879 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:58,879 - INFO - Agent opt - Optimization result: 975.5924369343618
+2024-09-11 23:28:59,174 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:59,175 - INFO - Agent opt - Optimization result: 366.53189271145607
+2024-09-11 23:28:59,299 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:28:59,299 - INFO - Optimization result: -910.095192202033
+2024-09-11 23:28:59,314 - INFO - Iteration: 13, Market Clearing Error: 0.9567427051481134, Tolerance: 0.12477980605851254
+2024-09-11 23:28:59,649 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:59,649 - INFO - Agent opt - Optimization result: 1865.4433969559702
+2024-09-11 23:28:59,728 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:59,728 - INFO - Agent opt - Optimization result: 1185.747349202164
+2024-09-11 23:28:59,835 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:28:59,835 - INFO - Agent opt - Optimization result: 230.7890714316401
+2024-09-11 23:28:59,979 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:28:59,979 - INFO - Optimization result: -912.9806150744561
+2024-09-11 23:28:59,994 - INFO - Iteration: 14, Market Clearing Error: 1.0890261322937929, Tolerance: 0.12477980605851254
+2024-09-11 23:29:00,192 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:00,192 - INFO - Agent opt - Optimization result: 2143.0142134735997
+2024-09-11 23:29:00,302 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:00,302 - INFO - Agent opt - Optimization result: 1423.9925334787895
+2024-09-11 23:29:00,373 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:00,373 - INFO - Agent opt - Optimization result: 174.00640553814844
+2024-09-11 23:29:00,496 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:00,496 - INFO - Optimization result: -913.5476562695796
+2024-09-11 23:29:00,510 - INFO - Iteration: 15, Market Clearing Error: 1.1607686149053003, Tolerance: 0.12477980605851254
+2024-09-11 23:29:00,826 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:00,826 - INFO - Agent opt - Optimization result: 2335.137802985168
+2024-09-11 23:29:01,104 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:01,104 - INFO - Agent opt - Optimization result: 1700.7865102796115
+2024-09-11 23:29:01,198 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:01,198 - INFO - Agent opt - Optimization result: 194.09445915640532
+2024-09-11 23:29:01,323 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:01,323 - INFO - Optimization result: -904.5027665523075
+2024-09-11 23:29:01,338 - INFO - Iteration: 16, Market Clearing Error: 1.1436187939442535, Tolerance: 0.12477980605851254
+2024-09-11 23:29:01,683 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:01,683 - INFO - Agent opt - Optimization result: 2403.4810168559134
+2024-09-11 23:29:01,794 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:01,794 - INFO - Agent opt - Optimization result: 1997.5038824139742
+2024-09-11 23:29:01,870 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:01,870 - INFO - Agent opt - Optimization result: 279.08008531575655
+2024-09-11 23:29:01,995 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:01,995 - INFO - Optimization result: -902.9098268186551
+2024-09-11 23:29:02,010 - INFO - Iteration: 17, Market Clearing Error: 0.6970617005803089, Tolerance: 0.12477980605851254
+2024-09-11 23:29:02,330 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:02,331 - INFO - Agent opt - Optimization result: 2362.4781254437708
+2024-09-11 23:29:02,466 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:02,466 - INFO - Agent opt - Optimization result: 2268.2496274511923
+2024-09-11 23:29:02,566 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:02,566 - INFO - Agent opt - Optimization result: 393.13772987946084
+2024-09-11 23:29:02,694 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:02,694 - INFO - Optimization result: -902.3564809054285
+2024-09-11 23:29:02,709 - INFO - Iteration: 18, Market Clearing Error: 0.6936824633360014, Tolerance: 0.12477980605851254
+2024-09-11 23:29:02,900 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:02,900 - INFO - Agent opt - Optimization result: 2262.1761645745155
+2024-09-11 23:29:03,010 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:03,010 - INFO - Agent opt - Optimization result: 2462.37773536787
+2024-09-11 23:29:03,360 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:03,360 - INFO - Agent opt - Optimization result: 512.7626620120864
+2024-09-11 23:29:03,489 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:03,489 - INFO - Optimization result: -901.1713754374532
+2024-09-11 23:29:03,504 - INFO - Iteration: 19, Market Clearing Error: 0.6531441442226323, Tolerance: 0.12477980605851254
+2024-09-11 23:29:03,625 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:03,625 - INFO - Agent opt - Optimization result: 2153.1292149699957
+2024-09-11 23:29:03,928 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:03,928 - INFO - Agent opt - Optimization result: 2546.205661466718
+2024-09-11 23:29:04,287 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:04,287 - INFO - Agent opt - Optimization result: 627.9951226199323
+2024-09-11 23:29:04,415 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:04,415 - INFO - Optimization result: -900.9943467426126
+2024-09-11 23:29:04,430 - INFO - Iteration: 20, Market Clearing Error: 0.676729362488915, Tolerance: 0.12477980605851254
+2024-09-11 23:29:04,670 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:04,670 - INFO - Agent opt - Optimization result: 2073.6631244068785
+2024-09-11 23:29:04,839 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:04,839 - INFO - Agent opt - Optimization result: 2515.8911031360058
+2024-09-11 23:29:05,199 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:05,200 - INFO - Agent opt - Optimization result: 744.1795864019298
+2024-09-11 23:29:05,327 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:05,327 - INFO - Optimization result: -899.1017620695981
+2024-09-11 23:29:05,342 - INFO - Iteration: 21, Market Clearing Error: 0.5876365087798394, Tolerance: 0.12477980605851254
+2024-09-11 23:29:05,629 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:05,629 - INFO - Agent opt - Optimization result: 2032.3616702240638
+2024-09-11 23:29:05,927 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:05,927 - INFO - Agent opt - Optimization result: 2392.157337615336
+2024-09-11 23:29:06,136 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:06,136 - INFO - Agent opt - Optimization result: 867.9266359954388
+2024-09-11 23:29:06,260 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:06,261 - INFO - Optimization result: -899.1939129545403
+2024-09-11 23:29:06,275 - INFO - Iteration: 22, Market Clearing Error: 0.6372210467863697, Tolerance: 0.12477980605851254
+2024-09-11 23:29:06,535 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:06,536 - INFO - Agent opt - Optimization result: 2020.9865387849413
+2024-09-11 23:29:06,791 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:06,791 - INFO - Agent opt - Optimization result: 2209.4466471238156
+2024-09-11 23:29:07,145 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:07,145 - INFO - Agent opt - Optimization result: 1012.5266223547046
+2024-09-11 23:29:07,270 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:07,270 - INFO - Optimization result: -896.0026085478704
+2024-09-11 23:29:07,410 - INFO - Iteration: 23, Market Clearing Error: 0.432191306258216, Tolerance: 0.12477980605851254
+2024-09-11 23:29:07,704 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:07,704 - INFO - Agent opt - Optimization result: 2025.963450137215
+2024-09-11 23:29:07,823 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:07,823 - INFO - Agent opt - Optimization result: 2004.6989274002624
+2024-09-11 23:29:08,001 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:08,001 - INFO - Agent opt - Optimization result: 1173.407748460029
+2024-09-11 23:29:08,126 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:08,126 - INFO - Optimization result: -895.7088597275979
+2024-09-11 23:29:08,141 - INFO - Iteration: 24, Market Clearing Error: 0.4758671353505508, Tolerance: 0.12477980605851254
+2024-09-11 23:29:08,235 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:08,235 - INFO - Agent opt - Optimization result: 2037.6698745585716
+2024-09-11 23:29:08,465 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:08,465 - INFO - Agent opt - Optimization result: 1806.839217386247
+2024-09-11 23:29:08,856 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:08,856 - INFO - Agent opt - Optimization result: 1341.1269735713636
+2024-09-11 23:29:08,984 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:08,984 - INFO - Optimization result: -893.5902915343984
+2024-09-11 23:29:08,999 - INFO - Iteration: 25, Market Clearing Error: 0.3296125836845398, Tolerance: 0.12477980605851254
+2024-09-11 23:29:09,100 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:09,100 - INFO - Agent opt - Optimization result: 2054.321180541876
+2024-09-11 23:29:09,199 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:09,199 - INFO - Agent opt - Optimization result: 1638.0813124323038
+2024-09-11 23:29:09,525 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:09,525 - INFO - Agent opt - Optimization result: 1494.1374467171663
+2024-09-11 23:29:09,653 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:09,653 - INFO - Optimization result: -892.6449149719192
+2024-09-11 23:29:09,668 - INFO - Iteration: 26, Market Clearing Error: 0.2518765190949365, Tolerance: 0.12477980605851254
+2024-09-11 23:29:09,875 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:09,875 - INFO - Agent opt - Optimization result: 2080.3694529898694
+2024-09-11 23:29:10,093 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:10,093 - INFO - Agent opt - Optimization result: 1509.2384802568167
+2024-09-11 23:29:10,247 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:10,248 - INFO - Agent opt - Optimization result: 1628.7155918609108
+2024-09-11 23:29:10,373 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:10,373 - INFO - Optimization result: -891.752866851255
+2024-09-11 23:29:10,388 - INFO - Iteration: 27, Market Clearing Error: 0.23254812279136058, Tolerance: 0.12477980605851254
+2024-09-11 23:29:10,550 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:10,550 - INFO - Agent opt - Optimization result: 2121.6746746163208
+2024-09-11 23:29:10,647 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:10,647 - INFO - Agent opt - Optimization result: 1421.2999374058522
+2024-09-11 23:29:11,004 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:11,004 - INFO - Agent opt - Optimization result: 1740.7501192226637
+2024-09-11 23:29:11,129 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:11,129 - INFO - Optimization result: -890.7872642644546
+2024-09-11 23:29:11,143 - INFO - Iteration: 28, Market Clearing Error: 0.14043940771890642, Tolerance: 0.12477980605851254
+2024-09-11 23:29:11,228 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:11,228 - INFO - Agent opt - Optimization result: 2177.9648164021805
+2024-09-11 23:29:11,487 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:11,487 - INFO - Agent opt - Optimization result: 1369.0163895432224
+2024-09-11 23:29:11,795 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:11,795 - INFO - Agent opt - Optimization result: 1834.5848029409535
+2024-09-11 23:29:11,919 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:11,919 - INFO - Optimization result: -890.0531052294053
+2024-09-11 23:29:11,934 - INFO - Iteration: 29, Market Clearing Error: 0.12532616091362195, Tolerance: 0.12477980605851254
+2024-09-11 23:29:12,068 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:12,068 - INFO - Agent opt - Optimization result: 2242.1089186675035
+2024-09-11 23:29:12,261 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:12,261 - INFO - Agent opt - Optimization result: 1343.7136612095887
+2024-09-11 23:29:12,439 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:12,439 - INFO - Agent opt - Optimization result: 1916.0202026853779
+2024-09-11 23:29:12,573 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:12,573 - INFO - Optimization result: -889.4574255384362
+2024-09-11 23:29:12,588 - INFO - Iteration: 30, Market Clearing Error: 0.15538668469234573, Tolerance: 0.12477980605851254
+2024-09-11 23:29:12,770 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:12,771 - INFO - Agent opt - Optimization result: 2300.3991531710276
+2024-09-11 23:29:12,916 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:12,916 - INFO - Agent opt - Optimization result: 1335.3238973746409
+2024-09-11 23:29:13,211 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:13,212 - INFO - Agent opt - Optimization result: 1987.272313278368
+2024-09-11 23:29:13,343 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:13,343 - INFO - Optimization result: -888.9861212650965
+2024-09-11 23:29:13,358 - INFO - Iteration: 31, Market Clearing Error: 0.2091803017131654, Tolerance: 0.12477980605851254
+2024-09-11 23:29:13,524 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:13,524 - INFO - Agent opt - Optimization result: 2333.2101194691636
+2024-09-11 23:29:13,626 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:13,626 - INFO - Agent opt - Optimization result: 1333.2709285381256
+2024-09-11 23:29:13,978 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:13,978 - INFO - Agent opt - Optimization result: 2046.7953387036466
+2024-09-11 23:29:14,104 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:14,104 - INFO - Optimization result: -888.5937148458353
+2024-09-11 23:29:14,119 - INFO - Iteration: 32, Market Clearing Error: 0.2659232293202157, Tolerance: 0.12477980605851254
+2024-09-11 23:29:14,324 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:14,324 - INFO - Agent opt - Optimization result: 2344.440392405111
+2024-09-11 23:29:14,466 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:14,466 - INFO - Agent opt - Optimization result: 1330.6887390352779
+2024-09-11 23:29:14,761 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:14,761 - INFO - Agent opt - Optimization result: 2090.83814019868
+2024-09-11 23:29:14,886 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:14,886 - INFO - Optimization result: -888.2214834115142
+2024-09-11 23:29:14,900 - INFO - Iteration: 33, Market Clearing Error: 0.31644686469244365, Tolerance: 0.12477980605851254
+2024-09-11 23:29:15,034 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:15,034 - INFO - Agent opt - Optimization result: 2339.325503977614
+2024-09-11 23:29:15,196 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:15,196 - INFO - Agent opt - Optimization result: 1324.5138847151093
+2024-09-11 23:29:15,605 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:15,605 - INFO - Agent opt - Optimization result: 2116.060009643069
+2024-09-11 23:29:15,731 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:15,731 - INFO - Optimization result: -887.823119670344
+2024-09-11 23:29:15,746 - INFO - Iteration: 34, Market Clearing Error: 0.3579608476266952, Tolerance: 0.12477980605851254
+2024-09-11 23:29:15,877 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:15,877 - INFO - Agent opt - Optimization result: 2320.57311164709
+2024-09-11 23:29:16,052 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:16,052 - INFO - Agent opt - Optimization result: 1314.5860685845726
+2024-09-11 23:29:16,433 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:16,434 - INFO - Agent opt - Optimization result: 2118.931680693424
+2024-09-11 23:29:16,559 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:16,559 - INFO - Optimization result: -886.9922169071638
+2024-09-11 23:29:16,574 - INFO - Iteration: 35, Market Clearing Error: 0.3943094970936002, Tolerance: 0.12477980605851254
+2024-09-11 23:29:16,729 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:16,729 - INFO - Agent opt - Optimization result: 2292.6016991529877
+2024-09-11 23:29:16,787 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:16,788 - INFO - Agent opt - Optimization result: 1303.7074759151528
+2024-09-11 23:29:17,172 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:17,172 - INFO - Agent opt - Optimization result: 2097.5378033219363
+2024-09-11 23:29:17,303 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:17,303 - INFO - Optimization result: -886.5802821523845
+2024-09-11 23:29:17,318 - INFO - Iteration: 36, Market Clearing Error: 0.3872310299187499, Tolerance: 0.12477980605851254
+2024-09-11 23:29:17,416 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:17,416 - INFO - Agent opt - Optimization result: 2261.0313303452203
+2024-09-11 23:29:17,533 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:17,533 - INFO - Agent opt - Optimization result: 1296.183550099579
+2024-09-11 23:29:17,905 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:17,905 - INFO - Agent opt - Optimization result: 2065.0895228669974
+2024-09-11 23:29:18,038 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:18,038 - INFO - Optimization result: -885.5504223958161
+2024-09-11 23:29:18,053 - INFO - Iteration: 37, Market Clearing Error: 0.4226220286786191, Tolerance: 0.12477980605851254
+2024-09-11 23:29:18,297 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:18,298 - INFO - Agent opt - Optimization result: 2230.8483732522586
+2024-09-11 23:29:18,421 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:18,421 - INFO - Agent opt - Optimization result: 1296.234122846684
+2024-09-11 23:29:18,829 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:29:18,829 - INFO - Agent opt - Optimization result: 2028.4791354428337
+2024-09-11 23:29:18,962 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:29:18,962 - INFO - Optimization result: -883.2540866185586
+2024-09-11 23:29:18,977 - INFO - Iteration: 38, Market Clearing Error: 0.07935706110082198, Tolerance: 0.12477980605851254
+2024-09-11 23:31:06,908 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:31:06,908 - INFO - Agent opt - Optimization result: -270.6795287626226
+2024-09-11 23:31:06,985 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:31:06,985 - INFO - Agent opt - Optimization result: -61.424352008945334
+2024-09-11 23:31:07,015 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:31:07,015 - INFO - Agent opt - Optimization result: -416.1813607217419
+2024-09-11 23:31:07,148 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:31:07,148 - INFO - Optimization result: -30362.78786880182
+2024-09-11 23:31:07,161 - INFO - Iteration: 1, Market Clearing Error: 180.75788535148325, Tolerance: 1.2477980605851255e-07
+2024-09-11 23:31:07,217 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:31:07,217 - INFO - Agent opt - Optimization result: 326.4509402658936
+2024-09-11 23:31:07,386 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:31:07,386 - INFO - Agent opt - Optimization result: 570.4682054437814
+2024-09-11 23:31:07,419 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-11 23:31:07,419 - INFO - Agent opt - Optimization result: 243.43160785699476
+2024-09-11 23:31:07,544 - INFO - Problem solved with solver CLARABEL
+2024-09-11 23:31:07,544 - INFO - Optimization result: -993.1652633522573
+2024-09-11 23:31:07,545 - INFO - Iteration: 2, Market Clearing Error: 0.0, Tolerance: 1.2477980605851255e-07
+2024-09-11 23:33:28,425 - INFO - Restricted license - for non-production use only - expires 2025-11-24
+2024-09-11 23:33:32,823 - INFO - Gurobi Optimizer version 11.0.1 build v11.0.1rc0 (mac64[rosetta2] - Darwin 23.3.0 23D60)
+2024-09-11 23:33:32,823 - INFO - 
+2024-09-11 23:33:32,823 - INFO - CPU model: Apple M1 Pro
+2024-09-11 23:33:32,823 - INFO - Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+2024-09-11 23:33:32,823 - INFO - 
+2024-09-12 00:03:05,365 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 00:03:05,366 - INFO - Agent opt - Optimization result: -370.4551732456275
+2024-09-12 00:03:05,391 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 00:03:05,391 - INFO - Agent opt - Optimization result: -98.71720410703469
+2024-09-12 00:03:05,417 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 00:03:05,417 - INFO - Agent opt - Optimization result: -427.5325649967593
+2024-09-12 00:03:05,550 - INFO - Problem solved with solver CLARABEL
+2024-09-12 00:03:05,550 - INFO - Optimization result: -30854.276963720135
+2024-09-12 00:03:05,564 - INFO - Iteration: 1, Market Clearing Error: 180.41128698641882, Tolerance: 1.2477980605851255e-07
+2024-09-12 00:03:05,614 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 00:03:05,614 - INFO - Agent opt - Optimization result: 481.7314479397905
+2024-09-12 00:03:05,764 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 00:03:05,764 - INFO - Agent opt - Optimization result: 482.79146938590463
+2024-09-12 00:03:05,796 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 00:03:05,796 - INFO - Agent opt - Optimization result: 69.3007068362322
+2024-09-12 00:03:05,925 - INFO - Problem solved with solver CLARABEL
+2024-09-12 00:03:05,925 - INFO - Optimization result: -986.6835739839522
+2024-09-12 00:03:05,925 - INFO - Iteration: 2, Market Clearing Error: 0.0, Tolerance: 1.2477980605851255e-07
+2024-09-12 01:26:23,378 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:26:23,378 - INFO - Agent opt - Optimization result: -302.18688867806605
+2024-09-12 01:26:23,461 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:26:23,462 - INFO - Agent opt - Optimization result: -26.728121974934737
+2024-09-12 01:26:23,490 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:26:23,490 - INFO - Agent opt - Optimization result: -456.02384437546584
+2024-09-12 01:26:23,622 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:26:23,622 - INFO - Optimization result: -31016.52441713732
+2024-09-12 01:26:23,635 - INFO - Iteration: 1, Market Clearing Error: 180.32483443350014, Tolerance: 1.2477980605851255e-07
+2024-09-12 01:26:23,724 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:26:23,724 - INFO - Agent opt - Optimization result: 374.1493199961122
+2024-09-12 01:26:23,792 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:26:23,792 - INFO - Agent opt - Optimization result: 621.331765909934
+2024-09-12 01:26:23,858 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:26:23,858 - INFO - Agent opt - Optimization result: 289.3799068924771
+2024-09-12 01:26:23,988 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:26:23,988 - INFO - Optimization result: -990.971137237945
+2024-09-12 01:26:23,988 - INFO - Iteration: 2, Market Clearing Error: 0.0, Tolerance: 1.2477980605851255e-07
+2024-09-12 01:50:28,448 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:28,449 - INFO - Agent opt - Optimization result: -50837.24387860646
+2024-09-12 01:50:28,494 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:28,494 - INFO - Agent opt - Optimization result: -49749.711609636484
+2024-09-12 01:50:28,552 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:28,552 - INFO - Agent opt - Optimization result: -47558.85842200683
+2024-09-12 01:50:28,697 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:28,699 - INFO - Optimization result: -25526.5551984697
+2024-09-12 01:50:28,712 - INFO - Iteration: 1, Market Clearing Error: 125.33871727060745, Tolerance: 0.12477980605851254
+2024-09-12 01:50:28,927 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:28,927 - INFO - Agent opt - Optimization result: -18384.3838588005
+2024-09-12 01:50:29,201 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:29,202 - INFO - Agent opt - Optimization result: -15259.109454249832
+2024-09-12 01:50:29,509 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:29,509 - INFO - Agent opt - Optimization result: -9656.672909763309
+2024-09-12 01:50:29,642 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:29,642 - INFO - Optimization result: -1969.9335377184434
+2024-09-12 01:50:29,655 - INFO - Iteration: 2, Market Clearing Error: 11.004978935462118, Tolerance: 0.12477980605851254
+2024-09-12 01:50:29,863 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:29,863 - INFO - Agent opt - Optimization result: -6697.360501853581
+2024-09-12 01:50:30,022 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:30,023 - INFO - Agent opt - Optimization result: -4446.952279783414
+2024-09-12 01:50:30,314 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:30,314 - INFO - Agent opt - Optimization result: 2482.015723083093
+2024-09-12 01:50:30,462 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:30,462 - INFO - Optimization result: -2179.4177568034193
+2024-09-12 01:50:30,475 - INFO - Iteration: 3, Market Clearing Error: 11.209902367108771, Tolerance: 0.12477980605851254
+2024-09-12 01:50:30,536 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:30,536 - INFO - Agent opt - Optimization result: -4383.109036087229
+2024-09-12 01:50:30,676 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:30,676 - INFO - Agent opt - Optimization result: -1991.4433153616876
+2024-09-12 01:50:30,998 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:30,998 - INFO - Agent opt - Optimization result: 2785.2290384078333
+2024-09-12 01:50:31,138 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:31,138 - INFO - Optimization result: -1543.7258692207274
+2024-09-12 01:50:31,152 - INFO - Iteration: 4, Market Clearing Error: 7.894806003108683, Tolerance: 0.12477980605851254
+2024-09-12 01:50:31,243 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:31,243 - INFO - Agent opt - Optimization result: -1178.7054613250107
+2024-09-12 01:50:31,292 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:31,293 - INFO - Agent opt - Optimization result: 112.93142914050964
+2024-09-12 01:50:31,431 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:31,432 - INFO - Agent opt - Optimization result: 2798.5094988666788
+2024-09-12 01:50:31,566 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:31,567 - INFO - Optimization result: -925.607111131721
+2024-09-12 01:50:31,580 - INFO - Iteration: 5, Market Clearing Error: 3.3492966074360666, Tolerance: 0.12477980605851254
+2024-09-12 01:50:31,650 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:31,650 - INFO - Agent opt - Optimization result: -220.41371464704446
+2024-09-12 01:50:31,748 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:31,749 - INFO - Agent opt - Optimization result: 17.26184685928456
+2024-09-12 01:50:31,847 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:31,847 - INFO - Agent opt - Optimization result: 2476.1881413653655
+2024-09-12 01:50:31,972 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:31,972 - INFO - Optimization result: -900.7734476111046
+2024-09-12 01:50:31,985 - INFO - Iteration: 6, Market Clearing Error: 2.449628705607477, Tolerance: 0.12477980605851254
+2024-09-12 01:50:32,071 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:32,071 - INFO - Agent opt - Optimization result: 430.1383093629047
+2024-09-12 01:50:32,180 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:32,180 - INFO - Agent opt - Optimization result: 352.12292373649814
+2024-09-12 01:50:32,463 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:32,463 - INFO - Agent opt - Optimization result: 2171.987265388429
+2024-09-12 01:50:32,589 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:32,589 - INFO - Optimization result: -883.2495231057053
+2024-09-12 01:50:32,603 - INFO - Iteration: 7, Market Clearing Error: 2.2135261684073835, Tolerance: 0.12477980605851254
+2024-09-12 01:50:32,783 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:32,783 - INFO - Agent opt - Optimization result: 770.5838717137121
+2024-09-12 01:50:32,837 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:32,837 - INFO - Agent opt - Optimization result: 786.2572088120509
+2024-09-12 01:50:33,200 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:33,200 - INFO - Agent opt - Optimization result: 1960.1886573583013
+2024-09-12 01:50:33,322 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:33,322 - INFO - Optimization result: -863.3857928683344
+2024-09-12 01:50:33,335 - INFO - Iteration: 8, Market Clearing Error: 1.7886615204557927, Tolerance: 0.12477980605851254
+2024-09-12 01:50:33,399 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:33,399 - INFO - Agent opt - Optimization result: 919.1640942422164
+2024-09-12 01:50:33,618 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:33,618 - INFO - Agent opt - Optimization result: 1123.5331822214803
+2024-09-12 01:50:33,939 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:33,939 - INFO - Agent opt - Optimization result: 1632.5730863127892
+2024-09-12 01:50:34,060 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:34,060 - INFO - Optimization result: -850.3660093150677
+2024-09-12 01:50:34,073 - INFO - Iteration: 9, Market Clearing Error: 1.3466107458257524, Tolerance: 0.12477980605851254
+2024-09-12 01:50:34,240 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:34,240 - INFO - Agent opt - Optimization result: 1032.645306310705
+2024-09-12 01:50:34,325 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:34,325 - INFO - Agent opt - Optimization result: 1374.2697225594716
+2024-09-12 01:50:34,673 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:34,673 - INFO - Agent opt - Optimization result: 1125.8079200072978
+2024-09-12 01:50:34,808 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:34,808 - INFO - Optimization result: -846.7313881446017
+2024-09-12 01:50:34,822 - INFO - Iteration: 10, Market Clearing Error: 1.2042196117971475, Tolerance: 0.12477980605851254
+2024-09-12 01:50:34,957 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:34,958 - INFO - Agent opt - Optimization result: 1201.3542116080832
+2024-09-12 01:50:35,264 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:35,264 - INFO - Agent opt - Optimization result: 1585.7888729925041
+2024-09-12 01:50:35,669 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:35,669 - INFO - Agent opt - Optimization result: 618.5017020269172
+2024-09-12 01:50:35,797 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:35,797 - INFO - Optimization result: -844.20350451281
+2024-09-12 01:50:35,810 - INFO - Iteration: 11, Market Clearing Error: 1.1450156843565231, Tolerance: 0.12477980605851254
+2024-09-12 01:50:36,029 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:36,029 - INFO - Agent opt - Optimization result: 1511.6063361162396
+2024-09-12 01:50:36,132 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:36,132 - INFO - Agent opt - Optimization result: 1736.7626147396238
+2024-09-12 01:50:36,233 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:36,233 - INFO - Agent opt - Optimization result: 239.80402792960052
+2024-09-12 01:50:36,358 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:36,358 - INFO - Optimization result: -837.9798305694825
+2024-09-12 01:50:36,372 - INFO - Iteration: 12, Market Clearing Error: 0.9228186954725481, Tolerance: 0.12477980605851254
+2024-09-12 01:50:36,608 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:36,609 - INFO - Agent opt - Optimization result: 1934.231293274731
+2024-09-12 01:50:36,899 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:36,899 - INFO - Agent opt - Optimization result: 1802.050638483492
+2024-09-12 01:50:37,044 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:37,044 - INFO - Agent opt - Optimization result: 2.0286725434319806
+2024-09-12 01:50:37,166 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:37,166 - INFO - Optimization result: -830.6172136549523
+2024-09-12 01:50:37,179 - INFO - Iteration: 13, Market Clearing Error: 0.840973459716003, Tolerance: 0.12477980605851254
+2024-09-12 01:50:37,541 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:37,541 - INFO - Agent opt - Optimization result: 2404.455439013557
+2024-09-12 01:50:37,837 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:37,837 - INFO - Agent opt - Optimization result: 1829.969318394523
+2024-09-12 01:50:38,199 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:38,199 - INFO - Agent opt - Optimization result: -126.2066503104883
+2024-09-12 01:50:38,322 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:38,322 - INFO - Optimization result: -828.2679890601091
+2024-09-12 01:50:38,336 - INFO - Iteration: 14, Market Clearing Error: 0.2868992556138152, Tolerance: 0.12477980605851254
+2024-09-12 01:50:38,702 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:38,702 - INFO - Agent opt - Optimization result: 2821.014742667555
+2024-09-12 01:50:39,001 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:39,001 - INFO - Agent opt - Optimization result: 1854.7265612641254
+2024-09-12 01:50:39,241 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:39,242 - INFO - Agent opt - Optimization result: -159.2764398050423
+2024-09-12 01:50:39,363 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:39,363 - INFO - Optimization result: -829.5887981998596
+2024-09-12 01:50:39,376 - INFO - Iteration: 15, Market Clearing Error: 0.48878209551940455, Tolerance: 0.12477980605851254
+2024-09-12 01:50:39,704 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:39,705 - INFO - Agent opt - Optimization result: 3116.5152850673403
+2024-09-12 01:50:39,812 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:39,812 - INFO - Agent opt - Optimization result: 1909.9485754981692
+2024-09-12 01:50:40,135 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:40,136 - INFO - Agent opt - Optimization result: -101.15473644231949
+2024-09-12 01:50:40,261 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:40,261 - INFO - Optimization result: -832.3389902546367
+2024-09-12 01:50:40,274 - INFO - Iteration: 16, Market Clearing Error: 0.690470970318203, Tolerance: 0.12477980605851254
+2024-09-12 01:50:40,602 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:40,602 - INFO - Agent opt - Optimization result: 3276.007819395567
+2024-09-12 01:50:40,846 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:40,846 - INFO - Agent opt - Optimization result: 2011.0653407962936
+2024-09-12 01:50:40,931 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:40,931 - INFO - Agent opt - Optimization result: 26.63138204937559
+2024-09-12 01:50:41,058 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:41,058 - INFO - Optimization result: -835.8912510939923
+2024-09-12 01:50:41,071 - INFO - Iteration: 17, Market Clearing Error: 0.8944012357282676, Tolerance: 0.12477980605851254
+2024-09-12 01:50:41,383 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:41,384 - INFO - Agent opt - Optimization result: 3312.593612893524
+2024-09-12 01:50:41,616 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:41,616 - INFO - Agent opt - Optimization result: 2147.1307403788014
+2024-09-12 01:50:41,976 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:41,976 - INFO - Agent opt - Optimization result: 186.02017365040314
+2024-09-12 01:50:42,153 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:42,154 - INFO - Optimization result: -832.0518516384013
+2024-09-12 01:50:42,172 - INFO - Iteration: 18, Market Clearing Error: 1.0609099337682442, Tolerance: 0.12477980605851254
+2024-09-12 01:50:42,428 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:42,428 - INFO - Agent opt - Optimization result: 3253.5542141000233
+2024-09-12 01:50:42,608 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:42,608 - INFO - Agent opt - Optimization result: 2287.0857358592193
+2024-09-12 01:50:42,995 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:42,995 - INFO - Agent opt - Optimization result: 346.8186243237552
+2024-09-12 01:50:43,117 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:43,118 - INFO - Optimization result: -829.0028032885642
+2024-09-12 01:50:43,131 - INFO - Iteration: 19, Market Clearing Error: 0.6816805641792262, Tolerance: 0.12477980605851254
+2024-09-12 01:50:43,367 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:43,367 - INFO - Agent opt - Optimization result: 3130.4902308760657
+2024-09-12 01:50:43,578 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:43,578 - INFO - Agent opt - Optimization result: 2398.89467158116
+2024-09-12 01:50:43,941 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:43,941 - INFO - Agent opt - Optimization result: 508.6366728461604
+2024-09-12 01:50:44,063 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:44,063 - INFO - Optimization result: -828.0211612410144
+2024-09-12 01:50:44,076 - INFO - Iteration: 20, Market Clearing Error: 0.5533305307440716, Tolerance: 0.12477980605851254
+2024-09-12 01:50:44,225 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:44,225 - INFO - Agent opt - Optimization result: 2967.4267978197568
+2024-09-12 01:50:44,419 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:44,419 - INFO - Agent opt - Optimization result: 2459.2520639749064
+2024-09-12 01:50:44,810 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:44,810 - INFO - Agent opt - Optimization result: 678.2400012789183
+2024-09-12 01:50:44,944 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:44,944 - INFO - Optimization result: -828.880796336905
+2024-09-12 01:50:44,957 - INFO - Iteration: 21, Market Clearing Error: 0.6527975341158782, Tolerance: 0.12477980605851254
+2024-09-12 01:50:45,059 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:45,059 - INFO - Agent opt - Optimization result: 2786.4466726358714
+2024-09-12 01:50:45,151 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:45,151 - INFO - Agent opt - Optimization result: 2459.0362883621992
+2024-09-12 01:50:45,310 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:45,310 - INFO - Agent opt - Optimization result: 858.4092741670174
+2024-09-12 01:50:45,431 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:45,431 - INFO - Optimization result: -829.7483213914579
+2024-09-12 01:50:45,445 - INFO - Iteration: 22, Market Clearing Error: 0.743876024119154, Tolerance: 0.12477980605851254
+2024-09-12 01:50:45,649 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:45,649 - INFO - Agent opt - Optimization result: 2602.817138686694
+2024-09-12 01:50:45,825 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:45,825 - INFO - Agent opt - Optimization result: 2401.0481757162615
+2024-09-12 01:50:46,189 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:46,189 - INFO - Agent opt - Optimization result: 1044.1415285517069
+2024-09-12 01:50:46,385 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:46,385 - INFO - Optimization result: -830.3711494063742
+2024-09-12 01:50:46,398 - INFO - Iteration: 23, Market Clearing Error: 0.809058095750822, Tolerance: 0.12477980605851254
+2024-09-12 01:50:46,575 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:46,576 - INFO - Agent opt - Optimization result: 2432.459665886542
+2024-09-12 01:50:46,796 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:46,796 - INFO - Agent opt - Optimization result: 2296.0082057715586
+2024-09-12 01:50:47,158 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:47,158 - INFO - Agent opt - Optimization result: 1223.8818874823567
+2024-09-12 01:50:47,280 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:47,281 - INFO - Optimization result: -830.0501306513445
+2024-09-12 01:50:47,294 - INFO - Iteration: 24, Market Clearing Error: 0.8573892439791536, Tolerance: 0.12477980605851254
+2024-09-12 01:50:47,437 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:47,437 - INFO - Agent opt - Optimization result: 2277.4778419171716
+2024-09-12 01:50:47,543 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:47,543 - INFO - Agent opt - Optimization result: 2159.907099429579
+2024-09-12 01:50:47,841 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:47,841 - INFO - Agent opt - Optimization result: 1381.573218307287
+2024-09-12 01:50:47,965 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:47,965 - INFO - Optimization result: -823.3597616855471
+2024-09-12 01:50:47,978 - INFO - Iteration: 25, Market Clearing Error: 0.6607076219453646, Tolerance: 0.12477980605851254
+2024-09-12 01:50:48,137 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:48,137 - INFO - Agent opt - Optimization result: 2133.4711118640553
+2024-09-12 01:50:48,290 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:48,290 - INFO - Agent opt - Optimization result: 2012.445616765518
+2024-09-12 01:50:48,651 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:48,651 - INFO - Agent opt - Optimization result: 1500.2535081608985
+2024-09-12 01:50:48,772 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:48,772 - INFO - Optimization result: -821.9550205878272
+2024-09-12 01:50:48,785 - INFO - Iteration: 26, Market Clearing Error: 0.3969467589798816, Tolerance: 0.12477980605851254
+2024-09-12 01:50:48,918 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:48,918 - INFO - Agent opt - Optimization result: 1988.7509580701499
+2024-09-12 01:50:49,063 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:49,063 - INFO - Agent opt - Optimization result: 1875.5471100540453
+2024-09-12 01:50:49,340 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:49,341 - INFO - Agent opt - Optimization result: 1583.8990779524397
+2024-09-12 01:50:49,462 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:49,462 - INFO - Optimization result: -819.7873956686832
+2024-09-12 01:50:49,475 - INFO - Iteration: 27, Market Clearing Error: 0.21149545500109898, Tolerance: 0.12477980605851254
+2024-09-12 01:50:49,667 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:49,667 - INFO - Agent opt - Optimization result: 1856.9995596930514
+2024-09-12 01:50:49,841 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:49,841 - INFO - Agent opt - Optimization result: 1769.3726284316501
+2024-09-12 01:50:50,116 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:50,116 - INFO - Agent opt - Optimization result: 1639.8158312302037
+2024-09-12 01:50:50,234 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:50,235 - INFO - Optimization result: -819.1742141189226
+2024-09-12 01:50:50,247 - INFO - Iteration: 28, Market Clearing Error: 0.23991434997543074, Tolerance: 0.12477980605851254
+2024-09-12 01:50:50,383 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:50,383 - INFO - Agent opt - Optimization result: 1755.492038977156
+2024-09-12 01:50:50,539 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:50,539 - INFO - Agent opt - Optimization result: 1708.032853939405
+2024-09-12 01:50:50,687 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:50,687 - INFO - Agent opt - Optimization result: 1687.4316669057619
+2024-09-12 01:50:50,806 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:50,806 - INFO - Optimization result: -818.4909945556718
+2024-09-12 01:50:50,819 - INFO - Iteration: 29, Market Clearing Error: 0.25565964372216393, Tolerance: 0.12477980605851254
+2024-09-12 01:50:50,909 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:50,909 - INFO - Agent opt - Optimization result: 1690.157877246909
+2024-09-12 01:50:51,038 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:51,038 - INFO - Agent opt - Optimization result: 1696.2952923491903
+2024-09-12 01:50:51,334 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:51,334 - INFO - Agent opt - Optimization result: 1737.3446826667962
+2024-09-12 01:50:51,455 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:51,455 - INFO - Optimization result: -817.8028770971274
+2024-09-12 01:50:51,468 - INFO - Iteration: 30, Market Clearing Error: 0.2704147725707595, Tolerance: 0.12477980605851254
+2024-09-12 01:50:51,557 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:51,557 - INFO - Agent opt - Optimization result: 1662.6230628184403
+2024-09-12 01:50:51,770 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:51,771 - INFO - Agent opt - Optimization result: 1729.2458596026388
+2024-09-12 01:50:52,125 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:52,125 - INFO - Agent opt - Optimization result: 1793.454816649387
+2024-09-12 01:50:52,244 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:52,244 - INFO - Optimization result: -817.1778280283079
+2024-09-12 01:50:52,257 - INFO - Iteration: 31, Market Clearing Error: 0.29344566957983886, Tolerance: 0.12477980605851254
+2024-09-12 01:50:52,385 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:52,385 - INFO - Agent opt - Optimization result: 1663.0723527310142
+2024-09-12 01:50:52,520 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:52,520 - INFO - Agent opt - Optimization result: 1794.9987806473828
+2024-09-12 01:50:52,867 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:52,867 - INFO - Agent opt - Optimization result: 1853.1174335433855
+2024-09-12 01:50:52,988 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:52,989 - INFO - Optimization result: -816.6362748551649
+2024-09-12 01:50:53,001 - INFO - Iteration: 32, Market Clearing Error: 0.3253380306997796, Tolerance: 0.12477980605851254
+2024-09-12 01:50:53,177 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:53,177 - INFO - Agent opt - Optimization result: 1676.268721366709
+2024-09-12 01:50:53,325 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:53,325 - INFO - Agent opt - Optimization result: 1879.4832184502293
+2024-09-12 01:50:53,677 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:53,677 - INFO - Agent opt - Optimization result: 1909.1135790709181
+2024-09-12 01:50:53,797 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:53,797 - INFO - Optimization result: -816.1524153815124
+2024-09-12 01:50:53,810 - INFO - Iteration: 33, Market Clearing Error: 0.36157311930966785, Tolerance: 0.12477980605851254
+2024-09-12 01:50:53,946 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:53,946 - INFO - Agent opt - Optimization result: 1687.6927145988645
+2024-09-12 01:50:54,054 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:54,054 - INFO - Agent opt - Optimization result: 1967.203968025392
+2024-09-12 01:50:54,344 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:54,344 - INFO - Agent opt - Optimization result: 1951.2311034922686
+2024-09-12 01:50:54,464 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:54,464 - INFO - Optimization result: -814.2372681331815
+2024-09-12 01:50:54,477 - INFO - Iteration: 34, Market Clearing Error: 0.19912827941892708, Tolerance: 0.12477980605851254
+2024-09-12 01:50:54,589 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:54,589 - INFO - Agent opt - Optimization result: 1686.792033284215
+2024-09-12 01:50:54,716 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:54,716 - INFO - Agent opt - Optimization result: 2030.2031069426296
+2024-09-12 01:50:55,112 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:55,112 - INFO - Agent opt - Optimization result: 1966.1689863820195
+2024-09-12 01:50:55,240 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:55,240 - INFO - Optimization result: -813.9290178797547
+2024-09-12 01:50:55,254 - INFO - Iteration: 35, Market Clearing Error: 0.27884300220577285, Tolerance: 0.12477980605851254
+2024-09-12 01:50:55,387 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:55,387 - INFO - Agent opt - Optimization result: 1669.3795882738611
+2024-09-12 01:50:55,498 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:55,498 - INFO - Agent opt - Optimization result: 2064.8333172975026
+2024-09-12 01:50:55,812 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:55,813 - INFO - Agent opt - Optimization result: 1954.8038726052598
+2024-09-12 01:50:55,934 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:55,934 - INFO - Optimization result: -813.6833756442237
+2024-09-12 01:50:55,947 - INFO - Iteration: 36, Market Clearing Error: 0.3475550053862637, Tolerance: 0.12477980605851254
+2024-09-12 01:50:56,081 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:56,081 - INFO - Agent opt - Optimization result: 1638.2120089776913
+2024-09-12 01:50:56,233 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:56,233 - INFO - Agent opt - Optimization result: 2089.178240306261
+2024-09-12 01:50:56,362 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:56,362 - INFO - Agent opt - Optimization result: 1916.2507531739348
+2024-09-12 01:50:56,485 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:56,485 - INFO - Optimization result: -811.7246211406901
+2024-09-12 01:50:56,498 - INFO - Iteration: 37, Market Clearing Error: 0.4034952560752365, Tolerance: 0.12477980605851254
+2024-09-12 01:50:56,627 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:56,627 - INFO - Agent opt - Optimization result: 1601.1251296471526
+2024-09-12 01:50:56,765 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:56,766 - INFO - Agent opt - Optimization result: 2114.746318084607
+2024-09-12 01:50:57,113 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 01:50:57,115 - INFO - Agent opt - Optimization result: 1849.7849296209802
+2024-09-12 01:50:57,260 - INFO - Problem solved with solver CLARABEL
+2024-09-12 01:50:57,260 - INFO - Optimization result: -810.6068403504221
+2024-09-12 01:50:57,273 - INFO - Iteration: 38, Market Clearing Error: 0.006061178425302627, Tolerance: 0.12477980605851254
+2024-09-12 02:09:32,807 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:32,808 - INFO - Agent opt - Optimization result: -56081.459308727615
+2024-09-12 02:09:32,838 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:32,838 - INFO - Agent opt - Optimization result: -45411.52165410286
+2024-09-12 02:09:32,870 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:32,870 - INFO - Agent opt - Optimization result: -48382.08401439346
+2024-09-12 02:09:33,020 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:33,020 - INFO - Optimization result: -29357.07127497309
+2024-09-12 02:09:33,033 - INFO - Iteration: 1, Market Clearing Error: 125.84379880255486, Tolerance: 0.12477980605851254
+2024-09-12 02:09:33,267 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:33,268 - INFO - Agent opt - Optimization result: -25506.19907572996
+2024-09-12 02:09:33,419 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:33,419 - INFO - Agent opt - Optimization result: -22545.90456516528
+2024-09-12 02:09:33,658 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:33,658 - INFO - Agent opt - Optimization result: -13165.967473469787
+2024-09-12 02:09:33,800 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:33,800 - INFO - Optimization result: -2287.3813389193992
+2024-09-12 02:09:33,813 - INFO - Iteration: 2, Market Clearing Error: 13.031318312457367, Tolerance: 0.12477980605851254
+2024-09-12 02:09:34,023 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:34,024 - INFO - Agent opt - Optimization result: -8451.312173092936
+2024-09-12 02:09:34,154 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:34,154 - INFO - Agent opt - Optimization result: -7102.402585302942
+2024-09-12 02:09:34,248 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:34,248 - INFO - Agent opt - Optimization result: 1164.9463921500746
+2024-09-12 02:09:34,382 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:34,382 - INFO - Optimization result: -2989.7314801467355
+2024-09-12 02:09:34,395 - INFO - Iteration: 3, Market Clearing Error: 14.868533046424567, Tolerance: 0.12477980605851254
+2024-09-12 02:09:34,526 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:34,527 - INFO - Agent opt - Optimization result: -5113.840199555956
+2024-09-12 02:09:34,556 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:34,556 - INFO - Agent opt - Optimization result: -2998.244989973842
+2024-09-12 02:09:34,695 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:34,695 - INFO - Agent opt - Optimization result: 1122.5057315367185
+2024-09-12 02:09:34,832 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:34,832 - INFO - Optimization result: -2016.079244368796
+2024-09-12 02:09:34,845 - INFO - Iteration: 4, Market Clearing Error: 10.69770444058485, Tolerance: 0.12477980605851254
+2024-09-12 02:09:34,974 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:34,974 - INFO - Agent opt - Optimization result: -2112.856838865292
+2024-09-12 02:09:35,032 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:35,032 - INFO - Agent opt - Optimization result: 643.0771578593002
+2024-09-12 02:09:35,181 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:35,181 - INFO - Agent opt - Optimization result: 1210.0371104869716
+2024-09-12 02:09:35,313 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:35,313 - INFO - Optimization result: -986.4290274096445
+2024-09-12 02:09:35,326 - INFO - Iteration: 5, Market Clearing Error: 4.984002341044007, Tolerance: 0.12477980605851254
+2024-09-12 02:09:35,470 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:35,470 - INFO - Agent opt - Optimization result: -1389.5412760422641
+2024-09-12 02:09:35,673 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:35,674 - INFO - Agent opt - Optimization result: 1673.1876399206747
+2024-09-12 02:09:35,882 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:35,882 - INFO - Agent opt - Optimization result: 1166.6909125218708
+2024-09-12 02:09:36,023 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:36,023 - INFO - Optimization result: -896.1503618282168
+2024-09-12 02:09:36,036 - INFO - Iteration: 6, Market Clearing Error: 3.1425436594363707, Tolerance: 0.12477980605851254
+2024-09-12 02:09:36,139 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:36,139 - INFO - Agent opt - Optimization result: -719.3078614208032
+2024-09-12 02:09:36,271 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:36,271 - INFO - Agent opt - Optimization result: 2074.8043852440223
+2024-09-12 02:09:36,428 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:36,428 - INFO - Agent opt - Optimization result: 795.7950387608066
+2024-09-12 02:09:36,555 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:36,556 - INFO - Optimization result: -861.7123550940545
+2024-09-12 02:09:36,569 - INFO - Iteration: 7, Market Clearing Error: 2.870403747573109, Tolerance: 0.12477980605851254
+2024-09-12 02:09:36,739 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:36,739 - INFO - Agent opt - Optimization result: -489.1042979621165
+2024-09-12 02:09:36,815 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:36,815 - INFO - Agent opt - Optimization result: 1975.8076711757167
+2024-09-12 02:09:37,122 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:37,122 - INFO - Agent opt - Optimization result: 347.2029572110015
+2024-09-12 02:09:37,241 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:37,241 - INFO - Optimization result: -842.612783486454
+2024-09-12 02:09:37,254 - INFO - Iteration: 8, Market Clearing Error: 2.36343341441663, Tolerance: 0.12477980605851254
+2024-09-12 02:09:37,478 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:37,478 - INFO - Agent opt - Optimization result: -421.7557281089844
+2024-09-12 02:09:37,720 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:37,720 - INFO - Agent opt - Optimization result: 1655.4253926054917
+2024-09-12 02:09:38,058 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:38,059 - INFO - Agent opt - Optimization result: 61.060569825328116
+2024-09-12 02:09:38,187 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:38,187 - INFO - Optimization result: -828.6873562639875
+2024-09-12 02:09:38,200 - INFO - Iteration: 9, Market Clearing Error: 2.1001396201557387, Tolerance: 0.12477980605851254
+2024-09-12 02:09:38,422 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:38,422 - INFO - Agent opt - Optimization result: -369.707140901085
+2024-09-12 02:09:38,665 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:38,665 - INFO - Agent opt - Optimization result: 1410.0872513893066
+2024-09-12 02:09:38,816 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:38,816 - INFO - Agent opt - Optimization result: 31.991132194028012
+2024-09-12 02:09:38,942 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:38,942 - INFO - Optimization result: -813.5935550780325
+2024-09-12 02:09:38,955 - INFO - Iteration: 10, Market Clearing Error: 1.7354469380427906, Tolerance: 0.12477980605851254
+2024-09-12 02:09:39,530 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:39,530 - INFO - Agent opt - Optimization result: -205.04445845364415
+2024-09-12 02:09:39,779 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:39,779 - INFO - Agent opt - Optimization result: 1333.520373265964
+2024-09-12 02:09:40,094 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:40,094 - INFO - Agent opt - Optimization result: 143.71217391660713
+2024-09-12 02:09:40,219 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:40,219 - INFO - Optimization result: -815.7408020640491
+2024-09-12 02:09:40,232 - INFO - Iteration: 11, Market Clearing Error: 2.0292314154110707, Tolerance: 0.12477980605851254
+2024-09-12 02:09:40,360 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:40,360 - INFO - Agent opt - Optimization result: 6.486532727067754
+2024-09-12 02:09:40,619 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:40,620 - INFO - Agent opt - Optimization result: 1394.0056779487331
+2024-09-12 02:09:40,994 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:40,994 - INFO - Agent opt - Optimization result: 380.73276456794974
+2024-09-12 02:09:41,109 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:41,109 - INFO - Optimization result: -808.0366093369435
+2024-09-12 02:09:41,122 - INFO - Iteration: 12, Market Clearing Error: 1.60763225783003, Tolerance: 0.12477980605851254
+2024-09-12 02:09:41,590 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:41,590 - INFO - Agent opt - Optimization result: 334.41653793038876
+2024-09-12 02:09:41,838 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:41,838 - INFO - Agent opt - Optimization result: 1533.639451293765
+2024-09-12 02:09:42,238 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:42,238 - INFO - Agent opt - Optimization result: 653.6911006935727
+2024-09-12 02:09:42,359 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:42,359 - INFO - Optimization result: -812.6387164286529
+2024-09-12 02:09:42,372 - INFO - Iteration: 13, Market Clearing Error: 1.6795130747009757, Tolerance: 0.12477980605851254
+2024-09-12 02:09:42,543 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:42,543 - INFO - Agent opt - Optimization result: 775.0518731066418
+2024-09-12 02:09:42,804 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:42,804 - INFO - Agent opt - Optimization result: 1687.3996153970809
+2024-09-12 02:09:43,074 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:43,074 - INFO - Agent opt - Optimization result: 928.6610079352185
+2024-09-12 02:09:43,190 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:43,190 - INFO - Optimization result: -819.0499098393225
+2024-09-12 02:09:43,203 - INFO - Iteration: 14, Market Clearing Error: 1.9980024385896693, Tolerance: 0.12477980605851254
+2024-09-12 02:09:43,425 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:43,425 - INFO - Agent opt - Optimization result: 1241.6279145456053
+2024-09-12 02:09:43,669 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:43,669 - INFO - Agent opt - Optimization result: 1831.1126462260581
+2024-09-12 02:09:43,931 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:43,932 - INFO - Agent opt - Optimization result: 1146.5388093461788
+2024-09-12 02:09:44,047 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:44,048 - INFO - Optimization result: -816.2567278007562
+2024-09-12 02:09:44,061 - INFO - Iteration: 15, Market Clearing Error: 1.97436439377818, Tolerance: 0.12477980605851254
+2024-09-12 02:09:44,273 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:44,273 - INFO - Agent opt - Optimization result: 1667.2929708436227
+2024-09-12 02:09:44,464 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:44,464 - INFO - Agent opt - Optimization result: 1959.053172910813
+2024-09-12 02:09:44,895 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:44,896 - INFO - Agent opt - Optimization result: 1238.936148538072
+2024-09-12 02:09:45,029 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:45,029 - INFO - Optimization result: -801.680810482424
+2024-09-12 02:09:45,042 - INFO - Iteration: 16, Market Clearing Error: 1.5062563115888405, Tolerance: 0.12477980605851254
+2024-09-12 02:09:45,381 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:45,381 - INFO - Agent opt - Optimization result: 2027.7560103616306
+2024-09-12 02:09:45,592 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:45,592 - INFO - Agent opt - Optimization result: 2069.5525896514314
+2024-09-12 02:09:45,966 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:45,967 - INFO - Agent opt - Optimization result: 1244.408448507581
+2024-09-12 02:09:46,081 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:46,082 - INFO - Optimization result: -790.0869750763878
+2024-09-12 02:09:46,095 - INFO - Iteration: 17, Market Clearing Error: 1.2359522301643173, Tolerance: 0.12477980605851254
+2024-09-12 02:09:46,414 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:46,414 - INFO - Agent opt - Optimization result: 2329.166628211214
+2024-09-12 02:09:46,655 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:46,655 - INFO - Agent opt - Optimization result: 2164.48871467544
+2024-09-12 02:09:47,049 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:47,049 - INFO - Agent opt - Optimization result: 1317.1456502667938
+2024-09-12 02:09:47,167 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:47,167 - INFO - Optimization result: -787.7016699468863
+2024-09-12 02:09:47,180 - INFO - Iteration: 18, Market Clearing Error: 1.0207091983260963, Tolerance: 0.12477980605851254
+2024-09-12 02:09:47,520 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:47,520 - INFO - Agent opt - Optimization result: 2588.6374399243573
+2024-09-12 02:09:47,742 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:47,742 - INFO - Agent opt - Optimization result: 2247.4834513575806
+2024-09-12 02:09:48,099 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:48,099 - INFO - Agent opt - Optimization result: 1420.2514158398044
+2024-09-12 02:09:48,217 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:48,217 - INFO - Optimization result: -782.4395275093284
+2024-09-12 02:09:48,230 - INFO - Iteration: 19, Market Clearing Error: 0.8079683826134421, Tolerance: 0.12477980605851254
+2024-09-12 02:09:48,489 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:48,490 - INFO - Agent opt - Optimization result: 2807.605676606566
+2024-09-12 02:09:48,649 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:48,650 - INFO - Agent opt - Optimization result: 2307.62401367551
+2024-09-12 02:09:49,001 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:49,001 - INFO - Agent opt - Optimization result: 1529.7291795032047
+2024-09-12 02:09:49,119 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:49,119 - INFO - Optimization result: -782.8451813674354
+2024-09-12 02:09:49,132 - INFO - Iteration: 20, Market Clearing Error: 0.8575287078013827, Tolerance: 0.12477980605851254
+2024-09-12 02:09:49,422 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:49,423 - INFO - Agent opt - Optimization result: 2978.2835397955787
+2024-09-12 02:09:49,591 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:49,591 - INFO - Agent opt - Optimization result: 2341.6430230160145
+2024-09-12 02:09:49,914 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:49,914 - INFO - Agent opt - Optimization result: 1643.7458302808152
+2024-09-12 02:09:50,032 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:50,032 - INFO - Optimization result: -782.2175584296272
+2024-09-12 02:09:50,045 - INFO - Iteration: 21, Market Clearing Error: 0.904902922908267, Tolerance: 0.12477980605851254
+2024-09-12 02:09:50,290 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:50,290 - INFO - Agent opt - Optimization result: 3091.259358281639
+2024-09-12 02:09:50,430 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:50,430 - INFO - Agent opt - Optimization result: 2343.7922447695455
+2024-09-12 02:09:50,737 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:50,738 - INFO - Agent opt - Optimization result: 1764.8051768518294
+2024-09-12 02:09:50,855 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:50,855 - INFO - Optimization result: -775.4697625075573
+2024-09-12 02:09:50,868 - INFO - Iteration: 22, Market Clearing Error: 0.505701807656568, Tolerance: 0.12477980605851254
+2024-09-12 02:09:51,113 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:51,113 - INFO - Agent opt - Optimization result: 3138.393960238191
+2024-09-12 02:09:51,168 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:51,168 - INFO - Agent opt - Optimization result: 2310.187933347148
+2024-09-12 02:09:51,463 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:51,463 - INFO - Agent opt - Optimization result: 1899.0786102344355
+2024-09-12 02:09:51,597 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:51,597 - INFO - Optimization result: -773.8929002444439
+2024-09-12 02:09:51,610 - INFO - Iteration: 23, Market Clearing Error: 0.5503005707662242, Tolerance: 0.12477980605851254
+2024-09-12 02:09:51,856 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:51,857 - INFO - Agent opt - Optimization result: 3127.240623436343
+2024-09-12 02:09:51,977 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:51,977 - INFO - Agent opt - Optimization result: 2237.6355441891956
+2024-09-12 02:09:52,333 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:52,334 - INFO - Agent opt - Optimization result: 2044.0257448258078
+2024-09-12 02:09:52,463 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:52,463 - INFO - Optimization result: -772.036840159727
+2024-09-12 02:09:52,476 - INFO - Iteration: 24, Market Clearing Error: 0.3904827050668371, Tolerance: 0.12477980605851254
+2024-09-12 02:09:52,711 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:52,711 - INFO - Agent opt - Optimization result: 3066.8917893003613
+2024-09-12 02:09:52,878 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:52,878 - INFO - Agent opt - Optimization result: 2127.79624513209
+2024-09-12 02:09:53,166 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:53,166 - INFO - Agent opt - Optimization result: 2180.4500220900936
+2024-09-12 02:09:53,292 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:53,292 - INFO - Optimization result: -770.270120952895
+2024-09-12 02:09:53,305 - INFO - Iteration: 25, Market Clearing Error: 0.1380517040862467, Tolerance: 0.12477980605851254
+2024-09-12 02:09:53,540 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:53,540 - INFO - Agent opt - Optimization result: 2960.283787001327
+2024-09-12 02:09:53,699 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:53,699 - INFO - Agent opt - Optimization result: 1986.2842888243208
+2024-09-12 02:09:53,979 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:53,979 - INFO - Agent opt - Optimization result: 2288.2732767866983
+2024-09-12 02:09:54,106 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:54,106 - INFO - Optimization result: -769.5257170151341
+2024-09-12 02:09:54,119 - INFO - Iteration: 26, Market Clearing Error: 0.14868534781146933, Tolerance: 0.12477980605851254
+2024-09-12 02:09:54,265 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:54,265 - INFO - Agent opt - Optimization result: 2831.95475450462
+2024-09-12 02:09:54,438 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:54,438 - INFO - Agent opt - Optimization result: 1831.8088048832287
+2024-09-12 02:09:54,547 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:54,547 - INFO - Agent opt - Optimization result: 2357.0559700872277
+2024-09-12 02:09:54,674 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:54,674 - INFO - Optimization result: -768.7350982740529
+2024-09-12 02:09:54,687 - INFO - Iteration: 27, Market Clearing Error: 0.15094147851591463, Tolerance: 0.12477980605851254
+2024-09-12 02:09:54,901 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:54,901 - INFO - Agent opt - Optimization result: 2704.9436388123627
+2024-09-12 02:09:55,057 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:55,057 - INFO - Agent opt - Optimization result: 1683.0644887647622
+2024-09-12 02:09:55,305 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:55,305 - INFO - Agent opt - Optimization result: 2390.9955627372633
+2024-09-12 02:09:55,432 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:55,432 - INFO - Optimization result: -767.7375153275633
+2024-09-12 02:09:55,445 - INFO - Iteration: 28, Market Clearing Error: 0.1485520747548548, Tolerance: 0.12477980605851254
+2024-09-12 02:09:55,604 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:55,604 - INFO - Agent opt - Optimization result: 2587.358575111564
+2024-09-12 02:09:55,772 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:55,772 - INFO - Agent opt - Optimization result: 1553.539541066882
+2024-09-12 02:09:56,042 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:09:56,042 - INFO - Agent opt - Optimization result: 2402.476253383746
+2024-09-12 02:09:56,169 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:09:56,169 - INFO - Optimization result: -766.8231739749232
+2024-09-12 02:09:56,182 - INFO - Iteration: 29, Market Clearing Error: 0.023401902325380603, Tolerance: 0.12477980605851254
+2024-09-12 02:16:23,354 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:23,354 - INFO - Agent opt - Optimization result: -61352.693982708864
+2024-09-12 02:16:23,388 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:23,388 - INFO - Agent opt - Optimization result: -44079.159695013244
+2024-09-12 02:16:23,420 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:23,420 - INFO - Agent opt - Optimization result: -53498.573923010525
+2024-09-12 02:16:23,559 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:23,559 - INFO - Optimization result: -29947.841238104455
+2024-09-12 02:16:23,572 - INFO - Iteration: 1, Market Clearing Error: 126.46961934657635, Tolerance: 0.12477980605851254
+2024-09-12 02:16:23,873 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:23,873 - INFO - Agent opt - Optimization result: -22517.093113249597
+2024-09-12 02:16:24,033 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:24,033 - INFO - Agent opt - Optimization result: -25907.690476181855
+2024-09-12 02:16:24,281 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:24,281 - INFO - Agent opt - Optimization result: -12489.81300206016
+2024-09-12 02:16:24,412 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:24,412 - INFO - Optimization result: -1955.3697018602054
+2024-09-12 02:16:24,425 - INFO - Iteration: 2, Market Clearing Error: 11.872006570738995, Tolerance: 0.12477980605851254
+2024-09-12 02:16:24,667 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:24,667 - INFO - Agent opt - Optimization result: -7255.204341329874
+2024-09-12 02:16:24,810 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:24,810 - INFO - Agent opt - Optimization result: -11998.763416417862
+2024-09-12 02:16:24,913 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:24,913 - INFO - Agent opt - Optimization result: 317.0004821679963
+2024-09-12 02:16:25,062 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:25,062 - INFO - Optimization result: -3059.6151137348993
+2024-09-12 02:16:25,075 - INFO - Iteration: 3, Market Clearing Error: 13.771828313606624, Tolerance: 0.12477980605851254
+2024-09-12 02:16:25,279 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:25,279 - INFO - Agent opt - Optimization result: -3044.645102286915
+2024-09-12 02:16:25,319 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:25,319 - INFO - Agent opt - Optimization result: -4087.352615497417
+2024-09-12 02:16:25,543 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:25,543 - INFO - Agent opt - Optimization result: 585.1288404411991
+2024-09-12 02:16:25,686 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:25,686 - INFO - Optimization result: -2349.6233009178713
+2024-09-12 02:16:25,699 - INFO - Iteration: 4, Market Clearing Error: 11.574754767009411, Tolerance: 0.12477980605851254
+2024-09-12 02:16:25,869 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:25,870 - INFO - Agent opt - Optimization result: 449.74224978304323
+2024-09-12 02:16:25,998 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:25,998 - INFO - Agent opt - Optimization result: 1980.6452111890103
+2024-09-12 02:16:26,145 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:26,145 - INFO - Agent opt - Optimization result: 1331.297014010992
+2024-09-12 02:16:26,272 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:26,273 - INFO - Optimization result: -1002.2616033929418
+2024-09-12 02:16:26,286 - INFO - Iteration: 5, Market Clearing Error: 4.639344435774295, Tolerance: 0.12477980605851254
+2024-09-12 02:16:26,462 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:26,462 - INFO - Agent opt - Optimization result: 280.3315671860862
+2024-09-12 02:16:26,585 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:26,585 - INFO - Agent opt - Optimization result: 2457.5709997720523
+2024-09-12 02:16:26,831 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:26,831 - INFO - Agent opt - Optimization result: 2177.1650221231907
+2024-09-12 02:16:26,969 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:26,969 - INFO - Optimization result: -864.6748114669249
+2024-09-12 02:16:26,982 - INFO - Iteration: 6, Market Clearing Error: 1.8528899823965117, Tolerance: 0.12477980605851254
+2024-09-12 02:16:27,062 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:27,062 - INFO - Agent opt - Optimization result: -158.0474486645045
+2024-09-12 02:16:27,256 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:27,256 - INFO - Agent opt - Optimization result: 2083.0468928575874
+2024-09-12 02:16:27,380 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:27,380 - INFO - Agent opt - Optimization result: 2382.1655608298406
+2024-09-12 02:16:27,501 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:27,501 - INFO - Optimization result: -869.892558275651
+2024-09-12 02:16:27,514 - INFO - Iteration: 7, Market Clearing Error: 1.9910840941116466, Tolerance: 0.12477980605851254
+2024-09-12 02:16:27,713 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:27,713 - INFO - Agent opt - Optimization result: -217.88685555092707
+2024-09-12 02:16:27,924 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:27,924 - INFO - Agent opt - Optimization result: 1644.702589074248
+2024-09-12 02:16:28,220 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:28,220 - INFO - Agent opt - Optimization result: 1955.5947478595497
+2024-09-12 02:16:28,351 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:28,351 - INFO - Optimization result: -867.0352039321983
+2024-09-12 02:16:28,364 - INFO - Iteration: 8, Market Clearing Error: 1.9732180589220942, Tolerance: 0.12477980605851254
+2024-09-12 02:16:28,419 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:28,419 - INFO - Agent opt - Optimization result: -1.378463866978791
+2024-09-12 02:16:28,610 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:28,611 - INFO - Agent opt - Optimization result: 1206.4982218707828
+2024-09-12 02:16:28,995 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:28,995 - INFO - Agent opt - Optimization result: 1312.1746983571586
+2024-09-12 02:16:29,115 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:29,115 - INFO - Optimization result: -873.1573290834287
+2024-09-12 02:16:29,128 - INFO - Iteration: 9, Market Clearing Error: 2.0521888873641574, Tolerance: 0.12477980605851254
+2024-09-12 02:16:29,427 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:29,427 - INFO - Agent opt - Optimization result: 367.91380666360396
+2024-09-12 02:16:29,565 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:29,565 - INFO - Agent opt - Optimization result: 820.5560492968223
+2024-09-12 02:16:29,923 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:29,923 - INFO - Agent opt - Optimization result: 829.0130105642712
+2024-09-12 02:16:30,051 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:30,052 - INFO - Optimization result: -881.67443688488
+2024-09-12 02:16:30,065 - INFO - Iteration: 10, Market Clearing Error: 2.220799314571034, Tolerance: 0.12477980605851254
+2024-09-12 02:16:30,354 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:30,355 - INFO - Agent opt - Optimization result: 781.9883874029438
+2024-09-12 02:16:30,583 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:30,583 - INFO - Agent opt - Optimization result: 588.908961548639
+2024-09-12 02:16:30,911 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:30,911 - INFO - Agent opt - Optimization result: 659.2727642390657
+2024-09-12 02:16:31,033 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:31,033 - INFO - Optimization result: -866.4451573471622
+2024-09-12 02:16:31,046 - INFO - Iteration: 11, Market Clearing Error: 2.3426810362511516, Tolerance: 0.12477980605851254
+2024-09-12 02:16:31,179 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:31,179 - INFO - Agent opt - Optimization result: 1024.8664125093587
+2024-09-12 02:16:31,209 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:31,209 - INFO - Agent opt - Optimization result: 582.3296009061655
+2024-09-12 02:16:31,305 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:31,305 - INFO - Agent opt - Optimization result: 670.5691302362691
+2024-09-12 02:16:31,438 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:31,438 - INFO - Optimization result: -853.2970065929729
+2024-09-12 02:16:31,451 - INFO - Iteration: 12, Market Clearing Error: 1.7422754580157926, Tolerance: 0.12477980605851254
+2024-09-12 02:16:31,763 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:31,763 - INFO - Agent opt - Optimization result: 1236.912690093729
+2024-09-12 02:16:31,843 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:31,843 - INFO - Agent opt - Optimization result: 779.4891972031271
+2024-09-12 02:16:32,004 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:32,006 - INFO - Agent opt - Optimization result: 690.6921651396354
+2024-09-12 02:16:32,127 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:32,127 - INFO - Optimization result: -838.7531282180604
+2024-09-12 02:16:32,140 - INFO - Iteration: 13, Market Clearing Error: 1.377795563733633, Tolerance: 0.12477980605851254
+2024-09-12 02:16:32,465 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:32,466 - INFO - Agent opt - Optimization result: 1441.3336755413134
+2024-09-12 02:16:32,499 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:32,499 - INFO - Agent opt - Optimization result: 1065.1675880268788
+2024-09-12 02:16:32,924 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:32,924 - INFO - Agent opt - Optimization result: 720.8886280861245
+2024-09-12 02:16:33,077 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:33,077 - INFO - Optimization result: -838.9692566864404
+2024-09-12 02:16:33,091 - INFO - Iteration: 14, Market Clearing Error: 1.373982521172241, Tolerance: 0.12477980605851254
+2024-09-12 02:16:33,449 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:33,449 - INFO - Agent opt - Optimization result: 1653.5154108126471
+2024-09-12 02:16:33,682 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:33,682 - INFO - Agent opt - Optimization result: 1325.7964297880176
+2024-09-12 02:16:33,786 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:33,786 - INFO - Agent opt - Optimization result: 664.270246342661
+2024-09-12 02:16:33,937 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:33,937 - INFO - Optimization result: -842.0723259948443
+2024-09-12 02:16:33,950 - INFO - Iteration: 15, Market Clearing Error: 1.400103541712218, Tolerance: 0.12477980605851254
+2024-09-12 02:16:34,347 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:34,347 - INFO - Agent opt - Optimization result: 1861.1389086355566
+2024-09-12 02:16:34,471 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:34,471 - INFO - Agent opt - Optimization result: 1508.736941730475
+2024-09-12 02:16:34,612 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:34,612 - INFO - Agent opt - Optimization result: 564.5037704890166
+2024-09-12 02:16:34,731 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:34,731 - INFO - Optimization result: -845.8360096276409
+2024-09-12 02:16:34,744 - INFO - Iteration: 16, Market Clearing Error: 1.48042643038586, Tolerance: 0.12477980605851254
+2024-09-12 02:16:35,085 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:35,085 - INFO - Agent opt - Optimization result: 2030.3207950988206
+2024-09-12 02:16:35,163 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:35,163 - INFO - Agent opt - Optimization result: 1620.5887769216151
+2024-09-12 02:16:35,299 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:35,299 - INFO - Agent opt - Optimization result: 486.5680930071397
+2024-09-12 02:16:35,421 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:35,421 - INFO - Optimization result: -848.9524752219528
+2024-09-12 02:16:35,434 - INFO - Iteration: 17, Market Clearing Error: 1.7265379874543731, Tolerance: 0.12477980605851254
+2024-09-12 02:16:35,799 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:35,799 - INFO - Agent opt - Optimization result: 2141.8583313068025
+2024-09-12 02:16:36,035 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:36,035 - INFO - Agent opt - Optimization result: 1699.5890406044023
+2024-09-12 02:16:36,432 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:36,432 - INFO - Agent opt - Optimization result: 473.47058235772204
+2024-09-12 02:16:36,560 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:36,560 - INFO - Optimization result: -837.2080219141168
+2024-09-12 02:16:36,573 - INFO - Iteration: 18, Market Clearing Error: 1.330742810472733, Tolerance: 0.12477980605851254
+2024-09-12 02:16:36,860 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:36,860 - INFO - Agent opt - Optimization result: 2230.2563234112686
+2024-09-12 02:16:37,124 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:37,124 - INFO - Agent opt - Optimization result: 1778.0151930644988
+2024-09-12 02:16:37,268 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:37,268 - INFO - Agent opt - Optimization result: 529.7205018812083
+2024-09-12 02:16:37,387 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:37,388 - INFO - Optimization result: -836.221346038601
+2024-09-12 02:16:37,401 - INFO - Iteration: 19, Market Clearing Error: 1.247764805145218, Tolerance: 0.12477980605851254
+2024-09-12 02:16:37,677 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:37,677 - INFO - Agent opt - Optimization result: 2343.5816400121403
+2024-09-12 02:16:37,953 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:37,953 - INFO - Agent opt - Optimization result: 1881.6944312623439
+2024-09-12 02:16:38,298 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:38,298 - INFO - Agent opt - Optimization result: 743.7562537718677
+2024-09-12 02:16:38,418 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:38,418 - INFO - Optimization result: -827.7639354940403
+2024-09-12 02:16:38,431 - INFO - Iteration: 20, Market Clearing Error: 1.010339666888516, Tolerance: 0.12477980605851254
+2024-09-12 02:16:38,759 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:38,759 - INFO - Agent opt - Optimization result: 2481.326268708793
+2024-09-12 02:16:38,896 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:38,896 - INFO - Agent opt - Optimization result: 1990.4071522315153
+2024-09-12 02:16:39,220 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:39,220 - INFO - Agent opt - Optimization result: 1064.3207086967032
+2024-09-12 02:16:39,339 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:39,339 - INFO - Optimization result: -821.8386875901946
+2024-09-12 02:16:39,352 - INFO - Iteration: 21, Market Clearing Error: 0.732660892009602, Tolerance: 0.12477980605851254
+2024-09-12 02:16:39,613 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:39,613 - INFO - Agent opt - Optimization result: 2626.423703636136
+2024-09-12 02:16:39,693 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:39,694 - INFO - Agent opt - Optimization result: 2094.0499845088216
+2024-09-12 02:16:40,030 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:40,030 - INFO - Agent opt - Optimization result: 1407.34658950122
+2024-09-12 02:16:40,155 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:40,155 - INFO - Optimization result: -817.432909975466
+2024-09-12 02:16:40,168 - INFO - Iteration: 22, Market Clearing Error: 0.4208602726917283, Tolerance: 0.12477980605851254
+2024-09-12 02:16:40,428 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:40,428 - INFO - Agent opt - Optimization result: 2753.3533275551426
+2024-09-12 02:16:40,663 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:40,663 - INFO - Agent opt - Optimization result: 2171.7380528371855
+2024-09-12 02:16:40,983 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:40,983 - INFO - Agent opt - Optimization result: 1688.4360392399706
+2024-09-12 02:16:41,106 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:41,106 - INFO - Optimization result: -815.205793287589
+2024-09-12 02:16:41,119 - INFO - Iteration: 23, Market Clearing Error: 0.33250707704791954, Tolerance: 0.12477980605851254
+2024-09-12 02:16:41,368 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:41,368 - INFO - Agent opt - Optimization result: 2833.0002520990624
+2024-09-12 02:16:41,493 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:41,493 - INFO - Agent opt - Optimization result: 2210.7991052567613
+2024-09-12 02:16:41,649 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:41,649 - INFO - Agent opt - Optimization result: 1860.3845727197856
+2024-09-12 02:16:41,771 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:41,772 - INFO - Optimization result: -815.1837568354726
+2024-09-12 02:16:41,785 - INFO - Iteration: 24, Market Clearing Error: 0.3098431174048905, Tolerance: 0.12477980605851254
+2024-09-12 02:16:42,033 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:42,033 - INFO - Agent opt - Optimization result: 2854.680969351871
+2024-09-12 02:16:42,256 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:42,256 - INFO - Agent opt - Optimization result: 2209.4088053967707
+2024-09-12 02:16:42,533 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:42,533 - INFO - Agent opt - Optimization result: 1933.15920708384
+2024-09-12 02:16:42,652 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:42,652 - INFO - Optimization result: -815.5124730412392
+2024-09-12 02:16:42,666 - INFO - Iteration: 25, Market Clearing Error: 0.4189797250432593, Tolerance: 0.12477980605851254
+2024-09-12 02:16:42,805 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:42,805 - INFO - Agent opt - Optimization result: 2819.295707772639
+2024-09-12 02:16:42,990 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:42,990 - INFO - Agent opt - Optimization result: 2166.8195743948168
+2024-09-12 02:16:43,284 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:43,284 - INFO - Agent opt - Optimization result: 1936.014565350107
+2024-09-12 02:16:43,403 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:43,403 - INFO - Optimization result: -816.0495374369941
+2024-09-12 02:16:43,416 - INFO - Iteration: 26, Market Clearing Error: 0.5224362920095539, Tolerance: 0.12477980605851254
+2024-09-12 02:16:43,572 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:43,572 - INFO - Agent opt - Optimization result: 2740.4981957705227
+2024-09-12 02:16:43,819 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:43,819 - INFO - Agent opt - Optimization result: 2090.7195057693134
+2024-09-12 02:16:43,923 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:43,923 - INFO - Agent opt - Optimization result: 1909.9619996258343
+2024-09-12 02:16:44,043 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:16:44,044 - INFO - Optimization result: -816.7454855871122
+2024-09-12 02:16:44,057 - INFO - Iteration: 27, Market Clearing Error: 0.6199118337672742, Tolerance: 0.12477980605851254
+2024-09-12 02:16:44,192 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:16:44,192 - INFO - Agent opt - Optimization result: 2635.618911259765
+2024-09-12 02:17:13,384 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:13,385 - INFO - Agent opt - Optimization result: -56224.858691211295
+2024-09-12 02:17:13,416 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:13,416 - INFO - Agent opt - Optimization result: -50759.77862352941
+2024-09-12 02:17:13,447 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:13,447 - INFO - Agent opt - Optimization result: -52729.51640777614
+2024-09-12 02:17:13,589 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:17:13,589 - INFO - Optimization result: -27946.765198436813
+2024-09-12 02:17:13,602 - INFO - Iteration: 1, Market Clearing Error: 125.1882138180966, Tolerance: 0.12477980605851254
+2024-09-12 02:17:13,669 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:13,669 - INFO - Agent opt - Optimization result: -22186.81136142305
+2024-09-12 02:17:13,883 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:13,883 - INFO - Agent opt - Optimization result: -20176.572188025413
+2024-09-12 02:17:14,137 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:14,137 - INFO - Agent opt - Optimization result: -11494.765284936257
+2024-09-12 02:17:14,275 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:17:14,275 - INFO - Optimization result: -2024.1722406262406
+2024-09-12 02:17:14,288 - INFO - Iteration: 2, Market Clearing Error: 10.86076424305316, Tolerance: 0.12477980605851254
+2024-09-12 02:17:14,487 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:14,487 - INFO - Agent opt - Optimization result: -8324.134537176631
+2024-09-12 02:17:14,618 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:14,618 - INFO - Agent opt - Optimization result: -8925.019283450272
+2024-09-12 02:17:14,831 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:14,831 - INFO - Agent opt - Optimization result: 3032.1615073812513
+2024-09-12 02:17:14,967 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:17:14,967 - INFO - Optimization result: -2607.89931119609
+2024-09-12 02:17:14,980 - INFO - Iteration: 3, Market Clearing Error: 12.653096837102263, Tolerance: 0.12477980605851254
+2024-09-12 02:17:15,029 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:15,029 - INFO - Agent opt - Optimization result: -3785.1423371200135
+2024-09-12 02:17:15,121 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:15,121 - INFO - Agent opt - Optimization result: -4642.738519795206
+2024-09-12 02:17:15,381 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:15,381 - INFO - Agent opt - Optimization result: 3630.323621357144
+2024-09-12 02:17:15,515 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:17:15,515 - INFO - Optimization result: -2100.5846157333917
+2024-09-12 02:17:15,528 - INFO - Iteration: 4, Market Clearing Error: 10.367770638649516, Tolerance: 0.12477980605851254
+2024-09-12 02:17:15,587 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:15,587 - INFO - Agent opt - Optimization result: 177.3124741131369
+2024-09-12 02:17:15,691 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:15,692 - INFO - Agent opt - Optimization result: -5.738316152682387
+2024-09-12 02:17:15,979 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:15,979 - INFO - Agent opt - Optimization result: 3444.011016974769
+2024-09-12 02:17:16,106 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:17:16,106 - INFO - Optimization result: -1058.3846131264602
+2024-09-12 02:17:16,119 - INFO - Iteration: 5, Market Clearing Error: 3.983743497578271, Tolerance: 0.12477980605851254
+2024-09-12 02:17:16,222 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:16,222 - INFO - Agent opt - Optimization result: 202.91580290479487
+2024-09-12 02:17:16,410 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:16,410 - INFO - Agent opt - Optimization result: 539.3790280528397
+2024-09-12 02:17:16,517 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 02:17:16,517 - INFO - Agent opt - Optimization result: 2644.6143609435794
+2024-09-12 02:17:16,635 - INFO - Problem solved with solver CLARABEL
+2024-09-12 02:17:16,635 - INFO - Optimization result: -971.8843751398015
+2024-09-12 02:17:16,648 - INFO - Iteration: 6, Market Clearing Error: 2.169257613945441, Tolerance: 0.12477980605851254
+2024-09-12 09:42:00,492 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 09:42:00,492 - INFO - Agent opt - Optimization result: -424.37667113853956
+2024-09-12 09:42:00,526 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 09:42:00,526 - INFO - Agent opt - Optimization result: -65.78806980224411
+2024-09-12 09:42:00,568 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 09:42:00,568 - INFO - Agent opt - Optimization result: -500.4385994188308
+2024-09-12 09:42:00,732 - INFO - Problem solved with solver CLARABEL
+2024-09-12 09:42:00,732 - INFO - Optimization result: -30679.948357248282
+2024-09-12 09:42:00,748 - INFO - Iteration: 1, Market Clearing Error: 180.10891474826383, Tolerance: 1.2477980605851255e-07
+2024-09-12 09:42:00,866 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 09:42:00,866 - INFO - Agent opt - Optimization result: 489.5698769576714
+2024-09-12 09:42:00,951 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 09:42:00,952 - INFO - Agent opt - Optimization result: 563.14590288309
+2024-09-12 09:42:00,988 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 09:42:00,988 - INFO - Agent opt - Optimization result: 229.0394283840771
+2024-09-12 09:42:01,153 - INFO - Problem solved with solver CLARABEL
+2024-09-12 09:42:01,153 - INFO - Optimization result: -987.3024950437033
+2024-09-12 09:42:01,153 - INFO - Iteration: 2, Market Clearing Error: 0.0, Tolerance: 1.2477980605851255e-07
+2024-09-12 09:43:48,544 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 09:43:48,545 - INFO - Agent opt - Optimization result: -374.4304055501484
+2024-09-12 09:43:48,582 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 09:43:48,582 - INFO - Agent opt - Optimization result: -100.66480730497153
+2024-09-12 09:43:48,612 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 09:43:48,612 - INFO - Agent opt - Optimization result: -419.98531986130484
+2024-09-12 09:43:48,771 - INFO - Problem solved with solver CLARABEL
+2024-09-12 09:43:48,772 - INFO - Optimization result: -30983.915705463198
+2024-09-12 09:43:48,788 - INFO - Iteration: 1, Market Clearing Error: 180.62005481887365, Tolerance: 1.2477980605851255e-07
+2024-09-12 09:43:48,859 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 09:43:48,859 - INFO - Agent opt - Optimization result: 357.44497196490875
+2024-09-12 09:43:48,894 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 09:43:48,894 - INFO - Agent opt - Optimization result: 324.008027330371
+2024-09-12 09:43:48,999 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 09:43:48,999 - INFO - Agent opt - Optimization result: 252.0934416741952
+2024-09-12 09:43:49,159 - INFO - Problem solved with solver CLARABEL
+2024-09-12 09:43:49,159 - INFO - Optimization result: -987.0376459530909
+2024-09-12 09:43:49,160 - INFO - Iteration: 2, Market Clearing Error: 0.0, Tolerance: 1.2477980605851255e-07
+2024-09-12 13:13:18,526 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 13:13:18,526 - INFO - Agent opt - Optimization result: -476.2106184967597
+2024-09-12 13:13:18,600 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 13:13:18,600 - INFO - Agent opt - Optimization result: -53.84721406777527
+2024-09-12 13:13:18,646 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 13:13:18,646 - INFO - Agent opt - Optimization result: -400.65235466051354
+2024-09-12 13:13:18,810 - INFO - Problem solved with solver CLARABEL
+2024-09-12 13:13:18,810 - INFO - Optimization result: -30850.42760499722
+2024-09-12 13:13:18,827 - INFO - Iteration: 1, Market Clearing Error: 180.13490164994886, Tolerance: 1.2477980605851255e-07
+2024-09-12 13:13:18,953 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 13:13:18,953 - INFO - Agent opt - Optimization result: 521.5783587523798
+2024-09-12 13:13:19,050 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 13:13:19,050 - INFO - Agent opt - Optimization result: 538.6037871423896
+2024-09-12 13:13:19,136 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 13:13:19,136 - INFO - Agent opt - Optimization result: 290.39860769170144
+2024-09-12 13:13:19,293 - INFO - Problem solved with solver CLARABEL
+2024-09-12 13:13:19,293 - INFO - Optimization result: -989.2954048449872
+2024-09-12 13:13:19,294 - INFO - Iteration: 2, Market Clearing Error: 0.0, Tolerance: 1.2477980605851255e-07
+2024-09-12 18:09:39,615 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:39,615 - INFO - Agent opt - Optimization result: -382.05041572122684
+2024-09-12 18:09:39,655 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:39,655 - INFO - Agent opt - Optimization result: -16.207504363932912
+2024-09-12 18:09:39,692 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:39,692 - INFO - Agent opt - Optimization result: -454.4276981277474
+2024-09-12 18:09:39,855 - INFO - Problem solved with solver CLARABEL
+2024-09-12 18:09:39,855 - INFO - Optimization result: -31197.8770274002
+2024-09-12 18:09:39,871 - INFO - Iteration: 1, Market Clearing Error: 180.364709279978, Tolerance: 1.2477980605851255e-07
+2024-09-12 18:09:39,985 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:39,985 - INFO - Agent opt - Optimization result: 501.5879602472004
+2024-09-12 18:09:40,033 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:40,033 - INFO - Agent opt - Optimization result: 328.99544164018045
+2024-09-12 18:09:40,117 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:40,117 - INFO - Agent opt - Optimization result: 351.9290880126978
+2024-09-12 18:09:40,274 - INFO - Problem solved with solver CLARABEL
+2024-09-12 18:09:40,274 - INFO - Optimization result: -985.2562882492621
+2024-09-12 18:09:40,275 - INFO - Iteration: 2, Market Clearing Error: 0.0, Tolerance: 1.2477980605851255e-07
+2024-09-12 18:09:56,440 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:56,440 - INFO - Agent opt - Optimization result: 247.1166621441036
+2024-09-12 18:09:56,571 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:56,571 - INFO - Agent opt - Optimization result: 251.3435676208978
+2024-09-12 18:09:56,723 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:56,723 - INFO - Agent opt - Optimization result: 55.37499526815199
+2024-09-12 18:09:56,874 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:56,874 - INFO - Agent opt - Optimization result: 195.0141352358627
+2024-09-12 18:09:57,065 - INFO - Problem solved with solver CLARABEL
+2024-09-12 18:09:57,065 - INFO - Optimization result: -32665.677535296138
+2024-09-12 18:09:57,086 - INFO - Iteration: 1, Market Clearing Error: 186.15904417499203, Tolerance: 1.7003529045465827e-07
+2024-09-12 18:09:57,327 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:57,327 - INFO - Agent opt - Optimization result: 630.9161661056086
+2024-09-12 18:09:57,585 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:57,585 - INFO - Agent opt - Optimization result: 775.2139970769299
+2024-09-12 18:09:57,616 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:57,616 - INFO - Agent opt - Optimization result: 696.8188313068471
+2024-09-12 18:09:57,715 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:57,715 - INFO - Agent opt - Optimization result: 614.254140917731
+2024-09-12 18:09:57,917 - INFO - Problem solved with solver CLARABEL
+2024-09-12 18:09:57,917 - INFO - Optimization result: -980.4235329414222
+2024-09-12 18:09:57,917 - INFO - Iteration: 2, Market Clearing Error: 0.6525615548263104, Tolerance: 1.7003529045465827e-07
+2024-09-12 18:09:58,180 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:58,180 - INFO - Agent opt - Optimization result: 793.3175680190336
+2024-09-12 18:09:58,443 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:58,443 - INFO - Agent opt - Optimization result: 906.9891762815674
+2024-09-12 18:09:58,612 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:58,612 - INFO - Agent opt - Optimization result: 870.5953387479119
+2024-09-12 18:09:58,853 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:09:58,853 - INFO - Agent opt - Optimization result: 775.6693209397929
+2024-09-12 18:09:59,056 - INFO - Problem solved with solver CLARABEL
+2024-09-12 18:09:59,056 - INFO - Optimization result: -979.3519093623004
+2024-09-12 18:09:59,056 - INFO - Iteration: 3, Market Clearing Error: 0.0, Tolerance: 1.7003529045465827e-07
+2024-09-12 18:10:18,151 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:10:18,152 - INFO - Agent opt - Optimization result: -251.72537145647541
+2024-09-12 18:10:18,179 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:10:18,179 - INFO - Agent opt - Optimization result: 188.0224212107638
+2024-09-12 18:10:18,248 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:10:18,248 - INFO - Agent opt - Optimization result: 25.8047633355541
+2024-09-12 18:10:18,346 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:10:18,346 - INFO - Agent opt - Optimization result: 340.2229843713661
+2024-09-12 18:10:18,415 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:10:18,415 - INFO - Agent opt - Optimization result: -5.016548125059501
+2024-09-12 18:10:18,693 - INFO - Problem solved with solver CLARABEL
+2024-09-12 18:10:18,693 - INFO - Optimization result: -39456.81194750609
+2024-09-12 18:10:18,728 - INFO - Iteration: 1, Market Clearing Error: 204.36747946204116, Tolerance: 2.3264780248263686e-07
+2024-09-12 18:10:18,871 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:10:18,872 - INFO - Agent opt - Optimization result: 434.9683884589968
+2024-09-12 18:10:19,006 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:10:19,006 - INFO - Agent opt - Optimization result: 645.9454172931519
+2024-09-12 18:10:19,083 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:10:19,083 - INFO - Agent opt - Optimization result: 543.9620290512065
+2024-09-12 18:10:19,335 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:10:19,335 - INFO - Agent opt - Optimization result: 868.9760616245696
+2024-09-12 18:10:19,421 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:10:19,421 - INFO - Agent opt - Optimization result: 551.8776919208156
+2024-09-12 18:10:19,704 - INFO - Problem solved with solver CLARABEL
+2024-09-12 18:10:19,704 - INFO - Optimization result: -970.0209534037863
+2024-09-12 18:10:19,705 - INFO - Iteration: 2, Market Clearing Error: 0.4097449646552841, Tolerance: 2.3264780248263686e-07
+2024-09-12 18:10:19,948 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:10:19,948 - INFO - Agent opt - Optimization result: 569.3590277241321
+2024-09-12 18:10:20,117 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:10:20,117 - INFO - Agent opt - Optimization result: 746.0829397452056
+2024-09-12 18:10:20,259 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:10:20,259 - INFO - Agent opt - Optimization result: 673.432325351528
+2024-09-12 18:10:20,500 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:10:20,500 - INFO - Agent opt - Optimization result: 996.1724911098892
+2024-09-12 18:10:20,533 - INFO - Agent Opt - Problem solved with solver SCS
+2024-09-12 18:10:20,533 - INFO - Agent opt - Optimization result: 690.0663074143506
+2024-09-12 18:10:20,835 - INFO - Problem solved with solver CLARABEL
+2024-09-12 18:10:20,835 - INFO - Optimization result: -968.9380597005904
+2024-09-12 18:10:20,836 - INFO - Iteration: 3, Market Clearing Error: 0.0, Tolerance: 2.3264780248263686e-07

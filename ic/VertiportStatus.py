@@ -21,6 +21,8 @@ class VertiportStatus(nx.DiGraph):
         super().__init__(data, **attr)
         self.time_steps = list(range(timing["start_time"], timing["end_time"] + timing["time_step"], timing["time_step"]))
         self.vertiports = vertiports
+        print("sjdfhlaskjdhfalksjdfhlaksjdhfkj")
+        print(vertiports.items())
 
         # Create time extended graph of vertiports
         for step in self.time_steps:

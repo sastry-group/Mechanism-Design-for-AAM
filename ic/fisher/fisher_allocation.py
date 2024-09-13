@@ -27,13 +27,8 @@ from fisher.fisher_int_optimization import int_optimization
 from write_csv import write_output, save_data
 
 UPDATED_APPROACH = True
-<<<<<<< HEAD
-TOL_ERROR = 1e-3
-MAX_NUM_ITERATIONS = 1000
-=======
 TOL_ERROR = 1e-9
 MAX_NUM_ITERATIONS = 5000
->>>>>>> equilibrium-dropout
 # BETA = 1
 # dropout_good_valuation = -1
 # default_good_valuation = 1
@@ -146,7 +141,7 @@ def construct_market(market_graph, flights, timing_info, routes, vertiport_usage
         A[0] = -1 * A[0]
         valuations = []
         for edge in edges:
-            valuations.append(agent_graph.edges[edge]["valuation"])
+            valuations.append(agent_graph.edges[edge]["valuation"]) # [('AC004', ('V001_13_dep', 'V002_18_arr')), ('AC005', ('V007_17_dep', 'V002_55_arr')), ('AC008', ('V003_20_dep', 'V006_42_arr'))]
 
         b = np.zeros(len(A))
         b[0] = 1
@@ -714,11 +709,25 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
         price_default_good = 10
         rebate_frequency = 1
 
+
+    print('A:   ------')
+    print(vertiport_usage)
+    print()
+    print()
+    print('B:   ------')
+    print(json.dumps(flights, indent =4 ))
+    print()
+    print()
+    print('C:   ------')
+    print(timing_info)
+    print()
+    print()
+
     # Construct market
     agent_information, market_information, bookkeeping = construct_market(market_graph, flights, timing_info, routes_data, vertiport_usage, 
                                                                           default_good_valuation=default_good_valuation, 
                                                                           dropout_good_valuation=dropout_good_valuation, BETA=BETA)
-
+    
     # Run market
     goods_list, times_list = bookkeeping
     num_goods, num_agents = len(goods_list), len(flights)
@@ -860,7 +869,17 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     #     new_allocations_goods = None
     # end_agent_status_data = (allocation, rebased, dropouts) #change
 
-
+    print("FISHER OUTPUT------------------")
+    print()
+    print()
+    print(allocation)
+    print()
+    print("********")
+    print()
+    print(rebased)
+    print()
+    print()
+    print('-------------')
 
     write_output(flights, edge_information, prices, new_prices, capacity, end_capacity, 
                 agents_data, market_auction_time, output_folder)
