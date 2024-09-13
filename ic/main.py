@@ -218,7 +218,11 @@ def step_simulation(
         flights (dict): The flights information.
         allocated_flights (list): The list of allocated flights.
         stack_commands (list): The list of stack commands to add to.
+
     """
+    if allocated_flights is None:
+        return vertiport_usage
+    
     for flight_id, request_id in allocated_flights:
         # Pull flight and allocated request
         flight = flights[flight_id]

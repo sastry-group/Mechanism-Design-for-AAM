@@ -276,6 +276,7 @@ def build_agent_edge_utilities(edge_information, agents_goods_list, utility_valu
 
     return all_agents_utilities
 
+
 def process_allocations(x, edge_information, agent_goods_lists):
     """
     Process the allocation matrix to output agent-specific goods allocations
@@ -315,6 +316,7 @@ def process_allocations(x, edge_information, agent_goods_lists):
         for id in indices:
             agent_edge = edge_labels_list[id]
             agent_edges[agent_edge] = edge_information[agent_edge]
+            
         
         agent_allocations.append(allocations)
         agent_indices.append(np.array(indices))
