@@ -27,7 +27,7 @@ from fisher.fisher_int_optimization import int_optimization
 from write_csv import write_output, save_data
 
 UPDATED_APPROACH = True
-TOL_ERROR = 1e-9
+TOL_ERROR = 1e-3
 MAX_NUM_ITERATIONS = 5000
 # BETA = 1
 # dropout_good_valuation = -1
@@ -260,7 +260,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
     # objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply, 2)))
     y_sum = cp.sum(y, axis=0)
     objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 'fro')) - (beta / 2) * cp.square(cp.norm(y_sum + y_bar - supply, 2))  - p_k.T @ y_bar)
-    cp_constraints = [y_bar >= 0, y[:,:-2]<=1.1, y_bar[:-2]<=supply[:-2]] # remove default and dropout good
+    cp_constraints = [y_bar >= 0, y[:,:-2]<=1, y_bar[:-2]<=supply[:-2]] # remove default and dropout good
     problem = cp.Problem(objective, cp_constraints)
     # problem = cp.Problem(objective)
 
@@ -387,7 +387,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
         regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.sum([cp.square(cp.maximum(A_i[t] @ x_i - b_i[t], 0)) for t in range(num_constraints)])
         lagrangians = - p.T @ x_i - cp.sum([r_i[t] * cp.maximum(A_i[t] @ x_i - b_i[t], 0) for t in range(num_constraints)])
         objective = cp.Maximize(u_i.T @ x_i + regularizers + lagrangians)
-        cp_constraints = [x_i >= 0, x_i<= 1.1]
+        cp_constraints = [x_i >= 0, x_i<= 1]
         # cp_constraints = [x_i >= 0, p.T @ x_i <= w_adj]
         # objective = cp.Maximize(u_i.T @ x_i)
         # cp_constraints = [x_i >= 0, p.T @ x_i <= w_adj, A_i @ x_i <= b_i]
@@ -400,14 +400,14 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
         lagrangians = - p.T @ x_i - r_i.T @ (A_i @ x_i - b_i) # the price of dropout good is 0
         nominal_objective = w_adj * cp.log(objective_terms)
         objective = cp.Maximize(nominal_objective + lagrangians + regularizers)
-        cp_constraints = [x_i >= 0, x_i<= 1.1]
+        cp_constraints = [x_i >= 0, x_i<= 1]
         # cp_constraints = [x_i >= 0, A_bar @ x_i[:-2] + x_i[-2] >= 0]
     else:
         regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.sum([cp.square(cp.maximum(A_i[t] @ x_i - b_i[t], 0)) for t in range(num_constraints)])
         lagrangians = - p.T @ x_i - cp.sum([r_i[t] * cp.maximum(A_i[t] @ x_i - b_i[t], 0) for t in range(num_constraints)])
         nominal_objective = w_adj * cp.log(u_i.T @ x_i)
         objective = cp.Maximize(nominal_objective + lagrangians + regularizers)
-        cp_constraints = [x_i >= 0, x_i<= 1.1]
+        cp_constraints = [x_i >= 0, x_i<= 1]
     # check_time = time.time()
     problem = cp.Problem(objective, cp_constraints)
     # problem.solve(solver=solver, verbose=False)
@@ -559,11 +559,11 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         current_social_welfare = social_welfare(x, p, u, supply)
         social_welfare_vector.append(current_social_welfare)
 
-        if (market_clearing_error <= tolerance) and (abs_constraint_error <= tolerance) and (x_iter>=10):
+        x_iter += 1
+        if (market_clearing_error <= tolerance) and (abs_constraint_error <= 0.000001) and (x_iter>=10):
             break
 
 
-        x_iter += 1
 
 
         print("Iteration: ", x_iter, "- MCE: ", market_clearing_error, "-Aabs. Err: ", abs_constraint_error, " - Tol: ", tolerance)
