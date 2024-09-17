@@ -243,6 +243,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
     '''
     Update market consumption, prices, and rebates
     '''
+    start_time = time.time()
     shape = np.shape(x)
     num_agents = shape[0]
     num_goods = shape[1]
@@ -263,7 +264,9 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
     cp_constraints = [y_bar >= 0, y[:,:-2]<=1, y_bar[:-2]<=supply[:-2]] # remove default and dropout good
     problem = cp.Problem(objective, cp_constraints)
     # problem = cp.Problem(objective)
+    build_time = time.time() - start_time
 
+    start_time = time.time()
     solvers = [cp.CLARABEL, cp.SCS, cp.OSQP, cp.ECOS, cp.CVXOPT]
     for solver in solvers:
         try:
@@ -276,6 +279,8 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
         except Exception as e:
             logging.error(f"An unexpected error occurred with solver {solver}: {e}")
             continue
+    solve_time = time.time() - start_time
+    print(f"Market: Build time: {build_time} - Solve time: {solve_time} with solver {solver}")
 
     # Check if the problem was solved successfully
     if problem.status != cp.OPTIMAL:
@@ -343,18 +348,29 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
     args = [(w[i], agent_utilities[i], agent_prices[i], r[i], constraints[i], agent_ys[i], beta, rational) for i in agent_indices]
 
     # Update agents in parallel or not depending on parallel flag
+    # parallel = True
     if not parallel:
         results = []
         adjusted_budgets = []
+        build_times = []
+        solve_times = []
         for arg in args:
             updates =  update_agent(*arg)
             results.append(updates[0])
-            adjusted_budgets.append(updates[1]) 
+            adjusted_budgets.append(updates[1])
+            build_times.append(updates[2][0])
+            solve_times.append(updates[2][1])
         # results = [update_agent(*arg) for arg in args]
+        print(f"Average build time: {np.mean(build_times)} - Average solve time: {np.mean(solve_times)}")
     else:
         num_processes = 4 # increase based on available resources
         with Pool(num_processes) as pool:
-            results = pool.starmap(update_agent, args)
+            pooled_results = pool.starmap(update_agent, args)
+            results = [result[0] for result in pooled_results]
+            adjusted_budgets = [result[1] for result in pooled_results]
+            build_times = [result[2][0] for result in pooled_results]
+            solve_times = [result[2][1] for result in pooled_results]
+        print(f"Average build time: {np.mean(build_times)} - Average solve time: {np.mean(solve_times)}")
 
     x = np.zeros((num_agents, num_goods))
     for i, agent_x in zip(agent_indices, results):
@@ -368,6 +384,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
     """
     Update individual agent's consumption given market settings and constraints
     """
+    start_time = time.time()
     # Individual agent optimization
     A_i, b_i = constraints
     # A_bar = A_i[0]
@@ -412,6 +429,8 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
     problem = cp.Problem(objective, cp_constraints)
     # problem.solve(solver=solver, verbose=False)
 
+    build_time = time.time() - start_time
+    start_time = time.time()
     solvers = [cp.SCS, cp.CLARABEL, cp.MOSEK, cp.OSQP, cp.ECOS, cp.CVXOPT]
     for solver in solvers:
         try:
@@ -424,7 +443,8 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
         except Exception as e:
             logging.error(f"Agent Opt - An unexpected error occurred with solver {solver}: {e}")
             continue
-
+    solve_time = time.time() - start_time
+    
     # Check if the problem was solved successfully
     if problem.status != cp.OPTIMAL:
         logging.error("Agent Opt - Failed to solve the problem with all solvers.")
@@ -432,8 +452,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
         logging.info("Agent opt - Optimization result: %s", result)
 
 
-    # print(f"Solvers time: {time.time() - check_time}")
-    return x_i.value, w_adj
+    return x_i.value, w_adj, (build_time, solve_time)
 
 
 def run_basic_market(initial_values, agent_settings, market_settings, plotting=False, rational=False):
@@ -562,6 +581,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         x_iter += 1
         if (market_clearing_error <= tolerance) and (abs_constraint_error <= 0.000001) and (x_iter>=10):
             break
+        if x_iter>=100:
+            break
 
 
 
@@ -657,16 +678,16 @@ def plotting_market(data_to_plot, output_folder, market_auction_time=None):
     plt.close()
 
     # Agent allocation evolution
-    plt.figure(figsize=(10, 5))
-    for agent_index in range(len(agent_allocations[0])):
-        plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_index][:-2] for i in range(len(agent_allocations))])
-        plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_index][-2] for i in range(len(agent_allocations))], 'b--', label=f"{agent_index} - Default Good")
-        plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_index][-1] for i in range(len(agent_allocations))], 'r-.', label=f"{agent_index} - Dropout Good")
-    plt.legend()
-    plt.xlabel('x_iter')
-    plt.title("Agent allocation evolution")
-    plt.savefig(get_filename("agent_allocation_evolution"))
-    plt.close()
+    # plt.figure(figsize=(10, 5))
+    # for agent_index in range(len(agent_allocations[0])):
+    #     plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_index][:-2] for i in range(len(agent_allocations))])
+    #     plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_index][-2] for i in range(len(agent_allocations))], 'b--', label=f"{agent_index} - Default Good")
+    #     plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_index][-1] for i in range(len(agent_allocations))], 'r-.', label=f"{agent_index} - Dropout Good")
+    # plt.legend()
+    # plt.xlabel('x_iter')
+    # plt.title("Agent allocation evolution")
+    # plt.savefig(get_filename("agent_allocation_evolution"))
+    # plt.close()
 
     # Desired goods evolution
     plt.figure(figsize=(10, 5))
