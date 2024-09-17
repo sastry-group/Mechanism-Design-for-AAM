@@ -239,38 +239,50 @@ def update_basic_market(x, values_k, market_settings, constraints):
     return k + 1, y_k_plus_1, p_k_plus_1, r_k_plus_1
 
 
-def update_market(x, values_k, market_settings, constraints, agent_goods_lists, goods_list, price_default_good, update_rebates=False):
+def update_market(x_val, values_k, market_settings, constraints, agent_goods_lists, goods_list, price_default_good, problem, update_rebates=False):
     '''
     Update market consumption, prices, and rebates
     '''
     start_time = time.time()
-    shape = np.shape(x)
+    shape = np.shape(x_val)
     num_agents = shape[0]
     num_goods = shape[1]
-    k, p_k, r_k = values_k
+    k, p_k_val, r_k = values_k
     supply, beta = market_settings
     
     # Update consumption
     # y = cp.Variable((num_agents, num_goods - 2)) # dropout and default removed
     # y = cp.Variable((num_agents, num_goods - 1)) # dropout removed (4)
-    y = cp.Variable((num_agents, num_goods)) 
-    y_bar = cp.Variable(num_goods)
-    # Do we remove drop out here or not? - remove the default and dropout good
-    # objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x[:,:-1] - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply[:-1], 2))) # (4) (5)
-    # objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x[:,:-2] - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply[:-2], 2)))
-    # objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply, 2)))
-    y_sum = cp.sum(y, axis=0)
-    objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 'fro')) - (beta / 2) * cp.square(cp.norm(y_sum + y_bar - supply, 2))  - p_k.T @ y_bar)
-    cp_constraints = [y_bar >= 0, y[:,:-2]<=1, y_bar[:-2]<=supply[:-2]] # remove default and dropout good
-    problem = cp.Problem(objective, cp_constraints)
-    # problem = cp.Problem(objective)
+    warm_start = False
+    if problem is None:
+        y = cp.Variable((num_agents, num_goods)) 
+        y_bar = cp.Variable(num_goods)
+        p_k = cp.Parameter(num_goods, name='p_k')
+        x = cp.Parameter((num_agents, num_goods), name='x')
+        # Do we remove drop out here or not? - remove the default and dropout good
+        # objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x[:,:-1] - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply[:-1], 2))) # (4) (5)
+        # objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x[:,:-2] - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply[:-2], 2)))
+        # objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply, 2)))
+        y_sum = cp.sum(y, axis=0)
+        objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 'fro')) - (beta / 2) * cp.square(cp.norm(y_sum + y_bar - supply, 2))  - p_k.T @ y_bar)
+        cp_constraints = [y_bar >= 0, y[:,:-2]<=1, y_bar[:-2]<=supply[:-2]] # remove default and dropout good
+        problem = cp.Problem(objective, cp_constraints)
+        warm_start = False
+        # problem = cp.Problem(objective)
+    else:
+        y = problem.variables()[0]
+        y_bar = problem.variables()[1]
+        p_k = problem.param_dict['p_k']
+        x = problem.param_dict['x']
+    p_k.value = p_k_val
+    x.value = x_val
     build_time = time.time() - start_time
 
     start_time = time.time()
     solvers = [cp.CLARABEL, cp.SCS, cp.OSQP, cp.ECOS, cp.CVXOPT]
     for solver in solvers:
         try:
-            result = problem.solve(solver=solver)
+            result = problem.solve(solver=solver, warm_start=warm_start, ignore_dpp=True)
             logging.info(f"Problem solved with solver {solver}")
             break
         except cp.error.SolverError as e:
@@ -296,7 +308,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
     # (3) do not update price, dont add it in optimization, 
     # (4) update price and add it in optimization, 
     # (5) dont update price but add it in optimization
-    p_k_plus_1 = p_k[:-2] + beta * (np.sum(y_k_plus_1[:,:-2], axis=0) - supply[:-2]) #(3) default 
+    p_k_plus_1 = p_k_val[:-2] + beta * (np.sum(y_k_plus_1[:,:-2], axis=0) - supply[:-2]) #(3) default 
     # p_k_plus_1 = p_k[:-1] + beta * (np.sum(y_k_plus_1, axis=0) - supply[:-1]) #(4)
     # p_k_plus_1 = p_k[:-2] + beta * (np.sum(y_k_plus_1[:,:-2], axis=0) - supply[:-2]) #(5)
     # p_k_plus_1 = p_k + beta * (np.sum(y_k_plus_1, axis=0) - supply)
@@ -314,7 +326,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
         r_k_plus_1 = []
         for i in range(num_agents):
             agent_constraints = constraints[i]
-            agent_x = np.array([x[i, goods_list.index(good)] for good in agent_goods_lists[i]])
+            agent_x = np.array([x.value[i, goods_list.index(good)] for good in agent_goods_lists[i]])
             if UPDATED_APPROACH:
                 # agent_x = np.array([x[i, goods_list[:-1].index(good)] for good in agent_goods_lists[i][:-1]])
                 constraint_violations = np.array([agent_constraints[0][j] @ agent_x - agent_constraints[1][j] for j in range(len(agent_constraints[1]))])
@@ -323,7 +335,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
             r_k_plus_1.append(r_k[i] + beta * constraint_violations)
     else:
         r_k_plus_1 = r_k
-    return k + 1, y_k_plus_1, p_k_plus_1, r_k_plus_1
+    return k + 1, y_k_plus_1, p_k_plus_1, r_k_plus_1, problem
 
 
 def update_basic_agents(w, u, p, r, constraints, y, beta, rational=False):
@@ -394,6 +406,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
 
     budget_adjustment = r_i.T @ b_i
     w_adj = w_i + budget_adjustment
+    # print(w_adj)
     w_adj = max(w_adj, 0)
     # w_adj = abs(w_adj) 
 
@@ -412,12 +425,12 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
         # objective_terms = v_i.T @ x_i[:-2] + v_i_o * x_i[-2] + v_i_d * x_i[-1]
         objective_terms = u_i.T @ x_i
         # regularizers = - (beta / 2) * cp.square(cp.norm(x_i[:-1] - y_i, 2)) - (beta / 2) * cp.square(cp.norm(A_i @ x_i - b_i, 2))  #(4)
-        regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.square(cp.norm(A_i @ x_i - b_i, 2))        
+        regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) *cp.square(cp.norm(A_i[0][:] @ x_i - b_i[0], 2)) # - (beta / 2) * cp.square(cp.norm(A_i @ x_i - b_i, 2))        
         # regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.square(cp.norm(A_i @ x_i - b_i, 2)) 
         lagrangians = - p.T @ x_i - r_i.T @ (A_i @ x_i - b_i) # the price of dropout good is 0
         nominal_objective = w_adj * cp.log(objective_terms)
         objective = cp.Maximize(nominal_objective + lagrangians + regularizers)
-        cp_constraints = [x_i >= 0, x_i<= 1]
+        cp_constraints = [x_i >= 0, x_i<= 1, A_i[1:] @ x_i == b_i[1:]]
         # cp_constraints = [x_i >= 0, A_bar @ x_i[:-2] + x_i[-2] >= 0]
     else:
         regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.sum([cp.square(cp.maximum(A_i[t] @ x_i - b_i[t], 0)) for t in range(num_constraints)])
@@ -541,7 +554,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
     x_iter = 0
     start_time_algorithm = time.time()  
     
-
+    problem = None
     while x_iter <= MAX_NUM_ITERATIONS:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
         x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, rational=rational)
         agent_allocations.append(x) # 
@@ -571,7 +584,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         else:
             update_rebates = False
         # Update market
-        k, y, p, r = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, price_default_good, update_rebates=update_rebates)
+        k, y, p, r, problem = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, price_default_good, problem, update_rebates=update_rebates)
         yplot.append(y)
         rebates.append([rebate_list for rebate_list in r])
         prices.append(p)
