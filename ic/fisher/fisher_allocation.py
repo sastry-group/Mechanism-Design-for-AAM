@@ -667,8 +667,8 @@ def plotting_market(data_to_plot, output_folder, market_auction_time=None):
     for agent_index in range(len(agent_constraints)):
         plt.plot(range(1, x_iter + 1), error[agent_index])
     plt.ylabel('Constraint error')
-    plt.title("Constraint error evolution $\sum (linear constraints)^2$")
-    plt.savefig(get_filename("constraint_error_evolution"))
+    plt.title("Constraint error evolution $\sum ||Ax - b||^2$")
+    plt.savefig(get_filename("linear_constraint_error_evolution"))
     plt.close()
 
     # Absolute error evolution
@@ -676,8 +676,8 @@ def plotting_market(data_to_plot, output_folder, market_auction_time=None):
     for agent_index in range(len(agent_constraints)):
         plt.plot(range(1, x_iter + 1), abs_error[agent_index])
     plt.ylabel('Constraint error')
-    plt.title("Absolute error evolution $\sum (x_i - y_i)^2$")
-    plt.savefig(get_filename("absolute_error_evolution"))
+    plt.title("Absolute error evolution $\sum ||x_i - y_i||^2$")
+    plt.savefig(get_filename("x-y_error_evolution"))
     plt.close()
 
     # Rebate evolution

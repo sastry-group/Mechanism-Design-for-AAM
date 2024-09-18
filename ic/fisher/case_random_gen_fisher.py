@@ -14,7 +14,7 @@ TIME_STEP = 1
 AUCTION_DT = 10 # every 15 timesteps there is an auction
 
 # Case study settings
-N_FLIGHTS = random.randint(10, 15)
+N_FLIGHTS = random.randint(50, 60)
 NUM_FLEETS = 10
 
 # change the request 000 for always be 0 - done
