@@ -32,68 +32,6 @@ TOL_ERROR = 1e-3
 MAX_NUM_ITERATIONS = 5000
 
 
-
-
-
-# def build_graph(vertiport_status, flights, timing_info):
-#     """
-
-#     """
-#     print("Building graph...")
-#     auxiliary_graph = nx.DiGraph()
-#     start_time_graph_build = time.time()
-    
-#     for _, value in flights.items():
-#         origin_vertiport = value["origin_vertiport_id"]
-#         destination_vertiport = value["requests"]["001"]["destination_vertiport_id"]
-#         apparance_time = value["appearance_time"]
-#         departure_time = value["requests"]["001"]["request_departure_time"]
-#         arrival_time = value["requests"]["001"]["request_arrival_time"]
-#         auction_frequency = timing_info["auction_frequency"]
-
-#         # Creating nodes from appearance to departure time
-#         appareance_to_departure = departure_time - apparance_time
-#         for ts in range(appareance_to_departure):
-#             app_node = origin_vertiport + "_" + str(apparance_time + ts)
-#             auxiliary_graph.add_node(vertiport_status.nodes[app_node])
-#             nx_node = origin_vertiport + "_" + str(apparance_time + ts + 1)
-#             auxiliary_graph.add_node(vertiport_status.nodes[next_node])
-#             auxiliary_graph.add_edge(node, nx_node)
-
-#         # Create nodes from arrival to end of respective auction window
-#         end_auction_arr_window = ((arrival_time // auction_frequency) + 1) * auction_frequency
-#         for ts in range(end_auction_arr_window - arrival_time):
-#             node = destination_vertiport + "_" + str(arrival_time + ts)
-#             auxiliary_graph.add_node(vertiport_status.nodes[node])
-#             nx_node = destination_vertiport + "_" + str(arrival_time + ts + 1)
-#             auxiliary_graph.add_node(vertiport_status.nodes[nx_node])
-#             auxiliary_graph.add_edge(node, nx_node)
-
-#         dep_node, arr_node = origin_vertiport + "_" + str(departure_time) + "_dep", destination_vertiport + "_" + str(arrival_time) + "_arr"
-#         auxiliary_graph.add_node(vertiport_status.nodes[dep_node])
-#         auxiliary_graph.add_node(vertiport_status.nodes[app_node])
-#         previous_node = origin_vertiport + "_" + str(departure_time - 1)
-#         next_node = destination_vertiport + "_" + str(arrival_time + 1)
-
-
-#         ## Construct edges from parking to departure to arrival to parking
-#         auxiliary_graph.add_edge(previous_node, dep_node)
-#         auxiliary_graph.add_edge(dep_node, arr_node)
-#         auxiliary_graph.add_edge(arr_node, next_node)
-
-#         # # Connect nodes at current time step to nodes at next time step
-#         # initial_time = value["appearance_time"]
-#         # max_time = arrival_time + timing_info["dissapear_ts"]
-#         # time_steps = list(range(initial_time, max_time, timing_info["time_step"]))
-#         # for step in time_steps:
-#         #     node = origin_vertiport + "_" + str(step)
-#         #     next_node = origin_vertiport + "_" + str(step + timing_info["time_step"])
-#         #     auxiliary_graph.add_edge(node, next_node)
-
-
-#     print(f"Time to build graph: {time.time() - start_time_graph_build}")
-#     return auxiliary_graph
-
 def construct_market(market_graph, flights, timing_info, routes, vertiport_usage, default_good_valuation=1, dropout_good_valuation=-1, BETA=1):
     """
 
@@ -815,9 +753,8 @@ def track_desired_goods(flights, goods_list):
 def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_data, vertiports, 
                                   output_folder=None, save_file=None, initial_allocation=True, design_parameters=None):
 
+    # building the graph
     market_auction_time=timing_info["start_time"]
-    # Build Fisher Graph
-    # market_graph = build_graph(vertiport_usage, flights, timing_info)
     start_time_graph_build = time.time()
     builder = FisherGraphBuilder(vertiport_usage, timing_info)
     market_graph = builder.build_graph(flights)

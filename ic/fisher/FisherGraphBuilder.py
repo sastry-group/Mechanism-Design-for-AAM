@@ -19,12 +19,6 @@ class FisherGraphBuilder:
             # Create parking nodes from appearance to end of auction
             end_auction_time = self._get_end_auction_time(arrival_time, auction_frequency)
 
-            # Debugging: Print the times being used
-            print(f"Processing flight {flight_id}:")
-            print(f"  Origin: {origin_vertiport}, Destination: {destination_vertiport}")
-            print(f"  Appearance Time: {appearance_time}, Departure Time: {departure_time}, Arrival Time: {arrival_time}")
-            print(f"  End Auction Time: {end_auction_time}")
-
             # if staying at origin vertiport
             self._create_parking_nodes(origin_vertiport, appearance_time, end_auction_time)
             # Create nodes for the time window (appearance to departure, and arrival window)
@@ -34,6 +28,9 @@ class FisherGraphBuilder:
 
             # Create edges for the origin vertiport from appearance to end of auction
             self._create_edges(origin_vertiport, appearance_time, departure_time)
+
+            # Create edges for the origin vertiport from departure to end auction staying parked
+            self._create_edges(origin_vertiport, departure_time, end_auction_time)
  
             # Create dep and arr nodes for the origin and destination vertiports and their edges
             self._create_dep_arr_elements(origin_vertiport, destination_vertiport, departure_time, arrival_time)
