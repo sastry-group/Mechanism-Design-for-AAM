@@ -24,57 +24,75 @@ sys.path.append(str(top_level_path))
 from VertiportStatus import VertiportStatus
 from fisher.sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, process_allocations, mapping_agent_to_full_data, mapping_goods_from_allocation
 from fisher.fisher_int_optimization import int_optimization
+from fisher.FisherGraphBuilder import FisherGraphBuilder
 from write_csv import write_output, save_data
 
 UPDATED_APPROACH = True
 TOL_ERROR = 1e-3
 MAX_NUM_ITERATIONS = 5000
-# BETA = 1
-# dropout_good_valuation = -1
-# default_good_valuation = 1
-# price_default_good = 10
 
 
 
-def build_graph(vertiport_status, timing_info):
-    """
 
-    """
-    print("Building graph...")
-    start_time_graph_build = time.time()
-    max_time, time_step = timing_info["end_time"], timing_info["time_step"]
 
-    auxiliary_graph = nx.DiGraph()
-    ## Construct nodes
-    #  Create dep, arr, and standard nodes for each initial node (vertiport + time step)
-    for node in vertiport_status.nodes:
-        auxiliary_graph.add_node(node + "_dep")
-        auxiliary_graph.add_node(node + "_arr")
-        auxiliary_graph.add_node(node)
+# def build_graph(vertiport_status, flights, timing_info):
+#     """
 
-    ## Construct edges
-        # Create arr -> standard edges
-        # auxiliary_graph.add_edge(node + "_arr", node, time=0, weight=0)
-        auxiliary_graph.add_edge(node + "_arr", node)
+#     """
+#     print("Building graph...")
+#     auxiliary_graph = nx.DiGraph()
+#     start_time_graph_build = time.time()
+    
+#     for _, value in flights.items():
+#         origin_vertiport = value["origin_vertiport_id"]
+#         destination_vertiport = value["requests"]["001"]["destination_vertiport_id"]
+#         apparance_time = value["appearance_time"]
+#         departure_time = value["requests"]["001"]["request_departure_time"]
+#         arrival_time = value["requests"]["001"]["request_arrival_time"]
+#         auction_frequency = timing_info["auction_frequency"]
 
-        # Create standard -> dep edges
-        # auxiliary_graph.add_edge(node, node + "_dep", time=max_time, weight=0)
-        auxiliary_graph.add_edge(node, node + "_dep")
+#         # Creating nodes from appearance to departure time
+#         appareance_to_departure = departure_time - apparance_time
+#         for ts in range(appareance_to_departure):
+#             app_node = origin_vertiport + "_" + str(apparance_time + ts)
+#             auxiliary_graph.add_node(vertiport_status.nodes[app_node])
+#             nx_node = origin_vertiport + "_" + str(apparance_time + ts + 1)
+#             auxiliary_graph.add_node(vertiport_status.nodes[next_node])
+#             auxiliary_graph.add_edge(node, nx_node)
 
-        # Connect standard nodes to node at next time step
-        if vertiport_status.nodes[node]["time"] != max_time:
-            vertiport_id = vertiport_status.nodes[node]["vertiport_id"]
-            next_time = vertiport_status.nodes[node]["time"] + time_step
-            auxiliary_graph.add_edge(node, vertiport_id + "_" + str(next_time))
+#         # Create nodes from arrival to end of respective auction window
+#         end_auction_arr_window = ((arrival_time // auction_frequency) + 1) * auction_frequency
+#         for ts in range(end_auction_arr_window - arrival_time):
+#             node = destination_vertiport + "_" + str(arrival_time + ts)
+#             auxiliary_graph.add_node(vertiport_status.nodes[node])
+#             nx_node = destination_vertiport + "_" + str(arrival_time + ts + 1)
+#             auxiliary_graph.add_node(vertiport_status.nodes[nx_node])
+#             auxiliary_graph.add_edge(node, nx_node)
 
-    for edge in vertiport_status.edges:
-        origin_vertiport_id_with_depart_time, destination_vertiport_id_with_arrival_time = edge
-        # auxiliary_graph.add_edge(origin_vertiport_id_with_depart_time + "_dep", destination_vertiport_id_with_arrival_time + "_arr", time=0, weight=0)
-        auxiliary_graph.add_edge(origin_vertiport_id_with_depart_time + "_dep", destination_vertiport_id_with_arrival_time + "_arr")
+#         dep_node, arr_node = origin_vertiport + "_" + str(departure_time) + "_dep", destination_vertiport + "_" + str(arrival_time) + "_arr"
+#         auxiliary_graph.add_node(vertiport_status.nodes[dep_node])
+#         auxiliary_graph.add_node(vertiport_status.nodes[app_node])
+#         previous_node = origin_vertiport + "_" + str(departure_time - 1)
+#         next_node = destination_vertiport + "_" + str(arrival_time + 1)
 
-    print(f"Time to build graph: {time.time() - start_time_graph_build}")
-    return auxiliary_graph
 
+#         ## Construct edges from parking to departure to arrival to parking
+#         auxiliary_graph.add_edge(previous_node, dep_node)
+#         auxiliary_graph.add_edge(dep_node, arr_node)
+#         auxiliary_graph.add_edge(arr_node, next_node)
+
+#         # # Connect nodes at current time step to nodes at next time step
+#         # initial_time = value["appearance_time"]
+#         # max_time = arrival_time + timing_info["dissapear_ts"]
+#         # time_steps = list(range(initial_time, max_time, timing_info["time_step"]))
+#         # for step in time_steps:
+#         #     node = origin_vertiport + "_" + str(step)
+#         #     next_node = origin_vertiport + "_" + str(step + timing_info["time_step"])
+#         #     auxiliary_graph.add_edge(node, next_node)
+
+
+#     print(f"Time to build graph: {time.time() - start_time_graph_build}")
+#     return auxiliary_graph
 
 def construct_market(market_graph, flights, timing_info, routes, vertiport_usage, default_good_valuation=1, dropout_good_valuation=-1, BETA=1):
     """
@@ -799,9 +817,14 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
 
     market_auction_time=timing_info["start_time"]
     # Build Fisher Graph
-    market_graph = build_graph(vertiport_usage, timing_info)
+    # market_graph = build_graph(vertiport_usage, flights, timing_info)
+    start_time_graph_build = time.time()
+    builder = FisherGraphBuilder(vertiport_usage, timing_info)
+    market_graph = builder.build_graph(flights)
+    print(f"Time to build graph: {time.time() - start_time_graph_build}")
 
     #Extracting design parameters
+    # we should create a config file for this
     if design_parameters:
         price_default_good = design_parameters["price_default_good"]
         default_good_valuation = design_parameters["default_good_valuation"]
@@ -857,7 +880,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     # Building edge information for mapping - move this to separate function
     # move this part to a different function
     edge_information = build_edge_information(goods_list)
-    agent_allocations, agent_dropout_x, agent_indices, agent_edge_information = process_allocations(x, edge_information, agent_goods_lists)
+    agent_allocations, agent_dropout_x, agent_indices, agent_edge_information = process_allocations(x, edge_information, agent_goods_lists, flights)
 
     
     _ , capacity, _ = market_information

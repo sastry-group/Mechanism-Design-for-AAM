@@ -277,7 +277,7 @@ def build_agent_edge_utilities(edge_information, agents_goods_list, utility_valu
     return all_agents_utilities
 
 
-def process_allocations(x, edge_information, agent_goods_lists):
+def process_allocations(x, edge_information, agent_goods_lists, flights):
     """
     Process the allocation matrix to output agent-specific goods allocations
     and corresponding indices in goods_list (master list). We also remove the default good
@@ -290,11 +290,14 @@ def process_allocations(x, edge_information, agent_goods_lists):
     
     Returns:
     - agent_allocations: list of np.ndarrays, each containing the fractional allocations for an agent from the fisher market
-    - agent_indices: list of np.ndarrays, each containing the indices in goods_list for an agent to map the indices to the master list
+    - agent_indices: list of np.ndarrays, each containing the indices of the agents goods mapping to the master goods_list
     - agent_edge_information: list of dictionaries, each containing the edge information for an agent goods  (edge_label: ('origin_node', 'destination_node'))
     """
     # Create a dictionary for quick lookup of goods in goods_list
     goods_index_map = {good: idx for idx, good in enumerate(edge_information.values())}
+
+    # creating an agent's dictionary of goods allocations
+    agents_data = {}
     
     agent_allocations = []
     agent_indices = []
@@ -317,7 +320,7 @@ def process_allocations(x, edge_information, agent_goods_lists):
             agent_edge = edge_labels_list[id]
             agent_edges[agent_edge] = edge_information[agent_edge]
             
-        
+        agents_data
         agent_allocations.append(allocations)
         agent_indices.append(np.array(indices))
         agent_edge_information.append(agent_edges)

@@ -385,7 +385,9 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher",
             current_timing_info = {
                 "start_time" : auction_start,
                 "end_time": timing_info["end_time"],
-                "time_step": timing_info["time_step"]
+                "time_step": timing_info["time_step"],
+                "auction_frequency": timing_info["auction_frequency"],
+                "auction_end": auction_end
             }
             if method == "fisher":
                 allocated_flights, rebased_flights, payments = fisher_allocation_and_payment(
