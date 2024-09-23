@@ -32,12 +32,16 @@ TOL_ERROR = 1e-3
 MAX_NUM_ITERATIONS = 5000
 
 
-def construct_market(market_graph, flights, timing_info, routes, vertiport_usage, default_good_valuation=1, dropout_good_valuation=-1, BETA=1):
+def construct_market(flights, timing_info, routes, vertiport_usage, default_good_valuation=1, dropout_good_valuation=-1, BETA=1):
     """
 
     """
-    max_time, time_step = timing_info["end_time"], timing_info["time_step"]
-    times_list = list(range(timing_info["start_time"], max_time + time_step, time_step))
+    # # building the graph
+    # market_auction_time=timing_info["start_time"]
+    # start_time_graph_build = time.time()
+    # builder = FisherGraphBuilder(vertiport_usage, timing_info)
+    # market_graph = builder.build_graph(flights)
+    # print(f"Time to build graph: {time.time() - start_time_graph_build}")
 
     print("Constructing market...")
     start_time_market_construct = time.time()
@@ -49,45 +53,18 @@ def construct_market(market_graph, flights, timing_info, routes, vertiport_usage
     agent_goods_lists = []
     
     for flight_id, flight in flights.items():
+
+
+        builder = FisherGraphBuilder(vertiport_usage, timing_info)
+        agent_graph = builder.build_graph(flight)
         origin_vertiport = flight["origin_vertiport_id"]
-        # Create agent graph
-        agent_graph = nx.DiGraph()
-        # for node_time in times_list:
-        #     agent_graph.add_edge(origin_vertiport + "_" + str(node_time), origin_vertiport + "_" + str(node_time) + "_dep")
-        for request_id, request in flight["requests"].items():
-            if request["request_departure_time"] == 0:
-                for start_time, end_time in zip(times_list[:-1],times_list[1:]):
-                    start_node, end_node = origin_vertiport + "_" + str(start_time), origin_vertiport + "_" + str(end_time)
-                    if end_time == times_list[-1]:
-                        attributes = {"valuation": request["valuation"]}
-                    else:
-                        attributes = {"valuation": 0}
-                        agent_graph.add_edge(start_node, end_node, **attributes)
-            else:
-                dep_time = request["request_departure_time"]
-                arr_time = request["request_arrival_time"]
-                destination_vertiport = request["destination_vertiport_id"]
-                decay = flights[flight_id]["decay_factor"]
-                for i in range(5):
-                    start_node, end_node = origin_vertiport + "_" + str(dep_time + i) + "_dep", destination_vertiport + "_" + str(arr_time+i) + "_arr"
-                    valuation = request["valuation"] * decay**i
-                    attributes = {"valuation": valuation}
-                    agent_graph.add_edge(start_node, end_node, **attributes)
-                    dep_start_node, dep_end_node = origin_vertiport + "_" + str(dep_time + i), origin_vertiport + "_" + str(dep_time + i) + "_dep"
-                    arr_start_node, arr_end_node = destination_vertiport + "_" + str(arr_time + i) + "_arr", destination_vertiport + "_" + str(arr_time + i)
-                    agent_graph.add_edge(dep_start_node, dep_end_node, **{"valuation": 0})
-                    agent_graph.add_edge(arr_start_node, arr_end_node, **{"valuation": 0})
-                # stationary_times = [time for time in times_list if time >= (arr_time)]
-                stationary_times = times_list[times_list.index(arr_time):]
-                for start_time, end_time in zip(stationary_times[:-1], stationary_times[1:]):
-                    start_node, end_node = destination_vertiport + "_" + str(start_time), destination_vertiport + "_" + str(end_time)
-                    attributes = {"valuation": 0}
-                    agent_graph.add_edge(start_node, end_node, **attributes)
+        start_node_time = flight["appearance_time"]
+    
 
         # Add constraints
         nodes = list(agent_graph.nodes)
         edges = list(agent_graph.edges)
-        starting_node = origin_vertiport + "_" + str(timing_info["start_time"])
+        starting_node = origin_vertiport + "_" + str(start_node_time)
         nodes.remove(starting_node)
         nodes = [starting_node] + nodes
         inc_matrix = nx.incidence_matrix(agent_graph, nodelist=nodes, edgelist=edges, oriented=True).toarray()
@@ -124,7 +101,7 @@ def construct_market(market_graph, flights, timing_info, routes, vertiport_usage
   
 
     print(f"Time to construct market: {time.time() - start_time_market_construct}")
-    return (u, agent_constraints, agent_goods_lists), (w, supply, BETA), (goods_list, times_list)
+    return (u, agent_constraints, agent_goods_lists), (w, supply, BETA), (goods_list)
 
 
 def find_capacity(goods_list, route_data, vertiport_data):
@@ -490,7 +467,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
     u, agent_constraints, agent_goods_lists = agent_settings
     y, p, r = initial_values
     w, supply, beta = market_settings
-    goods_list, times_list = bookkeeping
+    goods_list = bookkeeping
 
     x_iter = 0
     prices = []
@@ -665,8 +642,10 @@ def plotting_market(data_to_plot, output_folder, market_auction_time=None):
         agent_name = agent[1]       
         dep_index = desired_goods[agent_name]["desired_good_dep"]
         arr_index = desired_goods[agent_name]["desired_good_arr"]
-        plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_id][dep_index] for i in range(len(agent_allocations))], '--', label=f"{agent_name}_dep good")
-        plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_id][arr_index] for i in range(len(agent_allocations))], '-', label=f"{agent_name}_arr good")
+        label = f"Flight:{agent_name}, {desired_goods[agent_name]['desired_edge']}" 
+        # plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_id][dep_index] for i in range(len(agent_allocations))], '-', label=f"{agent_name}_dep good")
+        dep_to_arr_index = desired_goods[agent_name]["desired_good_dep_to_arr"]
+        plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_id][dep_to_arr_index] for i in range(len(agent_allocations))], '--', label=label)
     plt.legend()
     plt.xlabel('x_iter')
     plt.title("Desired Goods Agent allocation evolution")
@@ -741,9 +720,12 @@ def track_desired_goods(flights, goods_list):
         desired_arrival_time = flights[flight_id]["requests"]["001"]["request_arrival_time"]
         desired_good_arr = (f"{origin_vertiport}_{desired_dep_time}", f"{origin_vertiport}_{desired_dep_time}_dep")
         desired_good_dep = (f"{desired_vertiport}_{desired_arrival_time}_arr", f"{desired_vertiport}_{desired_arrival_time}")
+        desired_good_dep_to_arr = (f"{origin_vertiport}_{desired_dep_time}_dep", f"{desired_vertiport}_{desired_arrival_time}_arr")
         good_id_arr = goods_list.index(desired_good_arr)
         good_id_dep = goods_list.index(desired_good_dep)
-        desired_goods[flight_id] = {"desired_good_arr": good_id_arr, "desired_good_dep": good_id_dep}
+        good_id_dep_to_arr = goods_list.index(desired_good_dep_to_arr)
+        desired_goods[flight_id] = {"desired_good_arr": good_id_arr, "desired_good_dep": good_id_dep, "desired_good_dep_to_arr": good_id_dep_to_arr}
+        desired_goods[flight_id]["desired_edge"] = (f"{origin_vertiport}_{desired_dep_time}", f"{desired_vertiport}_{desired_arrival_time}")
 
     return desired_goods
 
@@ -753,12 +735,12 @@ def track_desired_goods(flights, goods_list):
 def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_data, vertiports, 
                                   output_folder=None, save_file=None, initial_allocation=True, design_parameters=None):
 
-    # building the graph
+    # # building the graph
     market_auction_time=timing_info["start_time"]
-    start_time_graph_build = time.time()
-    builder = FisherGraphBuilder(vertiport_usage, timing_info)
-    market_graph = builder.build_graph(flights)
-    print(f"Time to build graph: {time.time() - start_time_graph_build}")
+    # start_time_graph_build = time.time()
+    # builder = FisherGraphBuilder(vertiport_usage, timing_info)
+    # market_graph = builder.build_graph(flights)
+    # print(f"Time to build graph: {time.time() - start_time_graph_build}")
 
     #Extracting design parameters
     # we should create a config file for this
@@ -776,22 +758,24 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
         rebate_frequency = 1
 
     # Construct market
-    agent_information, market_information, bookkeeping = construct_market(market_graph, flights, timing_info, routes_data, vertiport_usage, 
+    agent_information, market_information, bookkeeping = construct_market(flights, timing_info, routes_data, vertiport_usage, 
                                                                           default_good_valuation=default_good_valuation, 
                                                                           dropout_good_valuation=dropout_good_valuation, BETA=BETA)
 
     # Run market
-    goods_list, times_list = bookkeeping
+    goods_list = bookkeeping
     num_goods, num_agents = len(goods_list), len(flights)
     u, agent_constraints, agent_goods_lists = agent_information
     # y = np.random.rand(num_agents, num_goods-2)*10
     y = np.zeros((num_agents, num_goods))
     desired_goods = track_desired_goods(flights, goods_list)
     for i, agent_ids in enumerate(desired_goods):
-        dept_id = desired_goods[agent_ids]["desired_good_arr"]
-        arr_id = desired_goods[agent_ids]["desired_good_dep"]
-        y[i][dept_id]= 1
-        y[i][arr_id] = 1
+        # dept_id = desired_goods[agent_ids]["desired_good_arr"]
+        # arr_id = desired_goods[agent_ids]["desired_good_dep"] 
+        dept_to_arr_id = desired_goods[agent_ids]["desired_good_dep_to_arr"]
+        # y[i][dept_id]= 1
+        # y[i][arr_id] = 1 
+        y[i][dept_to_arr_id] = 1
     # y = np.random.rand(num_agents, num_goods)
     p = np.zeros(num_goods)
     p[-2] = price_default_good 
