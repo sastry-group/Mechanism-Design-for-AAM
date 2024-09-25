@@ -3,11 +3,11 @@ import os
 from itertools import product
 
 # Define the parameter values to vary
-BETA_values = [10000]
+BETA_values = [200]
 dropout_good_valuation_values = [1]
 default_good_valuation_values = [1]
 price_default_good_values = [10]
-rebate_frequency_values = [10]
+rebate_frequency_values = [50]
 
 # Generate all combinations of the parameter values
 # "--file", "test_cases/casef_20240614_153258.json",
