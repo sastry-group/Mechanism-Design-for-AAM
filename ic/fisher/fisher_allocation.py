@@ -82,7 +82,7 @@ def construct_market(flights, timing_info, routes, vertiport_usage, default_good
         b[0] = 1
         
         A_with_default_good = np.hstack((A, np.zeros((A.shape[0], 1)), np.zeros((A.shape[0], 1)))) # outside/default and dropout good
-        A_with_default_good[0, -1] = 1
+        A_with_default_good[0, -1] = 1 # droupout good
         # A_with_default_good = np.hstack((A, np.zeros((A.shape[0], 1)))) # outside/default good
         goods = edges + ['default_good'] + ['dropout_good']
         # Appending values for default and dropout goods
@@ -281,7 +281,7 @@ def update_basic_agents(w, u, p, r, constraints, y, beta, rational=False):
     return x
 
 
-def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, beta, rational=False, parallel=False):
+def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, beta, x_iter, rational=False, parallel=False):
     num_agents, num_goods = len(w), len(p)
 
     agent_indices = range(num_agents)
@@ -290,7 +290,7 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
     agent_ys = [np.array([y[i, goods_list.index(good)] for good in agent_goods_lists[i]]) for i in agent_indices]
     # agent_ys = [np.array([y[i, goods_list[:-2].index(good)] for good in agent_goods_lists[i][:-2]]) for i in agent_indices] # removing dropout and detault good (3)
     # agent_ys = [np.array([y[i, goods_list[:-1].index(good)] for good in agent_goods_lists[i][:-1]]) for i in agent_indices] # removing dropout (4)
-    args = [(w[i], agent_utilities[i], agent_prices[i], r[i], constraints[i], agent_ys[i], beta, rational) for i in agent_indices]
+    args = [(w[i], agent_utilities[i], agent_prices[i], r[i], constraints[i], agent_ys[i], beta, x_iter, rational) for i in agent_indices]
 
     # Update agents in parallel or not depending on parallel flag
     # parallel = True
@@ -325,7 +325,7 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
     return x, adjusted_budgets
 
 
-def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solver=cp.SCS):
+def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, rational=False, solver=cp.SCS):
     """
     Update individual agent's consumption given market settings and constraints
     """
@@ -337,10 +337,13 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, rational=False, solve
     num_constraints = len(b_i)
     num_goods = len(p)
 
-    budget_adjustment = r_i.T @ b_i
-    w_adj = w_i + budget_adjustment
-    # print(w_adj)
-    w_adj = max(w_adj, 0)
+    if x_iter % 10 == 0:
+        budget_adjustment = r_i.T @ b_i
+        w_adj = w_i + budget_adjustment
+        # print(w_adj)
+        w_adj = max(w_adj, 0)
+    else:
+        w_adj = w_i
     # w_adj = abs(w_adj) 
 
     # print(f"Adjusted budget: {w_adj}")
@@ -489,7 +492,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
     
     problem = None
     while x_iter <= MAX_NUM_ITERATIONS:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
-        x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, rational=rational)
+        x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, x_iter, rational=rational)
         agent_allocations.append(x) # 
         overdemand.append(np.sum(x[:,:-2], axis=0) - supply[:-2].flatten())
         x_ij = np.sum(x[:,:-2], axis=0) # removing default and dropout good
@@ -498,12 +501,16 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         market_clearing_error = np.linalg.norm(clipped_excess_demand, ord=2)
         market_clearing.append(market_clearing_error)
 
+        iter_constraint_error = 0
+        iter_constraint_x_y = 0
         for agent_index in range(len(agent_constraints)):
             agent_x = np.array([x[agent_index, goods_list.index(good)] for good in agent_goods_lists[agent_index]])
             agent_y = np.array([y[agent_index, goods_list.index(good)] for good in agent_goods_lists[agent_index]])
             constraint_error = agent_constraints[agent_index][0] @ agent_x - agent_constraints[agent_index][1]
-            abs_constraint_error = np.sum(np.square(constraint_error))
-            agent_error = np.sum(np.square(agent_x - agent_y)) 
+            abs_constraint_error = np.sqrt(np.sum(np.square(constraint_error)))
+            iter_constraint_error += abs_constraint_error 
+            agent_error = np.sqrt(np.sum(np.square(agent_x - agent_y)))
+            iter_constraint_x_y += agent_error
             if x_iter == 0:
                 error.append([abs_constraint_error])
                 abs_error.append([agent_error])
@@ -512,7 +519,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
                 abs_error[agent_index].append(agent_error)
     
         
-        if x_iter % rebate_frequency == 0:
+        # if x_iter % rebate_frequency == 0:
+        if True:
             update_rebates = True
         else:
             update_rebates = False
@@ -525,15 +533,15 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         social_welfare_vector.append(current_social_welfare)
 
         x_iter += 1
-        if (market_clearing_error <= tolerance) and (abs_constraint_error <= 0.000001) and (x_iter>=10):
+        if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.000001) and (x_iter>=10):
             break
-        if x_iter>=100:
+        if x_iter > 100:
             break
 
 
 
 
-        print("Iteration: ", x_iter, "- MCE: ", market_clearing_error, "-Aabs. Err: ", abs_constraint_error, " - Tol: ", tolerance)
+        print("Iteration: ", x_iter, "- MCE: ", market_clearing_error, "-Ax-b. Err: ", iter_constraint_error, " - Tol: ", tolerance, "x-y error:", iter_constraint_x_y)
         logging.info(f"Iteration: {x_iter}, Market Clearing Error: {market_clearing_error}, Tolerance: {tolerance}")
     
         # if market_clearing_error <= tolerance:
@@ -640,13 +648,13 @@ def plotting_market(data_to_plot, output_folder, market_auction_time=None):
     for agent in enumerate(desired_goods):
         agent_id = agent[0]
         agent_name = agent[1]       
-        dep_index = desired_goods[agent_name]["desired_good_dep"]
-        arr_index = desired_goods[agent_name]["desired_good_arr"]
+        # dep_index = desired_goods[agent_name]["desired_good_dep"]
+        # arr_index = desired_goods[agent_name]["desired_good_arr"]
         label = f"Flight:{agent_name}, {desired_goods[agent_name]['desired_edge']}" 
         # plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_id][dep_index] for i in range(len(agent_allocations))], '-', label=f"{agent_name}_dep good")
         dep_to_arr_index = desired_goods[agent_name]["desired_good_dep_to_arr"]
         plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_id][dep_to_arr_index] for i in range(len(agent_allocations))], '--', label=label)
-    plt.legend()
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.xlabel('x_iter')
     plt.title("Desired Goods Agent allocation evolution")
     plt.savefig(get_filename("desired_goods_allocation_evolution"))
@@ -666,7 +674,7 @@ def plotting_market(data_to_plot, output_folder, market_auction_time=None):
         plt.plot(range(1, x_iter + 1), [yplot[i][agent_index][:-2] for i in range(len(yplot))])
         plt.plot(range(1, x_iter + 1), [yplot[i][agent_index][-2] for i in range(len(yplot))], 'b--', label="Default Good")
         plt.plot(range(1, x_iter + 1), [yplot[i][agent_index][-1] for i in range(len(yplot))], 'r-.', label="Dropout Good")
-    plt.legend()
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.xlabel('x_iter')
     plt.title("Y-values")
     plt.savefig(get_filename("y-values"))
@@ -781,6 +789,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     p[-2] = price_default_good 
     p[-1] = 0 # dropout good
     r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
+    _ , capacity, _ = market_information
     # x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
     x, prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot = run_market((y,p,r), agent_information, market_information, 
                                                              bookkeeping, rational=False, price_default_good=price_default_good, 
@@ -793,6 +802,9 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     'r': r,
     'agent_constraints': agent_constraints,
     'adjusted_budgets': adjusted_budgets,
+    'desired_goods': desired_goods,
+    'goods_list': goods_list,
+    'capacity': capacity,
     'data_to_plot': data_to_plot}
     save_data(output_folder, "fisher_data", market_auction_time, **extra_data)
     data_to_plot.append(desired_goods)
@@ -804,7 +816,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     agent_allocations, agent_dropout_x, agent_indices, agent_edge_information = process_allocations(x, edge_information, agent_goods_lists, flights)
 
     
-    _ , capacity, _ = market_information
+
     int_allocations = []
     utilities = []
     dropouts = [] # remove

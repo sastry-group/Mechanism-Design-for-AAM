@@ -149,8 +149,8 @@ def sample_path(G, start_node, agent_allocations, dropout_good_allocation=False)
     first_edge_weight = first_edge[2]['weight']
 
     # Calculate dropout probability based on the dropout edge
-    total_weight = first_edge_weight + dropout_good_allocation
-    dropout_probability = dropout_good_allocation / total_weight
+    total_weight = first_edge_weight + abs(dropout_good_allocation)
+    dropout_probability = abs(dropout_good_allocation) / total_weight
     if random.random() < dropout_probability:
         # Dropout is chosen
         dropout_flag = True
