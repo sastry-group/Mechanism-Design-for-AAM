@@ -21,8 +21,6 @@ class VertiportStatus(nx.DiGraph):
         super().__init__(data, **attr)
         self.time_steps = list(range(timing["start_time"], timing["end_time"] + timing["time_step"], timing["time_step"]))
         self.vertiports = vertiports
-        print("sjdfhlaskjdhfalksjdfhlaksjdhfkj")
-        print(vertiports.items())
 
         # Create time extended graph of vertiports
         for step in self.time_steps:
@@ -100,7 +98,11 @@ class VertiportStatus(nx.DiGraph):
         time_extended_origin = origin_vertiport + "_" + str(departure_time)
         time_extended_destination = destination_vertiport + "_" + str(arrival_time)
         self.nodes[time_extended_origin]["takeoff_usage"] += 1
+        assert self.nodes[time_extended_origin]["takeoff_usage"] <= self.nodes[time_extended_origin]["takeoff_capacity"], \
+            f"Vertiport {origin_vertiport} at time {departure_time} over takeoff capacity."
         self.nodes[time_extended_destination]["landing_usage"] += 1
+        assert self.nodes[time_extended_destination]["landing_usage"] <= self.nodes[time_extended_destination]["landing_capacity"], \
+            f"Vertiport {destination_vertiport} at time {arrival_time} over landing capacity."
 
 
 def draw_graph(graph):

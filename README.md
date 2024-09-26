@@ -1,7 +1,9 @@
-# Incentive Compatible Fleets for Advanced Air Mobility
+# Incentive Compatible Vertiport Reservation in Advanced Air Mobility
 
-This is a fork of the Bluesky repo for Air Traffic Simulation. This fork implements an incentive compatible
-approach to air traffic management.
+This is a fork of the Bluesky repo for Air Traffic Simulation. This repo is associated with the paper "Incentive-Compatible Vertiport Reservation in Advanced Air Mobility: An Auction-Based Approach" presented at CDC 2024, which implements an incentive compatible
+approach to vertiport management. The paper can be found at [https://arxiv.org/pdf/2403.18166](https://arxiv.org/pdf/2403.18166).
+
+Note: Make sure you have Python 3 and pip installed on your system before proceeding with the installation.
 
 ## Installation
 You need to get a [Gurobi](https://www.gurobi.com/) license, there is a free regular academic version.
@@ -45,19 +47,20 @@ To install and run the BlueSky simulator, follow these steps:
    1. Create database in .test_cases
    2. cd ic/
    3. To create the scenario based on the case run python3 ic/case_random_generator.py
-   4. python3 ic/main.py --file test_cases/case1.json --scn_folder /scenario/TEST_IC
+   4. python3 ic/main.py --file test_cases/case1.json --scn_folder /scenario/TEST_IC --method "vcg"
    5. Run ```python3 Bluesky.py``` and load the scenario
 
+7. To compare First-come, First-served to our approach, run 
+    ```bash
+    python3 ic/plot_sw_and_congestion_vs_lambda_ff_and_vcg.py --file "test_cases/case2.json" --scn_folder "/scenario/TEST_IC" --method "ff"
+    ```
+    which will use stored data.
+    To recreate the data, delete the file ```ic/results/sw_and_congestion_vs_lambda_ff_and_vcg.pkl``` and rerun. The output is shown below.
+    ![First-come, first-served vs vcg (our) approach](https://github.com/victoria-tuck/IC-vertiport-reservation/blob/main/SW_congestion_vs_lambda_pareto.png)
+    Figure 1. We compare our approach to a first-come, first-served approach across different values of lambda (trade-off between minimizing congestion costs and maximizing sum of valuations). Our approach creates a Pareto frontier of the trade-off, which the other approach is inside of. Congestion costs are the sum of C() for all vertiports and times, and the sum of valuations is the sum of the valuations of the allocated requests.
 
-Note: Make sure you have Python 3 and pip installed on your system before proceeding with the installation.
 
-## Code Quality
-
-```black``` and ```pylint``` are included for assistance with good code writing. 
-Black will reformat your code according to standard Python guidelines, and pylint will make code reformatting suggestions.
-These can be run with ```black <filename>``` and ```pylint <filename>```.
-We recommend running each of these in this order on any files you are making changes to.
-
+Below are Bluesky instructions.
 
 For more detailed installation instructions and troubleshooting, please refer to the [BlueSky Wiki](https://github.com/TUDelft-CNS-ATM/bluesky/wiki).
 

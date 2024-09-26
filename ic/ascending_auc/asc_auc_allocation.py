@@ -29,6 +29,7 @@ from write_csv import write_output
 UPDATED_APPROACH = True
 TOL_ERROR = 1e-3
 MAX_NUM_ITERATIONS = 1000
+
 # BETA = 1
 # dropout_good_valuation = -1
 # default_good_valuation = 1
@@ -229,85 +230,6 @@ def update_basic_market(x, values_k, market_settings, constraints):
 
         else:
             constraint_violations = np.array([max(agent_constraints[0][j] @ x[i] - agent_constraints[1][j], 0) for j in range(len(agent_constraints[1]))])
-        r_k_plus_1.append(r_k[i] + beta * constraint_violations)
-    return k + 1, y_k_plus_1, p_k_plus_1, r_k_plus_1
-
-
-def update_market(x, values_k, market_settings, constraints, agent_goods_lists, goods_list, price_default_good):
-    '''
-    Update market consumption, prices, and rebates
-    '''
-    shape = np.shape(x)
-    num_agents = shape[0]
-    num_goods = shape[1]
-    k, p_k, r_k = values_k
-    supply, beta = market_settings
-    
-    # Update consumption
-    # y = cp.Variable((num_agents, num_goods - 2)) # dropout and default removed
-    # y = cp.Variable((num_agents, num_goods - 1)) # dropout removed (4)
-    y = cp.Variable((num_agents, num_goods)) 
-    y_bar = cp.Variable(num_goods)
-    # Do we remove drop out here or not? - remove the default and dropout good
-    # objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x[:,:-1] - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply[:-1], 2))) # (4) (5)
-    # objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x[:,:-2] - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply[:-2], 2)))
-    # objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply, 2)))
-    y_sum = cp.sum(y, axis=0)
-    objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 'fro')) - (beta / 2) * cp.square(cp.norm(y_sum + y_bar - supply, 2))  - p_k.T @ y_bar)
-    cp_constraints = [y_bar >= 0] 
-    problem = cp.Problem(objective, cp_constraints)
-    # problem = cp.Problem(objective)
-
-    solvers = [cp.CLARABEL, cp.SCS, cp.OSQP, cp.ECOS, cp.CVXOPT]
-    for solver in solvers:
-        try:
-            result = problem.solve(solver=solver)
-            logging.info(f"Problem solved with solver {solver}")
-            break
-        except cp.error.SolverError as e:
-            logging.error(f"Solver {solver} failed: {e}")
-            continue
-        except Exception as e:
-            logging.error(f"An unexpected error occurred with solver {solver}: {e}")
-            continue
-
-    # Check if the problem was solved successfully
-    if problem.status != cp.OPTIMAL:
-        logging.error("Failed to solve the problem with all solvers.")
-    else:
-        logging.info("Optimization result: %s", result)
-
-    y_k_plus_1 = y.value
-
-    # Update prices
-    # p_k_plus_1 = np.zeros(p_k.shape)
-    # try the options (default good): 
-    # (3) do not update price, dont add it in optimization, 
-    # (4) update price and add it in optimization, 
-    # (5) dont update price but add it in optimization
-    p_k_plus_1 = p_k[:-2] + beta * (np.sum(y_k_plus_1[:,:-2], axis=0) - supply[:-2]) #(3)
-    # p_k_plus_1 = p_k[:-1] + beta * (np.sum(y_k_plus_1, axis=0) - supply[:-1]) #(4)
-    # p_k_plus_1 = p_k[:-2] + beta * (np.sum(y_k_plus_1[:,:-2], axis=0) - supply[:-2]) #(5)
-    # p_k_plus_1 = p_k + beta * (np.sum(y_k_plus_1, axis=0) - supply)
-    for i in range(len(p_k_plus_1)):
-        if p_k_plus_1[i] < 0:
-            p_k_plus_1[i] = 0
-    # p_k_plus_1[-1] = 0  # dropout good
-    # p_k_plus_1[-2] = price_default_good  # default good
-    p_k_plus_1 = np.append(p_k_plus_1, [price_default_good,0]) # default and dropout good
-    # p_k_plus_1 = np.append(p_k_plus_1, 0)  #  (4) update default good
-
-
-    # Update each agent's rebates
-    r_k_plus_1 = []
-    for i in range(num_agents):
-        agent_constraints = constraints[i]
-        agent_x = np.array([x[i, goods_list.index(good)] for good in agent_goods_lists[i]])
-        if UPDATED_APPROACH:
-            # agent_x = np.array([x[i, goods_list[:-1].index(good)] for good in agent_goods_lists[i][:-1]])
-            constraint_violations = np.array([agent_constraints[0][j] @ agent_x - agent_constraints[1][j] for j in range(len(agent_constraints[1]))])
-        else:
-            constraint_violations = np.array([max(agent_constraints[0][j] @ agent_x - agent_constraints[1][j], 0) for j in range(len(agent_constraints[1]))])
         r_k_plus_1.append(r_k[i] + beta * constraint_violations)
     return k + 1, y_k_plus_1, p_k_plus_1, r_k_plus_1
 
@@ -647,6 +569,7 @@ def find_dep_and_arrival_nodes(edges):
     
     return dep_node_found, arrival_node_found
 
+
 class time_step:
     flight_id = ""
     time_no = -1
@@ -656,6 +579,8 @@ class time_step:
         self.time_no = time_
         self.flight_id = id_
         self.spot = spot_
+    def copy(self):
+        return type(self)(self.flight_id, self.time_no, self.spot)
     def raise_val(self):
         self.price += 1
 
@@ -687,26 +612,43 @@ class bundle:
         for i in range(current_time,len(self.times)):
             tot += self.times[i].price
         return tot
+    
+    def show(self):
+        print(self.flight_id)
+        spots = [i.spot for i in self.times]
+        print(spots)
 
 
 #[('AC004', ('V001_13_dep', 'V002_18_arr')), ('AC005', ('V007_17_dep', 'V002_55_arr')), ('AC008', ('V003_20_dep', 'V006_42_arr'))]
 
+def remove_requests(all, confirmed):
+    remaining = []
+    for r in all:
+        used = False
+        for c in confirmed:
+            if(r.flight_id == confirmed.flight_id):
+                used = True
+
+            else:
+                remaining += [c]
+
 def process_request(id_, depart_port, arrive_port, depart_time, arrive_time, maxBid, start_time, end_time, step, decay):
     reqs = []
     if(depart_port == arrive_port):
-        reqs += [bundle(id_, 1, 100, maxBid, depart_port)]
+        reqs += [bundle(id_, start_time, end_time, maxBid, depart_port)]
         return reqs
     curtimesarray = [time_step(id_, i, 'NA') for i in range(start_time, end_time + 1, step)]
-
-    for i in range(start_time, depart_time, step):
+    blub = 0
+    for i in range(start_time - 1, depart_time, step): #start_time -1 so it starts at 0
         curtimesarray[i].spot =  depart_port
+        if(blub<5):
+            blub+=1
 
     curtimesarray[depart_time].spot = depart_port+'_dep'
-
     for i in range(depart_time + 1, arrive_time, step):
         curtimesarray[i].spot = depart_port+arrive_port
 
-    curtimesarray[arrive_time].spot += arrive_port+'_arr'
+    curtimesarray[arrive_time].spot = arrive_port+'_arr'
 
     for i in range(arrive_time + 1, end_time, step):
         curtimesarray[i].spot = arrive_port
@@ -719,7 +661,7 @@ def process_request(id_, depart_port, arrive_port, depart_time, arrive_time, max
     nb.update_flight_path(depart_time, depart_port, arrive_time, arrive_port)
     reqs += [nb]
     while(delayed_arr_t + 1 < end_time): # arrive_port + _arr on last timestep
-        c2 = [tm for tm in reqs[-1].times]
+        c2 = [tm.copy() for tm in reqs[-1].times]
         c2[delayed_dep_t].spot = depart_port
         c2[delayed_dep_t + 1].spot = depart_port + '_dep'
         c2[delayed_arr_t].spot = depart_port + arrive_port
@@ -733,7 +675,7 @@ def process_request(id_, depart_port, arrive_port, depart_time, arrive_time, max
     return reqs 
 
 def multiplicitiesDict(vals): # can optimize
-    print(vals)
+    #print(vals)
     k = set(vals)
     s = {}
     for i in k:
@@ -759,12 +701,12 @@ def run_auction(reqs, start_time, end_time, capacities):
                 spots_reqs += [[r.times[t].spot, r.flight_id]]
             
 
-            print()
+            #print()
 
             spots_reqs = [e[0] for e in list({tuple(i) for i in spots_reqs})] # ensuring same flights arent competing by creating set of used spots including flight ids
-            print('A  -----------------')
+            #print('A  -----------------')
             multiplicities = multiplicitiesDict(spots_reqs)
-            print('B ----------')
+            #print('B ----------')
             pricedOut = []
             for r_ix in range(len(reqs)):
                 r = reqs[r_ix]
@@ -809,15 +751,15 @@ def pickHighest(requests, start_time):
         mxMap[r.flight_id] = -1
         mxReq[r.flight_id] = None
     for r in requests:
-        tot = r.findCost(start_time)
+        tot = r.value - r.findCost(start_time)
         if(tot>mxMap[r.flight_id]):
             mxMap[r.flight_id] = tot 
             mxReq[r.flight_id] = r
     return mxReq.values()
 
 
-def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, routes_data, vertiports, 
-                                  output_folder=None, save_file=None, initial_allocation=True, design_parameters=None):
+def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, routes_data,  
+                                  save_file=None, initial_allocation=True, design_parameters=None):
 
     market_auction_time=timing_info["start_time"]
     # Build Fisher Graph
@@ -857,9 +799,13 @@ def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, 
     
     #for i in requests:
     #    print(i.flight)
+    #for r in range(len(requests)):
+    #    print('r: ', r)
+    #    requests[r].show()
+        
 
 
-    allocated_requests, final_prices_per_req, agents_left_time, price_change = run_auction(requests, timing_info["start_time"], timing_info["auction_end_time"], capacities)
+    allocated_requests, final_prices_per_req, agents_left_time, price_change = run_auction(requests, timing_info["auction_start"], timing_info["end_time"], capacities)
 
     allocated_requests = pickHighest(allocated_requests, market_auction_time)
 
@@ -877,8 +823,8 @@ def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, 
     #write_output(flights, agent_constraints, edge_information, prices, new_prices, capacity, end_capacity,
     #            agent_allocations, agent_indices, agent_edge_information, agent_goods_lists, 
     #            int_allocations, new_allocations_goods, u, adjusted_budgets, payment, end_agent_status_data, market_auction_time, output_folder)
-    
-    return allocation, None
+    costs_ = [ar.value - ar.findCost(timing_info["auction_start"]) for ar in allocated_requests]
+    return allocation, costs_
 
 
 
