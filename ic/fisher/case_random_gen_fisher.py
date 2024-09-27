@@ -14,7 +14,8 @@ TIME_STEP = 1
 AUCTION_DT = 10 # every 15 timesteps there is an auction
 
 # Case study settings
-N_FLIGHTS = random.randint(50, 60)
+# N_FLIGHTS = random.randint(50, 60)
+N_FLIGHTS = 20
 NUM_FLEETS = 10
 
 # change the request 000 for always be 0 - done
@@ -77,7 +78,8 @@ def generate_flights():
         
         # Select a random auction interval for the appearance time
         auction_interval = random.choice(auction_intervals[:(np.abs(np.array(auction_intervals) - last_auction)).argmin()])
-        appearance_time = random.randint(auction_interval, auction_interval + AUCTION_DT) # to avoid flights appearing after the last auction, this is also constraint by the maximu travel time for node creation
+        appearance_time = random.randint(1,9)
+        # appearance_time = random.randint(auction_interval, auction_interval + AUCTION_DT) # to avoid flights appearing after the last auction, this is also constraint by the maximu travel time for node creation
         # appearance_time = random.randint(1, 50) #needs to be changes using end time variable
 
         # Choose origin vertiport
