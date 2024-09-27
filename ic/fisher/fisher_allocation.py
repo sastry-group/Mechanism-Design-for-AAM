@@ -28,7 +28,7 @@ from fisher.FisherGraphBuilder import FisherGraphBuilder
 from write_csv import write_output, save_data
 
 UPDATED_APPROACH = True
-TOL_ERROR = 1e-3
+TOL_ERROR = 1e-4
 MAX_NUM_ITERATIONS = 5000
 
 
@@ -539,7 +539,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         x_iter += 1
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
             break
-        if x_iter ==  1000:
+        if x_iter ==  10:
             break
 
 
@@ -565,7 +565,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         "market_clearing": market_clearing,
         "agent_constraints": agent_constraints,
         "yplot": yplot,
-        "social_welfare_vector": social_welfare_vector
+        "social_welfare_vector": social_welfare_vector,
     }
 
 
@@ -607,6 +607,7 @@ def plotting_market(data_to_plot, desired_goods, output_folder, market_auction_t
     agent_constraints = data_to_plot["agent_constraints"]
     yplot = data_to_plot["yplot"]
     social_welfare = data_to_plot["social_welfare_vector"]
+
 
 
     # x_iter, prices, p, overdemand, error, abs_error, rebates, agent_allocations, market_clearing, agent_constraints, yplot, social_welfare, desired_goods = data_to_plot
@@ -677,6 +678,17 @@ def plotting_market(data_to_plot, desired_goods, output_folder, market_auction_t
     # plt.title("Agent allocation evolution")
     # plt.savefig(get_filename("agent_allocation_evolution"))
     # plt.close()
+
+    # Payment 
+    
+    plt.figure(figsize=(10, 5))
+    # agent allocations 
+    for agent_index in range(len(agent_allocations[0])):
+        # payment = prices[agent_index] @ agent_allocations[agent_index][0]
+        plt.plot(range(1, x_iter + 1), [prices[i] @ agent_allocations[i][agent_index] for i in range(len(prices))])
+
+
+
 
     # Desired goods evolution
     plt.figure(figsize=(10, 5))
