@@ -246,12 +246,15 @@ def update_market(x_val, values_k, market_settings, constraints, agent_goods_lis
     # (4) update price and add it in optimization, 
     # (5) dont update price but add it in optimization
     p_k_plus_1 = p_k_val[:-2] + beta * (np.sum(y_k_plus_1, axis=0) - supply[:-2]) #(3) default 
+    
     # p_k_plus_1 = p_k[:-1] + beta * (np.sum(y_k_plus_1, axis=0) - supply[:-1]) #(4)
     # p_k_plus_1 = p_k[:-2] + beta * (np.sum(y_k_plus_1[:,:-2], axis=0) - supply[:-2]) #(5)
     # p_k_plus_1 = p_k + beta * (np.sum(y_k_plus_1, axis=0) - supply)
     for i in range(len(p_k_plus_1)):
         if p_k_plus_1[i] < 0:
-            p_k_plus_1[i] = 0   
+            p_k_plus_1[i] = 0  
+        if p_k_plus_1[i] > 20:
+            p_k_plus_1[i] = 20 
     # p_k_plus_1[-1] = 0  # dropout good
     # p_k_plus_1[-2] = price_default_good  # default good
     p_k_plus_1 = np.append(p_k_plus_1, [price_default_good,0]) # default and dropout good
@@ -550,7 +553,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         x_iter += 1
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=5) and (iter_constraint_x_y <= 0.1):
             break
-        if x_iter == 205:
+        if x_iter ==  1000:
             break
 
 
@@ -696,8 +699,13 @@ def plotting_market(data_to_plot, desired_goods, output_folder, market_auction_t
     # agent allocations 
     for agent_index in range(len(agent_allocations[0])):
         # payment = prices[agent_index] @ agent_allocations[agent_index][0]
-        plt.plot(range(1, x_iter + 1), [prices[i] @ agent_allocations[i][agent_index] for i in range(len(prices))])
-
+        label = f"Flight:{agent_index}" 
+        plt.plot(range(1, x_iter + 1), [prices[i] @ agent_allocations[i][agent_index] for i in range(len(prices))], label=label)
+    plt.xlabel('x_iter')
+    plt.title("Payment evolution")
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.savefig(get_filename("payment"), bbox_inches='tight')
+    plt.close()
 
 
 
