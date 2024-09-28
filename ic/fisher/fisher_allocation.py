@@ -27,7 +27,7 @@ from fisher.fisher_int_optimization import int_optimization
 from fisher.FisherGraphBuilder import FisherGraphBuilder
 from write_csv import write_output, save_data
 
-INTEGRAL_APPROACH = True
+INTEGRAL_APPROACH = False
 UPDATED_APPROACH = True
 TOL_ERROR = 1e-4
 MAX_NUM_ITERATIONS = 5000
@@ -173,7 +173,7 @@ def update_basic_market(x, values_k, market_settings, constraints):
     return k + 1, y_k_plus_1, p_k_plus_1, r_k_plus_1
 
 
-def update_market(x_val, values_k, market_settings, constraints, agent_goods_lists, goods_list, price_default_good, problem, update_rebates=True):
+def update_market(x_val, values_k, market_settings, constraints, agent_goods_lists, goods_list, price_default_good, problem, update_rebates=True, integral=False):
     '''
     Update market consumption, prices, and rebates
     '''
@@ -189,8 +189,8 @@ def update_market(x_val, values_k, market_settings, constraints, agent_goods_lis
     # y = cp.Variable((num_agents, num_goods - 1)) # dropout removed (4)
     warm_start = False
     if problem is None:
-        y = cp.Variable((num_agents, num_goods - 2)) 
-        y_bar = cp.Variable(num_goods - 2)
+        y = cp.Variable((num_agents, num_goods - 2), integer=integral) 
+        y_bar = cp.Variable(num_goods - 2, integer=integral)
         p_k = cp.Parameter(num_goods, name='p_k')
         x = cp.Parameter((num_agents, num_goods), name='x')
         # Do we remove drop out here or not? - remove the default and dropout good
@@ -213,7 +213,10 @@ def update_market(x_val, values_k, market_settings, constraints, agent_goods_lis
     build_time = time.time() - start_time
 
     start_time = time.time()
-    solvers = [cp.CLARABEL, cp.SCS, cp.OSQP, cp.ECOS, cp.CVXOPT]
+    if integral:
+        solvers = [cp.MOSEK]
+    else:
+        solvers = [cp.CLARABEL, cp.SCS, cp.OSQP, cp.ECOS, cp.CVXOPT]
     for solver in solvers:
         try:
             result = problem.solve(solver=solver, warm_start=warm_start, ignore_dpp=True)
@@ -504,7 +507,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
     
     problem = None
     while x_iter <= MAX_NUM_ITERATIONS:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
-        x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, x_iter, rebate_frequency, rational=rational, integral=x_iter >= 100)
+        x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, x_iter, rebate_frequency, rational=rational, integral=INTEGRAL_APPROACH)
         agent_allocations.append(x) # 
         overdemand.append(np.sum(x[:,:-2], axis=0) - supply[:-2].flatten())
         x_ij = np.sum(x[:,:-2], axis=0) # removing default and dropout good
@@ -537,7 +540,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         else:
             update_rebates = False
         # Update market
-        k, y, p, r, problem = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, price_default_good, problem, update_rebates=update_rebates)
+        k, y, p, r, problem = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, price_default_good, problem, update_rebates=update_rebates, integral=INTEGRAL_APPROACH)
         yplot.append(y)
         rebates.append([[rebate] for rebate in r])
         prices.append(p)
@@ -547,7 +550,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         x_iter += 1
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=5) and (iter_constraint_x_y <= 0.1):
             break
-        if x_iter == 115:
+        if x_iter == 205:
             break
 
 
