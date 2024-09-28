@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 import pickle
+# from fisher.sampling_graph import process_allocations
 
 def full_list_string(lst):
     return ', '.join([str(item) for item in lst])
@@ -130,3 +131,5 @@ def write_results_table(flights, agents_data, output_folder):
 def save_data(output_folder, file_name, market_auction_time, **kwargs):
     with open(f'{output_folder}/{file_name}_{market_auction_time}.pkl', 'wb') as f:
         pickle.dump(kwargs, f)
+
+

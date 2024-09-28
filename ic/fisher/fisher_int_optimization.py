@@ -7,6 +7,27 @@ import pandas as pd
 import time
 
 
+def agent_allocation_selection(ranked_list, agent_data):
+    pass
+    # """
+    # Function to select the agent allocation based on the ranked list
+    # Args:
+    # ranked_list (list): ranked list of agents
+    # agent_data (dict): dictionary of agent data
+    # Returns:
+    # selected_agent (int): selected agent
+    # """
+    # for good 
+    # while desired_good 
+    # selected_agent = None
+    # for agent in ranked_list:
+    #     if agent_data[agent]['status'] == 'fisher_allocated':
+    #         selected_agent = agent
+    #         break
+    # return selected_agent
+
+
+
 def int_optimization(full_allocations, capacity, budget, prices, utility, agents_constraints, agent_indices, agents_allocations, output_folder):
     #int_optimization(int_allocations_full, capacity, budget, prices, u, agent_constraints, int_allocations, output_folder)
     """

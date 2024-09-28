@@ -22,10 +22,11 @@ print(str(top_level_path))
 sys.path.append(str(top_level_path))
 
 from VertiportStatus import VertiportStatus
-from fisher.sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, process_allocations, mapping_agent_to_full_data, mapping_goods_from_allocation
+from fisher.sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, mapping_agent_to_full_data, mapping_goods_from_allocation
 from fisher.fisher_int_optimization import int_optimization
 from fisher.FisherGraphBuilder import FisherGraphBuilder
-from write_csv import write_output, save_data
+from write_csv import write_output, save_data 
+# from utils import store_agent_data, process_allocations, rank_allocations
 
 UPDATED_APPROACH = True
 TOL_ERROR = 1e-4
@@ -249,8 +250,8 @@ def update_market(x_val, values_k, market_settings, constraints, agent_goods_lis
     for i in range(len(p_k_plus_1)):
         if p_k_plus_1[i] < 0:
             p_k_plus_1[i] = 0  
-        if p_k_plus_1[i] > 20:
-            p_k_plus_1[i] = 20 
+        if p_k_plus_1[i] > 100:
+            p_k_plus_1[i] = 100 
     # p_k_plus_1[-1] = 0  # dropout good
     # p_k_plus_1[-2] = price_default_good  # default good
     p_k_plus_1 = np.append(p_k_plus_1, [price_default_good,0]) # default and dropout good
@@ -499,6 +500,11 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
     
     problem = None
     while x_iter <= MAX_NUM_ITERATIONS:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
+        if x_iter == 0: 
+            beta_init = beta
+        else:
+            beta = beta_init/np.sqrt(x_iter)
+        
         x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, x_iter, rebate_frequency, rational=rational)
         agent_allocations.append(x) # 
         overdemand.append(np.sum(x[:,:-2], axis=0) - supply[:-2].flatten())
@@ -867,101 +873,111 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     
     # Building edge information for mapping - move this to separate function
     # move this part to a different function
+    # ADD BREAK POINT HERE
     edge_information = build_edge_information(goods_list)
-    agent_allocations, agent_dropout_x, agent_indices, agent_edge_information = process_allocations(x, edge_information, agent_goods_lists, flights)
+    # agents_data_dict = store_agent_data(flights, x, edge_information, agent_information, adjusted_budgets, desired_goods, market_auction_time)
+
+    # ranked_list = rank_allocations(agents_data_dict, desired_goods)
+    # agents_data_dict = agent_allocation_selection(ranked_list, agents_data_dict)
+
+
+
+
+
+
+    # agent_allocations, agent_dropout_x, agent_indices, agent_edge_information = process_allocations(x, edge_information, agent_goods_lists, flights)
 
     
+    # agents_data = {}
+    # int_allocations = []
+    # utilities = []
+    # dropouts = [] # remove
+    # allocated_flights = [] #remove
+    # budgets = [] #remove
+    # constraints = [] #remove
+    # agents_indices = [] #remove
+    # int_allocations_full = []
+    # start_time_sample = time.time()
+    # flights_list = list(flights.keys())
+    # print("Sampling edges ...")
+    # for i, flight_id in enumerate(flights_list):
+    #     frac_allocations = agent_allocations[i]
+    #     start_node= list(agent_edge_information[i].values())[0][0]
+    #     extended_graph, agent_allocation = agent_probability_graph_extended(agent_edge_information[i], frac_allocations, flight_id, output_folder)
+    #     sampled_path_extended, sampled_edges, int_allocation, dropout_flag = sample_path(extended_graph, start_node, agent_allocation, agent_dropout_x[i])
+    #     if dropout_flag:
+    #         dropouts.append(flight_id) #remove
+    #         agents_data[flight_id] = {'status': 'dropped', "payment":  0}
+    #         agents_data[flight_id]['good_allocated'] = None
+    #         agents_data[flight_id]['request'] = None
 
-    int_allocations = []
-    utilities = []
-    dropouts = [] # remove
-    agents_data = {}
-    allocated_flights = [] #remove
-    budgets = [] #remove
-    constraints = [] #remove
-    agents_indices = [] #remove
-    int_allocations_full = []
-    start_time_sample = time.time()
-    flights_list = list(flights.keys())
-    print("Sampling edges ...")
-    for i, flight_id in enumerate(flights_list):
-        frac_allocations = agent_allocations[i]
-        start_node= list(agent_edge_information[i].values())[0][0]
-        extended_graph, agent_allocation = agent_probability_graph_extended(agent_edge_information[i], frac_allocations, flight_id, output_folder)
-        sampled_path_extended, sampled_edges, int_allocation, dropout_flag = sample_path(extended_graph, start_node, agent_allocation, agent_dropout_x[i])
-        if dropout_flag:
-            dropouts.append(flight_id) #remove
-            agents_data[flight_id] = {'status': 'dropped', "payment":  0}
-            agents_data[flight_id]['good_allocated'] = None
-            agents_data[flight_id]['request'] = None
+    #     else:
+    #         # print("Sampled Path:", sampled_path_extended)
+    #         # print("Sampled Edges:", sampled_edges)
+    #         # plot_sample_path_extended(extended_graph, sampled_path_extended, agent_number, output_folder)
+    #         allocated_flights.append(flight_id) # remove 
+    #         agents_data[flight_id] = {'status': 'int_allocated'}
+    #         agents_data[flight_id]['int_allocation'] = int_allocation
+    #         int_allocations.append(int_allocation)
+    #         int_allocation_full = mapping_agent_to_full_data(edge_information, sampled_edges)
+    #         int_allocations_full.append(int_allocation_full)           
+    #         utilities.append(u[i]) # removing default and dropout good
+    #         budgets.append(adjusted_budgets[i]) #remove
+    #         constraints.append(agent_constraints[i]) #remove
+    #         agents_indices.append(agent_indices) #remove
 
-        else:
-            # print("Sampled Path:", sampled_path_extended)
-            # print("Sampled Edges:", sampled_edges)
-            # plot_sample_path_extended(extended_graph, sampled_path_extended, agent_number, output_folder)
-            allocated_flights.append(flight_id) # remove 
-            agents_data[flight_id] = {'status': 'int_allocated'}
-            agents_data[flight_id]['int_allocation'] = int_allocation
-            int_allocations.append(int_allocation)
-            int_allocation_full = mapping_agent_to_full_data(edge_information, sampled_edges)
-            int_allocations_full.append(int_allocation_full)           
-            utilities.append(u[i]) # removing default and dropout good
-            budgets.append(adjusted_budgets[i]) #remove
-            constraints.append(agent_constraints[i]) #remove
-            agents_indices.append(agent_indices) #remove
-
-        agents_data[flight_id]['utility'] = u[i]
-        agents_data[flight_id]['constraints'] = agent_constraints[i]
-        agents_data[flight_id]['adjusted_budget'] = adjusted_budgets[i]
-        agents_data[flight_id]['agent_edge_indices'] = agent_indices[i]
-        agents_data[flight_id]['fisher_allocation'] = agent_allocations[i]
-        agents_data[flight_id]['agent_goods_list'] = agent_goods_lists[i]
-        agents_data[flight_id]['deconficted_goods'] = None
-
+    #     agents_data[flight_id]['utility'] = u[i]
+    #     agents_data[flight_id]['constraints'] = agent_constraints[i]
+    #     agents_data[flight_id]['adjusted_budget'] = adjusted_budgets[i]
+    #     agents_data[flight_id]['agent_edge_indices'] = agent_indices[i]
+    #     agents_data[flight_id]['fisher_allocation'] = agent_allocations[i]
+    #     agents_data[flight_id]['agent_goods_list'] = agent_goods_lists[i]
+    #     agents_data[flight_id]['deconficted_goods'] = None
 
 
-    if int_allocations_full:
-        int_allocations_full = np.array(int_allocations_full)
-        print(f"Time to sample: {time.time() - start_time_sample:.5f}")
-        # IOP for contested goods
+
+    # if int_allocations_full:
+    #     int_allocations_full = np.array(int_allocations_full)
+    #     print(f"Time to sample: {time.time() - start_time_sample:.5f}")
+    #     # IOP for contested goods
         
-        capacity = capacity[:-2] # removing default and dropout good
-        prices = prices[:-2] # removing default and dropout good
-        new_allocations, new_prices = int_optimization(int_allocations_full, capacity, budgets, prices, utilities, constraints, agents_indices, int_allocations, output_folder)
+    #     capacity = capacity[:-2] # removing default and dropout good
+    #     prices = prices[:-2] # removing default and dropout good
+    #     new_allocations, new_prices = int_optimization(int_allocations_full, capacity, budgets, prices, utilities, constraints, agents_indices, int_allocations, output_folder)
 
-        # if new_allocations.any():
-        payment = np.sum(new_prices * new_allocations, axis=1)
-        end_capacity = capacity - np.sum(new_allocations, axis=0)
-        new_allocations_goods = mapping_goods_from_allocation(new_allocations, goods_list)
-        # Allocation and Rebased
-        allocation = []
-        rebased = []
-        index = 0
-        for key, value in agents_data.items():
-            if agents_data[key]['status'] == 'int_allocated':
-                agents_data[key]["deconflicted_goods"] = new_allocations_goods[index]
-                dep_node, arrival_node = find_dep_and_arrival_nodes(new_allocations_goods[index])
-                if dep_node:
-                    good = (dep_node, arrival_node)
-                    allocation.append((key, good)) #remove
-                    agents_data[key]["status"] = "allocated"
-                    agents_data[key]['payment'] = payment[index]
-                    agents_data[key]["request"] = "001"
-                    agents_data[key]["good_allocated"] =  good
-                    index += 1
-                else:
-                    rebased.append((key, '000')) #remove
-                    agents_data[key]['payment'] = 0
-                    agents_data[key]["request"] = "000"
-                    agents_data[key]["good_allocated"] =  None
+    #     # if new_allocations.any():
+    #     payment = np.sum(new_prices * new_allocations, axis=1)
+    #     end_capacity = capacity - np.sum(new_allocations, axis=0)
+    #     new_allocations_goods = mapping_goods_from_allocation(new_allocations, goods_list)
+    #     # Allocation and Rebased
+    #     allocation = []
+    #     rebased = []
+    #     index = 0
+    #     for key, value in agents_data.items():
+    #         if agents_data[key]['status'] == 'int_allocated':
+    #             agents_data[key]["deconflicted_goods"] = new_allocations_goods[index]
+    #             dep_node, arrival_node = find_dep_and_arrival_nodes(new_allocations_goods[index])
+    #             if dep_node:
+    #                 good = (dep_node, arrival_node)
+    #                 allocation.append((key, good)) #remove
+    #                 agents_data[key]["status"] = "allocated"
+    #                 agents_data[key]['payment'] = payment[index]
+    #                 agents_data[key]["request"] = "001"
+    #                 agents_data[key]["good_allocated"] =  good
+    #                 index += 1
+    #             else:
+    #                 rebased.append((key, '000')) #remove
+    #                 agents_data[key]['payment'] = 0
+    #                 agents_data[key]["request"] = "000"
+    #                 agents_data[key]["good_allocated"] =  None
 
-    else: # if there are only dropouts
-        payment = np.zeros(len(flights))
-        end_capacity = capacity
-        new_prices = prices
-        allocation = None
-        rebased = None
-        new_allocations_goods = None
+    # else: # if there are only dropouts
+    #     payment = np.zeros(len(flights))
+    #     end_capacity = capacity
+    #     new_prices = prices
+    #     allocation = None
+    #     rebased = None
+    #     new_allocations_goods = None
         
 
     # for i, flight_id in enumerate(allocated_flights):
@@ -983,10 +999,12 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
 
 
 
-    write_output(flights, edge_information, prices, new_prices, capacity, end_capacity, 
-                agents_data, market_auction_time, output_folder)
+    # write_output(flights, edge_information, prices, new_prices, capacity, end_capacity, 
+    #             agents_data, market_auction_time, output_folder)
+
+    return None, None, None
     
-    return allocation, rebased, None
+    # return allocation, rebased, None
 
 
 
