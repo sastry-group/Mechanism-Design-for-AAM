@@ -10,6 +10,7 @@ from pathlib import Path
 import time
 import math
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 # Add the bluesky package to the path
@@ -246,6 +247,45 @@ def step_simulation(
 
     return vertiport_usage
 
+def step_simulation_delay(
+    vertiport_usage, vertiports, flights, allocated_flights, stack_commands
+):
+    """
+    Step the simulation forward based on the allocated flights.
+
+    Args:
+        vertiport_usage (VertiportStatus): The current status of the vertiports.
+        vertiports (dict): The vertiports information.
+        flights (dict): The flights information.
+        allocated_flights (list): The list of allocated flights.
+        stack_commands (list): The list of stack commands to add to.
+    """
+    for flight_id, request_id, delay, bid, d, a in allocated_flights:
+        # Pull flight and allocated request
+        flight = flights[flight_id]
+        request = flight["requests"][request_id]
+
+        request["request_departure_time"] += delay
+        request["request_arrival_time"] += delay
+        request["bid"] = bid
+
+        # Move aircraft in VertiportStatus
+        vertiport_usage.move_aircraft(flight["origin_vertiport_id"], request)
+
+        # Add movement to stack commands
+        origin_vertiport = vertiports[flight["origin_vertiport_id"]]
+        destination_vertiport = vertiports[request["destination_vertiport_id"]]
+        add_commands_for_flight(
+            flight_id,
+            flight,
+            request,
+            origin_vertiport,
+            destination_vertiport,
+            stack_commands,
+        )
+
+    return vertiport_usage
+
 def adjust_interval_flights(allocated_flights, flights):
     """
     This function adjusts the allocated flights based on the departure time of the flight 
@@ -317,6 +357,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
     flights = data["flights"]
     vertiports = data["vertiports"]
     timing_info = data["timing_info"]
+    #timing_info["start_time"] = 0
     auction_freq = timing_info["auction_frequency"]
     routes_data = data["routes"]
 
@@ -394,6 +435,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
             flight_id: flights[flight_id] for flight_id in current_flight_ids
         }
         print('Auctioning currently between: ', prev_auction_time, auction_time)
+        print("Meethod: ", method)
         # Determine flight allocation and payment
         current_timing_info = {
             "start_time" : timing_info["start_time"],
@@ -409,7 +451,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
                 vertiport_usage, current_flights, current_timing_info, congestion_info, fleets, save_file=scenario_name, initial_allocation=initial_allocation, payment_calc=payment_calc, save=save_scenario
             )
             # Update system status based on allocation
-            print(allocated_flights)
+            #print(allocated_flights)
             vertiport_usage = step_simulation(
                 vertiport_usage, vertiports, flights, allocated_flights, stack_commands
             )
@@ -418,13 +460,19 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
                     vertiport_usage, current_flights, current_timing_info, routes_data, 
                     save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
                 )
-            print(allocated_flights)
-            print(payments)
+            #print(allocated_flights)
+            #print(payments)
 
-
-            vertiport_usage = step_simulation(
+            vertiport_usage = step_simulation_delay(
                 vertiport_usage, vertiports, flights, allocated_flights, stack_commands
             )
+
+            print("ALLOCATED FLIGHTS")
+            for af in allocated_flights:
+                print("flight id: ", af[0], "request id: ", af[1]," delay: ", af[2],"value: ", af[3], )
+            print('---------')
+
+            allocated_flights = [i[0:2] for i in allocated_flights]
         elif method == "ff":
             allocated_flights, payments = ff_allocation_and_payment(
                 vertiport_usage, current_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
@@ -437,12 +485,19 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         elapsed_time = end_time - start_time
         print(f"Elapsed time: {elapsed_time} seconds")
 
-#C
-
         # Evaluate the allocation
+        
+
         allocated_valuation = {flight_id: current_flights[flight_id]["requests"][request_id]["valuation"] for flight_id, request_id in allocated_flights}
         parked_valuation = {flight_id: flight["requests"]["000"]["valuation"] for flight_id, flight in current_flights.items() if flight_id not in [flight_id for flight_id, _ in allocated_flights]}
         valuation = sum([current_flights[flight_id]["rho"] * val for flight_id, val in allocated_valuation.items()]) + sum([current_flights[flight_id]["rho"] * val for flight_id, val in parked_valuation.items()])
+
+
+        #[print('Nodes: -----')]
+        #for n in vertiport_usage.nodes:
+        #    print("node: ", n)
+        #    print("cost: ", C(vertiport_usage.nodes[n]["vertiport_id"], vertiport_usage.nodes[n]["hold_usage"]))
+        #    print('----')
         congestion_costs = congestion_info["lambda"] * sum([C(vertiport_usage.nodes[node]["vertiport_id"], vertiport_usage.nodes[node]["hold_usage"]) for node in vertiport_usage.nodes])
         if method == "vcg":
             assert sw - (valuation - congestion_costs) <= 0.01, "Social welfare calculation incorrect."
@@ -454,8 +509,9 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         path_to_written_file = write_scenario(scenario_path, scenario_name, stack_commands)
     else:
         path_to_written_file = None
-
-
+    
+    print("AUCTION DONE")
+    print(results)
 
     # Visualize the graph
     #if VISUALIZE:
@@ -592,6 +648,9 @@ if __name__ == "__main__":
             sys.exit()
 
     # Create the scenario file and double check the correct path was used
+    #print("SCN_FOLDER: ", SCN_FOLDER)
+    #print("SCN_NAME:", SCN_NAME)
+    #print("FILE_PATH: ",file_path)
     path_to_scn_file, results = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME, file_path, args.method)
     print(path_to_scn_file)
     assert path == path_to_scn_file, "An error occured while writing the scenario file."

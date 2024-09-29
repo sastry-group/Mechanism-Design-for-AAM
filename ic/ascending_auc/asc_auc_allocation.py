@@ -579,6 +579,8 @@ class time_step:
         self.time_no = time_
         self.flight_id = id_
         self.spot = spot_
+    def disp(self):
+        print("CLASS: ", self.flight_id, self.spot, self.time_no, self.price)
     def copy(self):
         return type(self)(self.flight_id, self.time_no, self.spot)
     def raise_val(self):
@@ -587,24 +589,31 @@ class time_step:
 class bundle:
     flight_id = ""
     time = -1
-    flight = ()
+    delay = 0
+    req_id = None
+    flight = () #allocated_requests format for step_simulation
     times = []
     value = 0
-    def __init__(self, id_, start, end, price, spot):
-        flight_id = id_
-        value = price
+    dep_id = None
+    arr_id = None
+    
+    def populate(self, start, end, spot):
         for i in range(start,end):
-            self.times += [time_step(flight_id, i, spot)]
+            self.times += [time_step(self.flight_id, i, spot)]
+
     def update_flight_path(self, depart_time, depart_port, arrive_time, arrive_port):
-        dep_id = depart_port + '_' + str(depart_time) + '_dep'
-        arr_id = arrive_port + '_' + str(arrive_time) + '_arr'
-        self.flight = (self.flight_id, (dep_id, arr_id))
+        #(self.flight_id, (dep_id, arr_id)) was ff output format for allocated_requests
+        self.dep_id = depart_port + '_' + str(depart_time) + '_dep'
+        self.arr_id = arrive_port + '_' + str(arrive_time) + '_arr'
+        self.flight = (self.flight_id, self.req_id, self.delay, self.value, depart_port, arrive_port)
         return self.flight
     
-    def __init__(self, f,t,v):
+    def __init__(self, f, req_id, t, v, delay):
         self.flight_id = f
+        self.req_id = req_id
         self.times = t
         self.value =v
+        self.delay = delay
     
     
     def findCost(self, current_time):
@@ -632,11 +641,15 @@ def remove_requests(all, confirmed):
             else:
                 remaining += [c]
 
-def process_request(id_, depart_port, arrive_port, depart_time, arrive_time, maxBid, start_time, end_time, step, decay):
+def process_request(id_, req_id, depart_port, arrive_port, depart_time, arrive_time, maxBid, start_time, end_time, step, decay):
     reqs = []
     if(depart_port == arrive_port):
-        reqs += [bundle(id_, start_time, end_time, maxBid, depart_port)]
+        b = bundle(id_, req_id, [], maxBid, 0)
+        b.populate(start_time,end_time + 1, depart_port)
+        b.update_flight_path(depart_time, depart_port, arrive_time, arrive_port)
+        reqs += [b]
         return reqs
+    
     curtimesarray = [time_step(id_, i, 'NA') for i in range(start_time, end_time + 1, step)]
     blub = 0
     for i in range(start_time - 1, depart_time, step): #start_time -1 so it starts at 0
@@ -656,17 +669,19 @@ def process_request(id_, depart_port, arrive_port, depart_time, arrive_time, max
 
     delayed_dep_t = depart_time 
     delayed_arr_t = arrive_time
-    
-    nb = bundle(id_, curtimesarray, maxBid)
+    delay = 0
+    nb = bundle(id_, req_id, curtimesarray, maxBid, 0)
     nb.update_flight_path(depart_time, depart_port, arrive_time, arrive_port)
     reqs += [nb]
+
     while(delayed_arr_t + 1 < end_time): # arrive_port + _arr on last timestep
+        delay +=1
         c2 = [tm.copy() for tm in reqs[-1].times]
         c2[delayed_dep_t].spot = depart_port
         c2[delayed_dep_t + 1].spot = depart_port + '_dep'
         c2[delayed_arr_t].spot = depart_port + arrive_port
         c2[delayed_arr_t + 1].spot = arrive_port + '_arr'
-        delayedBundle = bundle(id_, c2, maxBid * decay)
+        delayedBundle = bundle(id_, req_id, c2, maxBid * decay, delay)
         delayedBundle.update_flight_path(delayed_dep_t, depart_port, delayed_arr_t, arrive_port)
         reqs += [delayedBundle]
         decay *= 0.95
@@ -688,20 +703,19 @@ def run_auction(reqs, start_time, end_time, capacities):
     final = False
     pplcnt_log = []
     maxprice_log = []
+    it = 0
     while(not final):
         final = True
-        print(numreq)
-        print(price_per_req)
+        it += 1
+        #print('AUC ITER # ', it)
         for t in range(start_time, end_time):
-            print(t)
             #look through all requests at a time step
             spots_reqs = []
+        
             for r in reqs:
                 #print(type(r.times[t]))
+                #print(r.flight_id, r.req_id, r.delay, len(r.times))
                 spots_reqs += [[r.times[t].spot, r.flight_id]]
-            
-
-            #print()
 
             spots_reqs = [e[0] for e in list({tuple(i) for i in spots_reqs})] # ensuring same flights arent competing by creating set of used spots including flight ids
             #print('A  -----------------')
@@ -713,6 +727,8 @@ def run_auction(reqs, start_time, end_time, capacities):
                 #compare each request size to capacity
                 #print(r.times[t].spot,multiplicities[r.times[t].spot], capacities[r.times[t].spot])
                 if(multiplicities[r.times[t].spot] > capacities[r.times[t].spot]): # contested
+                    #r.times[t].disp()
+                    #print(r.value)
                     final = False
                      #if larger increase price of time step at each request & total flight price
                     r.times[t].raise_val()
@@ -722,9 +738,18 @@ def run_auction(reqs, start_time, end_time, capacities):
             for n in pricedOut[::-1]:
                 reqs.pop(n)
                 price_per_req.pop(n)
+            #
+            
             pplcnt_log += [[t, len(price_per_req)]]
             maxprice_log += [[t, max(price_per_req)]]
             numreq = len(reqs)
+            
+    
+    print('     ----')
+    for ri in range(len(reqs)):
+        r = reqs[ri]
+        print(r.flight_id, r.req_id, r.dep_id, r.arr_id, r.delay, r.value, price_per_req[ri], r.value - price_per_req[ri])
+    print('     ----')
     
     return reqs, price_per_req, pplcnt_log, maxprice_log
 
@@ -780,29 +805,39 @@ def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, 
 
 
     capacities = define_capacities(vertiport_usage.vertiports, routes_data)
-
+    print("--- PROCESSING REQUESTS ---")
     requests = []
     for f in flights.keys():
         flight_data = flights[f]
         origin_vp = flight_data["origin_vertiport_id"]
         flight_req = flight_data["requests"]
         decay = flight_data["decay_factor"]
-        for req_index in flight_req.keys():
+        
+        for req_index in flight_req.keys(): #req_index = 000, 001, ...
+            print(f, req_index)
             fr = flight_req[req_index]
             dest_vp = fr["destination_vertiport_id"]
-            if(origin_vp == dest_vp):
-                continue
             dep_time = fr["request_departure_time"]
             arr_time = fr["request_arrival_time"]
+            #if(origin_vp== dest_vp):
+            #    continue
+            #    dep_time += 1
+            #    arr_time += 1
+
             val = fr["valuation"]
-            requests += process_request(f, origin_vp, dest_vp, dep_time, arr_time, val, timing_info["start_time"], timing_info["end_time"], timing_info["time_step"], decay)
+            requests += process_request(f, req_index, origin_vp, dest_vp, dep_time, arr_time, val, timing_info["start_time"], timing_info["end_time"], timing_info["time_step"], decay)
     
     #for i in requests:
     #    print(i.flight)
     #for r in range(len(requests)):
     #    print('r: ', r)
     #    requests[r].show()
-        
+    print("PROCESSED REQUESTS")
+    for r in requests:
+        print(r.flight_id, r.req_id, r.value)
+
+
+    print("--- RUNNING AUCTION ---")    
 
 
     allocated_requests, final_prices_per_req, agents_left_time, price_change = run_auction(requests, timing_info["auction_start"], timing_info["end_time"], capacities)

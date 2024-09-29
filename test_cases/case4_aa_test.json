@@ -125,19 +125,7 @@
               "AC004"
           ],
           "rho": 2
-      },
-      "F005": {
-          "members": [
-              "AC005"
-          ],
-          "rho": 3
-      },
-      "F006": {
-        "members": [
-            "AC006"
-        ],
-        "rho": 3
-    }
+      }
   },
   "flights": {
       "AC001": {
@@ -152,13 +140,6 @@
                   "request_arrival_time": 0,
                   "bid": 10,
                   "valuation": 10
-              },
-              "001": {
-                  "destination_vertiport_id": "V004",
-                  "request_departure_time": 17,
-                  "request_arrival_time": 29,
-                  "bid": 15,
-                  "valuation": 15
               }
           }
       },
@@ -176,11 +157,11 @@
                   "valuation": 10
               },
               "001": {
-                  "destination_vertiport_id": "V004",
+                  "destination_vertiport_id": "V006",
                   "request_departure_time": 24,
                   "request_arrival_time": 36,
-                  "bid": 35,
-                  "valuation": 35
+                  "bid": 240,
+                  "valuation": 240
               }
           }
       },
@@ -207,7 +188,7 @@
           }
       },
       "AC004": {
-          "appearance_time": 23,
+          "appearance_time": 9,
           "origin_vertiport_id": "V004",
           "budget_constraint": 91,
           "decay_factor": 0.95,
@@ -221,71 +202,13 @@
               },
               "001": {
                   "destination_vertiport_id": "V006",
-                  "request_departure_time": 40,
-                  "request_arrival_time": 70,
+                  "request_departure_time": 37,
+                  "request_arrival_time": 67,
                   "bid": 255,
                   "valuation": 255
-              },
-              "002": {
-                "destination_vertiport_id": "V005",
-                "request_departure_time": 36,
-                "request_arrival_time": 66,
-                "bid": 15,
-                "valuation": 15
-            }
+              }
           }
-      },
-      "AC005": {
-          "appearance_time": 33,
-          "origin_vertiport_id": "V005",
-          "budget_constraint": 150,
-          "decay_factor": 0.95,
-          "requests": {
-              "000": {
-                  "destination_vertiport_id": "V005",
-                  "request_departure_time": 0,
-                  "request_arrival_time": 0,
-                  "bid": 2,
-                  "valuation": 2
-              },
-              "001": {
-                  "destination_vertiport_id": "V006",
-                  "request_departure_time": 60,
-                  "request_arrival_time": 78,
-                  "bid": 245,
-                  "valuation": 245
-              },
-              "002": {
-                "destination_vertiport_id": "V001",
-                "request_departure_time": 38,
-                "request_arrival_time": 62,
-                "bid": 60,
-                "valuation": 60
-            }
-          }
-      },
-      "AC006": {
-        "appearance_time": 32,
-        "origin_vertiport_id": "V007",
-        "budget_constraint": 150,
-        "decay_factor": 0.95,
-        "requests": {
-            "000": {
-                "destination_vertiport_id": "V007",
-                "request_departure_time": 0,
-                "request_arrival_time": 0,
-                "bid": 1000,
-                "valuation": 1000
-            },
-            "001": {
-                "destination_vertiport_id": "V002",
-                "request_departure_time": 35,
-                "request_arrival_time": 77,
-                "bid": 113,
-                "valuation": 113
-            }
-        }
-    }
+      }
 
   },
   "vertiports": {
@@ -327,8 +250,8 @@
       "V006": {
           "latitude": 37.25214395119753,
           "longitude": -122.4066509403772,
-          "landing_capacity": 1,
-          "takeoff_capacity": 1,
+          "landing_capacity": 2,
+          "takeoff_capacity": 2,
           "hold_capacity": 2
       },
       "V007": {
