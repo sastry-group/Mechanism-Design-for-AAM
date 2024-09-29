@@ -238,10 +238,12 @@ def build_edge_information(goods_list):
     Outputs: a dictionary with all the labeled edges. This would a master list.
     """
     edge_information = {}
-    for i, goods in enumerate(goods_list[:-2], start=1): # without default and dropout good
-        edge_information[f"e{i}"] = (goods[0], goods[1])
+    for i, goods in enumerate(goods_list[:-2]): # without default and dropout good
+        edge_information[f"e{i+1}"] = (goods[0], goods[1])
+
     edge_information['default_good'] = ('default_good')
     edge_information['dropout_good'] = ('dropout_good')
+
 
     return edge_information
 

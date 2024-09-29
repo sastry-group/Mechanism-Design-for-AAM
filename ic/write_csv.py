@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 import pickle
-# from fisher.sampling_graph import process_allocations
+from utils import process_allocations
 
 def full_list_string(lst):
     return ', '.join([str(item) for item in lst])

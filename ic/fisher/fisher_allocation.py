@@ -23,10 +23,10 @@ sys.path.append(str(top_level_path))
 
 from VertiportStatus import VertiportStatus
 from fisher.sampling_graph import build_edge_information, agent_probability_graph_extended, sample_path, plot_sample_path_extended, mapping_agent_to_full_data, mapping_goods_from_allocation
-from fisher.fisher_int_optimization import int_optimization
+from fisher.fisher_int_optimization import int_optimization, agent_allocation_selection, settling_contested_allocations
 from fisher.FisherGraphBuilder import FisherGraphBuilder
 from write_csv import write_output, save_data 
-# from utils import store_agent_data, process_allocations, rank_allocations
+from utils import store_agent_data, process_allocations, rank_allocations, store_market_data, get_next_auction_data
 
 UPDATED_APPROACH = True
 TOL_ERROR = 1e-4
@@ -173,7 +173,8 @@ def update_basic_market(x, values_k, market_settings, constraints):
     return k + 1, y_k_plus_1, p_k_plus_1, r_k_plus_1
 
 
-def update_market(x_val, values_k, market_settings, constraints, agent_goods_lists, goods_list, price_default_good, problem, update_rebates=False):
+def update_market(x_val, values_k, market_settings, constraints, agent_goods_lists, goods_list, 
+                  price_default_good, problem, update_rebates=False, price_upper_bound=1000):
     '''
     Update market consumption, prices, and rebates
     '''
@@ -250,8 +251,8 @@ def update_market(x_val, values_k, market_settings, constraints, agent_goods_lis
     for i in range(len(p_k_plus_1)):
         if p_k_plus_1[i] < 0:
             p_k_plus_1[i] = 0  
-        if p_k_plus_1[i] > 100:
-            p_k_plus_1[i] = 100 
+        if p_k_plus_1[i] > price_upper_bound:
+            p_k_plus_1[i] = price_upper_bound 
     # p_k_plus_1[-1] = 0  # dropout good
     # p_k_plus_1[-2] = price_default_good  # default good
     p_k_plus_1 = np.append(p_k_plus_1, [price_default_good,0]) # default and dropout good
@@ -470,11 +471,12 @@ def run_basic_market(initial_values, agent_settings, market_settings, plotting=F
 
 
 
-def run_market(initial_values, agent_settings, market_settings, bookkeeping, rational=False, price_default_good=10, rebate_frequency=1):
+def run_market(initial_values, agent_settings, market_settings, bookkeeping, rational=False, price_default_good=10, lambda_frequency=1, price_upper_bound=1000):
     """
     
     """
-    print(f"running with rebate frequency: {rebate_frequency}")
+    print(f"running with rebate frequency: {lambda_frequency}")
+    print(f"Price upper bound: {price_upper_bound}")
     u, agent_constraints, agent_goods_lists = agent_settings
     y, p, r = initial_values
     w, supply, beta = market_settings
@@ -505,7 +507,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         else:
             beta = beta_init/np.sqrt(x_iter)
         
-        x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, x_iter, rebate_frequency, rational=rational)
+        x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, x_iter, lambda_frequency, rational=rational)
         agent_allocations.append(x) # 
         overdemand.append(np.sum(x[:,:-2], axis=0) - supply[:-2].flatten())
         x_ij = np.sum(x[:,:-2], axis=0) # removing default and dropout good
@@ -538,7 +540,9 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         else:
             update_rebates = False
         # Update market
-        k, y, p, r, problem = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, price_default_good, problem, update_rebates=update_rebates)
+        k, y, p, r, problem = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, 
+                                            price_default_good, problem, 
+                                            update_rebates=update_rebates, price_upper_bound=price_upper_bound)
         yplot.append(y)
         rebates.append([[rebate] for rebate in r])
         prices.append(p)
@@ -818,13 +822,16 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
         default_good_valuation = design_parameters["default_good_valuation"]
         dropout_good_valuation = design_parameters["dropout_good_valuation"]
         BETA = design_parameters["beta"]
-        rebate_frequency = design_parameters["rebate_frequency"]
+        lambda_frequency = design_parameters["lambda_frequency"]
+        price_upper_bound = design_parameters["price_upper_bound"]
+
     else:
         BETA = 1 # chante to 1/T
         dropout_good_valuation = -1
         default_good_valuation = 1
         price_default_good = 10
-        rebate_frequency = 1
+        lambda_frequency = 1
+        price_upper_bound = 1000
 
     # Construct market
     agent_information, market_information, bookkeeping = construct_market(flights, timing_info, routes_data, vertiport_usage, 
@@ -855,7 +862,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     # x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
     x, prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot = run_market((y,p,r), agent_information, market_information, 
                                                              bookkeeping, rational=False, price_default_good=price_default_good, 
-                                                             rebate_frequency=rebate_frequency)
+                                                             lambda_frequency=lambda_frequency, price_upper_bound=price_upper_bound)
     
 
     extra_data = {
@@ -873,15 +880,21 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     
     # Building edge information for mapping - move this to separate function
     # move this part to a different function
-    # ADD BREAK POINT HERE
     edge_information = build_edge_information(goods_list)
-    # agents_data_dict = store_agent_data(flights, x, edge_information, agent_information, adjusted_budgets, desired_goods, market_auction_time)
-
-    # ranked_list = rank_allocations(agents_data_dict, desired_goods)
-    # agents_data_dict = agent_allocation_selection(ranked_list, agents_data_dict)
 
 
+    agents_data_dict = store_agent_data(flights, x, agent_information, adjusted_budgets, desired_goods, agent_goods_lists, edge_information)
+    market_data_dict = store_market_data(prices, x, r,  goods_list, capacity, market_auction_time)
 
+    # Rank agents based on their allocation and settling any contested goods
+    sorted_agent_dict, ranked_list = rank_allocations(agents_data_dict)
+    agents_data_dict, market_data_dict, flag = agent_allocation_selection(ranked_list, agents_data_dict, market_data_dict)
+    if flag:
+        agents_data_dict, market_data_dict = settling_contested_allocations(agents_data_dict, market_data_dict)
+
+
+    # Getting data for next auction
+    allocation, rebased, dropped = get_next_auction_data(agents_data_dict, market_data_dict)
 
 
 
@@ -1002,7 +1015,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     # write_output(flights, edge_information, prices, new_prices, capacity, end_capacity, 
     #             agents_data, market_auction_time, output_folder)
 
-    return None, None, None
+    return allocation, rebased, dropped
     
     # return allocation, rebased, None
 

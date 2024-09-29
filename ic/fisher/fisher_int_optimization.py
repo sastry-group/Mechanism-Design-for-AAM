@@ -7,26 +7,88 @@ import pandas as pd
 import time
 
 
-def agent_allocation_selection(ranked_list, agent_data):
-    pass
-    # """
-    # Function to select the agent allocation based on the ranked list
-    # Args:
-    # ranked_list (list): ranked list of agents
-    # agent_data (dict): dictionary of agent data
-    # Returns:
-    # selected_agent (int): selected agent
-    # """
-    # for good 
-    # while desired_good 
-    # selected_agent = None
-    # for agent in ranked_list:
-    #     if agent_data[agent]['status'] == 'fisher_allocated':
-    #         selected_agent = agent
-    #         break
-    # return selected_agent
+def agent_allocation_selection(ranked_list, agent_data, market_data):
+    capacity = market_data['capacity']
+    prices = market_data['prices'] 
+    demand = market_data['demand']
+    flag = False
+    contested = []
+    allocated = []
+    for agent in ranked_list:
+        Aarray = agent_data[agent]["constraints"][0]
+        Aarray = Aarray[:,:-2] #removing default and dropout goods
+        barray = agent_data[agent]["constraints"][1]
+        fisher_allocation = agent_data[agent]["allocation_short"]
+        utility = agent_data[agent]["utility"][:-2]
+        budget = agent_data[agent]["adjusted_budget"]
+        agent_indices = agent_data[agent]["agent_edge_indices"]
+        agent_prices = prices[agent_indices]
+        agent_values = find_optimal_xi(len(fisher_allocation), utility, Aarray, barray, agent_prices, budget)
+        if agent_values is None:
+            print("Warning: Could not find optimal xi value for agent", agent)
+        else:
+            # we need to do this in vertiport status as well"
+            agent_values_to_full_size = np.zeros(len(prices))
+            agent_values_to_full_size[agent_indices] = agent_values
+            check_capacity = capacity - agent_values_to_full_size
+            idx_contested_edges = np.where(demand > check_capacity)[0]
+            if np.all(check_capacity >= 0):
+                agent_data[agent]["int_allocation"] = agent_values
+                agent_data[agent]["status"] = "int_allocated"
+                allocated.append(agent)
+
+                # equilibrium_reached = check_equilibrium(demand, capacity)
+            else:
+                agent_data[agent]["status"] = "contested"
+                contested.append(agent)
+                market_data['prices'][idx_contested_edges] = market_data['prices'][idx_contested_edges] + 10000
+                flag = True
+    market_data['int_allocated_agents'] = allocated
+    market_data['contested_agents'] = contested
 
 
+    return agent_data, market_data, flag
+
+def settling_contested_allocations(agent_data, market_data):
+    k = 0
+    ALPHA = 0.1
+    equilibrium_reached = False
+    while not equilibrium_reached:
+        
+        agent_xs, allocated_agents, droppped_agents, no_solution_agents = [], [], [], []
+        for agent in market_data['contested_agents']:
+            Aarray = agent_data[agent]["constraints"][0]
+            Aarray = Aarray[:,:-2]
+            barray = agent_data[agent]["constraints"][1]
+            fisher_allocation = agent_data[agent]["fisher_allocation"][:-2]
+            utility = agent_data[agent]["utility"][:-2]
+            budget = agent_data[agent]["adjusted_budget"][:-2]
+            agent_values = find_optimal_xi(len(fisher_allocation), utility, Aarray, barray, market_data['prices'], budget)
+            if agent_values is None:
+                print("Warning: Could not find optimal xi value for agent", agent)
+                no_solution_agents.append(agent)
+            else:
+                agent_xs.append(agent_values)
+                allocated_agents.append(agent)
+                
+        demand = np.sum(agent_xs, axis=0)
+        idx_contested_edges = np.where(demand > market_data["capacity"])
+        market_data["prices"] = [idx_contested_edges] + ALPHA
+        equilibrium_reached = check_equilibrium(demand, market_data["capacity"])
+        k += 1
+    agent_data = update_agent_status(agent_data, agent_values, no_solution_agents, droppped_agents, allocated_agents)    
+
+    return agent_data, market_data
+
+def update_agent_status(agent_data, agent_values, droppped_agents, allocated_agents):
+    if len(droppped_agents) > 0:
+        for agent in droppped_agents:
+            agent_data[agent]["status"] = "dropped"
+    if len(allocated_agents) > 0:
+        for agent in allocated_agents:
+            agent_data[agent]["a3_allocation"] = agent_values[allocated_agents.index(agent)]
+            agent_data[agent]["status"] = "allocated"
+    return agent_data
 
 def int_optimization(full_allocations, capacity, budget, prices, utility, agents_constraints, agent_indices, agents_allocations, output_folder):
     #int_optimization(int_allocations_full, capacity, budget, prices, u, agent_constraints, int_allocations, output_folder)
