@@ -798,7 +798,7 @@ def track_desired_goods(flights, goods_list):
         good_id_dep = goods_list.index(desired_good_dep)
         good_id_dep_to_arr = goods_list.index(desired_good_dep_to_arr)
         desired_goods[flight_id] = {"desired_good_arr": good_id_arr, "desired_good_dep": good_id_dep, "desired_good_dep_to_arr": good_id_dep_to_arr}
-        desired_goods[flight_id]["desired_edge"] = (f"{origin_vertiport}_{desired_dep_time}", f"{desired_vertiport}_{desired_arrival_time}")
+        desired_goods[flight_id]["desired_edge"] = goods_list[good_id_dep_to_arr]
 
     return desired_goods
 
