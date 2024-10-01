@@ -79,11 +79,11 @@ def write_output(flights, edge_information, prices, new_prices, capacity, end_ca
             "Indices": agents_data[key]['agent_edge_indices'],
             # "Edge Information": agent_edge_information[i],
             "Goods Lists": agents_data[key]["agent_goods_list"],
-            "Sample and Int Allocations": agents_data[key]["int_allocation"],
-            "Deconflicted Allocations": agents_data[key]["deconflicted_goods"],
+            # "Sample and Int Allocations": agents_data[key]["int_allocation"],
+            "Deconflicted Allocations": 0,
             "Utility": agents_data[key]["utility"],
             "Budget": agents_data[key]["adjusted_budget"],
-            "Payment": agents_data[key]["payment"]
+            # "Payment": np.sum(new_prices[agents_data[key]['agent_edge_indices']] * agents_data[key]["int_allocation"])
         }
         agent_df = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in data_to_write.items()]))
         agent_file = os.path.join(output_folder, f"{key}.csv")
@@ -108,7 +108,7 @@ def write_results_table(flights, agents_data, output_folder):
         valuation = value['requests']["001"]["valuation"]
         modified_budget = agents_data[key]["adjusted_budget"]
         allocated_flight = agents_data[key]["good_allocated"]
-        agent_payment = agents_data[key]["payment"]
+        agent_payment = 0 # change
         origin_destination_tuple = (value["origin_vertiport_id"], value['requests']["001"]["destination_vertiport_id"])
         status = agents_data[key]["status"]
           

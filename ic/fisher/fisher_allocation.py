@@ -770,18 +770,6 @@ def load_json(file=None):
     return data
 
 
-def find_dep_and_arrival_nodes(edges):
-    dep_node_found = False
-    arrival_node_found = False
-    
-    for edge in edges:
-        if "dep" in edge[0]:
-            dep_node_found = edge[0]
-            arrival_node_found = edge[1]
-            assert "arr" in arrival_node_found, f"Arrival node not found: {arrival_node_found}"
-            return dep_node_found, arrival_node_found
-    
-    return dep_node_found, arrival_node_found
 
 def track_desired_goods(flights, goods_list):
     "return the index of the desired goods for each flight"
@@ -1010,10 +998,15 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     #     new_allocations_goods = None
     # end_agent_status_data = (allocation, rebased, dropouts) #change
 
+    output_data = {"market_data":market_data_dict, "agents_data":agents_data_dict}
+    save_data(output_folder, "fisher_data_after", market_auction_time, **output_data)
 
+    new_prices = market_data_dict["prices"]
+    end_capacity = market_data_dict["capacity"]
+    agents_data = agents_data_dict
 
-    # write_output(flights, edge_information, prices, new_prices, capacity, end_capacity, 
-    #             agents_data, market_auction_time, output_folder)
+    write_output(flights, edge_information, prices, new_prices, capacity, end_capacity, 
+                agents_data, market_auction_time, output_folder)
 
     return allocation, rebased, dropped
     
