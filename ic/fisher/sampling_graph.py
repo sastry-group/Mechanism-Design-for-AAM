@@ -232,21 +232,6 @@ def plot_sample_path_extended(G, sampled_path, agent_number, output_folder=False
     return H
 
 
-def build_edge_information(goods_list):
-    """
-    Build edge information from goods list.
-    Outputs: a dictionary with all the labeled edges. This would a master list.
-    """
-    edge_information = {}
-    for i, goods in enumerate(goods_list[:-2]): # without default and dropout good
-        edge_information[f"e{i+1}"] = (goods[0], goods[1])
-
-    edge_information['default_good'] = ('default_good')
-    edge_information['dropout_good'] = ('dropout_good')
-
-
-    return edge_information
-
 
 
 def build_agent_edge_utilities(edge_information, agents_goods_list, utility_values):

@@ -82,12 +82,21 @@ class FisherGraphBuilder:
         for ts in range(start_time, end_time - 1):  # Avoid out of range for next time step
             current_node = f"{vertiport}_{ts}"
             next_node = f"{vertiport}_{ts + 1}"
-            self.graph.add_edge(current_node, next_node, **attributes)
+            edge = (current_node, next_node)
+            self._add_edge_if_not_exists(edge, **attributes)
+            # self.graph.add_edge(current_node, next_node, **attributes)
             # print(f"  Added Edge: {current_node} -> {next_node}")
 
     def _create_dep_arr_edges(self, current_node, next_node, attributes=None):
         """Create edges between time window nodes for the given vertiport."""
-        self.graph.add_edge(current_node, next_node, **attributes)
+        # edge = (current_node, next_node)
+        # if edge not in self.graph.edges:
+        #     if edge in self.vertiport_status.edges:
+        #         self.graph.add_edge(edge, **self.vertiport_status.edges[edge])
+        #     else:
+        #         self.graph.add_edge(edge)
+        edge = (current_node, next_node)
+        self._add_edge_if_not_exists(edge, **attributes)
 
 
     def _get_end_auction_time(self, arrival_time, auction_frequency):
@@ -101,5 +110,14 @@ class FisherGraphBuilder:
                 self.graph.add_node(node, **self.vertiport_status.nodes[node])
             else:
                 self.graph.add_node(node)
+    
+    def _add_edge_if_not_exists(self, edge, **attributes):
+        """Check if edge exists in VertiportStatus and add to the graph if it doesn't already exist."""
+        if edge not in self.graph.edges:
+            current_node, next_node = edge
+            if edge in self.vertiport_status.edges:
+                self.graph.add_edge(current_node, next_node, **self.vertiport_status.edges[edge])
+            else:
+                self.graph.add_edge(current_node, next_node, **attributes)
     
                 

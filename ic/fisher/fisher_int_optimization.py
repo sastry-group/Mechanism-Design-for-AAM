@@ -10,7 +10,7 @@ import time
 def agent_allocation_selection(ranked_list, agent_data, market_data):
     capacity = market_data['capacity']
     capacity_temp = capacity
-    prices = market_data['prices'] 
+    temp_prices = market_data['prices'] 
     demand = market_data['demand']
     flag = False
     contested = []
@@ -23,16 +23,16 @@ def agent_allocation_selection(ranked_list, agent_data, market_data):
         utility = agent_data[agent]["utility"][:-2]
         budget = agent_data[agent]["adjusted_budget"]
         agent_indices = agent_data[agent]["agent_edge_indices"]
-        agent_prices = prices[agent_indices]
+        agent_prices = temp_prices[agent_indices]
         agent_values = find_optimal_xi(len(fisher_allocation), utility, Aarray, barray, agent_prices, budget)
+
         if agent_values is None:
             print("Warning: Could not find optimal xi value for agent", agent)
         else:
             # we need to do this in vertiport status as well"
-            agent_values_to_full_size = np.zeros(len(prices))
+            agent_values_to_full_size = np.zeros(len(temp_prices))
             agent_values_to_full_size[agent_indices] = agent_values
             check_capacity = capacity_temp - agent_values_to_full_size
-            idx_contested_edges = np.where(demand > check_capacity)[0]
             if np.all(check_capacity >= 0):
                 agent_data[agent]["int_allocation"] = agent_values
                 agent_data[agent]["status"] = "int_allocated"
@@ -44,9 +44,11 @@ def agent_allocation_selection(ranked_list, agent_data, market_data):
             else:
                 agent_data[agent]["status"] = "contested"
                 contested.append(agent)
-                market_data['prices'][idx_contested_edges] = market_data['prices'][idx_contested_edges] + 10000
+                idx_contested_edges = np.where(demand > check_capacity)[0]
+                temp_prices[idx_contested_edges] = temp_prices[idx_contested_edges] + 10000
                 flag = True
         agent_data[agent]["final_allocation"] = agent_values
+    market_data['temp_prices'] = temp_prices
     market_data['int_allocated_agents'] = allocated
     market_data['contested_agents'] = contested
 
@@ -55,7 +57,6 @@ def agent_allocation_selection(ranked_list, agent_data, market_data):
 
 def settling_contested_allocations(agent_data, market_data):
     k = 0
-    ALPHA = 0.1
     equilibrium_reached = False
     while not equilibrium_reached:
         
@@ -69,9 +70,10 @@ def settling_contested_allocations(agent_data, market_data):
 
             fisher_allocation = agent_data[agent]["allocation_short"]
             utility = agent_data[agent]["utility"][:-2]
-            budget = agent_data[agent]["adjusted_budget"]
+            budget = agent_data[agent]["original_budget"]
             agent_indices = agent_data[agent]["agent_edge_indices"]
-            prices = market_data['prices']
+            # prices = market_data['prices']
+            prices = market_data['temp_prices']
             agent_prices = prices[agent_indices]
             agent_values = find_optimal_xi(len(fisher_allocation), utility, Aarray, barray, agent_prices, budget)
             if agent_values is None:
@@ -86,7 +88,7 @@ def settling_contested_allocations(agent_data, market_data):
         demand = np.sum(agent_xs, axis=0)
         idx_contested_edges = np.where(demand > market_data["capacity"])
         if idx_contested_edges == []:
-            market_data["prices"] = [idx_contested_edges] + ALPHA
+            market_data['temp_prices'] = [idx_contested_edges] + 10000
         
         equilibrium_reached = check_equilibrium(demand, market_data["capacity"])
         k += 1
@@ -237,7 +239,7 @@ def find_optimal_xi(n, utility, A, b, prices, budget):
     problem = cp.Problem(objective, constraints)
     result = problem.solve()
     
-    print("Problem status:", problem.status)
+    # print("Problem status:", problem.status)
     # print("Optimal value:", result)
     
     if problem.status not in ["optimal", "optimal_inaccurate"]:
@@ -293,15 +295,34 @@ def map_agent_values(full_x_array, agent_indices, agent_values):
     """
     Function to map agent values to the index in agent indices
     Args:
-    agent_indices (list): list of indices corresponding to the agents
-    agent_values (list): list of values for each agent
+    agent_indices (list): list of indices corresponding to the agent goods in the full array
+    agent_values (list): list of values for each agent ( this is only the values for each agent)
     Returns:
-    mapped_values (np.array): array of mapped values
+    mapped_values (np.array): the size here is n_goods
     """
     mapped_values = np.zeros(full_x_array)
     for agent_index, agent_value in zip(agent_indices, agent_values):
         mapped_values[agent_index] = agent_value
     return mapped_values
+
+def map_goodslist_to_agent_goods(goods_list, agent_goods):
+    """
+    Function to map goods list to agent goods
+    Args:
+    goods_list (list): list of goods (this the entire list of goods)
+    agent_goods (list): list of agent goods
+    Returns:
+    mapped_goods (np.array): 
+    """
+    ind2master_goodsidx = []
+    for agent, agent_goods_list in enumerate(agent_goods):
+        mapped_goods = np.zeros(len(agent_goods_list))
+        mapped_goods = [goods_list.index(good) for good in agent_goods_list]
+        ind2master_goodsidx.append(mapped_goods)
+
+    
+
+    return ind2master_goodsidx
 
 # Test
 # num_agents, num_goods, constraints_per_agent = 5, 8, [6] * 5
