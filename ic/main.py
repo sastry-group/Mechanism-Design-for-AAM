@@ -357,7 +357,6 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
     flights = data["flights"]
     vertiports = data["vertiports"]
     timing_info = data["timing_info"]
-    #timing_info["start_time"] = 0
     auction_freq = timing_info["auction_frequency"]
     routes_data = data["routes"]
 
@@ -455,9 +454,27 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
             vertiport_usage = step_simulation(
                 vertiport_usage, vertiports, flights, allocated_flights, stack_commands
             )
-        elif method == "ascending-auction":
+        elif method == "ascending-auction-budgetbased":
             allocated_flights, payments = ascending_auc_allocation_and_payment(
-                    vertiport_usage, current_flights, current_timing_info, routes_data, 
+                    vertiport_usage, current_flights, current_timing_info, routes_data, "budget",
+                    save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
+                )
+            #print(allocated_flights)
+            #print(payments)
+
+            vertiport_usage = step_simulation_delay(
+                vertiport_usage, vertiports, flights, allocated_flights, stack_commands
+            )
+
+            print("ALLOCATED FLIGHTS")
+            for af in allocated_flights:
+                print("flight id: ", af[0], "request id: ", af[1]," delay: ", af[2],"value: ", af[3], )
+            print('---------')
+            allocated_flights = [i[0:2] for i in allocated_flights]
+        
+        elif method == "ascending-auction-profitbased":
+            allocated_flights, payments = ascending_auc_allocation_and_payment(
+                    vertiport_usage, current_flights, current_timing_info, routes_data, "profit",
                     save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
                 )
             #print(allocated_flights)

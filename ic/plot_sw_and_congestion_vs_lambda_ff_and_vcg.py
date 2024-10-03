@@ -26,7 +26,7 @@ def load_json(file=None):
         print(f"Opened file {file}")
     return data
 
-methods = ["ff", "vcg", "ascending-auction"]
+methods = ["ff", "vcg", "ascending-auction-profitbased","ascending-auction-budgetbased"]
 if True: #not Path(result_path).is_file():
     # Read in case file
     print("case_file_path: ", case_file_path)
@@ -61,10 +61,12 @@ else:
 
 print(f"FF Valuations: {valuations[0]}, Congestion costs: {congestion_costs[0]}")
 print(f"VCG Valuations: {valuations[1]}, Congestion costs: {congestion_costs[1]}")
-print(f"ASC AUC Valuations: {valuations[2]}, Congestion costs: {congestion_costs[2]}")
+print(f"ASC AUC (profit-based) Valuations : {valuations[2]}, Congestion costs: {congestion_costs[2]}")
+print(f"ASC AUC (budget-based) Valuations : {valuations[3]}, Congestion costs: {congestion_costs[3]}")
 print(f"FF SW: {[valuations[0][i] - congestion_costs[0][i] for i in range(len(LAMBDAS))]}")
 print(f"VCG SW: {[valuations[1][i] - congestion_costs[1][i] for i in range(len(LAMBDAS))]}")
-print(f"ASC AUC SW: {[valuations[2][i] - congestion_costs[2][i] for i in range(len(LAMBDAS))]}")
+print(f"ASC AUC (profit-based) SW: {[valuations[2][i] - congestion_costs[2][i] for i in range(len(LAMBDAS))]}")
+print(f"ASC AUC (budget-based) SW: {[valuations[3][i] - congestion_costs[3][i] for i in range(len(LAMBDAS))]}")
 assert all([valuations[0][i] - congestion_costs[0][i] <= valuations[1][i] - congestion_costs[1][i] for i in range(len(LAMBDAS))]), "FF is not better than VCG"
 
 
@@ -72,10 +74,12 @@ sizes = [size**3 for size in list(range(1, len(LAMBDAS)+1))]
 plt.scatter(plotted_congestion[0], valuations[0], sizes=sizes, color="blue")
 plt.scatter(plotted_congestion[1], valuations[1], sizes=sizes, color="orange")
 plt.scatter(plotted_congestion[2], valuations[2], sizes=sizes, color="green")
+plt.scatter(plotted_congestion[3], valuations[3], sizes=sizes, color="red")
 
 plt.plot(plotted_congestion[0], valuations[0], "--", color = "blue", label = "FF")
 plt.plot(plotted_congestion[1], valuations[1], "--", color = "orange", label = "VCG [ours]")
-plt.plot(plotted_congestion[2], valuations[2], "--", color = "green", label = "Ascending Auction")
+plt.plot(plotted_congestion[2], valuations[2], "--", color = "green", label = "Ascending Auction (profit-based)")
+plt.plot(plotted_congestion[3], valuations[3], "--", color = "red", label = "Ascending Auction (budget-based)")
 
 # plt.ylim(0, 1.1* max(max(valuations)))
 # plt.xlim(1.1* max(max(congestion_costs)), 0)

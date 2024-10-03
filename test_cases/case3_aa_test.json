@@ -143,7 +143,7 @@
       "AC001": {
           "appearance_time": 0,
           "origin_vertiport_id": "V001",
-          "budget_constraint": 153,
+          "budget_constraint": 7,
           "decay_factor": 0.95,
           "requests": {
               "000": {
@@ -165,37 +165,37 @@
       "AC002": {
           "appearance_time": 5,
           "origin_vertiport_id": "V002",
-          "budget_constraint": 168,
+          "budget_constraint": 54,
           "decay_factor": 0.95,
           "requests": {
               "000": {
                   "destination_vertiport_id": "V002",
                   "request_departure_time": 0,
                   "request_arrival_time": 0,
-                  "bid": 10,
-                  "valuation": 10
+                  "bid": 60,
+                  "valuation": 60
               },
               "001": {
                   "destination_vertiport_id": "V004",
                   "request_departure_time": 24,
                   "request_arrival_time": 36,
-                  "bid": 35,
-                  "valuation": 35
+                  "bid": 75,
+                  "valuation": 75
               }
           }
       },
       "AC003": {
           "appearance_time": 7,
           "origin_vertiport_id": "V003",
-          "budget_constraint": 72,
+          "budget_constraint": 58,
           "decay_factor": 0.95,
           "requests": {
               "000": {
                   "destination_vertiport_id": "V003",
                   "request_departure_time": 0,
                   "request_arrival_time": 0,
-                  "bid": 16,
-                  "valuation": 16
+                  "bid": 60,
+                  "valuation": 60
               },
               "001": {
                   "destination_vertiport_id": "V006",
@@ -209,15 +209,15 @@
       "AC004": {
           "appearance_time": 23,
           "origin_vertiport_id": "V004",
-          "budget_constraint": 91,
+          "budget_constraint": 55,
           "decay_factor": 0.95,
           "requests": {
               "000": {
                   "destination_vertiport_id": "V004",
                   "request_departure_time": 0,
                   "request_arrival_time": 0,
-                  "bid": 12,
-                  "valuation": 12
+                  "bid": 60,
+                  "valuation": 60
               },
               "001": {
                   "destination_vertiport_id": "V006",
