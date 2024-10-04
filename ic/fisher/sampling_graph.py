@@ -88,13 +88,13 @@ def agent_probability_graph_extended(edge_information, x, agent_number=1, output
     nx.draw(G, pos, with_labels=True, node_size=700, node_color='lightblue', edge_color='#909090', font_size=9)
     edge_labels = {(u, v): f"{d['label']} ({d['weight']:.4f})" for u, v, d in G.edges(data=True)}
     nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, label_pos=0.5, font_color='red')
-    # plt.figure(figsize=(12, 8))
-    # plt.title("Time Extended Decision Tree Graph with Branching and Constraints")
+    plt.figure(figsize=(12, 8))
+    plt.title("Time Extended Decision Tree Graph with Branching and Constraints")
 
-    # if output_folder:
-    #     plt.savefig(f'{output_folder}/extended_graph_{agent_label}.png')
-    # # plt.show()
-    # plt.close()
+    if output_folder:
+        plt.savefig(f'{output_folder}/extended_graph_{agent_label}.png')
+    # plt.show()
+    plt.close()
 
 
         # origin_node, destination_node = edge
@@ -149,8 +149,8 @@ def sample_path(G, start_node, agent_allocations, dropout_good_allocation=False)
     first_edge_weight = first_edge[2]['weight']
 
     # Calculate dropout probability based on the dropout edge
-    total_weight = first_edge_weight + dropout_good_allocation
-    dropout_probability = dropout_good_allocation / total_weight
+    total_weight = first_edge_weight + abs(dropout_good_allocation)
+    dropout_probability = abs(dropout_good_allocation) / total_weight
     if random.random() < dropout_probability:
         # Dropout is chosen
         dropout_flag = True
@@ -276,7 +276,8 @@ def build_agent_edge_utilities(edge_information, agents_goods_list, utility_valu
 
     return all_agents_utilities
 
-def process_allocations(x, edge_information, agent_goods_lists):
+
+def process_allocations(x, edge_information, agent_goods_lists, flights):
     """
     Process the allocation matrix to output agent-specific goods allocations
     and corresponding indices in goods_list (master list). We also remove the default good
@@ -289,11 +290,14 @@ def process_allocations(x, edge_information, agent_goods_lists):
     
     Returns:
     - agent_allocations: list of np.ndarrays, each containing the fractional allocations for an agent from the fisher market
-    - agent_indices: list of np.ndarrays, each containing the indices in goods_list for an agent to map the indices to the master list
+    - agent_indices: list of np.ndarrays, each containing the indices of the agents goods mapping to the master goods_list
     - agent_edge_information: list of dictionaries, each containing the edge information for an agent goods  (edge_label: ('origin_node', 'destination_node'))
     """
     # Create a dictionary for quick lookup of goods in goods_list
     goods_index_map = {good: idx for idx, good in enumerate(edge_information.values())}
+
+    # creating an agent's dictionary of goods allocations
+    agents_data = {}
     
     agent_allocations = []
     agent_indices = []
@@ -315,7 +319,8 @@ def process_allocations(x, edge_information, agent_goods_lists):
         for id in indices:
             agent_edge = edge_labels_list[id]
             agent_edges[agent_edge] = edge_information[agent_edge]
-        
+            
+        agents_data
         agent_allocations.append(allocations)
         agent_indices.append(np.array(indices))
         agent_edge_information.append(agent_edges)

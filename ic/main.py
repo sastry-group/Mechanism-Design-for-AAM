@@ -224,7 +224,11 @@ def step_simulation(
         flights (dict): The flights information.
         allocated_flights (list): The list of allocated flights.
         stack_commands (list): The list of stack commands to add to.
+
     """
+    if allocated_flights is None:
+        return vertiport_usage
+    
     for flight_id, request_id in allocated_flights:
         # Pull flight and allocated request
         flight = flights[flight_id]
@@ -426,6 +430,12 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
     for prev_auction_time, auction_time in zip(auction_times[:-1], auction_times[1:]):
         # Get the current flights
         # current_flight_ids = ordered_flights[appearance_time]
+        
+        # FISHER MAY NEED THIS
+        # This is to ensure it doest not rebase the flights beyond simulation end time
+        #    if rebased_flights and auction_end <= last_auction + 1:
+        #        flights = adjust_rebased_flights(rebased_flights, flights, auction_start, auction_end)
+        
         relevant_appearances = [key for key in ordered_flights.keys() if key >= prev_auction_time and key < auction_time]
         current_flight_ids = sum([ordered_flights[appearance_time] for appearance_time in relevant_appearances], [])
         if len(current_flight_ids) == 0:
@@ -433,8 +443,31 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         current_flights = {
             flight_id: flights[flight_id] for flight_id in current_flight_ids
         }
+        
+
+        unique_vertiport_ids = set()
+        interval_routes = set()
+        for flight in current_flights.values():
+            origin = flight['origin_vertiport_id']
+            unique_vertiport_ids.add(origin)
+            # Assuming there's also a destination_vertiport_id in the flight data
+            for request in flight['requests'].values():
+                destination = request['destination_vertiport_id']
+                unique_vertiport_ids.add(destination)
+                interval_routes.add((origin, destination))
+
+        filtered_vertiports = {vid: vertiports[vid] for vid in unique_vertiport_ids}
+        filtered_routes = [route for route in routes_data if (route['origin_vertiport_id'], route['destination_vertiport_id']) in interval_routes]
+
+        # FISHER MAY NEED THIS:
+      # filtered_vertiport_usage = VertiportStatus(filtered_vertiports, filtered_routes, timing_info)
+      # filtered_vertiport_usage.add_aircraft(interval_flights)
+
+         
+        #write_market_interval(auction_start, auction_end, current_flights, output_folder)
+
         print('Auctioning currently between: ', prev_auction_time, auction_time)
-        print("Meethod: ", method)
+        print("Method: ", method)
         # Determine flight allocation and payment
         current_timing_info = {
             "start_time" : timing_info["start_time"],
@@ -442,9 +475,12 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
             "end_time": timing_info["end_time"],
             "auction_start": prev_auction_time,
             "auction_end": auction_time,
+            "auction_frequency": timing_info["auction_frequency"],
             "time_step": timing_info["time_step"]
         }
         if method == "vcg":
+
+#fisher & develop/asc_auc branch split 
 
             allocated_flights, payments, sw = vcg_allocation_and_payment(
                 vertiport_usage, current_flights, current_timing_info, congestion_info, fleets, save_file=scenario_name, initial_allocation=initial_allocation, payment_calc=payment_calc, save=save_scenario
@@ -454,6 +490,12 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
             vertiport_usage = step_simulation(
                 vertiport_usage, vertiports, flights, allocated_flights, stack_commands
             )
+        elif method == "fisher":
+                output_folder = None
+                allocated_flights, rebased_flights, payments = fisher_allocation_and_payment( # used filtered_vertiport_usage instead of vertiport_usage
+                    vertiport_usage, current_flights, current_timing_info, filtered_routes, filtered_vertiports,
+                    output_folder, save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
+                )
         elif method == "ascending-auction-budgetbased":
             allocated_flights, payments = ascending_auc_allocation_and_payment(
                     vertiport_usage, current_flights, current_timing_info, routes_data, "budget",
