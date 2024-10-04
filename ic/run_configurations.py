@@ -19,8 +19,8 @@ main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 for idx, (BETA, dropout_good_valuation, default_good_valuation, price_default_good, rebate_frequency) in enumerate(parameter_combinations):
     args = [
         "python", main_script_path,
-        "--file", "test_cases/case4_aa_test.json",
-        "--method", "ascending-auction-budgetbased",
+        "--file", "test_cases/case3_aa_test.json",
+        "--method", "ascending-auction-profitbased",
         "--force_overwrite",
         "--BETA", str(BETA),
         "--dropout_good_valuation", str(dropout_good_valuation),

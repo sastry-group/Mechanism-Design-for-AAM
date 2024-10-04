@@ -88,6 +88,7 @@ for i, txt in enumerate(LAMBDAS):
     plt.annotate(r'$\lambda$=' + str(txt), (plotted_congestion[1][i] + 10, valuations[1][i] + 10))
 plt.annotate("all", (plotted_congestion[0][i] + 10 , valuations[0][i] + 10))
 plt.annotate("all", (plotted_congestion[2][i] + 10 , valuations[2][i] + 10))
+plt.annotate("all", (plotted_congestion[3][i] + 10 , valuations[3][i] + 10))
 plt.ylabel("Sum of Valuations")
 plt.xlabel("Congestion Costs")
 plt.title("Sum of Valuations vs. Congestion Costs")
