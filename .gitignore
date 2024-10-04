@@ -16,6 +16,12 @@ docs/_build/
 # virtual environment
 venv
 
+#venv
+bluesky-venv
+
+#scenarios
+scenario/TEST_IC
+
 # PyBuilder
 target/
 

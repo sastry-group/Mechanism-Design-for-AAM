@@ -15948,3 +15948,194 @@
 2024-10-03 13:51:45,086 - INFO - 
 2024-10-03 13:51:45,086 - INFO - Optimal solution found (tolerance 1.00e-04)
 2024-10-03 13:51:45,087 - INFO - Best objective -2.923590000000e+05, best bound -2.923590000000e+05, gap 0.0000%
+2024-10-03 17:57:14,096 - INFO - Set parameter Username
+2024-10-03 17:57:14,110 - INFO - Academic license - for non-commercial use only - expires 2025-09-28
+2024-10-03 17:57:20,244 - INFO - Gurobi Optimizer version 11.0.1 build v11.0.1rc0 (mac64[rosetta2] - Darwin 23.3.0 23D60)
+2024-10-03 17:57:20,244 - INFO - 
+2024-10-03 17:57:20,244 - INFO - CPU model: Apple M1 Pro
+2024-10-03 17:57:20,244 - INFO - Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+2024-10-03 17:57:20,244 - INFO - 
+2024-10-03 17:57:20,244 - INFO - Optimize a model with 14944 rows, 6547 columns and 26165 nonzeros
+2024-10-03 17:57:20,245 - INFO - Model fingerprint: 0x83ee2788
+2024-10-03 17:57:20,245 - INFO - Variable types: 6467 continuous, 80 integer (80 binary)
+2024-10-03 17:57:20,245 - INFO - Coefficient statistics:
+2024-10-03 17:57:20,246 - INFO -   Matrix range     [1e+00, 1e+00]
+2024-10-03 17:57:20,246 - INFO -   Objective range  [2e-01, 6e+02]
+2024-10-03 17:57:20,246 - INFO -   Bounds range     [1e+00, 1e+00]
+2024-10-03 17:57:20,246 - INFO -   RHS range        [1e+00, 8e+00]
+2024-10-03 17:57:20,246 - INFO - 
+2024-10-03 17:57:20,253 - INFO - User MIP start did not produce a new incumbent solution
+2024-10-03 17:57:20,253 - INFO - 
+2024-10-03 17:57:20,282 - INFO - Presolve removed 14406 rows and 2341 columns
+2024-10-03 17:57:20,282 - INFO - Presolve time: 0.03s
+2024-10-03 17:57:20,282 - INFO - Presolved: 538 rows, 4206 columns, 8356 nonzeros
+2024-10-03 17:57:20,290 - INFO - Variable types: 4152 continuous, 54 integer (54 binary)
+2024-10-03 17:57:20,302 - INFO - Found heuristic solution: objective -2016.200000
+2024-10-03 17:57:20,306 - INFO - Found heuristic solution: objective 944.3000000
+2024-10-03 17:57:20,311 - INFO - 
+2024-10-03 17:57:20,311 - INFO - Root relaxation: objective 2.953100e+03, 843 iterations, 0.00 seconds (0.01 work units)
+2024-10-03 17:57:20,312 - INFO - 
+2024-10-03 17:57:20,313 - INFO -     Nodes    |    Current Node    |     Objective Bounds      |     Work
+2024-10-03 17:57:20,313 - INFO -  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+2024-10-03 17:57:20,313 - INFO - 
+2024-10-03 17:57:20,313 - INFO - *    0     0               0    2953.1000000 2953.10000  0.00%     -    0s
+2024-10-03 17:57:20,316 - INFO - 
+2024-10-03 17:57:20,316 - INFO - Explored 1 nodes (843 simplex iterations) in 0.07 seconds (0.06 work units)
+2024-10-03 17:57:20,316 - INFO - Thread count was 8 (of 8 available processors)
+2024-10-03 17:57:20,316 - INFO - 
+2024-10-03 17:57:20,316 - INFO - Solution count 3: 2953.1 944.3 -2016.2 
+2024-10-03 17:57:20,316 - INFO - 
+2024-10-03 17:57:20,316 - INFO - Optimal solution found (tolerance 1.00e-04)
+2024-10-03 17:57:20,317 - INFO - Best objective 2.953100000000e+03, best bound 2.953100000000e+03, gap 0.0000%
+2024-10-03 17:57:26,561 - INFO - Gurobi Optimizer version 11.0.1 build v11.0.1rc0 (mac64[rosetta2] - Darwin 23.3.0 23D60)
+2024-10-03 17:57:26,562 - INFO - 
+2024-10-03 17:57:26,562 - INFO - CPU model: Apple M1 Pro
+2024-10-03 17:57:26,562 - INFO - Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+2024-10-03 17:57:26,562 - INFO - 
+2024-10-03 17:57:26,562 - INFO - Optimize a model with 14944 rows, 6547 columns and 26165 nonzeros
+2024-10-03 17:57:26,563 - INFO - Model fingerprint: 0x9c6ea863
+2024-10-03 17:57:26,563 - INFO - Variable types: 6467 continuous, 80 integer (80 binary)
+2024-10-03 17:57:26,563 - INFO - Coefficient statistics:
+2024-10-03 17:57:26,563 - INFO -   Matrix range     [1e+00, 1e+00]
+2024-10-03 17:57:26,563 - INFO -   Objective range  [4e-01, 6e+02]
+2024-10-03 17:57:26,563 - INFO -   Bounds range     [1e+00, 1e+00]
+2024-10-03 17:57:26,563 - INFO -   RHS range        [1e+00, 8e+00]
+2024-10-03 17:57:26,563 - INFO - 
+2024-10-03 17:57:26,565 - INFO - User MIP start did not produce a new incumbent solution
+2024-10-03 17:57:26,565 - INFO - 
+2024-10-03 17:57:26,581 - INFO - Presolve removed 14406 rows and 2341 columns
+2024-10-03 17:57:26,581 - INFO - Presolve time: 0.01s
+2024-10-03 17:57:26,581 - INFO - Presolved: 538 rows, 4206 columns, 8356 nonzeros
+2024-10-03 17:57:26,582 - INFO - Variable types: 4152 continuous, 54 integer (54 binary)
+2024-10-03 17:57:26,588 - INFO - Found heuristic solution: objective -5783.400000
+2024-10-03 17:57:26,593 - INFO - Found heuristic solution: objective -2471.400000
+2024-10-03 17:57:26,600 - INFO - 
+2024-10-03 17:57:26,600 - INFO - Root relaxation: objective -2.664000e+02, 1017 iterations, 0.01 seconds (0.01 work units)
+2024-10-03 17:57:26,601 - INFO - 
+2024-10-03 17:57:26,601 - INFO -     Nodes    |    Current Node    |     Objective Bounds      |     Work
+2024-10-03 17:57:26,601 - INFO -  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+2024-10-03 17:57:26,601 - INFO - 
+2024-10-03 17:57:26,601 - INFO - *    0     0               0    -266.4000000 -266.40000  0.00%     -    0s
+2024-10-03 17:57:26,604 - INFO - 
+2024-10-03 17:57:26,604 - INFO - Explored 1 nodes (1017 simplex iterations) in 0.04 seconds (0.07 work units)
+2024-10-03 17:57:26,604 - INFO - Thread count was 8 (of 8 available processors)
+2024-10-03 17:57:26,604 - INFO - 
+2024-10-03 17:57:26,604 - INFO - Solution count 3: -266.4 -2471.4 -5783.4 
+2024-10-03 17:57:26,604 - INFO - No other solutions better than -266.4
+2024-10-03 17:57:26,604 - INFO - 
+2024-10-03 17:57:26,604 - INFO - Optimal solution found (tolerance 1.00e-04)
+2024-10-03 17:57:26,604 - INFO - Best objective -2.664000000000e+02, best bound -2.664000000000e+02, gap 0.0000%
+2024-10-03 17:57:33,046 - INFO - Gurobi Optimizer version 11.0.1 build v11.0.1rc0 (mac64[rosetta2] - Darwin 23.3.0 23D60)
+2024-10-03 17:57:33,047 - INFO - 
+2024-10-03 17:57:33,047 - INFO - CPU model: Apple M1 Pro
+2024-10-03 17:57:33,047 - INFO - Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+2024-10-03 17:57:33,047 - INFO - 
+2024-10-03 17:57:33,047 - INFO - Optimize a model with 14944 rows, 6547 columns and 26165 nonzeros
+2024-10-03 17:57:33,047 - INFO - Model fingerprint: 0x20d9a50b
+2024-10-03 17:57:33,047 - INFO - Variable types: 6467 continuous, 80 integer (80 binary)
+2024-10-03 17:57:33,048 - INFO - Coefficient statistics:
+2024-10-03 17:57:33,048 - INFO -   Matrix range     [1e+00, 1e+00]
+2024-10-03 17:57:33,048 - INFO -   Objective range  [1e+00, 6e+02]
+2024-10-03 17:57:33,048 - INFO -   Bounds range     [1e+00, 1e+00]
+2024-10-03 17:57:33,048 - INFO -   RHS range        [1e+00, 8e+00]
+2024-10-03 17:57:33,048 - INFO - 
+2024-10-03 17:57:33,050 - INFO - User MIP start did not produce a new incumbent solution
+2024-10-03 17:57:33,050 - INFO - 
+2024-10-03 17:57:33,065 - INFO - Presolve removed 14406 rows and 2341 columns
+2024-10-03 17:57:33,065 - INFO - Presolve time: 0.01s
+2024-10-03 17:57:33,065 - INFO - Presolved: 538 rows, 4206 columns, 8356 nonzeros
+2024-10-03 17:57:33,066 - INFO - Variable types: 4152 continuous, 54 integer (54 binary)
+2024-10-03 17:57:33,072 - INFO - Found heuristic solution: objective -17085.00000
+2024-10-03 17:57:33,078 - INFO - Found heuristic solution: objective -12718.50000
+2024-10-03 17:57:33,086 - INFO - 
+2024-10-03 17:57:33,086 - INFO - Root relaxation: objective -9.667500e+03, 1235 iterations, 0.01 seconds (0.02 work units)
+2024-10-03 17:57:33,087 - INFO - 
+2024-10-03 17:57:33,088 - INFO -     Nodes    |    Current Node    |     Objective Bounds      |     Work
+2024-10-03 17:57:33,088 - INFO -  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+2024-10-03 17:57:33,088 - INFO - 
+2024-10-03 17:57:33,088 - INFO - *    0     0               0    -9667.500000 -9667.5000  0.00%     -    0s
+2024-10-03 17:57:33,089 - INFO - 
+2024-10-03 17:57:33,090 - INFO - Explored 1 nodes (1235 simplex iterations) in 0.04 seconds (0.07 work units)
+2024-10-03 17:57:33,090 - INFO - Thread count was 8 (of 8 available processors)
+2024-10-03 17:57:33,090 - INFO - 
+2024-10-03 17:57:33,090 - INFO - Solution count 3: -9667.5 -12718.5 -17085 
+2024-10-03 17:57:33,090 - INFO - No other solutions better than -9667.5
+2024-10-03 17:57:33,090 - INFO - 
+2024-10-03 17:57:33,090 - INFO - Optimal solution found (tolerance 1.00e-04)
+2024-10-03 17:57:33,090 - INFO - Best objective -9.667500000000e+03, best bound -9.667500000000e+03, gap 0.0000%
+2024-10-03 17:57:39,543 - INFO - Gurobi Optimizer version 11.0.1 build v11.0.1rc0 (mac64[rosetta2] - Darwin 23.3.0 23D60)
+2024-10-03 17:57:39,544 - INFO - 
+2024-10-03 17:57:39,544 - INFO - CPU model: Apple M1 Pro
+2024-10-03 17:57:39,544 - INFO - Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+2024-10-03 17:57:39,544 - INFO - 
+2024-10-03 17:57:39,544 - INFO - Optimize a model with 14944 rows, 6547 columns and 26165 nonzeros
+2024-10-03 17:57:39,544 - INFO - Model fingerprint: 0x1a81f192
+2024-10-03 17:57:39,544 - INFO - Variable types: 6467 continuous, 80 integer (80 binary)
+2024-10-03 17:57:39,544 - INFO - Coefficient statistics:
+2024-10-03 17:57:39,544 - INFO -   Matrix range     [1e+00, 1e+00]
+2024-10-03 17:57:39,544 - INFO -   Objective range  [1e+00, 6e+02]
+2024-10-03 17:57:39,544 - INFO -   Bounds range     [1e+00, 1e+00]
+2024-10-03 17:57:39,544 - INFO -   RHS range        [1e+00, 8e+00]
+2024-10-03 17:57:39,544 - INFO - 
+2024-10-03 17:57:39,547 - INFO - User MIP start did not produce a new incumbent solution
+2024-10-03 17:57:39,547 - INFO - 
+2024-10-03 17:57:39,562 - INFO - Presolve removed 14406 rows and 2341 columns
+2024-10-03 17:57:39,562 - INFO - Presolve time: 0.01s
+2024-10-03 17:57:39,562 - INFO - Presolved: 538 rows, 4206 columns, 8356 nonzeros
+2024-10-03 17:57:39,563 - INFO - Variable types: 4152 continuous, 54 integer (54 binary)
+2024-10-03 17:57:39,570 - INFO - Found heuristic solution: objective -35921.00000
+2024-10-03 17:57:39,575 - INFO - Found heuristic solution: objective -29797.00000
+2024-10-03 17:57:39,592 - INFO - 
+2024-10-03 17:57:39,592 - INFO - Root relaxation: objective -2.487400e+04, 1809 iterations, 0.02 seconds (0.03 work units)
+2024-10-03 17:57:39,593 - INFO - 
+2024-10-03 17:57:39,594 - INFO -     Nodes    |    Current Node    |     Objective Bounds      |     Work
+2024-10-03 17:57:39,594 - INFO -  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+2024-10-03 17:57:39,594 - INFO - 
+2024-10-03 17:57:39,594 - INFO - *    0     0               0    -24874.00000 -24874.000  0.00%     -    0s
+2024-10-03 17:57:39,595 - INFO - 
+2024-10-03 17:57:39,595 - INFO - Explored 1 nodes (1809 simplex iterations) in 0.05 seconds (0.09 work units)
+2024-10-03 17:57:39,595 - INFO - Thread count was 8 (of 8 available processors)
+2024-10-03 17:57:39,595 - INFO - 
+2024-10-03 17:57:39,595 - INFO - Solution count 3: -24874 -29797 -35921 
+2024-10-03 17:57:39,595 - INFO - No other solutions better than -24874
+2024-10-03 17:57:39,595 - INFO - 
+2024-10-03 17:57:39,596 - INFO - Optimal solution found (tolerance 1.00e-04)
+2024-10-03 17:57:39,598 - INFO - Best objective -2.487400000000e+04, best bound -2.487400000000e+04, gap 0.0000%
+2024-10-03 17:57:45,850 - INFO - Gurobi Optimizer version 11.0.1 build v11.0.1rc0 (mac64[rosetta2] - Darwin 23.3.0 23D60)
+2024-10-03 17:57:45,851 - INFO - 
+2024-10-03 17:57:45,851 - INFO - CPU model: Apple M1 Pro
+2024-10-03 17:57:45,851 - INFO - Thread count: 8 physical cores, 8 logical processors, using up to 8 threads
+2024-10-03 17:57:45,851 - INFO - 
+2024-10-03 17:57:45,851 - INFO - Optimize a model with 14944 rows, 6547 columns and 26165 nonzeros
+2024-10-03 17:57:45,851 - INFO - Model fingerprint: 0x8a97b1cf
+2024-10-03 17:57:45,851 - INFO - Variable types: 6467 continuous, 80 integer (80 binary)
+2024-10-03 17:57:45,851 - INFO - Coefficient statistics:
+2024-10-03 17:57:45,851 - INFO -   Matrix range     [1e+00, 1e+00]
+2024-10-03 17:57:45,851 - INFO -   Objective range  [1e+00, 6e+02]
+2024-10-03 17:57:45,851 - INFO -   Bounds range     [1e+00, 1e+00]
+2024-10-03 17:57:45,851 - INFO -   RHS range        [1e+00, 8e+00]
+2024-10-03 17:57:45,851 - INFO - 
+2024-10-03 17:57:45,854 - INFO - User MIP start did not produce a new incumbent solution
+2024-10-03 17:57:45,854 - INFO - 
+2024-10-03 17:57:45,869 - INFO - Presolve removed 14406 rows and 2341 columns
+2024-10-03 17:57:45,869 - INFO - Presolve time: 0.01s
+2024-10-03 17:57:45,869 - INFO - Presolved: 538 rows, 4206 columns, 8356 nonzeros
+2024-10-03 17:57:45,870 - INFO - Variable types: 4152 continuous, 54 integer (54 binary)
+2024-10-03 17:57:45,877 - INFO - Found heuristic solution: objective -374969.0000
+2024-10-03 17:57:45,881 - INFO - Found heuristic solution: objective -337210.0000
+2024-10-03 17:57:45,905 - INFO - 
+2024-10-03 17:57:45,906 - INFO - Root relaxation: objective -2.923590e+05, 2022 iterations, 0.02 seconds (0.04 work units)
+2024-10-03 17:57:45,909 - INFO - 
+2024-10-03 17:57:45,909 - INFO -     Nodes    |    Current Node    |     Objective Bounds      |     Work
+2024-10-03 17:57:45,909 - INFO -  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+2024-10-03 17:57:45,909 - INFO - 
+2024-10-03 17:57:45,909 - INFO - *    0     0               0    -292359.0000 -292359.00  0.00%     -    0s
+2024-10-03 17:57:45,912 - INFO - 
+2024-10-03 17:57:45,912 - INFO - Explored 1 nodes (2022 simplex iterations) in 0.06 seconds (0.09 work units)
+2024-10-03 17:57:45,912 - INFO - Thread count was 8 (of 8 available processors)
+2024-10-03 17:57:45,912 - INFO - 
+2024-10-03 17:57:45,912 - INFO - Solution count 3: -292359 -337210 -374969 
+2024-10-03 17:57:45,912 - INFO - No other solutions better than -292359
+2024-10-03 17:57:45,912 - INFO - 
+2024-10-03 17:57:45,912 - INFO - Optimal solution found (tolerance 1.00e-04)
+2024-10-03 17:57:45,912 - INFO - Best objective -2.923590000000e+05, best bound -2.923590000000e+05, gap 0.0000%

@@ -27,7 +27,7 @@ def load_json(file=None):
     return data
 
 methods = ["ff", "vcg", "ascending-auction-profitbased","ascending-auction-budgetbased"]
-if True: #not Path(result_path).is_file():
+if not Path(result_path).is_file(): # won't rerun auctions if pickle exists (set to true for testing)
     # Read in case file
     print("case_file_path: ", case_file_path)
     
