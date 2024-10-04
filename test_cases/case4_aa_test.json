@@ -168,7 +168,7 @@
       "AC003": {
           "appearance_time": 7,
           "origin_vertiport_id": "V003",
-          "budget_constraint": 150,
+          "budget_constraint": 170,
           "decay_factor": 0.95,
           "requests": {
               "000": {
