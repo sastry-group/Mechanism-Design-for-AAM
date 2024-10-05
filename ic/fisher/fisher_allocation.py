@@ -22,7 +22,7 @@ print(str(top_level_path))
 sys.path.append(str(top_level_path))
 
 from VertiportStatus import VertiportStatus
-from fisher.fisher_int_optimization import agent_allocation_selection, settling_contested_allocations, map_goodslist_to_agent_goods
+from fisher.fisher_int_optimization import agent_allocation_selection, map_goodslist_to_agent_goods, track_delayed_goods
 from fisher.FisherGraphBuilder import FisherGraphBuilder
 from write_csv import write_output, save_data 
 from utils import store_agent_data, process_allocations, rank_allocations, store_market_data, get_next_auction_data, build_edge_information
@@ -798,7 +798,6 @@ def track_desired_goods(flights, goods_list):
 
 
 
-
 def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_data, vertiports, 
                                   output_folder=None, save_file=None, initial_allocation=True, design_parameters=None):
 
@@ -862,9 +861,9 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     
 
     extra_data = {
-    'x': x,
+    'x_prob': x,
     'prices': prices,
-    'r': r,
+    'rebates': r,
     'agent_constraints': agent_constraints,
     'adjusted_budgets': adjusted_budgets,
     'desired_goods': desired_goods,
@@ -880,145 +879,26 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
 
 
     agents_data_dict = store_agent_data(flights, x, agent_information, adjusted_budgets, desired_goods, agent_goods_lists, edge_information)
-    market_data_dict = store_market_data(prices, x, r,  goods_list, capacity, market_auction_time)
-
+    market_data_dict = store_market_data(extra_data, design_parameters, market_auction_time)
+    agents_data_dict = track_delayed_goods(agents_data_dict, market_data_dict)
     # Rank agents based on their allocation and settling any contested goods
     sorted_agent_dict, ranked_list = rank_allocations(agents_data_dict)
-    agents_data_dict, market_data_dict, flag = agent_allocation_selection(ranked_list, agents_data_dict, market_data_dict)
-    if flag:
-        agents_data_dict, market_data_dict = settling_contested_allocations(agents_data_dict, market_data_dict)
+    agents_data_dict, market_data_dict= agent_allocation_selection(ranked_list, agents_data_dict, market_data_dict)
 
 
     # Getting data for next auction
     allocation, rebased, dropped = get_next_auction_data(agents_data_dict, market_data_dict)
 
 
-
-    # agent_allocations, agent_dropout_x, agent_indices, agent_edge_information = process_allocations(x, edge_information, agent_goods_lists, flights)
-
-    
-    # agents_data = {}
-    # int_allocations = []
-    # utilities = []
-    # dropouts = [] # remove
-    # allocated_flights = [] #remove
-    # budgets = [] #remove
-    # constraints = [] #remove
-    # agents_indices = [] #remove
-    # int_allocations_full = []
-    # start_time_sample = time.time()
-    # flights_list = list(flights.keys())
-    # print("Sampling edges ...")
-    # for i, flight_id in enumerate(flights_list):
-    #     frac_allocations = agent_allocations[i]
-    #     start_node= list(agent_edge_information[i].values())[0][0]
-    #     extended_graph, agent_allocation = agent_probability_graph_extended(agent_edge_information[i], frac_allocations, flight_id, output_folder)
-    #     sampled_path_extended, sampled_edges, int_allocation, dropout_flag = sample_path(extended_graph, start_node, agent_allocation, agent_dropout_x[i])
-    #     if dropout_flag:
-    #         dropouts.append(flight_id) #remove
-    #         agents_data[flight_id] = {'status': 'dropped', "payment":  0}
-    #         agents_data[flight_id]['good_allocated'] = None
-    #         agents_data[flight_id]['request'] = None
-
-    #     else:
-    #         # print("Sampled Path:", sampled_path_extended)
-    #         # print("Sampled Edges:", sampled_edges)
-    #         # plot_sample_path_extended(extended_graph, sampled_path_extended, agent_number, output_folder)
-    #         allocated_flights.append(flight_id) # remove 
-    #         agents_data[flight_id] = {'status': 'int_allocated'}
-    #         agents_data[flight_id]['int_allocation'] = int_allocation
-    #         int_allocations.append(int_allocation)
-    #         int_allocation_full = mapping_agent_to_full_data(edge_information, sampled_edges)
-    #         int_allocations_full.append(int_allocation_full)           
-    #         utilities.append(u[i]) # removing default and dropout good
-    #         budgets.append(adjusted_budgets[i]) #remove
-    #         constraints.append(agent_constraints[i]) #remove
-    #         agents_indices.append(agent_indices) #remove
-
-    #     agents_data[flight_id]['utility'] = u[i]
-    #     agents_data[flight_id]['constraints'] = agent_constraints[i]
-    #     agents_data[flight_id]['adjusted_budget'] = adjusted_budgets[i]
-    #     agents_data[flight_id]['agent_edge_indices'] = agent_indices[i]
-    #     agents_data[flight_id]['fisher_allocation'] = agent_allocations[i]
-    #     agents_data[flight_id]['agent_goods_list'] = agent_goods_lists[i]
-    #     agents_data[flight_id]['deconficted_goods'] = None
-
-
-
-    # if int_allocations_full:
-    #     int_allocations_full = np.array(int_allocations_full)
-    #     print(f"Time to sample: {time.time() - start_time_sample:.5f}")
-    #     # IOP for contested goods
-        
-    #     capacity = capacity[:-2] # removing default and dropout good
-    #     prices = prices[:-2] # removing default and dropout good
-    #     new_allocations, new_prices = int_optimization(int_allocations_full, capacity, budgets, prices, utilities, constraints, agents_indices, int_allocations, output_folder)
-
-    #     # if new_allocations.any():
-    #     payment = np.sum(new_prices * new_allocations, axis=1)
-    #     end_capacity = capacity - np.sum(new_allocations, axis=0)
-    #     new_allocations_goods = mapping_goods_from_allocation(new_allocations, goods_list)
-    #     # Allocation and Rebased
-    #     allocation = []
-    #     rebased = []
-    #     index = 0
-    #     for key, value in agents_data.items():
-    #         if agents_data[key]['status'] == 'int_allocated':
-    #             agents_data[key]["deconflicted_goods"] = new_allocations_goods[index]
-    #             dep_node, arrival_node = find_dep_and_arrival_nodes(new_allocations_goods[index])
-    #             if dep_node:
-    #                 good = (dep_node, arrival_node)
-    #                 allocation.append((key, good)) #remove
-    #                 agents_data[key]["status"] = "allocated"
-    #                 agents_data[key]['payment'] = payment[index]
-    #                 agents_data[key]["request"] = "001"
-    #                 agents_data[key]["good_allocated"] =  good
-    #                 index += 1
-    #             else:
-    #                 rebased.append((key, '000')) #remove
-    #                 agents_data[key]['payment'] = 0
-    #                 agents_data[key]["request"] = "000"
-    #                 agents_data[key]["good_allocated"] =  None
-
-    # else: # if there are only dropouts
-    #     payment = np.zeros(len(flights))
-    #     end_capacity = capacity
-    #     new_prices = prices
-    #     allocation = None
-    #     rebased = None
-    #     new_allocations_goods = None
-        
-
-    # for i, flight_id in enumerate(allocated_flights):
-    #     dep_node, arrival_node = find_dep_and_arrival_nodes(new_allocations_goods[i])
-    #     if dep_node:
-    #         good = (dep_node, arrival_node)
-    #         allocation.append((flight_id, good))
-    #         agents_data["status"] = "allocated"
-    #     else:
-    #         rebased.append((flight_id, '000'))
-    #         agents_data["status"] = "rebased"
-    # else:
-    #     payment = 0
-    #     end_capacity = capacity
-    #     allocation = None
-    #     rebased = None
-    #     new_allocations_goods = None
-    # end_agent_status_data = (allocation, rebased, dropouts) #change
-
     output_data = {"market_data":market_data_dict, "agents_data":agents_data_dict}
     save_data(output_folder, "fisher_data_after", market_auction_time, **output_data)
 
-    new_prices = market_data_dict["prices"]
-    end_capacity = market_data_dict["capacity"]
-    agents_data = agents_data_dict
 
-    write_output(flights, edge_information, prices, new_prices, capacity, end_capacity, 
-                agents_data, market_auction_time, output_folder)
+    write_output(flights, edge_information, market_data_dict, 
+                agents_data_dict, market_auction_time, output_folder)
 
     return allocation, rebased, dropped
     
-    # return allocation, rebased, None
 
 
 

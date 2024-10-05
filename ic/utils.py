@@ -65,7 +65,6 @@ def store_agent_data(flights, fisher_allocations, agent_information,
         agents_data[flight_id] = {'status': 'fisher_allocated'}
         agents_data[flight_id]['agent_id'] = i
         agents_data[flight_id]['original_budget'] = flights[flight_id]['budget_constraint']
-        agents_data[flight_id]['original_budget'] = flights[flight_id]['budget_constraint']
         agents_data[flight_id]['utility'] = utility[i]
         agents_data[flight_id]['constraints'] = agent_constraints[i]
         agents_data[flight_id]['adjusted_budget'] = adjusted_budgets[i]
@@ -75,18 +74,25 @@ def store_agent_data(flights, fisher_allocations, agent_information,
         agents_data[flight_id]['deconficted_goods'] = None
         agents_data[flight_id]['allocation_short'] = agent_allocations[i]
         agents_data[flight_id]['agent_edge_indices'] = agent_indices[i]
+        agents_data[flight_id]['delayed_goods'] = []
+        agents_data[flight_id]["payment"] = 0
+        agents_data[flight_id]["flight_info"] = flights[flight_id] 
 
     return agents_data
 
-def store_market_data(prices, x, rebates, goods_list, capacity, market_auction_time):
+def store_market_data(extra_data, design_parameters, market_auction_time):
+
     market_data = {
-        'prices': prices,
-        'rebates': rebates,
-        'capacity': goods_list,
-        'goods_list': goods_list,
-        'capacity': capacity,
-        'demand': np.sum(x, axis=0),
-        'market_auction_time': market_auction_time
+        'prices': extra_data["prices"],
+        'rebates': extra_data["rebates"],
+        'goods_list': extra_data['goods_list'],
+        'capacity': extra_data["capacity"],
+        'original_capacity': extra_data["capacity"],
+        'demand': np.sum(extra_data["x_prob"], axis=0),
+        'market_auction_time': market_auction_time,
+        'num_iterations': extra_data["data_to_plot"]["x_iter"],
+        'market_parameters': {design_parameters[key] for key in design_parameters.keys()}
+        
     }
     return market_data
 
@@ -132,10 +138,11 @@ def find_dep_and_arrival_nodes(edges):
 def get_next_auction_data(agent_data, market_data):
     allocation, rebased, dropped = [], [], []
     for  flight_id, data in agent_data.items():
-        if data['status'] == 'int_allocated':
+        if data['status'] == 'allocated':
             desired_good_idx = data['desired_good_info']["desired_good_dep_to_arr"]
             int_allocation_long = np.zeros(len(data["fisher_allocation"]))
-            int_allocation_long[data["agent_edge_indices"]] = data["final_allocation"]
+            int_allocation_long[data["agent_edge_indices"]] = data["final_allocation"][:-1] 
+            int_allocation_long[-1] = data["final_allocation"][-1]
             if round(int_allocation_long[desired_good_idx]) == 1:
                 good_tuple = (data['desired_good_info']["desired_edge"])
                 allocation.append((flight_id, good_tuple))

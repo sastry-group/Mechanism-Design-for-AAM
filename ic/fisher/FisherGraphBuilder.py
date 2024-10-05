@@ -37,7 +37,7 @@ class FisherGraphBuilder:
                 self._create_dep_arr_elements(origin_vertiport, destination_vertiport, departure_time, arrival_time, attributes)
                 
                 decay = flight_data["decay_factor"]
-                for ts_delay in range(1, 5): #change this to a variable
+                for ts_delay in range(1, 6): #change this to a variable
                     new_arrival_time = arrival_time + ts_delay
                     new_departure_time = departure_time + ts_delay
                     decay_valuation = request["valuation"] * decay**ts_delay
