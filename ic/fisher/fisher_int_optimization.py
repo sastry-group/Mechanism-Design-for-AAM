@@ -8,8 +8,6 @@ import time
 
 
 def agent_allocation_selection(ranked_list, agent_data, market_data):
-    capacity = market_data['capacity']
-    capacity_temp = capacity
     temp_prices = market_data['prices'] 
     contested = []
     allocated = []
@@ -37,7 +35,7 @@ def agent_allocation_selection(ranked_list, agent_data, market_data):
                 agent_values_to_full_size = np.zeros(len(temp_prices))
                 agent_values_to_full_size[agent_indices] = agent_values[:-1]
                 agent_values_to_full_size[-1] =  agent_values[-1]
-                check_capacity = capacity_temp - agent_values_to_full_size
+                check_capacity = market_data["capacity"] - agent_values_to_full_size
                 if np.all(check_capacity >= 0):
                     agent_data[agent]["final_allocation"] = agent_values
                     agent_data[agent]["status"] = "allocated"

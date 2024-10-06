@@ -117,7 +117,7 @@ def write_output(flights, edge_information, market_data_dict,
     write_market_data(edge_information, prices, new_prices, capacity, end_capacity, market_auction_time, output_folder)
     write_customer_board(flights, agents_data_dict, output_folder)
     write_SP_board(edge_information, agents_data_dict, output_folder)
-    # write_network_board(market_data_dict, agents_data_dict, output_folder)
+    write_network_board(market_data_dict, agents_data_dict, output_folder)
     
     for key in agents_data_dict:
         if agents_data_dict[key]['status'] != 'dropped':
@@ -177,11 +177,18 @@ def write_SP_board(edge_information, agents_data, output_folder):
     """
     sp_board_data = []
     for key, value in agents_data.items():
+        destination = value["flight_info"]["requests"]["001"]["destination_vertiport_id"]
+        origin = value["flight_info"]["origin_vertiport_id"]
+        dep_time = value["flight_info"]["requests"]["001"]["request_departure_time"]
+        arr_time = value["flight_info"]["requests"]["001"]["request_arrival_time"]
+        good_allocated = value["good_allocated"]
         sp_board_data.append([
-            key, len(value["agent_goods_list"]), value["fisher_allocation"], value["status"]
+            key, len(value["flight_info"]["requests"]), (origin, destination), (dep_time, arr_time), 
+            value["status"], good_allocated
         ])
+        
     
-    sp_board_df = pd.DataFrame(sp_board_data, columns=["Request", "Number of Requests", "Fisher Allocations", "Status"])
+    sp_board_df = pd.DataFrame(sp_board_data, columns=["Agent", "Number of Requests", "Desired Route", "(T_d, T_arr)", "Status", "Allocated Route"])
     
     sp_board_file = os.path.join(output_folder, "sp_board.csv")
     write_to_csv(sp_board_df, sp_board_file)
@@ -197,31 +204,33 @@ def write_network_board(market_data_dict, agent_data_dict, output_folder):
     """
     Writes a network-facing board including market parameters, prices, and valuations.
     """
-    num_iterations = market_data_dict["data_to_plot"]["x_iter"]
-    design_parameters = {key: value for key, value in market_data_dict["market_parameters"].items()}
+    num_iterations = market_data_dict["num_iterations"]
+    design_parameters = market_data_dict["market_parameters"]
     network_board_data = []
 
-    for agent_id, agent_data in agent_data_dict.items():
-        origin_vertiport = agent_data["flight_info"]["origin_vertiport_id"]
-        destination_vertiport = agent_data["flight_info"]["requests"]["001"]["destination_vertiport_id"]
-        original_budget = agent_data["original_budget"]
-        valuation = agent_data["valuation"]
-        network_board_data.append([
-            num_iterations, num_agents, contested_routes, design_parameters, final_prices, valuations,
-            agent_id, origin_vertiport, destination_vertiport, original_budget, valuation
-        ])
+    # for agent_id, agent_data in agent_data_dict.items():
+    #     origin_vertiport = agent_data["flight_info"]["origin_vertiport_id"]
+    #     destination_vertiport = agent_data["flight_info"]["requests"]["001"]["destination_vertiport_id"]
+    #     original_budget = agent_data["original_budget"]
+    #     valuation = agent_data["valuation"]
+    #     network_board_data.append([
+    #         num_iterations, num_agents, contested_routes, design_parameters, final_prices, valuations,
+    #         agent_id, origin_vertiport, destination_vertiport, original_budget, valuation
+    #     ])
 
-    contested_routes = market_data_dict["contested_routes"]
-    num_agents = len(market_data_dict["agents"])
-    final_prices = market_data_dict["final_prices"]
-    valuations = market_data_dict["valuations"]
+    initial_capacity = market_data_dict["original_capacity"]
+    end_capacity = market_data_dict["capacity"]
+    num_agents = len(agent_data_dict)
+    final_prices = market_data_dict["prices"]
+
 
     network_board_data.append([
-        num_iterations, num_agents, contested_routes, design_parameters, final_prices, valuations
+        num_iterations, num_agents, initial_capacity, end_capacity, design_parameters, final_prices
     ])    
 
     network_board_df = pd.DataFrame(network_board_data, columns=[
-        "No. Iterations", "No. Agents", "No. Contested Routes", 
+        "No. Iterations", "No. Agents", "Initial Capacity", "End Capacity", 
+        "Design Parameters (price of default good, defautlt good valuation, dropout good val, beta, price upper bound)", "Final Prices"
     ])
     
     network_board_file = os.path.join(output_folder, "network_board.csv")
