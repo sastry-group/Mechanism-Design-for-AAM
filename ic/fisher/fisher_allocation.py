@@ -395,7 +395,10 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_freque
         solvers = [cp.SCS, cp.CLARABEL, cp.MOSEK, cp.OSQP, cp.ECOS, cp.CVXOPT]
     for solver in solvers:
         try:
-            result = problem.solve(solver=solver, mosek_params={"MSK_DPAR_INTPNT_CO_TOL_REL_GAP": 1e-7})
+            if solver == cp.MOSEK:
+                result = problem.solve(solver=solver, mosek_params={"MSK_DPAR_INTPNT_CO_TOL_REL_GAP": 1e-7})
+            else:
+                result = problem.solve(solver=solver)
             logging.info(f"Agent Opt - Problem solved with solver {solver}")
             break
         except cp.error.SolverError as e:
