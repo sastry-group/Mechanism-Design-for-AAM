@@ -147,22 +147,31 @@ def get_next_auction_data(agent_data, market_data):
                 good_tuple = (data['desired_good_info']["desired_edge"])
                 allocation.append((flight_id, good_tuple))
                 agent_data[flight_id]["good_allocated"] = good_tuple
+                allocation.append((flight_id, good_tuple))
+            elif round(int_allocation_long[-1]) == 1:
+                data['status'] = 'dropped'
+                dropped.append(flight_id)
+                good_tuple = ('VOOO', 'V000')
+                agent_data[flight_id]["good_allocated"] = good_tuple
             else:
                 edges_id = np.where(data["final_allocation"] == 1)[0]
                 edges = [data["agent_goods_list"][edge_id] for edge_id in edges_id]
                 good_tuple = find_dep_and_arrival_nodes(edges)
                 if good_tuple:
-                    data['status'] = 'allocated - delayed'
+                    data['status'] = 'delayed'
                     agent_data[flight_id]["good_allocated"] = good_tuple
-                else:
-                    data['status'] = 'rebased'
-                    good_tuple = ('VOOO', 'V000')
-                    agent_data[flight_id]["good_allocated"] = good_tuple
-                allocation.append((flight_id, good_tuple))
-        elif data['status'] == 'dropped':
-            dropped.append(flight_id)
-            good_tuple = ('VOOO', 'V000')
-            agent_data[flight_id]["good_allocated"] = good_tuple
+                    allocation.append((flight_id, good_tuple))
+
+                print("Check allocation")
+                # else:
+                #     data['status'] = 'rebased'
+                #     good_tuple = ('VOOO', 'V000')
+                #     agent_data[flight_id]["good_allocated"] = good_tuple
+            
+        # elif data['status'] == 'dropped':
+        #     dropped.append(flight_id)
+        #     good_tuple = ('VOOO', 'V000')
+        #     agent_data[flight_id]["good_allocated"] = good_tuple
         else:
             data['status'] = 'rebased'
             edges_id = np.where(data["final_allocation"] == 1)[0]

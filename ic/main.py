@@ -230,7 +230,7 @@ def step_simulation(
         request = flight["requests"][request_id]
 
         # Move aircraft in VertiportStatus
-        vertiport_usage.move_aircraft(flight["origin_vertiport_id"], request)
+        # vertiport_usage.move_aircraft(flight["origin_vertiport_id"], request)
 
         # Add movement to stack commands
         origin_vertiport = vertiports[flight["origin_vertiport_id"]]
