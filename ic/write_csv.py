@@ -118,6 +118,7 @@ def write_output(flights, edge_information, market_data_dict,
     write_customer_board(flights, agents_data_dict, output_folder)
     write_SP_board(edge_information, agents_data_dict, output_folder)
     write_network_board(market_data_dict, agents_data_dict, output_folder)
+    write_to_csv(pd.DataFrame(market_data_dict["ranked_agents"]), os.path.join(output_folder, "ranked_list.csv"))
     
     for key in agents_data_dict:
         if agents_data_dict[key]['status'] != 'dropped':

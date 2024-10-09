@@ -553,8 +553,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         x_iter += 1
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
             break
-        if x_iter ==  1000:
-            break
+        # if x_iter ==  1000:
+        #     break
 
 
 
@@ -882,7 +882,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     market_data_dict = store_market_data(extra_data, design_parameters, market_auction_time)
     agents_data_dict = track_delayed_goods(agents_data_dict, market_data_dict)
     # Rank agents based on their allocation and settling any contested goods
-    sorted_agent_dict, ranked_list = rank_allocations(agents_data_dict)
+    sorted_agent_dict, ranked_list = rank_allocations(agents_data_dict, market_data_dict)
     agents_data_dict, market_data_dict= agent_allocation_selection(ranked_list, agents_data_dict, market_data_dict)
 
 
@@ -890,7 +890,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     allocation, rebased, dropped = get_next_auction_data(agents_data_dict, market_data_dict)
 
 
-    output_data = {"market_data":market_data_dict, "agents_data":agents_data_dict}
+    output_data = {"market_data":market_data_dict, "agents_data":agents_data_dict, "ranked_list":ranked_list}
     save_data(output_folder, "fisher_data_after", market_auction_time, **output_data)
 
 

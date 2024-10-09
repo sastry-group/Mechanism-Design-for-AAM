@@ -3,12 +3,12 @@ import os
 from itertools import product
 
 # Define the parameter values to vary
-BETA_values = [100, 50, 20, 10, 1]
+BETA_values = [100,50,10,5,1]
 dropout_good_valuation_values = [1]
 default_good_valuation_values = [1]
 price_default_good_values = [10]
-lambda_frequency_values = [10]
-price_upper_bound_values = [50, 80]
+lambda_frequency_values = [2,10]
+price_upper_bound_values = [100]
 
 # Generate all combinations of the parameter values
 # "--file", "test_cases/casef_20240614_153258.json",
@@ -20,7 +20,7 @@ main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 for idx, (BETA, dropout_good_valuation, default_good_valuation, price_default_good, lambda_frequency, price_upper_bound) in enumerate(parameter_combinations):
     args = [
         "python", main_script_path,
-        "--file", "test_cases/casef_20240925_175552.json",
+        "--file", "test_cases/casef_20240925_175552_short.json",
         "--method", "fisher",
         "--force_overwrite",
         "--BETA", str(BETA),
