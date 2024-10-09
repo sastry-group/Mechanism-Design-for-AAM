@@ -433,8 +433,8 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         
         # FISHER MAY NEED THIS
         # This is to ensure it doest not rebase the flights beyond simulation end time
-        if rebased_flights and auction_time <= last_auction + 1:
-            flights = adjust_rebased_flights(rebased_flights, flights, auction_start, auction_end)
+        #if rebased_flights and auction_time <= last_auction + 1:
+        #    flights = adjust_rebased_flights(rebased_flights, flights, auction_start, auction_end)
         
         relevant_appearances = [key for key in ordered_flights.keys() if key >= prev_auction_time and key < auction_time]
         current_flight_ids = sum([ordered_flights[appearance_time] for appearance_time in relevant_appearances], [])
@@ -460,8 +460,8 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         filtered_routes = [route for route in routes_data if (route['origin_vertiport_id'], route['destination_vertiport_id']) in interval_routes]
 
         # FISHER MAY NEED THIS: (current_flights ~ interval_flights)
-        filtered_vertiport_usage = VertiportStatus(filtered_vertiports, filtered_routes, timing_info)
-        filtered_vertiport_usage.add_aircraft(current_flights)
+        #filtered_vertiport_usage = VertiportStatus(filtered_vertiports, filtered_routes, timing_info)
+        #filtered_vertiport_usage.add_aircraft(current_flights)
 
          
         #write_market_interval(auction_start, auction_end, current_flights, output_folder)
