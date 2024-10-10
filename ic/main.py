@@ -353,10 +353,11 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
     """
     # added by Gaby, creating save folder path
 
-    #file_name = file_path.split("/")[-1].split(".")[0]
+    file_name = file_path.split("/")[-1].split(".")[0]
     # data = load_json(file_path)
-    #output_folder = f"ic/results/{file_name}_{design_parameters['beta']}_{design_parameters['dropout_good_valuation']}_{design_parameters['default_good_valuation']}_{design_parameters['price_default_good']}_{design_parameters['rebate_frequency']}"
-    #Path(output_folder).mkdir(parents=True, exist_ok=True)
+    print(design_parameters)
+    output_folder = f"ic/results/{file_name}_{design_parameters['beta']}_{design_parameters['dropout_good_valuation']}_{design_parameters['default_good_valuation']}_{design_parameters['price_default_good']}_{design_parameters['rebate_frequency']}"
+    Path(output_folder).mkdir(parents=True, exist_ok=True)
 
     flights = data["flights"]
     vertiports = data["vertiports"]
@@ -382,7 +383,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
 
     # Create vertiport graph and add starting aircraft positions
     vertiport_usage = VertiportStatus(vertiports, data["routes"], timing_info)
-    vertiport_usage.add_aircraft(flights)
+    # vertiport_usage.add_aircraft(flights)
 
 
     start_time = timing_info["start_time"]
@@ -410,7 +411,10 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         else:
             ordered_flights[appearance_time].append(flight_id)
 
-    auction_times = list(np.arange(0, timing_info["end_time"], timing_info["auction_frequency"]))
+    auction_times = list(np.arange(0, timing_info["end_time"], auction_freq))
+
+    max_travel_time = 60
+    last_auction =  end_time - max_travel_time - auction_freq
 
     # Initialize stack commands
     stack_commands = ["00:00:00.00>TRAILS OFF\n00:00:00.00>PAN CCR\n00:00:00.00>ZOOM 1\n00:00:00.00>CDMETHOD STATEBASED\n00:00:00.00>DTMULT 30\n"]
@@ -422,7 +426,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
 
     simulation_start_time = time.time()
     initial_allocation = True
-#A
+    rebased_flights = None
 
     # Iterate through each time flights appear
     # for appearance_time in sorted(ordered_flights.keys()):
@@ -431,10 +435,12 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         # Get the current flights
         # current_flight_ids = ordered_flights[appearance_time]
         
-        # FISHER MAY NEED THIS
+        if prev_auction_time > 11:
+            break
+
         # This is to ensure it doest not rebase the flights beyond simulation end time
-        #if rebased_flights and auction_time <= last_auction + 1:
-        #    flights = adjust_rebased_flights(rebased_flights, flights, auction_start, auction_end)
+        if rebased_flights and auction_time <= last_auction + 1:
+           flights = adjust_rebased_flights(rebased_flights, flights, prev_auction_time, auction_time)
         
         relevant_appearances = [key for key in ordered_flights.keys() if key >= prev_auction_time and key < auction_time]
         current_flight_ids = sum([ordered_flights[appearance_time] for appearance_time in relevant_appearances], [])
@@ -459,12 +465,14 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         filtered_vertiports = {vid: vertiports[vid] for vid in unique_vertiport_ids}
         filtered_routes = [route for route in routes_data if (route['origin_vertiport_id'], route['destination_vertiport_id']) in interval_routes]
 
-        # FISHER MAY NEED THIS: (current_flights ~ interval_flights)
-        #filtered_vertiport_usage = VertiportStatus(filtered_vertiports, filtered_routes, timing_info)
+        filtered_vertiport_usage = VertiportStatus(filtered_vertiports, filtered_routes, timing_info)
         #filtered_vertiport_usage.add_aircraft(current_flights)
 
-         
-        #write_market_interval(auction_start, auction_end, current_flights, output_folder)
+        print("Performing auction for interval: ", prev_auction_time, " to ", auction_time) 
+        write_market_interval(prev_auction_time, auction_time, current_flights, output_folder)
+
+        if not current_flights:
+            continue
 
         print('Auctioning currently between: ', prev_auction_time, auction_time)
         print("Method: ", method)
@@ -480,10 +488,8 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         }
         if method == "vcg":
 
-#fisher & develop/asc_auc branch split 
-
             allocated_flights, payments, sw = vcg_allocation_and_payment(
-                vertiport_usage, current_flights, current_timing_info, congestion_info, fleets, save_file=scenario_name, initial_allocation=initial_allocation, payment_calc=payment_calc, save=save_scenario
+                filtered_vertiport_usage, current_flights, current_timing_info, congestion_info, fleets, save_file=scenario_name, initial_allocation=initial_allocation, payment_calc=payment_calc, save=save_scenario
             )
             # Update system status based on allocation
             #print(allocated_flights)
@@ -491,14 +497,16 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
                 vertiport_usage, vertiports, flights, allocated_flights, stack_commands
             )
         elif method == "fisher":
-                output_folder = None
-                allocated_flights, rebased_flights, payments = fisher_allocation_and_payment( # used filtered_vertiport_usage instead of vertiport_usage
-                    vertiport_usage, current_flights, current_timing_info, filtered_routes, filtered_vertiports,
-                    output_folder, save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
-                )
+            allocated_flights, rebased_flights, payments = fisher_allocation_and_payment(
+                filtered_vertiport_usage, current_flights, current_timing_info, filtered_routes, filtered_vertiports,
+                output_folder, save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
+            )
+            vertiport_usage = step_simulation(
+                vertiport_usage, vertiports, flights, allocated_flights, stack_commands
+            )
         elif method == "ascending-auction-budgetbased":
             allocated_flights, payments = ascending_auc_allocation_and_payment(
-                    vertiport_usage, current_flights, current_timing_info, routes_data, "budget",
+                    filtered_vertiport_usage, current_flights, current_timing_info, routes_data, "budget",
                     save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
                 )
             #print(allocated_flights)
@@ -516,7 +524,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         
         elif method == "ascending-auction-profitbased":
             allocated_flights, payments = ascending_auc_allocation_and_payment(
-                    vertiport_usage, current_flights, current_timing_info, routes_data, "profit",
+                    filtered_vertiport_usage, current_flights, current_timing_info, routes_data, "profit",
                     save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
                 )
             #print(allocated_flights)
@@ -534,14 +542,14 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
             allocated_flights = [i[0:2] for i in allocated_flights]
         elif method == "ff":
             allocated_flights, payments = ff_allocation_and_payment(
-                vertiport_usage, current_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
+                filtered_vertiport_usage, current_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
             )
             # System status updated as part of allocation
         if initial_allocation:
             initial_allocation = False
 
-        end_time = time.time()
-        elapsed_time = end_time - start_time
+        simulation_end_time = time.time()
+        elapsed_time = simulation_end_time - simulation_start_time
         print(f"Elapsed time: {elapsed_time} seconds")
 
         # Evaluate the allocation
@@ -710,7 +718,7 @@ if __name__ == "__main__":
     #print("SCN_FOLDER: ", SCN_FOLDER)
     #print("SCN_NAME:", SCN_NAME)
     #print("FILE_PATH: ",file_path)
-    path_to_scn_file, results = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME, file_path, args.method)
+    path_to_scn_file, results = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME, file_path, args.method, design_parameters)
     print(path_to_scn_file)
     assert path == path_to_scn_file, "An error occured while writing the scenario file."
 

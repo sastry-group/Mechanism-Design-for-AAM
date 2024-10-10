@@ -839,18 +839,18 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
         rebate_frequency = 1
 
 
-    print('A:   ------')
-    print(vertiport_usage)
-    print()
-    print()
-    print('B:   ------')
-    print(json.dumps(flights, indent =4 ))
-    print()
-    print()
-    print('C:   ------')
-    print(timing_info)
-    print()
-    print()
+    # print('A:   ------')
+    # print(vertiport_usage)
+    # print()
+    # print()
+    # print('B:   ------')
+    # print(json.dumps(flights, indent =4 ))
+    # print()
+    # print()
+    # print('C:   ------')
+    # print(timing_info)
+    # print()
+    # print()
 
     # Construct market
     agent_information, market_information, bookkeeping = construct_market(flights, timing_info, routes_data, vertiport_usage, 
