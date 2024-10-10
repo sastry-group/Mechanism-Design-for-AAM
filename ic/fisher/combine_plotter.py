@@ -6,16 +6,35 @@ import json
 import re
 from itertools import cycle
 
-def extract_beta_from_filename(filename):
-    # Use regex to extract the first number after the 3rd underscore
-    match = re.search(r'[^_]+_[^_]+_[^_]+_(\d+\.\d+)', filename)
-    print("beta val:", match.group(1))
-    if match:
-        return float(match.group(1))
+def extract_parameter_from_filename(filename, parameter):
+    if parameter == "beta":
+        match = re.search(r'[^_]+_[^_]+_[^_]+_(\d+\.\d+)', filename)
+    elif parameter == "price_val":
+        match = re.search(r'[^_]+_[^_]+_[^_]+_[^_]+_(\d+\.\d+)', filename)
+    elif parameter == "default_val":
+        match = re.search(r'[^_]+_[^_]+_[^_]+_[^_]+_[^_]+_(\d+\.\d+)', filename)
+    elif parameter == "price_default_good":
+        match = re.search(r'[^_]+_[^_]+_[^_]+_[^_]+_[^_]+_[^_]+_(\d+\.\d+)', filename)
+    elif parameter == "lambda_freq":
+        match = re.search(r'[^_]+_[^_]+_[^_]+_[^_]+_[^_]+_[^_]+_[^_]+_(\d+\.\d+)', filename)
     else:
-        raise ValueError(f"Could not extract beta value from filename: {filename}")
+        raise ValueError(f"Unknown parameter: {parameter}")
 
-def read_and_merge_data(files):
+    if match:
+        return float(match.group(1)), parameter
+    else:
+        raise ValueError(f"Could not extract {parameter} value from filename: {filename}")
+    
+    # # Use regex to extract the first number after the 3rd underscore
+
+    # match = re.search(r'[^_]+_[^_]+_[^_]+_(\d+\.\d+)', filename)
+    # print("beta val:", match.group(1))
+    # if match:
+    #     return float(match.group(1))
+    # else:
+    #     raise ValueError(f"Could not extract beta value from filename: {filename}")
+
+def read_and_merge_data(files, parameter_to_evaluate):
     # Initialize empty structures for combined data
     combined_data = {
         "x_iter": [],
@@ -31,7 +50,7 @@ def read_and_merge_data(files):
         "yplot": [],
         "social_welfare_vector": [],
         "desired_goods": [],
-        "beta_values": [],
+        "parameter_values": [],
     }
 
     for file in files:
@@ -40,8 +59,8 @@ def read_and_merge_data(files):
             data_to_plot = data["data_to_plot"]
             
             # Extract beta value from filename
-            beta_value = extract_beta_from_filename(file)
-            combined_data["beta_values"].append(beta_value)
+            parameter_value, parameter_name = extract_parameter_from_filename(file, parameter_to_evaluate)
+            combined_data["parameter_values"].append(parameter_value)
 
             # Update combined data with data from this file
             combined_data["x_iter"].append(data_to_plot["x_iter"])
@@ -65,9 +84,9 @@ def read_and_merge_data(files):
 
     return combined_data
 
-def plotting_combined_market(files, output_folder, market_auction_time=None):
+def plotting_combined_market(files, output_folder, parameter_to_evaluate, market_auction_time=None):
     # Read and merge the data from multiple .pkl files
-    data_to_plot = read_and_merge_data(files)
+    data_to_plot = read_and_merge_data(files, parameter_to_evaluate)
     
     # Extract variables for plotting
     x_iter = data_to_plot["x_iter"]
@@ -83,7 +102,8 @@ def plotting_combined_market(files, output_folder, market_auction_time=None):
     yplot = data_to_plot["yplot"]
     social_welfare = data_to_plot["social_welfare_vector"]
     desired_goods = data_to_plot["desired_goods"]
-    beta_values = data_to_plot["beta_values"]
+    parameter_values = data_to_plot["parameter_values"]
+    parameter_name = parameter_to_evaluate
 
     def get_filename(base_name):
         if market_auction_time:
@@ -189,7 +209,7 @@ def plotting_combined_market(files, output_folder, market_auction_time=None):
         "#6B33FF",  # Indigo
         "#33FF57"   # Mint Green
     ]
-    for id, beta in enumerate(beta_values):
+    for id, parameter in enumerate(parameter_values):
         agents = desired_goods[id]
         # agents_of_interest = ["AC002", "AC009"]
         i = 0
@@ -200,7 +220,7 @@ def plotting_combined_market(files, output_folder, market_auction_time=None):
                 # dep_index = desired_goods[agent_name]["desired_good_dep"]
                 # arr_index = desired_goods[agent_name]["desired_good_arr"]
                 # label = f"Flight:{agent_name}, {desired_goods[id][agent_name]['desired_edge']}" 
-                label = f"Flight:{agent_name}, beta:{beta}"
+                label = f"Flight:{agent_name}, {parameter_name}:{parameter}"
                 print(label, colors[id])
                 # plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_id][dep_index] for i in range(len(agent_allocations))], '-', label=f"{agent_name}_dep good")
                 dep_to_arr_index = desired_goods[id][agent_name]["desired_good_dep_to_arr"]
@@ -217,7 +237,7 @@ def plotting_combined_market(files, output_folder, market_auction_time=None):
     plt.ylabel('Allocated Edge')
     plt.xlim(0, 200)
     plt.title("Contested Goods Beta Analysis")
-    plt.savefig(get_filename("combined_desired_goods_beta_analysis"), bbox_inches='tight')
+    plt.savefig(get_filename(f"combined_desired_goods_beta_analysis_{parameter_to_evaluate}"), bbox_inches='tight')
     plt.close()
 
     # # Market Clearing Error
@@ -274,16 +294,19 @@ if __name__ == "__main__":
     #         "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/results/casef_20240917_081204_100.0_1.0_1.0_10.0_10.0/fisher_data_1.pkl",
     #         ]
     files = [
-            "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/results/casef_20240925_175552short_100.0_1.0_1.0_10.0_2.0/fisher_data_1.pkl",
-            "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/results/casef_20240925_175552short_50.0_1.0_1.0_10.0_2.0/fisher_data_1.pkl",
-            "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/results/casef_20240925_175552short_10.0_1.0_1.0_10.0_2.0/fisher_data_1.pkl",
-            "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/results/casef_20240925_175552short_5.0_1.0_1.0_10.0_2.0/fisher_data_1.pkl",
-            "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/results/casef_20240925_175552short_1.0_1.0_1.0_10.0_2.0/fisher_data_1.pkl",
+            "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/results/casef_20240925_175552short_5.0_1.0_1.0_0.1_10.0/fisher_data_1.pkl",
+            "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/results/casef_20240925_175552short_5.0_1.0_1.0_0.2_10.0/fisher_data_1.pkl",
+            "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/results/casef_20240925_175552short_5.0_1.0_1.0_0.5_10.0/fisher_data_1.pkl",
+            "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/results/casef_20240925_175552short_5.0_1.0_1.0_1.0_10.0/fisher_data_1.pkl",
+            # "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/results/casef_20240925_175552short_5.0_1.0_1.0_10.0_2.0/fisher_data_1.pkl",
+            # "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/results/casef_20240925_175552short_1.0_1.0_1.0_10.0_2.0/fisher_data_1.pkl",
             ]
     output_folder = "/home/gaby/Documents/UCB/AAM/GIT/bluesky-IC/ic/plots/"
+    # options "beta","price_val", "default_val", "price_default_good","lambda_freq"
+    parameter_to_evaluate = "price_default_good"    
     market_auction_time = None  # Adjust if needed
 
-    plotting_combined_market(files, output_folder, market_auction_time)
+    plotting_combined_market(files, output_folder, parameter_to_evaluate, market_auction_time)
 
 
 
