@@ -150,11 +150,12 @@ def sample_path(G, start_node, agent_allocations, dropout_good_allocation=False)
 
     # Calculate dropout probability based on the dropout edge
     total_weight = first_edge_weight + abs(dropout_good_allocation)
-    dropout_probability = abs(dropout_good_allocation) / total_weight
-    if random.random() < dropout_probability:
-        # Dropout is chosen
-        dropout_flag = True
-        return [], [], [0]*len(agent_allocations), dropout_flag
+    # dropout_probability = abs(dropout_good_allocation) / total_weight
+    # dropout_probability = 0.00000000000001
+    # if random.random() < dropout_probability:
+    #     # Dropout is chosen
+    #     dropout_flag = True
+    #     return [], [], [0]*len(agent_allocations), dropout_flag
 
     # This is if the agent does not dropout
     while True:
@@ -231,19 +232,6 @@ def plot_sample_path_extended(G, sampled_path, agent_number, output_folder=False
     return H
 
 
-def build_edge_information(goods_list):
-    """
-    Build edge information from goods list.
-    Outputs: a dictionary with all the labeled edges. This would a master list.
-    """
-    edge_information = {}
-    for i, goods in enumerate(goods_list[:-2], start=1): # without default and dropout good
-        edge_information[f"e{i}"] = (goods[0], goods[1])
-    edge_information['default_good'] = ('default_good')
-    edge_information['dropout_good'] = ('dropout_good')
-
-    return edge_information
-
 
 
 def build_agent_edge_utilities(edge_information, agents_goods_list, utility_values):
@@ -276,56 +264,6 @@ def build_agent_edge_utilities(edge_information, agents_goods_list, utility_valu
 
     return all_agents_utilities
 
-
-def process_allocations(x, edge_information, agent_goods_lists, flights):
-    """
-    Process the allocation matrix to output agent-specific goods allocations
-    and corresponding indices in goods_list (master list). We also remove the default good
-    for every agent to process sampling and integer allocaton
-    
-    Parameters:
-    - x: np.ndarray of shape (len(goods_list), num_agents)
-    - edge_information: dictionary of edge information ('edge_label': ('origin_node', 'destination_node')
-    - agent_goods_lists: list of lists, each containing tuples of goods for each agent
-    
-    Returns:
-    - agent_allocations: list of np.ndarrays, each containing the fractional allocations for an agent from the fisher market
-    - agent_indices: list of np.ndarrays, each containing the indices of the agents goods mapping to the master goods_list
-    - agent_edge_information: list of dictionaries, each containing the edge information for an agent goods  (edge_label: ('origin_node', 'destination_node'))
-    """
-    # Create a dictionary for quick lookup of goods in goods_list
-    goods_index_map = {good: idx for idx, good in enumerate(edge_information.values())}
-
-    # creating an agent's dictionary of goods allocations
-    agents_data = {}
-    
-    agent_allocations = []
-    agent_indices = []
-    agent_edge_information = []
-    edge_labels_list = list(edge_information.keys())
-    agents_dropout_allocations = []
-    
-    for agent, agent_data in enumerate(agent_goods_lists):
-        # Remove 'default_good' if it exists
-        agent_goods = [good for good in agent_data if good not in ['default_good', 'dropout_good']]
-        agents_dropout_allocations.append(x[agent][goods_index_map[('dropout_good')]])
-        
-        # Find indices of agent_goods in goods_list
-        indices = [goods_index_map[good] for good in agent_goods if good in goods_index_map]
-        
-        # Get allocations for the agent
-        allocations = x[agent][indices]
-        agent_edges = {}
-        for id in indices:
-            agent_edge = edge_labels_list[id]
-            agent_edges[agent_edge] = edge_information[agent_edge]
-            
-        agents_data
-        agent_allocations.append(allocations)
-        agent_indices.append(np.array(indices))
-        agent_edge_information.append(agent_edges)
-    
-    return agent_allocations, agents_dropout_allocations, agent_indices, agent_edge_information
 
 
 def mapping_agent_to_full_data(full_edge_information, sampled_edges):

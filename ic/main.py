@@ -56,7 +56,8 @@ parser.add_argument('--BETA', type=float, default=1)
 parser.add_argument('--dropout_good_valuation', type=float, default=1)
 parser.add_argument('--default_good_valuation', type=float, default=1)
 parser.add_argument('--price_default_good', type=float, default=10)
-parser.add_argument('--rebate_frequency', type=float, default=1)
+parser.add_argument('--lambda_frequency', type=float, default=1)
+parser.add_argument('--price_upper_bound', type=float, default=50)
 args = parser.parse_args()
 
 
@@ -229,7 +230,7 @@ def step_simulation(
         request = flight["requests"][request_id]
 
         # Move aircraft in VertiportStatus
-        vertiport_usage.move_aircraft(flight["origin_vertiport_id"], request)
+        # vertiport_usage.move_aircraft(flight["origin_vertiport_id"], request)
 
         # Add movement to stack commands
         origin_vertiport = vertiports[flight["origin_vertiport_id"]]
@@ -308,7 +309,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method="fisher",
 
     file_name = file_path.split("/")[-1].split(".")[0]
     # data = load_json(file_path)
-    output_folder = f"ic/results/{file_name}_{design_parameters['beta']}_{design_parameters['dropout_good_valuation']}_{design_parameters['default_good_valuation']}_{design_parameters['price_default_good']}_{design_parameters['rebate_frequency']}"
+    output_folder = f"ic/results/{file_name}_{design_parameters['beta']}_{design_parameters['dropout_good_valuation']}_{design_parameters['default_good_valuation']}_{design_parameters['price_default_good']}_{design_parameters['lambda_frequency']}"
     Path(output_folder).mkdir(parents=True, exist_ok=True)
 
     flights = data["flights"]
@@ -513,13 +514,15 @@ if __name__ == "__main__":
     dropout_good_valuation = args.dropout_good_valuation
     default_good_valuation = args.default_good_valuation
     price_default_good = args.price_default_good
-    rebate_frequency = args.rebate_frequency
+    lambda_frequency = args.lambda_frequency
+    price_upper_bound = args.price_upper_bound
     design_parameters = {
         "beta": BETA,
         "dropout_good_valuation": dropout_good_valuation,
         "default_good_valuation": default_good_valuation,
         "price_default_good": price_default_good,
-        "rebate_frequency": rebate_frequency
+        "lambda_frequency": lambda_frequency,
+        "price_upper_bound": price_upper_bound
         }
     
 
