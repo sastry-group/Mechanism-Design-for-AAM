@@ -102,76 +102,106 @@
       }
   },
     "fleets": {
-        "F001": [
-            "AC021",
-            "AC022",
-            "AC042",
-            "AC035",
-            "AC049"
-        ],
-        "F002": [
-            "AC007",
-            "AC031",
-            "AC018",
-            "AC046",
-            "AC027"
-        ],
-        "F003": [
-            "AC030",
-            "AC029",
-            "AC051",
-            "AC024",
-            "AC047"
-        ],
-        "F004": [
-            "AC036",
-            "AC053",
-            "AC019",
-            "AC016",
-            "AC050"
-        ],
-        "F005": [
-            "AC043",
-            "AC045",
-            "AC033",
-            "AC020",
-            "AC014"
-        ],
-        "F006": [
-            "AC026",
-            "AC048",
-            "AC010",
-            "AC012",
-            "AC009"
-        ],
-        "F007": [
-            "AC015",
-            "AC032",
-            "AC004",
-            "AC017",
-            "AC005"
-        ],
-        "F008": [
-            "AC040",
-            "AC044",
-            "AC011",
-            "AC037",
-            "AC034"
-        ],
-        "F009": [
-            "AC028",
-            "AC002",
-            "AC013",
-            "AC038",
-            "AC041"
-        ],
-        "F010": [
-            "AC003",
-            "AC025",
-            "AC052",
-            "AC023",
-            "AC039"
-        ]
+        "F001": {
+            "members": [
+                "AC021",
+                "AC022",
+                "AC042",
+                "AC035",
+                "AC049"
+            ],
+            "rho": 1
+        },
+        "F002": {
+            "members": [
+                "AC007",
+                "AC031",
+                "AC018",
+                "AC046",
+                "AC027"
+            ],
+            "rho": 1
+        },
+        "F003": {
+            "members": [
+                "AC030",
+                "AC029",
+                "AC051",
+                "AC024",
+                "AC047"
+            ],
+            "rho": 1
+        },
+        "F004": {
+            "members": [
+                "AC036",
+                "AC053",
+                "AC019",
+                "AC016",
+                "AC050"
+            ],
+            "rho": 1
+        },
+        "F005": {
+            "members": [
+                "AC043",
+                "AC045",
+                "AC033",
+                "AC020",
+                "AC014"
+            ],
+            "rho": 1
+        },
+        "F006": {
+            "members": [
+                "AC026",
+                "AC048",
+                "AC010",
+                "AC012",
+                "AC009"
+            ],
+            "rho": 1
+        },
+        "F007": {
+            "members": [
+                "AC015",
+                "AC032",
+                "AC004",
+                "AC017",
+                "AC005"
+            ],
+            "rho": 1
+        },
+        "F008": {
+            "members": [
+                "AC040",
+                "AC044",
+                "AC011",
+                "AC037",
+                "AC034"
+            ],
+            "rho": 1
+        },
+        "F009": {
+            "members": [
+                "AC028",
+                "AC002",
+                "AC013",
+                "AC038",
+                "AC041"
+            ],
+            "rho": 1
+        },
+        "F010": {
+            "members": [
+                "AC003",
+                "AC025",
+                "AC052",
+                "AC023",
+                "AC039"
+            ],
+            "rho": 1
+        }
     },
     "flights": {
         "AC001": {
@@ -1241,49 +1271,49 @@
             "longitude": -122.3903664,
             "landing_capacity": 3,
             "takeoff_capacity": 5,
-            "hold_capacity": 8
+            "hold_capacity": 10
         },
         "V002": {
             "latitude": 37.8361761,
             "longitude": -122.2668028,
             "landing_capacity": 2,
             "takeoff_capacity": 2,
-            "hold_capacity": 8
+            "hold_capacity": 10
         },
         "V003": {
             "latitude": 37.7835538,
             "longitude": -122.5067642,
             "landing_capacity": 1,
             "takeoff_capacity": 5,
-            "hold_capacity": 8
+            "hold_capacity": 10
         },
         "V004": {
             "latitude": 37.9472484,
             "longitude": -122.4880737,
             "landing_capacity": 3,
             "takeoff_capacity": 5,
-            "hold_capacity": 8
+            "hold_capacity": 10
         },
         "V005": {
             "latitude": 37.38556649999999,
             "longitude": -121.9723564,
             "landing_capacity": 3,
             "takeoff_capacity": 1,
-            "hold_capacity": 8
+            "hold_capacity": 10
         },
         "V006": {
             "latitude": 37.25214395119753,
             "longitude": -122.4066509403772,
             "landing_capacity": 3,
             "takeoff_capacity": 5,
-            "hold_capacity": 8
+            "hold_capacity": 10
         },
         "V007": {
             "latitude": 38.58856301092047,
             "longitude": -121.5627454937505,
             "landing_capacity": 2,
             "takeoff_capacity": 3,
-            "hold_capacity": 8
+            "hold_capacity": 10
         }
     },
     "routes": [

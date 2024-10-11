@@ -27,7 +27,7 @@ def agent_allocation_selection(ranked_list, agent_data, market_data):
             agent_indices = agent_data[agent]["agent_edge_indices"]
             agent_prices = temp_prices[agent_indices] 
             agent_prices = np.append(agent_prices, temp_prices[-1]) # adding dropout good
-            agent_values = find_optimal_xi(n_vals, utility, Aarray, barray, agent_prices, budget)
+            agent_values, valuation = find_optimal_xi(n_vals, utility, Aarray, barray, agent_prices, budget)
             if agent_values is None:
                 print("Warning: Could not find optimal xi value for agent", agent)
             else:
@@ -49,6 +49,8 @@ def agent_allocation_selection(ranked_list, agent_data, market_data):
                     idx_contested_edges = np.where(check_capacity < 0)[0]
                     temp_prices[idx_contested_edges] += 10000
                     contested_goods_id.append(idx_contested_edges)
+        print(f"Agent values: {agent_values} with valuation {valuation}")
+        agent_data[agent]["valuation"] = valuation
                 
 
 
@@ -223,7 +225,7 @@ def find_optimal_xi(n, utility, A, b, prices, budget):
         print(message)
         return None
     
-    return x.value
+    return x.value, result
 
 
 

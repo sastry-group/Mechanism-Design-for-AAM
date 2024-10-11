@@ -77,7 +77,7 @@ def construct_market(flights, timing_info, routes, vertiport_usage, default_good
         A[0] = -1 * A[0]
         valuations = []
         for edge in edges:
-            valuations.append(agent_graph.edges[edge]["valuation"])
+            valuations.append(agent_graph.edges[edge]["valuation"]) # [('AC004', ('V001_13_dep', 'V002_18_arr')), ('AC005', ('V007_17_dep', 'V002_55_arr')), ('AC008', ('V003_20_dep', 'V006_42_arr'))]
 
         b = np.zeros(len(A))
         b[0] = 1
@@ -567,7 +567,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         x_iter += 1
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
             break
-        # if x_iter ==  1000:
+        # if x_iter ==  100:
         #     break
 
 
@@ -848,7 +848,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     agent_information, market_information, bookkeeping = construct_market(flights, timing_info, routes_data, vertiport_usage, 
                                                                           default_good_valuation=default_good_valuation, 
                                                                           dropout_good_valuation=dropout_good_valuation, BETA=BETA)
-
+    
     # Run market
     goods_list = bookkeeping
     num_goods, num_agents = len(goods_list), len(flights)
@@ -902,20 +902,20 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     # Rank agents based on their allocation and settling any contested goods
     sorted_agent_dict, ranked_list = rank_allocations(agents_data_dict, market_data_dict)
     agents_data_dict, market_data_dict= agent_allocation_selection(ranked_list, agents_data_dict, market_data_dict)
-
+    valuations = {key: agents_data_dict[key]["valuation"] for key in agents_data_dict.keys()}
 
     # Getting data for next auction
-    allocation, rebased, dropped = get_next_auction_data(agents_data_dict, market_data_dict)
+    allocation, rebased, dropped, = get_next_auction_data(agents_data_dict, market_data_dict)
+    print(f"Allocation: {allocation}")
 
-
-    output_data = {"market_data":market_data_dict, "agents_data":agents_data_dict, "ranked_list":ranked_list}
+    output_data = {"market_data":market_data_dict, "agents_data":agents_data_dict, "ranked_list":ranked_list, "valuations":valuations}
     save_data(output_folder, "fisher_data_after", market_auction_time, **output_data)
 
 
     write_output(flights, edge_information, market_data_dict, 
                 agents_data_dict, market_auction_time, output_folder)
 
-    return allocation, rebased, dropped
+    return allocation, rebased, dropped, valuations
     
 
 
