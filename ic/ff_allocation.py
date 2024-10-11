@@ -49,7 +49,7 @@ def determine_allocation(vertiport_usage, flights, timing_info):
                 else:
                     # If so, allocate the flight and move to next flight
                     print(f"Allocating flight {flight_id} with request {request_id}")
-                    vertiport_usage.move_aircraft(flight["origin_vertiport_id"], request)
+                    vertiport_usage.allocate_aircraft(flight["origin_vertiport_id"], request)
                     allocation.append((flight_id, request_id))
                     break
     

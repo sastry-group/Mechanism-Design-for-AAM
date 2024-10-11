@@ -7,6 +7,84 @@ import pandas as pd
 import time
 
 
+def agent_allocation_selection(ranked_list, agent_data, market_data):
+    temp_prices = market_data['prices'] 
+    contested = []
+    allocated = []
+    contested_goods_id = []
+    for agent in ranked_list:
+        agent_data[agent]["status"] = "contested"
+        while agent_data[agent]["status"] == "contested":
+            Aarray = agent_data[agent]["constraints"][0]
+            Aarray = np.hstack((Aarray[:, :-2], Aarray[:, -1].reshape(-1, 1)))
+
+            # Aarray = np.append(Aarray, Aarray[:, -1]) #keeping dropout good
+            # Aarray = Aarray[:,:-2] #removing default and dropout goods
+            barray = agent_data[agent]["constraints"][1]
+            n_vals = len(agent_data[agent]["utility"]) - 1 # to remove default good
+            utility = agent_data[agent]["utility"][:-2] + [agent_data[agent]["utility"][-1]] # do not remove dropout
+            budget = agent_data[agent]["original_budget"]
+            agent_indices = agent_data[agent]["agent_edge_indices"]
+            agent_prices = temp_prices[agent_indices] 
+            agent_prices = np.append(agent_prices, temp_prices[-1]) # adding dropout good
+            agent_values, valuation = find_optimal_xi(n_vals, utility, Aarray, barray, agent_prices, budget)
+            if agent_values is None:
+                print("Warning: Could not find optimal xi value for agent", agent)
+            else:
+                # we need to do this in vertiport status as well"
+                agent_values_to_full_size = np.zeros(len(temp_prices))
+                agent_values_to_full_size[agent_indices] = agent_values[:-1]
+                agent_values_to_full_size[-1] =  agent_values[-1]
+                check_capacity = market_data["capacity"] - agent_values_to_full_size
+                if np.all(check_capacity >= 0):
+                    agent_data[agent]["final_allocation"] = agent_values
+                    agent_data[agent]["status"] = "allocated"
+                    allocated.append(agent)
+                    market_data['capacity'] = check_capacity
+                elif agent_values[-1] == 1:
+                    agent_data[agent]["final_allocation"] = agent_values
+                    agent_data[agent]["status"] = "dropped"
+                else:
+                    contested.append(agent)
+                    idx_contested_edges = np.where(check_capacity < 0)[0]
+                    temp_prices[idx_contested_edges] += 10000
+                    contested_goods_id.append(idx_contested_edges)
+        print(f"Agent values: {agent_values} with valuation {valuation}")
+        agent_data[agent]["valuation"] = valuation
+                
+
+
+    return agent_data, market_data
+
+
+
+def track_delayed_goods(agents_data_dict, market_data_dict):
+
+    goods_list = market_data_dict['goods_list']
+    for agent_id, agent_data in agents_data_dict.items():
+        delayed_goods = []
+        for good in agent_data["agent_goods_list"]:
+            if "dep" in good[0] and "arr" in good[1]:
+                good_tuple = (good[0], good[1])
+                delayed_goods.append(good_tuple)
+        delayed_goods.pop(0)
+        agent_data['delayed_goods'] = delayed_goods
+        delayed_goods_indices = [goods_list.index(good) for good in delayed_goods]
+        agent_data["idx_delayed_goods"] = delayed_goods_indices
+    return agents_data_dict
+
+
+def update_agent_status(agent_data, agent_values, no_solution_agents, droppped_agents, allocated_agents):
+    if len(droppped_agents) > 0:
+        for agent in droppped_agents:
+            agent_data[agent]["status"] = "dropped"
+            agent_data[agent]["final_allocation"] = np.zeros(len(agent_values))
+    if len(allocated_agents) > 0:
+        for agent in allocated_agents:
+            agent_data[agent]["final_allocation"] = agent_values[allocated_agents.index(agent)]
+            agent_data[agent]["status"] = "allocated"
+    return agent_data
+
 def int_optimization(full_allocations, capacity, budget, prices, utility, agents_constraints, agent_indices, agents_allocations, output_folder):
     #int_optimization(int_allocations_full, capacity, budget, prices, u, agent_constraints, int_allocations, output_folder)
     """
@@ -139,7 +217,7 @@ def find_optimal_xi(n, utility, A, b, prices, budget):
     problem = cp.Problem(objective, constraints)
     result = problem.solve()
     
-    print("Problem status:", problem.status)
+    # print("Problem status:", problem.status)
     # print("Optimal value:", result)
     
     if problem.status not in ["optimal", "optimal_inaccurate"]:
@@ -147,7 +225,7 @@ def find_optimal_xi(n, utility, A, b, prices, budget):
         print(message)
         return None
     
-    return x.value
+    return x.value, result
 
 
 
@@ -195,90 +273,32 @@ def map_agent_values(full_x_array, agent_indices, agent_values):
     """
     Function to map agent values to the index in agent indices
     Args:
-    agent_indices (list): list of indices corresponding to the agents
-    agent_values (list): list of values for each agent
+    agent_indices (list): list of indices corresponding to the agent goods in the full array
+    agent_values (list): list of values for each agent ( this is only the values for each agent)
     Returns:
-    mapped_values (np.array): array of mapped values
+    mapped_values (np.array): the size here is n_goods
     """
     mapped_values = np.zeros(full_x_array)
     for agent_index, agent_value in zip(agent_indices, agent_values):
         mapped_values[agent_index] = agent_value
     return mapped_values
 
-# Test
-# num_agents, num_goods, constraints_per_agent = 5, 8, [6] * 5
+def map_goodslist_to_agent_goods(goods_list, agent_goods):
+    """
+    Function to map goods list to agent goods
+    Args:
+    goods_list (list): list of goods (this the entire list of goods)
+    agent_goods (list): list of agent goods
+    Returns:
+    mapped_goods (np.array): 
+    """
+    ind2master_goodsidx = []
+    for agent, agent_goods_list in enumerate(agent_goods):
+        mapped_goods = np.zeros(len(agent_goods_list))
+        mapped_goods = [goods_list.index(good) for good in agent_goods_list]
+        ind2master_goodsidx.append(mapped_goods)
 
-# u_1 = np.array([2, 6, 2, 4, 2, 0, 0, 0] * math.ceil(num_agents/2)).reshape((math.ceil(num_agents/2), num_goods))
-# u_2 = np.array([0, 0, 1, 0, 1, 1, 6, 4] * math.floor(num_agents/2)).reshape((math.floor(num_agents/2), num_goods))
-# utility = np.concatenate((u_1, u_2), axis=0).reshape(num_agents, num_goods) + np.random.rand(num_agents, num_goods)*0.2
-# # utiliy = np.array([[2.10628590e+00, 6.13463177e+00, 2.12402939e+00, 4.06331267e+00,
-# #   2.19681180e+00 ,2.04596833e-03, 6.15723078e-02, 3.08863481e-02],
-# #  [2.16271364e+00, 6.03811631e+00, 2.00095090e+00, 4.19687028e+00,
-# #   2.17477883e+00, 2.14251137e-02, 1.90627363e-01, 7.58981569e-02],
-# #  [2.04961097e+00, 6.12345572e+00, 2.04791694e+00, 4.05964121e+00,
-# #   2.11196920e+00, 6.03082793e-02, 1.24299362e-02, 8.59124297e-02],
-# #  [1.18106818e-01 ,1.22718131e-01, 1.08330508e+00, 1.12469963e-01,
-# #   1.09494796e+00 ,1.08835093e+00, 6.13612516e+00, 4.04153363e+00],
-# #  [9.38598097e-02 ,1.36914154e-01, 1.01101805e+00, 3.57687317e-02,
-# #   1.12010625e+00 ,1.07778423e+00, 6.06547205e+00, 4.03022307e+00]])
-# # print(utility)
-# x_agents = np.array([[1.00397543e+00,4.80360433e-07,1.92159788e-06,1.79412229e-06,
-#     1.00599048e+00,2.49121963e-07,6.26215796e-09, 2.42991058e-08],
-#  [1.00411052e+00 ,1.21665341e-07 ,1.80407082e-03, 1.00637552e+00,
-#     4.84328060e-07, 4.82682667e-07 ,7.56841742e-09 ,2.18305684e-08],
-#  [7.85322580e-08, 9.88166643e-01, 9.84427659e-01 ,1.86267598e-06,
-#     1.30186140e-07,6.49328992e-07, 1.08405199e-08, 1.74791140e-08],
-#  [1.38309823e-06, 5.76908587e-09, 1.35556694e-08 ,1.13796523e-08,
-#     4.79966863e-05 ,1.00276772e+00, 3.71215693e-06 ,1.00482195e+00],
-#  [3.58705716e-06, 6.56599609e-09 ,1.11557250e-08, 9.46150329e-09,
-#     1.00542076e+00, 6.86702827e-08, 1.00451420e+00, 1.85567648e-03]])
+    
 
-# x_agents_rounded = np.round(x_agents, 1)
+    return ind2master_goodsidx
 
-# x_contested  = np.array([[1., 0., 0., 0., 1., 0., 0., 0.],
-#  [1. ,0. ,0., 1., 0., 0., 0., 0.],
-#  [1., 0., 0., 1., 0., 0., 0., 0.],
-#  [0., 0., 0., 0., 0., 1., 0., 1.],
-#  [0., 0., 0., 0., 1., 0., 1., 0.]])
-# # print(x_agents_rounded)
-# capacity = np.array([10 ,  1.,  10.  , 1. , 10. , 10. ,  1.  , 1.])
-# budget = np.ones(5)*100 + np.random.rand(5)*10 - 5
-# # A = np.array([[1, 1, 0, 0, 0, 0, 0, 0, 0], [1, 0, 0, -1, -1, 0, 0, 0, 0], [0, 1, -1, 0, 0, 0, 0, 0, 0], \
-# #                 [0, 0, 0, 0, 0, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 0, 0], [0, 0, 0, 0, 0, 0, 0, 1, 0], \
-# #                 [0, 0, 0, 0, 0, 1, 1, 0, 0], [0, 0, -1, 0, 0, 1, 0, -1, 0], [0, 0, 0, 0, -1, 0, 1, 0, 0], \
-# #                 [1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0, 0, 0, 0]])
-# A =[
-#     np.array([[1, 1, 0, 0, 0, 0, 0, 0, 0],
-#                [1, 0, 0, -1, -1, 0, 0, 0, 0],
-#                [0, 1, -1, 0, 0, 0, 0, 0, 0],
-#                [0, 0, 0, 0, 0, 1, 0, 0, 0],
-#                [0, 0, 0, 0, 0, 0, 1, 0, 0],
-#                [0, 0, 0, 0, 0, 0, 0, 1, 0]]), 
-#     np.array([[1, 1, 0, 0, 0, 0, 0, 0, 0],
-#                [1, 0, 0, -1, -1, 0, 0, 0, 0],
-#                [0, 1, -1, 0, 0, 0, 0, 0, 0],
-#                [0, 0, 0, 0, 0, 1, 0, 0, 0],
-#                [0, 0, 0, 0, 0, 0, 1, 0, 0],
-#                [0, 0, 0, 0, 0, 0, 0, 1, 0]]), 
-#     np.array([[1, 1, 0, 0, 0, 0, 0, 0, 0],
-#                [1, 0, 0, -1, -1, 0, 0, 0, 0],
-#                [0, 1, -1, 0, 0, 0, 0, 0, 0],
-#                [0, 0, 0, 0, 0, 1, 0, 0, 0],
-#                [0, 0, 0, 0, 0, 0, 1, 0, 0],
-#                [0, 0, 0, 0, 0, 0, 0, 1, 0]]), 
-#     np.array([[0, 0, 0, 0, 0, 1, 1, 0, 0],
-#                [0, 0, -1, 0, 0, 1, 0, -1, 0],
-#                [0, 0, 0, 0, -1, 0, 1, 0, 0],
-#                [1, 0, 0, 0, 0, 0, 0, 0, 0],
-#                [0, 1, 0, 0, 0, 0, 0, 0, 0],
-#                [0, 0, 0, 1, 0, 0, 0, 0, 0]]),
-#     np.array([[0, 0, 0, 0, 0, 1, 1, 0, 0],
-#                [0, 0, -1, 0, 0, 1, 0, -1, 0],
-#                [0, 0, 0, 0, -1, 0, 1, 0, 0],
-#                [1, 0, 0, 0, 0, 0, 0, 0, 0],
-#                [0, 1, 0, 0, 0, 0, 0, 0, 0],
-#                [0, 0, 0, 1, 0, 0, 0, 0, 0]])]
-# prices = np.array([0., 16.60415211, 0., 7.83724561, 0., 0., 16.97227583, 7.55527186])
-# b = np.array([[1., 0., 0., 0., 0., 0.],[1., 0., 0., 0., 0., 0.],[1., 0., 0., 0., 0., 0.], [1., 0., 0., 0., 0., 0.], [1., 0., 0., 0., 0., 0.]])
-
-# # int_optimization(x_contested, capacity, budget, prices, utility, A, b)

@@ -10,7 +10,7 @@ from pathlib import Path
 import time
 import math
 import numpy as np
-import matplotlib.pyplot as plt
+import re
 
 
 # Add the bluesky package to the path
@@ -61,7 +61,8 @@ parser.add_argument('--BETA', type=float, default=1)
 parser.add_argument('--dropout_good_valuation', type=float, default=1)
 parser.add_argument('--default_good_valuation', type=float, default=1)
 parser.add_argument('--price_default_good', type=float, default=10)
-parser.add_argument('--rebate_frequency', type=float, default=1)
+parser.add_argument('--lambda_frequency', type=float, default=1)
+parser.add_argument('--price_upper_bound', type=float, default=50)
 args = parser.parse_args()
 
 
@@ -232,6 +233,7 @@ def step_simulation(
     for flight_id, request_id in allocated_flights:
         # Pull flight and allocated request
         flight = flights[flight_id]
+        print(f"Request id: {request_id}")
         request = flight["requests"][request_id]
 
         # Move aircraft in VertiportStatus
@@ -274,7 +276,7 @@ def step_simulation_delay(
         request["bid"] = bid
 
         # Move aircraft in VertiportStatus
-        vertiport_usage.move_aircraft(flight["origin_vertiport_id"], request)
+        # vertiport_usage.move_aircraft(flight["origin_vertiport_id"], request)
 
         # Add movement to stack commands
         origin_vertiport = vertiports[flight["origin_vertiport_id"]]
@@ -355,8 +357,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
 
     file_name = file_path.split("/")[-1].split(".")[0]
     # data = load_json(file_path)
-    print(design_parameters)
-    output_folder = f"ic/results/{file_name}_{design_parameters['beta']}_{design_parameters['dropout_good_valuation']}_{design_parameters['default_good_valuation']}_{design_parameters['price_default_good']}_{design_parameters['rebate_frequency']}"
+    output_folder = f"ic/results/{file_name}_{design_parameters['beta']}_{design_parameters['dropout_good_valuation']}_{design_parameters['default_good_valuation']}_{design_parameters['price_default_good']}_{design_parameters['lambda_frequency']}"
     Path(output_folder).mkdir(parents=True, exist_ok=True)
 
     flights = data["flights"]
@@ -497,13 +498,13 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
                 vertiport_usage, vertiports, flights, allocated_flights, stack_commands
             )
         elif method == "fisher":
-            allocated_flights, rebased_flights, payments = fisher_allocation_and_payment(
+            allocated_flights, rebased_flights, payments, valuations = fisher_allocation_and_payment(
                 filtered_vertiport_usage, current_flights, current_timing_info, filtered_routes, filtered_vertiports,
                 output_folder, save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
             )
-            vertiport_usage = step_simulation(
-                vertiport_usage, vertiports, flights, allocated_flights, stack_commands
-            )
+            # vertiport_usage = step_simulation(
+            #     vertiport_usage, vertiports, flights, allocated_flights, stack_commands
+            # )
         elif method == "ascending-auction-budgetbased":
             allocated_flights, payments = ascending_auc_allocation_and_payment(
                     filtered_vertiport_usage, current_flights, current_timing_info, routes_data, "budget",
@@ -554,22 +555,23 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
 
         # Evaluate the allocation
         
+        valuation = False
+        if valuation:
+            allocated_valuation = {flight_id: current_flights[flight_id]["requests"][request_id]["valuation"] for flight_id, request_id in allocated_flights}
+            parked_valuation = {flight_id: flight["requests"]["000"]["valuation"] for flight_id, flight in current_flights.items() if flight_id not in [flight_id for flight_id, _ in allocated_flights]}
+            valuation = sum([current_flights[flight_id]["rho"] * val for flight_id, val in allocated_valuation.items()]) + sum([current_flights[flight_id]["rho"] * val for flight_id, val in parked_valuation.items()])
 
-        allocated_valuation = {flight_id: current_flights[flight_id]["requests"][request_id]["valuation"] for flight_id, request_id in allocated_flights}
-        parked_valuation = {flight_id: flight["requests"]["000"]["valuation"] for flight_id, flight in current_flights.items() if flight_id not in [flight_id for flight_id, _ in allocated_flights]}
-        valuation = sum([current_flights[flight_id]["rho"] * val for flight_id, val in allocated_valuation.items()]) + sum([current_flights[flight_id]["rho"] * val for flight_id, val in parked_valuation.items()])
 
-
-        #[print('Nodes: -----')]
-        #for n in vertiport_usage.nodes:
-        #    print("node: ", n)
-        #    print("cost: ", C(vertiport_usage.nodes[n]["vertiport_id"], vertiport_usage.nodes[n]["hold_usage"]))
-        #    print('----')
-        congestion_costs = congestion_info["lambda"] * sum([C(vertiport_usage.nodes[node]["vertiport_id"], vertiport_usage.nodes[node]["hold_usage"]) for node in vertiport_usage.nodes])
-        if method == "vcg":
-            assert sw - (valuation - congestion_costs) <= 0.01, "Social welfare calculation incorrect."
-        print(f"Social welfare: {valuation - congestion_costs}")
-        results.append((allocated_flights, payments, valuation, congestion_costs))
+            #[print('Nodes: -----')]
+            #for n in vertiport_usage.nodes:
+            #    print("node: ", n)
+            #    print("cost: ", C(vertiport_usage.nodes[n]["vertiport_id"], vertiport_usage.nodes[n]["hold_usage"]))
+            #    print('----')
+            congestion_costs = congestion_info["lambda"] * sum([C(vertiport_usage.nodes[node]["vertiport_id"], vertiport_usage.nodes[node]["hold_usage"]) for node in vertiport_usage.nodes])
+            if method == "vcg":
+                assert sw - (valuation - congestion_costs) <= 0.01, "Social welfare calculation incorrect."
+            print(f"Social welfare: {valuation - congestion_costs}")
+            results.append((allocated_flights, payments, valuation, congestion_costs))
 
     # Write the scenario to a file
     if save_scenario:
@@ -673,13 +675,15 @@ if __name__ == "__main__":
     dropout_good_valuation = args.dropout_good_valuation
     default_good_valuation = args.default_good_valuation
     price_default_good = args.price_default_good
-    rebate_frequency = args.rebate_frequency
+    lambda_frequency = args.lambda_frequency
+    price_upper_bound = args.price_upper_bound
     design_parameters = {
         "beta": BETA,
         "dropout_good_valuation": dropout_good_valuation,
         "default_good_valuation": default_good_valuation,
         "price_default_good": price_default_good,
-        "rebate_frequency": rebate_frequency
+        "lambda_frequency": lambda_frequency,
+        "price_upper_bound": price_upper_bound
         }
     
 
