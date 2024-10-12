@@ -1,0 +1,156 @@
+{
+    "timing_info": {
+        "start_time": 1,
+        "end_time": 20,
+        "time_step": 1,
+        "auction_frequency": 10
+    },
+    "congestion_params": {
+        "lambda": 0.1,
+        "C": {
+            "V001": [
+                0.0,
+                0.2,
+                0.6,
+                1.2,
+                2.0,
+                3.0,
+                4.2,
+                5.6,
+                7.2,
+                9.0,
+                11.0
+            ]
+        }
+    },
+    "vertiports": {
+        "V001": {
+            "latitude": 43.6048,
+            "longitude": 1.5173739588333184,
+            "landing_capacity": 5,
+            "takeoff_capacity": 5,
+            "hold_capacity": 5
+        }
+    },
+    "sectors": {
+        "S001": {
+            "latitude": 43.6048,
+            "longitude": 1.4428,
+            "hold_capacity": 1
+        },
+        "S002": {
+            "latitude": 43.6048,
+            "longitude": 1.5157762111108113,
+            "hold_capacity": 1
+        }
+    },
+    "flights": {
+        "AC000": {
+            "appearance_time": 3,
+            "origin_vertiport_id": "V001",
+            "budget_constraint": 300,
+            "decay_factor": 0.95,
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "bid": 1,
+                    "valuation": 1
+                },
+                "001": {
+                    "bid": 200,
+                    "valuation": 200,
+                    "request_departure_time": 4,
+                    "request_arrival_time": 6,
+                    "sector_path": [
+                        "S001",
+                        "S002"
+                    ],
+                    "sector_times": [
+                        4,
+                        5,
+                        6
+                    ],
+                    "destination_vertiport_id": null
+                }
+            }
+        },
+        "AC001": {
+            "appearance_time": 3,
+            "origin_vertiport_id": "V001",
+            "budget_constraint": 200,
+            "decay_factor": 0.95,
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "bid": 1,
+                    "valuation": 1
+                },
+                "001": {
+                    "bid": 50,
+                    "valuation": 50,
+                    "request_departure_time" : 4,
+                    "request_arrival_time": 6,
+                    "sector_path": [
+                        "S001",
+                        "S002"
+                    ],
+                    "sector_times": [
+                        4,
+                        5,
+                        6
+                    ],
+                    "destination_vertiport_id": null
+                }
+            }
+        },
+        "AC002": {
+            "appearance_time": 3,
+            "origin_vertiport_id": "V001",
+            "budget_constraint": 170,
+            "decay_factor": 0.95,
+            "requests": {
+                "000": {
+                    "destination_vertiport_id": "V001",
+                    "request_departure_time": 0,
+                    "request_arrival_time": 0,
+                    "bid": 1,
+                    "valuation": 1
+                },
+                "001": {
+                    "bid": 70,
+                    "valuation": 70,
+                    "request_departure_time" : 4,
+                    "request_arrival_time": 6,
+                    "sector_path": [
+                        "S001",
+                        "S002"
+                    ],
+                    "sector_times": [
+                        4,
+                        5,
+                        6
+                    ],
+                    "destination_vertiport_id": null
+                }
+            }
+        }
+    },
+    "fleets": {
+        "F001": {
+            "members": [
+                "AC000"
+            ],
+            "rho": 1
+        },
+        "F002": {
+            "members": [
+                "AC001"
+            ],
+            "rho": 1
+        }
+    }
+}
