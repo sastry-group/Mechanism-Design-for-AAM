@@ -157,12 +157,12 @@ def write_customer_board(flights, agents_data, output_folder):
         payment = 0  # Placeholder for future logic
         status = value["status"]
         customer_board_data.append([
-            key, (flights[key]["origin_vertiport_id"], request["destination_vertiport_id"]), 
-            (request["request_departure_time"], request["request_arrival_time"]), allocated_flight, payment, status
+            key, flights[key]["origin_vertiport_id"], request["destination_vertiport_id"], 
+            request["request_departure_time"], request["request_arrival_time"], status, payment
         ])
 
     customer_board_df = pd.DataFrame(customer_board_data, columns=[
-        "Aircraft", "(Origin, Destination)", "Desired Departure Td, Desired Arrival", "Allocated", "Payment", "Status"
+        "Aircraft", "Departure Vertiport", "Arrival Vertiport", "Desired Departure Time" "Desired Arrival Time", "Status", "Payment"
     ])
     
     customer_board_file = os.path.join(output_folder, "customer_board.csv")

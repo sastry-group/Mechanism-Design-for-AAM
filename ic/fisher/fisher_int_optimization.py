@@ -14,7 +14,9 @@ def agent_allocation_selection(ranked_list, agent_data, market_data):
     contested_goods_id = []
     for agent in ranked_list:
         agent_data[agent]["status"] = "contested"
+        i = 0
         while agent_data[agent]["status"] == "contested":
+
             Aarray = agent_data[agent]["constraints"][0]
             Aarray = np.hstack((Aarray[:, :-2], Aarray[:, -1].reshape(-1, 1)))
 
@@ -28,6 +30,12 @@ def agent_allocation_selection(ranked_list, agent_data, market_data):
             agent_prices = temp_prices[agent_indices] 
             agent_prices = np.append(agent_prices, temp_prices[-1]) # adding dropout good
             agent_values = find_optimal_xi(n_vals, utility, Aarray, barray, agent_prices, budget)
+            # if i == 0:
+            #     p_fixed = market_data['prices']
+            #     p_prices = p_fixed[agent_indices] 
+            #     p_prices = np.append(p_prices, temp_prices[-1])
+            #     max_agents_val = find_optimal_xi(n_vals, utility, Aarray, barray, p_prices, budget)
+            #     agent_data[agent]["max_utility"] = max_agents_val @ utility
             if agent_values is None:
                 print("Warning: Could not find optimal xi value for agent", agent)
             else:
@@ -48,8 +56,7 @@ def agent_allocation_selection(ranked_list, agent_data, market_data):
                     contested.append(agent)
                     idx_contested_edges = np.where(check_capacity < 0)[0]
                     temp_prices[idx_contested_edges] += 10000
-                    contested_goods_id.append(idx_contested_edges)
-                
+                    contested_goods_id.append(idx_contested_edges) 
 
 
     return agent_data, market_data

@@ -3,10 +3,10 @@ import os
 from itertools import product
 
 # Define the parameter values to vary
-BETA_values = [5, 10]
+BETA_values = [5]
 dropout_good_valuation_values = [1]
 default_good_valuation_values = [1]
-price_default_good_values = [0.1,0.2,0.5,1]
+price_default_good_values = [10]
 lambda_frequency_values = [10]
 price_upper_bound_values = [100]
 

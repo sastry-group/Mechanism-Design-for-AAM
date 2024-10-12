@@ -1,5 +1,7 @@
 
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 
 def process_allocations(x, edge_information, agent_goods_lists, flights):
@@ -136,6 +138,8 @@ def find_dep_and_arrival_nodes(edges):
             return dep_node_found, arrival_node_found
     
     return dep_node_found, arrival_node_found
+
+
 def get_next_auction_data(agent_data, market_data):
     allocation, rebased, dropped = [], [], []
     for  flight_id, data in agent_data.items():
@@ -149,6 +153,7 @@ def get_next_auction_data(agent_data, market_data):
                 allocation.append((flight_id, good_tuple))
                 agent_data[flight_id]["good_allocated"] = good_tuple
                 allocation.append((flight_id, good_tuple))
+                agent_data[flight_id]["good_allocated_idx_short_list"] = data["agent_goods_list"].index(good_tuple)
             elif round(int_allocation_long[-1]) == 1:
                 data['status'] = 'dropped'
                 dropped.append(flight_id)
@@ -162,6 +167,7 @@ def get_next_auction_data(agent_data, market_data):
                     data['status'] = 'delayed'
                     agent_data[flight_id]["good_allocated"] = good_tuple
                     allocation.append((flight_id, good_tuple))
+                    agent_data[flight_id]["good_allocated_idx_short_list"] = data["agent_goods_list"].index(good_tuple)
 
                 print("Check allocation")
                 # else:
@@ -197,3 +203,61 @@ def build_edge_information(goods_list):
 
 
     return edge_information
+
+def compute_utilites(agent_data):
+    """
+    Compute the utility for an agent
+    """
+    agent_utility_vec = agent_data["utility"]
+    dropout_utility = agent_utility_vec[-1]
+    default_utility = agent_utility_vec[-2]
+    allocated_good_utility = agent_utility_vec[agent_data["good_allocated_idx_short_list"]]
+    x_allocated = agent_data["final_allocation"][agent_data["good_allocated_idx_short_list"]]
+    desired_good_utility = agent_data["flight_info"]["requests"]["001"]["valuation"]
+    agent_fu = allocated_good_utility *  x_allocated + default_utility * agent_data["final_allocation"][-2] + dropout_utility * agent_data["final_allocation"][-1]
+    agent_fu_max = desired_good_utility
+    return agent_fu, agent_fu_max
+
+
+def plot_utility_functions(agents_data_dict, output_folder):
+    agent_names = []
+    max_utilities = []
+    end_utilities = []
+    ascending_utilities = []  # Placeholder for Ascending Auction utilities
+    
+    for agent_name, agent in agents_data_dict.items():
+        agent_names.append(agent_name)
+        agent_fu, agent_max_fu = compute_utilites(agent)
+        max_utilities.append(agent_max_fu)
+        end_utilities.append(agent_fu)
+        ascending_utilities.append(agent_fu - 30)  # Placeholder logic for ascending auction
+    
+    bar_width = 0.25  # Narrower bar width since we have three bars
+    indices = np.arange(len(agent_names))
+
+    plt.figure(figsize=(12, 8))
+
+    # Plot Max Utility (light blue)
+    plt.bar(indices - bar_width, max_utilities, bar_width, 
+            color='lightblue', label='Max Utility')
+
+    # Plot Fisher Market (blue)
+    plt.bar(indices, end_utilities, bar_width, 
+            color='blue', label='Fisher Market')
+
+    # Plot Ascending Auction (light green)
+    plt.bar(indices + bar_width, ascending_utilities, bar_width, 
+            color='lightgreen', label='Ascending Auction')
+
+    # Add labels, title, and legend
+    plt.xlabel('Agents')
+    plt.ylabel('Utility')
+    plt.xticks(indices, agent_names, rotation=45)
+
+    # Simplified color-coded legend
+    plt.legend(loc='upper right')
+
+    # Save the figure
+    plt.tight_layout()
+    plt.savefig(f"{output_folder}/utility_distribution.png")
+    plt.close()

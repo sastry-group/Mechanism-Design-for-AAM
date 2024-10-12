@@ -25,7 +25,7 @@ from VertiportStatus import VertiportStatus
 from fisher.fisher_int_optimization import agent_allocation_selection, map_goodslist_to_agent_goods, track_delayed_goods
 from fisher.FisherGraphBuilder import FisherGraphBuilder
 from write_csv import write_output, save_data 
-from utils import store_agent_data, process_allocations, rank_allocations, store_market_data, get_next_auction_data, build_edge_information
+from utils import store_agent_data, process_allocations, rank_allocations, store_market_data, get_next_auction_data, build_edge_information, plot_utility_functions
 
 INTEGRAL_APPROACH = False
 UPDATED_APPROACH = True
@@ -906,6 +906,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
 
     # Getting data for next auction
     allocation, rebased, dropped = get_next_auction_data(agents_data_dict, market_data_dict)
+    plot_utility_functions(agents_data_dict, output_folder)
 
 
     output_data = {"market_data":market_data_dict, "agents_data":agents_data_dict, "ranked_list":ranked_list}
