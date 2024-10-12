@@ -6,9 +6,9 @@ from itertools import product
 BETA_values = [5]
 dropout_good_valuation_values = [1]
 default_good_valuation_values = [1]
-price_default_good_values = [10]
-lambda_frequency_values = [10]
-price_upper_bound_values = [100]
+price_default_good_values = [1]
+lambda_frequency_values = [2]
+price_upper_bound_values = [500]
 
 # Generate all combinations of the parameter values
 # "--file", "test_cases/casef_20240614_153258.json",

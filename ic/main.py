@@ -542,6 +542,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
                 filtered_vertiport_usage, current_flights, current_timing_info, filtered_routes, filtered_vertiports,
                 output_folder, save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
             )
+            print(f"Social welfare: {sum([val for val in valuations.values()])}")
             # vertiport_usage = step_simulation(
             #     vertiport_usage, vertiports, flights, allocated_flights, stack_commands
             # )
@@ -561,6 +562,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
             for af in allocated_flights:
                 print("flight id: ", af[0], "request id: ", af[1]," delay: ", af[2],"value: ", af[3], )
             print('---------')
+            print(f"Social welfare: {[sum(af[3] for af in allocated_flights)]}")
             allocated_flights = [i[0:2] for i in allocated_flights]
         
         elif method == "ascending-auction-profitbased":
