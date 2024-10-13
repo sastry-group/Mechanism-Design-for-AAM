@@ -56,7 +56,10 @@ def agent_allocation_selection(ranked_list, agent_data, market_data):
                     contested.append(agent)
                     idx_contested_edges = np.where(check_capacity < 0)[0]
                     temp_prices[idx_contested_edges] += 10000
-                    contested_goods_id.append(idx_contested_edges) 
+                    contested_goods_id.append(idx_contested_edges)
+        p_fixed = market_data['prices']
+        p_prices = p_fixed[agent_indices] 
+        agent_data[agent]["payment"] = agent_values[:-2] @ p_prices[:-1]
 
 
     return agent_data, market_data

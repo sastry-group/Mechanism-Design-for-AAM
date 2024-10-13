@@ -93,7 +93,7 @@ def store_market_data(extra_data, design_parameters, market_auction_time):
         'demand': np.sum(extra_data["x_prob"], axis=0),
         'market_auction_time': market_auction_time,
         'num_iterations': extra_data["data_to_plot"]["x_iter"],
-        'market_parameters': {design_parameters[key] for key in design_parameters.keys()}
+        'market_parameters': {key: value for key, value in design_parameters.items()}
         
     }
     return market_data
@@ -219,19 +219,26 @@ def compute_utilites(agent_data):
     return agent_fu, agent_fu_max
 
 
-def plot_utility_functions(agents_data_dict, output_folder):
+def plot_utility_functions(agents_data_dict, market_data_dict, output_folder):
     agent_names = []
     max_utilities = []
     end_utilities = []
     ascending_utilities = []  # Placeholder for Ascending Auction utilities
+    total_max_utility = 0
+    total_fisher_utility = 0
     
     for agent_name, agent in agents_data_dict.items():
         agent_names.append(agent_name)
         agent_fu, agent_max_fu = compute_utilites(agent)
         max_utilities.append(agent_max_fu)
         end_utilities.append(agent_fu)
+        total_max_utility += agent_max_fu
+        total_fisher_utility += agent_fu
         ascending_utilities.append(agent_fu - 30)  # Placeholder logic for ascending auction
     
+    market_data_dict['total_max_utility'] = total_max_utility
+    market_data_dict['total_fisher_utility'] = total_fisher_utility
+
     bar_width = 0.25  # Narrower bar width since we have three bars
     indices = np.arange(len(agent_names))
 
@@ -261,3 +268,4 @@ def plot_utility_functions(agents_data_dict, output_folder):
     plt.tight_layout()
     plt.savefig(f"{output_folder}/utility_distribution.png")
     plt.close()
+    return market_data_dict

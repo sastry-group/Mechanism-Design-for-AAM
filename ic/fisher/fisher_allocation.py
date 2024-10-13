@@ -828,6 +828,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
 
     #Extracting design parameters
     # we should create a config file for this
+    
     if design_parameters:
         price_default_good = design_parameters["price_default_good"]
         default_good_valuation = design_parameters["default_good_valuation"]
@@ -906,7 +907,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
 
     # Getting data for next auction
     allocation, rebased, dropped = get_next_auction_data(agents_data_dict, market_data_dict)
-    plot_utility_functions(agents_data_dict, output_folder)
+    market_data_dict = plot_utility_functions(agents_data_dict, market_data_dict, output_folder)
 
 
     output_data = {"market_data":market_data_dict, "agents_data":agents_data_dict, "ranked_list":ranked_list}
