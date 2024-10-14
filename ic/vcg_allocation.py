@@ -3,11 +3,11 @@ from VertiportStatus import draw_graph
 import numpy as np
 import gurobipy as gp
 import time
-
+import copy
 
 rho = 1
 
-def build_auxiliary(vertiport_status, flights, timing_info):
+def build_auxiliary(vertiport_status, flights, timing_info, congestion_info):
     """
     Build auxiliary graph for a given time and set of requests.
 
@@ -21,6 +21,7 @@ def build_auxiliary(vertiport_status, flights, timing_info):
     print("Building auxiliary graph...")
     start_time_graph_build = time.time()
     max_time, time_step = timing_info["end_time"], timing_info["time_step"]
+    lambda_val, C = congestion_info["lambda"], congestion_info["C"]
     auxiliary_graph = nx.MultiDiGraph()
     ## Construct nodes
     #  V1. Create dep, arr, and standard nodes for each initial node (vertiport + time step)
@@ -66,16 +67,13 @@ def build_auxiliary(vertiport_status, flights, timing_info):
         # E3. Connect time steps together for each vertiport
         if vertiport_status.nodes[node]["time"] == max_time:
             continue
-        for val in range(vertiport_status.nodes[node]["hold_capacity"]):
-            lambda_val = 0
-            factor = 1
-            weight = lambda_val * factor
+        for val in range(1, vertiport_status.nodes[node]["hold_capacity"] + 1):
+            vertiport_id = vertiport_status.nodes[node]["vertiport_id"]
+            weight = - lambda_val * (C(vertiport_id, val) - C(vertiport_id, val - 1))
             attributes = {"upper_capacity": 1,
                         "lower_capacity": 0,
                         "weight": weight,
-                        "edge_group": "E3_" + str(val + 1)} # Assume lambda is 0 for now
-            # Todo: Add case when lambda is not 0
-            vertiport_id = vertiport_status.nodes[node]["vertiport_id"]
+                        "edge_group": "E3_" + str(val + 1)}
             next_time = vertiport_status.nodes[node]["time"] + time_step
             auxiliary_graph.add_edge(node, vertiport_id + "_" + str(next_time), **attributes)
 
@@ -96,7 +94,7 @@ def build_auxiliary(vertiport_status, flights, timing_info):
             if request["request_departure_time"] == 0:
                 attributes = {"upper_capacity": f"d_{flight_id}_0",
                             "lower_capacity": f"d_{flight_id}_0",
-                            "weight": rho * request["bid"], # rho * b, rho=1 for now
+                            "weight": flight["rho"] * request["bid"], # rho * b, rho=1 for now
                             "edge_group": "E7"}
                 auxiliary_graph.add_edge("source", flight_id + "_0", **attributes)
             else:
@@ -106,7 +104,7 @@ def build_auxiliary(vertiport_status, flights, timing_info):
                 arrival_time = request["request_arrival_time"]
                 attributes = {"upper_capacity": 1,
                             "lower_capacity": 0,
-                            "weight": rho * request["bid"],  # rho * b, rho=1 for now
+                            "weight": flight["rho"] * request["bid"],  # rho * b, rho=1 for now
                             "edge_group": "E5",
                             "flight_id": flight_id,
                             "request_id": request_id}
@@ -129,18 +127,19 @@ def build_auxiliary(vertiport_status, flights, timing_info):
         auxiliary_graph.add_edge("source", vertiport[0] + "_" + str(time_step), **attributes)
 
         # E8. Connect each node at the last time step to sink per park allowance
-        for val in range(vertiport[1]["hold_capacity"]):
+        for val in range(1, vertiport[1]["hold_capacity"] + 1):
+            weight = - lambda_val * (C(vertiport[0], val) - C(vertiport[0], val - 1))
             attributes = {"upper_capacity": 1,
                         "lower_capacity": 0,
-                        "weight": 0, #lambda = 0
+                        "weight": weight,
                         "edge_group": "E8_" + str(val + 1)}
             auxiliary_graph.add_edge(vertiport[0] + "_" + str(max_time), "sink", **attributes)  
     
     print(f"Time to build graph: {time.time() - start_time_graph_build}")
     # Print edges for debugging
-    for edge in auxiliary_graph.edges(data=True):
-        print(edge)
-    draw_graph(auxiliary_graph)
+    #for edge in auxiliary_graph.edges(data=True):
+    #    print(edge)
+    #draw_graph(auxiliary_graph)
     return auxiliary_graph, unique_departure_times
 
 
@@ -267,11 +266,14 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
         for _, _, attr in allocated_edges:
             if attr["edge_group"] == "E5":
                 allocation.append((attr["flight_id"], attr["request_id"]))
+                # print(f"Allocated flight {attr['flight_id']} has weight {attr['weight']}")
+            # else:
+                # print(f"Other allocated edge: {attr}")
     else:
         print("Optimization was not successful.")
         allocation = None
 
-    return allocation
+    return allocation, m.ObjVal
 
 
 def save_allocation(allocation, save_file, start_time, initial_allocation=False):
@@ -290,7 +292,7 @@ def save_allocation(allocation, save_file, start_time, initial_allocation=False)
             f.write(f"    {flight_id}, {request_id}\n")
 
 
-def allocation_and_payment(vertiport_usage, flights, timing_info, save_file, initial_allocation):
+def vcg_allocation_and_payment(vertiport_usage, flights, timing_info, congestion_info, fleets, save_file, initial_allocation, payment_calc=True, save=True):
     """
     Allocate flights for a given time and set of requests.
 
@@ -301,13 +303,46 @@ def allocation_and_payment(vertiport_usage, flights, timing_info, save_file, ini
     """
     # Create auxiliary graph and determine allocation
     # Todo: Also determine payment here
-    auxiliary_graph, unique_departure_times = build_auxiliary(vertiport_usage, flights, timing_info)
-    allocation = determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_departure_times)
-    save_allocation(allocation, save_file, timing_info["current_time"], initial_allocation=initial_allocation)
-
+    auxiliary_graph, unique_departure_times = build_auxiliary(vertiport_usage, flights, timing_info, congestion_info)
+    allocation, SW = determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_departure_times)
+    flights_allocated = {flight_id: request_id for flight_id, request_id in allocation}
+    fleet_members_allocated = {fleet_id: [] for fleet_id in fleets.keys()}
     # Print outputs
     print(f"Allocation\n{allocation}")
-    payment = None
-    print(f"\nPayment\n{payment}")
+    print(f"Original Social Welfare: {SW}")
 
-    return allocation, payment
+    payment = []
+    if payment_calc:
+        alternate_SWs = []
+        for fleet_id, fleet in fleets.items():
+            # Determine which fleet members were allocated
+            SW_minus_i = SW
+            for flight_id in fleet["members"]:
+                if flight_id in flights_allocated.keys():
+                    fleet_members_allocated[fleet_id].append(flight_id)
+                    # Find social welfare excluding the allocated members of the fleet
+                    allocated_request_id = flights_allocated[flight_id]
+                    SW_minus_i -= fleet["rho"] * flights[flight_id]["requests"][allocated_request_id]["bid"]
+                else:
+                    SW_minus_i -= fleet["rho"] * flights[flight_id]["requests"]["000"]["bid"]
+
+            # Get the objective value for the allocation without the complete fleet
+            adjusted_flights = copy.deepcopy(flights)
+            for flight_id in fleet["members"]:
+                adjusted_flight_requests = copy.deepcopy(flights[flight_id]["requests"])
+                for request_id in adjusted_flight_requests.keys():
+                    adjusted_flight_requests[request_id]["bid"] = 0
+                adjusted_flights[flight_id]["requests"] = adjusted_flight_requests
+            # print(f"Adjusted flights for fleet {fleet_id}: {adjusted_flights} given allocation {allocation}")
+            auxiliary_graph, unique_departure_times = build_auxiliary(vertiport_usage, adjusted_flights, timing_info, congestion_info)
+            _, SW_alternate_allocation = determine_allocation(vertiport_usage, adjusted_flights, auxiliary_graph, unique_departure_times)
+            alternate_SWs.append(SW_alternate_allocation)
+
+            # Calculate the payment for the fleet
+            payment.append( (fleet_id, 1/fleet["rho"] * (SW_alternate_allocation - SW_minus_i)))
+        print(f"Social welfares without each fleet: {alternate_SWs}")
+        print(f"\nPayment\n{payment}")
+    if save:
+        save_allocation(allocation, save_file, timing_info["current_time"], initial_allocation=initial_allocation)
+
+    return allocation, payment, SW

@@ -16,6 +16,7 @@ parameter_combinations = list(product(BETA_values, dropout_good_valuation_values
 
 main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 
+
 # Iterate through each combination and run the main script
 for idx, (BETA, dropout_good_valuation, default_good_valuation, price_default_good, lambda_frequency, price_upper_bound) in enumerate(parameter_combinations):
     args = [
