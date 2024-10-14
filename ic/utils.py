@@ -169,17 +169,11 @@ def get_next_auction_data(agent_data, market_data):
                     agent_data[flight_id]["good_allocated"] = good_tuple
                     allocation.append((flight_id, good_tuple))
                     agent_data[flight_id]["good_allocated_idx_short_list"] = data["agent_goods_list"].index(good_tuple)
+                else:
+                    data['status'] = 'parked'
+                    # save parked good on the agent data to make it easier to chexk if allocation is parked
 
                 print("Check allocation")
-                # else:
-                #     data['status'] = 'rebased'
-                #     good_tuple = ('VOOO', 'V000')
-                #     agent_data[flight_id]["good_allocated"] = good_tuple
-            
-        # elif data['status'] == 'dropped':
-        #     dropped.append(flight_id)
-        #     good_tuple = ('VOOO', 'V000')
-        #     agent_data[flight_id]["good_allocated"] = good_tuple
         else:
             data['status'] = 'rebased'
             edges_id = np.where(data["final_allocation"] == 1)[0]
