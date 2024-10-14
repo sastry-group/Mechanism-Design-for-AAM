@@ -15,6 +15,7 @@ class FisherGraphBuilder:
         self.vertiport_status = vertiport_status
         self.timing_info = timing_info
         self.graph = nx.DiGraph()
+        self.additional_constraints = []
 
     def build_graph(self, flight_data):
 
@@ -45,7 +46,11 @@ class FisherGraphBuilder:
                 sector_times = request["sector_times"]
                 
                 decay = flight_data["decay_factor"]
+<<<<<<< HEAD
                 for ts_delay in range(1, 6): #change this to a variable
+=======
+                for ts_delay in range(5):
+>>>>>>> 06618e14 (Changes and additional data processing)
                     new_arrival_time = arrival_time + ts_delay
                     new_departure_time = departure_time + ts_delay
                     decay_valuation = request["valuation"] * decay**ts_delay
@@ -82,6 +87,8 @@ class FisherGraphBuilder:
     def _create_path_elements(self, origin_vertiport, destination_vertiport, sector_path, sector_times,
                               departure_time, arrival_time, attributes=None):
         """Create path elements for the given path."""
+        path_additional_constraints = []
+
         # Departing vertiport
         self._add_node_if_not_exists(f"{origin_vertiport}_{departure_time}")
         dep_node = f"{origin_vertiport}_{departure_time}_dep"
@@ -89,6 +96,7 @@ class FisherGraphBuilder:
         self._add_node_if_not_exists(f"{sector_path[0]}_{sector_times[0]}")
         dep_attributes = {"valuation": 0}
         self._create_dep_arr_edges(f"{origin_vertiport}_{departure_time}", dep_node, dep_attributes)
+        path_additional_constraints.append((f"{origin_vertiport}_{departure_time}", dep_node))
         self._add_edge_if_not_exists(f"{origin_vertiport}_{departure_time}_dep", f"{sector_path[0]}_{sector_times[0]}", attributes)
 
         # Traversing sectors
@@ -99,14 +107,15 @@ class FisherGraphBuilder:
             for ts in range(current_time, next_time):
                 start_node = f"{current_sector}_{ts}"
                 end_node = f"{current_sector}_{ts+1}" 
-                if start_node == "S002_35" and end_node == "S002_36":
-                    print(f"Adding ({start_node}, {end_node})") 
+                # if start_node == "S002_35" and end_node == "S002_36":
+                #     print(f"Adding ({start_node}, {end_node})") 
                 self._add_node_if_not_exists(end_node)
                 self._add_edge_if_not_exists(start_node, end_node, sector_attributes)
 
             if i < len(sector_path) - 1:
                 next_sector = sector_path[i + 1]
                 self._add_edge_if_not_exists(f"{current_sector}_{next_time}", f"{next_sector}_{next_time}", sector_attributes)
+                path_additional_constraints.append((f"{current_sector}_{next_time}", f"{next_sector}_{next_time}"))
 
         # Arriving at vertiport
         if destination_vertiport is not None:
@@ -116,6 +125,9 @@ class FisherGraphBuilder:
             self._add_node_if_not_exists(f"{destination_vertiport}_{arrival_time}")
             self._add_edge_if_not_exists(f"{sector_path[-1]}_{sector_times[-1]}", arr_node, {"valuation": 0})
             self._add_edge_if_not_exists(arr_node, f"{destination_vertiport}_{arrival_time}", {"valuation": 0})
+            path_additional_constraints.append((arr_node, f"{destination_vertiport}_{arrival_time}"))
+        
+        self.additional_constraints.append(path_additional_constraints)
 
     def _create_sector_nodes(self, sector, start_time, end_time):
         """Create nodes for the given sector from start_time to end_time."""
