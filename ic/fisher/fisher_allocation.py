@@ -98,7 +98,39 @@ def construct_market(flights, timing_info, routes, vertiport_usage, default_good
         A[0] = -1 * A[0]
         valuations = []
         for edge in edges:
-            valuations.append(agent_graph.edges[edge]["valuation"]) # [('AC004', ('V001_13_dep', 'V002_18_arr')), ('AC005', ('V007_17_dep', 'V002_55_arr')), ('AC008', ('V003_20_dep', 'V006_42_arr'))]
+            valuations.append(agent_graph.edges[edge]["valuation"]) 
+
+        for i, constraint in enumerate(builder.additional_constraints):
+            arrival_index = edges.index(constraint[-1])
+            for edge in constraint[:-1]:
+                edge_index = edges.index(edge)
+                A = np.vstack((A, np.zeros(len(A[0]))))
+                A[-1, edge_index] = 1
+                A[-1, arrival_index] = -1
+                # valuations.append(0)
+
+        if flight_id == "AC005":
+            for row in A:
+        # row = inc_matrix[-15,:]
+                positive_indices = [edges[index] for index in np.where(row == 1)[0]]
+                negative_indices = [edges[index] for index in np.where(row == -1)[0]]
+                print(f"{positive_indices} - {negative_indices}")
+
+        for i, constraint in enumerate(builder.additional_constraints):
+            arrival_index = edges.index(constraint[-1])
+            for edge in constraint[:-1]:
+                edge_index = edges.index(edge)
+                A = np.vstack((A, np.zeros(len(A[0]))))
+                A[-1, edge_index] = 1
+                A[-1, arrival_index] = -1
+                # valuations.append(0)
+
+        if flight_id == "AC005":
+            for row in A:
+        # row = inc_matrix[-15,:]
+                positive_indices = [edges[index] for index in np.where(row == 1)[0]]
+                negative_indices = [edges[index] for index in np.where(row == -1)[0]]
+                print(f"{positive_indices} - {negative_indices}")
 
         b = np.zeros(len(A))
         b[0] = 1
@@ -640,9 +672,10 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         console.clear()
         console.print(table)
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
+        if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
             break
-        # if x_iter ==  5:
-        #     break
+        if x_iter == 1000:
+            break
 
 
         # print("Iteration: ", x_iter, "- MCE: ", round(market_clearing_error, 5), "-Ax-b. Err: ", iter_constraint_error, " - Tol: ", round(tolerance,3), "x-y error:", iter_constraint_x_y)

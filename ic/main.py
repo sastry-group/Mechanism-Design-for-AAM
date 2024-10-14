@@ -581,7 +581,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
             for af in allocated_flights:
                 print("flight id: ", af[0], "request id: ", af[1]," delay: ", af[2],"value: ", af[3], )
             print('---------')
-
+            print(f"Social welfare: {[sum(af[3] for af in allocated_flights)]}")
             allocated_flights = [i[0:2] for i in allocated_flights]
         elif method == "ff":
             allocated_flights, payments = ff_allocation_and_payment(

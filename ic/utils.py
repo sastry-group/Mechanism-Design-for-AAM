@@ -127,18 +127,19 @@ def rank_allocations(agents_data, market_data):
     return market_data, ranked_agents_list
 
 def find_dep_and_arrival_nodes(edges):
-    dep_node_found = False
-    arrival_node_found = False
+    dep_edge = False
+    arr_edge = False
     
     for edge in edges:
-        if "dep" in edge[0]:
-            dep_node_found = edge[0]
-            arrival_node_found = edge[1]
-            assert "arr" in arrival_node_found, f"Arrival node not found: {arrival_node_found}"
-            return dep_node_found, arrival_node_found
+        if "dep" in edge[1]:
+            assert not dep_edge, f"Multiple departure edges found: {dep_edge} and {edge}"
+            dep_edge = edge
+        if "arr" in edge[0]:
+            assert not arr_edge, f"Multiple arrival nodes found: {arr_edge} and {edge}"
+            arr_edge = edge
+    # assert "arr" in arrival_node_found, f"Arrival node not found: {arrival_node_found}"
     
-    return dep_node_found, arrival_node_found
-
+    return dep_edge[1], arr_edge[0]
 
 def get_next_auction_data(agent_data, market_data):
     allocation, rebased, dropped = [], [], []
@@ -154,7 +155,7 @@ def get_next_auction_data(agent_data, market_data):
                 # allocation.append((flight_id, good_tuple))
                 agent_data[flight_id]["good_allocated"] = good_tuple
                 allocation.append((flight_id, good_tuple))
-                agent_data[flight_id]["good_allocated_idx_short_list"] = data["agent_goods_list"].index(good_tuple)
+                # agent_data[flight_id]["good_allocated_idx_short_list"] = data["agent_goods_list"].index(good_tuple)
             elif round(int_allocation_long[-1]) == 1:
                 data['status'] = 'dropped'
                 dropped.append(flight_id)
@@ -168,9 +169,9 @@ def get_next_auction_data(agent_data, market_data):
                     data['status'] = 'delayed'
                     agent_data[flight_id]["good_allocated"] = good_tuple
                     allocation.append((flight_id, good_tuple))
-                    agent_data[flight_id]["good_allocated_idx_short_list"] = data["agent_goods_list"].index(good_tuple)
-                else:
-                    data['status'] = 'parked'
+                    # agent_data[flight_id]["good_allocated_idx_short_list"] = data["agent_goods_list"].index(good_tuple)
+                # else:
+                    # data['status'] = 'parked'
                     # save parked good on the agent data to make it easier to chexk if allocation is parked
 
                 print("Check allocation")
