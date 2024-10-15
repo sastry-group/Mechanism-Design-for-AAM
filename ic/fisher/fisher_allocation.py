@@ -617,7 +617,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         overdemand.append(np.sum(x[:,:-2], axis=0) - supply[:-2].flatten())
         x_ij = np.sum(x[:,:-2], axis=0) # removing default and dropout good
         excess_demand = x_ij - supply[:-2]
-        clipped_excess_demand = np.where(p[:-2] > 0,excess_demand, np.maximum(0, excess_demand)) # price removing default and dropout good
+        clipped_excess_demand = np.where(p[:-2] > 0, excess_demand, np.maximum(0, excess_demand)) # price removing default and dropout good
         market_clearing_error = np.linalg.norm(clipped_excess_demand, ord=2)
         market_clearing.append(market_clearing_error)
 
