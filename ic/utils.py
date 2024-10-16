@@ -127,6 +127,8 @@ def rank_allocations(agents_data, market_data):
     return market_data, ranked_agents_list
 
 def find_dep_and_arrival_nodes(edges):
+    if edges is None:
+        return None
     dep_edge = False
     arr_edge = False
     
@@ -145,6 +147,12 @@ def get_next_auction_data(agent_data, market_data):
     allocation, rebased, dropped = [], [], []
     for  flight_id, data in agent_data.items():
         print(f"Processing flight {flight_id}")
+        # print(f"Goods list: {data['agent_goods_list']}")
+        # print(f"Final allocation: {data['final_allocation']}")
+        allocation_indices = np.where(data["final_allocation"] == 1)[0]
+        allocation_indices = [int(alloc) for alloc in allocation_indices]
+        # print(f"Allocation indices: {allocation_indices}")
+        print(f"Allocated goods: {[data["agent_goods_list"][index] for index in allocation_indices]}")
         if data['status'] == 'allocated':
             desired_good_idx = data['desired_good_info']["desired_good_dep_to_arr"]
             int_allocation_long = np.zeros(len(data["fisher_allocation"]))
@@ -157,8 +165,8 @@ def get_next_auction_data(agent_data, market_data):
                 allocation.append((flight_id, good_tuple))
                 # agent_data[flight_id]["good_allocated_idx_short_list"] = data["agent_goods_list"].index(good_tuple)
             elif round(int_allocation_long[-1]) == 1:
-                data['status'] = 'dropped'
-                dropped.append(flight_id)
+                data['status'] = 'rebased'
+                rebased.append(flight_id)
                 good_tuple = ('VOOO', 'V000')
                 agent_data[flight_id]["good_allocated"] = good_tuple
             else:
@@ -169,19 +177,26 @@ def get_next_auction_data(agent_data, market_data):
                     data['status'] = 'delayed'
                     agent_data[flight_id]["good_allocated"] = good_tuple
                     allocation.append((flight_id, good_tuple))
-                    # agent_data[flight_id]["good_allocated_idx_short_list"] = data["agent_goods_list"].index(good_tuple)
-                # else:
-                    # data['status'] = 'parked'
-                    # save parked good on the agent data to make it easier to chexk if allocation is parked
+                else:
+                    data['status'] = 'parked'
 
                 print("Check allocation")
-        else:
-            data['status'] = 'rebased'
-            edges_id = np.where(data["final_allocation"] == 1)[0]
-            edges = [data["agent_goods_list"][edge_id] for edge_id in edges_id]
-            rebased.append(flight_id)
-            good_tuple = find_dep_and_arrival_nodes(edges)
-            agent_data[flight_id]["good_allocated"] = good_tuple
+                # else:
+                #     data['status'] = 'rebased'
+                #     good_tuple = ('VOOO', 'V000')
+                #     agent_data[flight_id]["good_allocated"] = good_tuple
+            
+        # elif data['status'] == 'dropped':
+        #     dropped.append(flight_id)
+        #     good_tuple = ('VOOO', 'V000')
+        #     agent_data[flight_id]["good_allocated"] = good_tuple
+        # else:
+        #     data['status'] = 'rebased'
+        #     edges_id = np.where(data["final_allocation"] == 1)[0]
+        #     edges = [data["agent_goods_list"][edge_id] for edge_id in edges_id]
+        #     rebased.append(flight_id)
+        #     good_tuple = find_dep_and_arrival_nodes(edges)
+        #     agent_data[flight_id]["good_allocated"] = good_tuple
     
     return allocation, rebased, dropped
 
