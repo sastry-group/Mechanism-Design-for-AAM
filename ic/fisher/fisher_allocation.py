@@ -81,13 +81,12 @@ def construct_market(flights, timing_info, routes, vertiport_usage, default_good
         inc_matrix = nx.incidence_matrix(agent_graph, nodelist=nodes, edgelist=edges, oriented=True).toarray()
         # print(f"Agent nodes: {nodes}")
         # print(f"Agent edges: {edges}")
-        if flight_id == "AC005":
-            for row in inc_matrix:
-        # row = inc_matrix[-15,:]
+        # if flight_id == "AC005":
+        # for row in inc_matrix:
 
-                positive_indices = [edges[index] for index in np.where(row == 1)[0]]
-                negative_indices = [edges[index] for index in np.where(row == -1)[0]]
-                print(f"{positive_indices} - {negative_indices}")
+        #     positive_indices = [edges[index] for index in np.where(row == 1)[0]]
+        #     negative_indices = [edges[index] for index in np.where(row == -1)[0]]
+        #     print(f"{positive_indices} - {negative_indices}")
         # print(row)
         # print(f"Incidence matrix: {inc_matrix}")
         rows_to_delete = []
@@ -166,16 +165,23 @@ def construct_market(flights, timing_info, routes, vertiport_usage, default_good
 
 def find_capacity(goods_list, route_data, vertiport_data):
     # Create a dictionary for route capacities, for now just connectin between diff vertiports
-    sector_dict = {sid: sector["hold_capacity"] for sid, sector in sectors_data.items()}
+    # sector_dict = {sid: sector["hold_capacity"] for sid, sector in sectors_data.items()}
     # route_dict = {(route["origin_vertiport_id"], route["destination_vertiport_id"]): route["capacity"] for route in route_data}
 
     capacities = np.zeros(len(goods_list)) 
     for i, (origin, destination) in enumerate(goods_list[:-2]): # excluding default/outside good - consider changing this to remove "dropout_good" and "default_good"
+        print(f"Origin: {origin} - Destination: {destination}")
         origin_base = origin.split("_")[0]
         destination_base = destination.split("_")[0]
         if origin_base[0] == 'S' and destination_base[0] == 'S':
-            # Traveling between sectors
-            capacity = sector_dict.get(origin_base, None)
+            if origin_base[3:] == destination_base[3:]:
+                # Staying within a sector
+                edge = vertiport_data.get_edge_data(origin, destination)
+                capacity = edge['hold_capacity'] - edge['hold_usage']
+            else:
+                # Traveling between sectors
+                capacity = 10
+            # capacity = sector_dict.get(origin_base, None)
         # if origin_base != destination_base:
         #     # Traveling between vertiport
         #     capacity = route_dict.get((origin_base, destination_base), None)
@@ -183,36 +189,45 @@ def find_capacity(goods_list, route_data, vertiport_data):
         elif origin_base[0] == 'V' and destination_base[0] == 'V':
             # Staying within a vertiport
             if origin.endswith('_arr'):
-                origin_time = origin.replace('_arr', '')
-                node = vertiport_data._node.get(origin_time)
-                capacity = node.get('landing_capacity') - node.get('landing_usage') 
+                edge = vertiport_data.get_edge_data(origin, destination)
+                capacity = edge['landing_capacity'] - edge['landing_usage']
+                # origin_time = origin.replace('_arr', '')
+                # node = vertiport_data._node.get(origin_time)
+                # capacity = node.get('landing_capacity') - node.get('landing_usage') 
             elif destination.endswith('_dep'):
-                destination_time = destination.replace('_dep', '')
-                node = vertiport_data._node.get(destination_time)
-                capacity = node.get('takeoff_capacity') - node.get('takeoff_usage') 
+                edge = vertiport_data.get_edge_data(origin, destination)
+                capacity = edge['takeoff_capacity'] - edge['takeoff_usage']
+                # destination_time = destination.replace('_dep', '')
+                # node = vertiport_data._node.get(destination_time)
+                # capacity = node.get('takeoff_capacity') - node.get('takeoff_usage') 
             else:
-                node = vertiport_data._node.get(origin)
+                edge = vertiport_data.get_edge_data(origin, destination)
+                # node = vertiport_data._node.get(origin)
                 # if node is None:
                     # print(f"Origin: {origin} - Destination: {destination}")
                     # print(f"Nodes: {vertiport_data.nodes}")
-                capacity = node.get('hold_capacity') - node.get('hold_usage') 
+                capacity = edge['hold_capacity'] - edge['hold_usage']
                 # print(f"Node hold capacity: {node.get('hold_capacity')}")
                 # print(f"Node usage capacity: {node.get('hold_usage')}")
-                # print(f"Capacity on edge {origin} to {destination}: {capacity}")
+                print(f"Capacity on edge {origin} to {destination}: {capacity}")
         else:
             if origin_base[0] == 'V':
                 # Traveling from vertiport to sector
                 origin_time = origin.replace('_dep', '')
-                node = vertiport_data._node.get(origin_time)
-                capacity = node.get('takeoff_capacity') - node.get('takeoff_usage')
+                edge = vertiport_data.get_edge_data(origin_time, origin)
+                capacity = edge['takeoff_capacity'] - edge['takeoff_usage']
+                # node = vertiport_data._node.get(origin_time)
+                # capacity = node.get('takeoff_capacity') - node.get('takeoff_usage')
             elif destination_base[0] == 'V':
                 # Traveling from sector to vertiport
                 destination_time = destination.replace('_arr', '')
-                node = vertiport_data._node.get(destination_time)
-                # if node is None:
-                #     print(f"Origin: {origin} - Destination: {destination}")
-                #     print(f"Nodes: {vertiport_data.nodes}")
-                capacity = node.get('landing_capacity') - node.get('landing_usage')
+                edge = vertiport_data.get_edge_data(destination, destination_time)
+                capacity = edge['landing_capacity'] - edge['landing_usage']
+                # node = vertiport_data._node.get(destination_time)
+                # # if node is None:
+                # #     print(f"Origin: {origin} - Destination: {destination}")
+                # #     print(f"Nodes: {vertiport_data.nodes}")
+                # capacity = node.get('landing_capacity') - node.get('landing_usage')
         # print(f"Capacity on edge {origin} to {destination}: {capacity}")
         capacities[i] = capacity
     
@@ -674,7 +689,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
             break
-        if x_iter == 1000:
+        if x_iter == 500:
             break
 
 
@@ -964,7 +979,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
                                   output_folder=None, save_file=None, initial_allocation=True, design_parameters=None):
 
     # # building the graph
-    market_auction_time=timing_info["start_time"]
+    market_auction_time=timing_info["auction_start"]
     # start_time_graph_build = time.time()
     # builder = FisherGraphBuilder(vertiport_usage, timing_info)
     # market_graph = builder.build_graph(flights)
@@ -1038,9 +1053,11 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
 
     print("---FINAL ALLOCATION---")
     # for agent_x, desired_good in zip(x, desired_goods):
-    print(f"Agent allocation of goods: {[goods_list[i] for i in np.where(x[2] > 0.9)[0]]}")
-    print(f"Partial allocation: {[goods_list[i] for i in np.where(np.logical_and(x[2] > 0.1, x[2] <= 0.9))[0]]}")
-    print(f"Partially allocated good values: {[x[2][i] for i in np.where(np.logical_and(x[2] > 0.1, x[2] <= 0.9))[0]]}")
+    # print(f"Agent allocation of goods: {[goods_list[i] for i in np.where(x[0] > 0.1)[0]]}")
+    print(f"Partial allocation for 0th agent: {[goods_list[i] for i in np.where(x[0] > 0.1)[0]]}")
+    print(f"Partial allocation for 1st agent: {[goods_list[i] for i in np.where(x[1] > 0.1)[0]]}")
+    print(f"Partially allocated good values: {[x[0][i] for i in np.where(x[0] > 0.1)[0]]}")
+    print(f"Partially allocated good values: {[x[1][i] for i in np.where(x[1] > 0.1)[0]]}")
     # print(f"Full agent allocations: {x[2][-2]}")
     # print(f"Goods list: {goods_list}")
     # print(f"{np.where(np.array(goods_list) == ('S001_37', 'S002_37'))}")
@@ -1058,7 +1075,8 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     'desired_goods': desired_goods,
     'goods_list': goods_list,
     'capacity': capacity,
-    'data_to_plot': data_to_plot}
+    'data_to_plot': data_to_plot,
+    'agent_goods_lists': agent_goods_lists}
     save_data(output_folder, "fisher_data", market_auction_time, **extra_data)
     plotting_market(data_to_plot, desired_goods, output_folder, market_auction_time)
     
