@@ -39,8 +39,8 @@ from utils import store_agent_data, process_allocations, rank_allocations, store
 
 INTEGRAL_APPROACH = False
 UPDATED_APPROACH = True
-TOL_ERROR = 1e-4
-MAX_NUM_ITERATIONS = 5000
+TOL_ERROR = 1e-3
+MAX_NUM_ITERATIONS = 10000
 
 
 def construct_market(flights, timing_info, routes, vertiport_usage, default_good_valuation=1, dropout_good_valuation=-1, BETA=1):
@@ -228,7 +228,7 @@ def find_capacity(goods_list, route_data, vertiport_data):
                 # #     print(f"Origin: {origin} - Destination: {destination}")
                 # #     print(f"Nodes: {vertiport_data.nodes}")
                 # capacity = node.get('landing_capacity') - node.get('landing_usage')
-        # print(f"Capacity on edge {origin} to {destination}: {capacity}")
+        print(f"Capacity on edge {origin} to {destination}: {capacity}")
         capacities[i] = capacity
     
     capacities[-2] = 100 # default/outside good
@@ -445,6 +445,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_freque
     num_goods = len(p)
 
     if x_iter % update_frequency == 0:
+        print(f"{x_iter % update_frequency}")
         # lambda_i = r_i.T @ b_i # update lambda
         lambda_i = r_i * b_i[0]
         w_adj = w_i + lambda_i
@@ -617,11 +618,11 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
 
 
     while x_iter <= MAX_NUM_ITERATIONS:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
-        beta_init = beta
         # if x_iter == 0: 
         #     beta_init = beta
         # else:
         #     beta = beta_init/np.sqrt(x_iter)
+            # beta = beta_init / (x_iter + 1)
         
         if x_iter == 0:
             x = np.zeros((num_agents, len(p)))
@@ -945,7 +946,7 @@ def track_desired_goods(flights, goods_list):
         flights_desired_goods = [desired_edge]
         for i in range(appearance_time, desired_dep_time):
             flights_desired_goods.append((f"{origin_vertiport}_{i}", f"{origin_vertiport}_{i+1}"))
-        flights_desired_goods.append((f"{origin_vertiport}_{desired_dep_time}_dep", f"{desired_request["sector_path"][0]}_{desired_request["sector_times"][0]}"))
+        flights_desired_goods.append((f"{origin_vertiport}_{desired_dep_time}_dep", f"{desired_request['sector_path'][0]}_{desired_request['sector_times'][0]}"))
         for i in range(len(desired_request["sector_path"])):
             sector = desired_request["sector_path"][i]
             start_time = desired_request["sector_times"][i]
@@ -981,6 +982,20 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
 
     # # building the graph
     market_auction_time=timing_info["auction_start"]
+    if market_auction_time>5:
+        price_default_good = 10
+        default_good_valuation = 1
+        dropout_good_valuation = 40
+        BETA = 50
+        lambda_frequency = 50
+        price_upper_bound = 3000
+    else:
+        price_default_good = design_parameters["price_default_good"]
+        default_good_valuation = design_parameters["default_good_valuation"]
+        dropout_good_valuation = design_parameters["dropout_good_valuation"]
+        BETA = design_parameters["beta"]
+        lambda_frequency = design_parameters["lambda_frequency"]
+        price_upper_bound = design_parameters["price_upper_bound"]       
     # start_time_graph_build = time.time()
     # builder = FisherGraphBuilder(vertiport_usage, timing_info)
     # market_graph = builder.build_graph(flights)
@@ -988,22 +1003,21 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
 
     #Extracting design parameters
     # we should create a config file for this
-    
-    if design_parameters:
-        price_default_good = design_parameters["price_default_good"]
-        default_good_valuation = design_parameters["default_good_valuation"]
-        dropout_good_valuation = design_parameters["dropout_good_valuation"]
-        BETA = design_parameters["beta"]
-        lambda_frequency = design_parameters["lambda_frequency"]
-        price_upper_bound = design_parameters["price_upper_bound"]
+    # if design_parameters:
+    #     price_default_good = design_parameters["price_default_good"]
+    #     default_good_valuation = design_parameters["default_good_valuation"]
+    #     dropout_good_valuation = design_parameters["dropout_good_valuation"]
+    #     BETA = design_parameters["beta"]
+    #     lambda_frequency = design_parameters["lambda_frequency"]
+    #     price_upper_bound = design_parameters["price_upper_bound"]
 
-    else:
-        BETA = 1 # chante to 1/T
-        dropout_good_valuation = -1
-        default_good_valuation = 1
-        price_default_good = 10
-        lambda_frequency = 1
-        price_upper_bound = 1000
+    # else:
+    #     BETA = 1 # chante to 1/T
+    #     dropout_good_valuation = -1
+    #     default_good_valuation = 1
+    #     price_default_good = 10
+    #     lambda_frequency = 1
+    #     price_upper_bound = 1000
 
     # Construct market
     agent_information, market_information, bookkeeping = construct_market(flights, timing_info, routes_data, vertiport_usage, 
