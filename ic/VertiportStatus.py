@@ -147,7 +147,7 @@ class VertiportStatus(nx.DiGraph):
                 assert self[time_extended_origin_start][time_extended_origin_end]["hold_usage"] >= 0 and \
                     self[time_extended_origin_start][time_extended_origin_end]["hold_usage"] <= self[time_extended_origin_start][time_extended_origin_end]["hold_capacity"], \
                     f"Vertiport {origin_vertiport} at time {start_time} to {next_time} has incorrect hold usage."
-                print(f"Adding {time_extended_origin_start} to {time_extended_origin_end} with current hold_usage {self[time_extended_origin_start][time_extended_origin_end]["hold_usage"]} and capacity {self[time_extended_origin_start][time_extended_origin_end]["hold_capacity"]}")
+                print(f"Adding {time_extended_origin_start} to {time_extended_origin_end} with current hold_usage {self[time_extended_origin_start][time_extended_origin_end]['hold_usage']} and capacity {self[time_extended_origin_start][time_extended_origin_end]['hold_capacity']}")
                 
             
             # Add the aircraft to the destination vertiport
@@ -158,7 +158,7 @@ class VertiportStatus(nx.DiGraph):
                 assert self[time_extended_destination_start][time_extended_destination_end]["hold_usage"] >= 0 and \
                     self[time_extended_destination_start][time_extended_destination_end]["hold_usage"] <= self[time_extended_destination_start][time_extended_destination_end]["hold_capacity"], \
                     f"Vertiport {destination_vertiport} at time {start_time} to {next_time} has incorrect hold usage."
-                print(f"Adding {time_extended_destination_start} to {time_extended_destination_end} with current hold_usage {self[time_extended_destination_start][time_extended_destination_end]["hold_usage"]} and capacity {self[time_extended_destination_start][time_extended_destination_end]["hold_capacity"]}")
+                print(f"Adding {time_extended_destination_start} to {time_extended_destination_end} with current hold_usage {self[time_extended_destination_start][time_extended_destination_end]['hold_usage']} and capacity {self[time_extended_destination_start][time_extended_destination_end]['hold_capacity']}")
                 
         # Add aircraft sector traversal
         sector_path = request["sector_path"]
