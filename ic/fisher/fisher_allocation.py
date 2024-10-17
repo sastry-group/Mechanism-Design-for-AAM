@@ -617,17 +617,18 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
 
 
     while x_iter <= MAX_NUM_ITERATIONS:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
-        if x_iter == 0: 
-            beta_init = beta
-        else:
-            beta = beta_init/np.sqrt(x_iter)
-        # if x_iter == 0:
-        #     x = np.zeros((num_agents, len(p)))
-        #     x[:,:-2] = y
-        #     adjusted_budgets = w
+        beta_init = beta
+        # if x_iter == 0: 
+        #     beta_init = beta
         # else:
-        #     x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, x_iter, lambda_frequency, rational=rational, integral=INTEGRAL_APPROACH)        
-        x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, x_iter, lambda_frequency, rational=rational, integral=INTEGRAL_APPROACH)
+        #     beta = beta_init/np.sqrt(x_iter)
+        
+        if x_iter == 0:
+            x = np.zeros((num_agents, len(p)))
+            x[:,:-2] = y
+            adjusted_budgets = w
+        else:
+            x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, x_iter, lambda_frequency, rational=rational, integral=INTEGRAL_APPROACH)
         agent_allocations.append(x) # 
         overdemand.append(np.sum(x[:,:-2], axis=0) - supply[:-2].flatten())
         x_ij = np.sum(x[:,:-2], axis=0) # removing default and dropout good
@@ -689,7 +690,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
             break
-        if x_iter == 500:
+        if x_iter == 1000:
             break
 
 
