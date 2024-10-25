@@ -474,7 +474,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         # Get the current flights
         # current_flight_ids = ordered_flights[appearance_time]
         
-        # if prev_auction_time > 5:
+        # if prev_auction_time > 10:
         #     break
 
         # This is to ensure it doest not rebase the flights beyond simulation end time
