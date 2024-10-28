@@ -404,7 +404,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
 
     file_name = file_path.split("/")[-1].split(".")[0]
     # data = load_json(file_path)
-    output_folder = f"ic/results/{file_name}_{method}_{design_parameters['beta']}_{design_parameters['dropout_good_valuation']}_{design_parameters['default_good_valuation']}_{design_parameters['price_default_good']}_{design_parameters['lambda_frequency']}_{design_parameters['price_upper_bound']}_receding"
+    output_folder = f"ic/results/{file_name}_{method}_beta{design_parameters['beta']}_dval{design_parameters['dropout_good_valuation']}_outval{design_parameters['default_good_valuation']}_pout{design_parameters['price_default_good']}_freq{design_parameters['lambda_frequency']}_pbound{design_parameters['price_upper_bound']}_receding"
     Path(output_folder).mkdir(parents=True, exist_ok=True)
 
     flights = data["flights"]
@@ -508,8 +508,8 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         # Get the current flights
         # current_flight_ids = ordered_flights[appearance_time]
         
-        # if prev_auction_time > 10:
-        #     break
+        if prev_auction_time > 50:
+            break
 
         # This is to ensure it doest not rebase the flights beyond simulation end time
         if rebased_flights and auction_time <= last_auction + 1:
