@@ -324,6 +324,8 @@ def vcg_allocation_and_payment(vertiport_usage, flights, timing_info, congestion
                     allocated_request_id = flights_allocated[flight_id]
                     SW_minus_i -= fleet["rho"] * flights[flight_id]["requests"][allocated_request_id]["bid"]
                 else:
+                    print(flight_id)
+                    print(flights)
                     SW_minus_i -= fleet["rho"] * flights[flight_id]["requests"]["000"]["bid"]
 
             # Get the objective value for the allocation without the complete fleet

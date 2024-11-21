@@ -357,6 +357,8 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
 
     file_name = file_path.split("/")[-1].split(".")[0]
     # data = load_json(file_path)
+    
+    # save allocation outputs here v
     output_folder = f"ic/results/{file_name}_{design_parameters['beta']}_{design_parameters['dropout_good_valuation']}_{design_parameters['default_good_valuation']}_{design_parameters['price_default_good']}_{design_parameters['lambda_frequency']}"
     Path(output_folder).mkdir(parents=True, exist_ok=True)
 
@@ -377,14 +379,13 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
             vertiport (str): The vertiport id.
             q (int): The number of aircraft in the hold.
         """
-        
-        assert float(q).is_integer() and q >= 0 and q < len(congestion_params["C"][vertiport]), "q must be a non-negative integer."
-        return congestion_params["C"][vertiport][q]
+        assert float(q).is_integer() and q >= 0 and q < len(congestion_params["C"]), "q must be a non-negative integer."
+        return congestion_params["C"][q]
     congestion_info = {"lambda": congestion_params["lambda"], "C": C}
 
     # Create vertiport graph and add starting aircraft positions
     vertiport_usage = VertiportStatus(vertiports, data["routes"], timing_info)
-    # vertiport_usage.add_aircraft(flights)
+    vertiport_usage.add_aircraft(flights)
 
 
     start_time = timing_info["start_time"]
@@ -494,6 +495,9 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
             )
             # Update system status based on allocation
             #print(allocated_flights)
+
+            # DUMP INTO JSON HERE
+
             vertiport_usage = step_simulation(
                 vertiport_usage, vertiports, flights, allocated_flights, stack_commands
             )
