@@ -1,11 +1,13 @@
 import json
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+import matplotlib.cm as cm
+import numpy as np
 
-with open('test_cases/gui_v1.json', 'r') as file:
+with open('test_cases/casef_20240925_175552_mod2.json', 'r') as file:
     data = json.load(file)
 
-granularity = 10
+granularity = 3
 
 lats = []
 lons = []
@@ -18,11 +20,28 @@ minlon = min(data["gridBounds"][0]["lng"],data["gridBounds"][1]["lng"])
 maxlat = max(data["gridBounds"][0]["lat"],data["gridBounds"][1]["lat"])
 maxlon = max(data["gridBounds"][0]["lng"],data["gridBounds"][1]["lng"])
 
-data["flights"]["AC001"]["allocated_request"] = "002"
-data["flights"]["AC002"]["allocated_request"] = "002"
+data["flights"]["AC001"]["allocated_request"] = "001"
+data["flights"]["AC002"]["allocated_request"] = "001"
 data["flights"]["AC003"]["allocated_request"] = "001"
+data["flights"]["AC004"]["allocated_request"] = "001"
+data["flights"]["AC005"]["allocated_request"] = "001"
+data["flights"]["AC006"]["allocated_request"] = "001"
+data["flights"]["AC007"]["allocated_request"] = "001"
+data["flights"]["AC008"]["allocated_request"] = "001"
+data["flights"]["AC009"]["allocated_request"] = "001"
+data["flights"]["AC010"]["allocated_request"] = "001"
+data["flights"]["AC011"]["allocated_request"] = "001"
+data["flights"]["AC012"]["allocated_request"] = "001"
+data["flights"]["AC013"]["allocated_request"] = "001"
+data["flights"]["AC014"]["allocated_request"] = "001"
+data["flights"]["AC015"]["allocated_request"] = "001"
+data["flights"]["AC016"]["allocated_request"] = "001"
+data["flights"]["AC017"]["allocated_request"] = "001"
+data["flights"]["AC018"]["allocated_request"] = "001"
+data["flights"]["AC019"]["allocated_request"] = "001"
+data["flights"]["AC020"]["allocated_request"] = "001"
 
-bg = plt.imread("test_cases/gui_v1.png")
+bg = plt.imread("test_cases/pres_bg.png")
 
 def get_latlon(frame, flight_id):
     
@@ -62,10 +81,9 @@ for i in data["flights"]:
     flight_lat += [lat]
     flight_lon += [lon]
 
-flight_lat, flight_lon
-
-fig, ax = plt.subplots()
-plt.scatter(lons, lats, color='red', label='Vertiports', s= 100)
+fig, ax = plt.subplots(figsize=(5,4))
+plt.tight_layout()
+plt.scatter(lons, lats, color='blue', label='Vertiports', s= 80)
 
 # Set the axis limits according to the grid bounds
 plt.xlim(minlon, maxlon)
@@ -74,11 +92,16 @@ plt.ylim(minlat, maxlat)
 # Add labels and a title
 plt.xlabel('Longitude')
 plt.ylabel('Latitude')
-plt.title('Latitude and Longitude Points')
+plt.title('AAM Simulation')
 
-animated_points, = ax.plot(flight_lon, flight_lat, 'go', label='Flights', marker = '^')
-ax.imshow(bg,extent=[minlon, maxlon, maxlat, minlat], origin='lower')
 
+num_flights = len(data["flights"])
+colors = cm.plasma(np.linspace(0, 1, num_flights)) 
+
+#animated_points, = ax.plot(flight_lon, flight_lat, c = colors, label='Flights', marker = '^')
+ax.imshow(bg,extent=[minlon, maxlon, maxlat, minlat], origin='lower', aspect='equal')
+
+scatter = ax.scatter(flight_lon, flight_lat, c=colors, s=60, label='Flights', marker='^')
 
 def update(frame):
     new_lat = []
@@ -87,10 +110,13 @@ def update(frame):
         lat_,lon_ = get_latlon(frame, i)
         new_lat += [lat_]
         new_lon += [lon_]
-    animated_points.set_data(new_lon, new_lat)
-    print(frame)
+    scatter.set_offsets(np.c_[new_lon, new_lat])  # Update positions
+    #animated_points.set_data(new_lon, new_lat)
 
-ani = FuncAnimation(fig, update, frames=data["timing_info"]["end_time"] * granularity, interval=25, repeat = False)
+ani = FuncAnimation(fig, update, frames=data["timing_info"]["end_time"] * granularity, interval=15, repeat = False)
+
+ani.save("sim/aam_sim9.gif", writer="pillow", fps=60)
+
 
 # Show the plot
 plt.legend()
