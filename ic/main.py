@@ -11,6 +11,7 @@ import time
 import math
 import numpy as np
 import re
+import copy
 
 
 # Add the bluesky package to the path
@@ -381,6 +382,29 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         """
         assert float(q).is_integer() and q >= 0 and q < len(congestion_params["C"]), "q must be a non-negative integer."
         return congestion_params["C"][q]
+    
+    #add delays for vcg
+    max_delay = 10
+    if(method == 'vcg'):
+        for fl in data["flights"]:
+            dr = {}
+            for j, r in enumerate(data["flights"][fl]["requests"]):
+                if(r=='000'):
+                    dr['000'] = copy.deepcopy(data["flights"][fl]["requests"][r])
+                    dr['000']['delay'] = 0
+                    continue
+                for i in range(max_delay + 1):
+                    k = copy.deepcopy(data["flights"][fl]["requests"][r])
+                    k["request_departure_time"] += i
+                    k["request_arrival_time"] += i
+                    k["bid"] *= pow(0.95,i)
+                    k["valuation"] *= pow(0.95,i)
+                    k["delay"] = i
+                    id_ = str(1 + (j-1)*(max_delay+1) + i)
+                    s = '0' * (3 - len(id_)) + str(id_)
+                    dr[s] = k
+            data["flights"][fl]["requests"] = dr
+
     congestion_info = {"lambda": congestion_params["lambda"], "C": C}
 
     # Create vertiport graph and add starting aircraft positions
