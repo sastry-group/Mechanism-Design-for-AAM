@@ -60,11 +60,12 @@ To install and run the BlueSky simulator, follow these steps:
     Figure 1. We compare our approach to a first-come, first-served approach across different values of lambda (trade-off between minimizing congestion costs and maximizing sum of valuations). Our approach creates a Pareto frontier of the trade-off, which the other approach is inside of. Congestion costs are the sum of C() for all vertiports and times, and the sum of valuations is the sum of the valuations of the allocated requests.
 
 
-Below are Bluesky instructions.
+### Below are Bluesky instructions.
+We have a script to output a scenario file to visualize results in a Bluesky. 
 
 For more detailed installation instructions and troubleshooting, please refer to the [BlueSky Wiki](https://github.com/TUDelft-CNS-ATM/bluesky/wiki).
 
-# 10 years of BlueSky!
+<!-- # 10 years of BlueSky!
 This year marks BlueSky's tenth anniversary, which we are celebrating with a two-day [workshop](https://forms.office.com/e/mXamnSYba5) on November 8-9.
 ![workshop programme](https://github.com/TUDelft-CNS-ATM/bluesky/blob/a20cf4497d6fc57d859970891026db7ba3574807/docs/workshop_programme.png)
 
@@ -116,4 +117,4 @@ containing the same commands with a time stamp before the command ("HH:MM:SS.hh>
 
 ## Contributions
 BlueSky can be considered 'perpetual beta'. We would like to encourage anyone with a strong interest in
-ATM and/or Python to join us. Please feel free to comment, criticise, and contribute to this project. Please send suggestions, proposed changes or contributions through GitHub pull requests, preferably after debugging it and optimising it for run-time performance.
+ATM and/or Python to join us. Please feel free to comment, criticise, and contribute to this project. Please send suggestions, proposed changes or contributions through GitHub pull requests, preferably after debugging it and optimising it for run-time performance. -->
