@@ -1,0 +1,106 @@
+\hypertarget{classVertiportStatus_1_1VertiportStatus}{}\doxysection{Vertiport\+Status.\+Vertiport\+Status Class Reference}
+\label{classVertiportStatus_1_1VertiportStatus}\index{VertiportStatus.VertiportStatus@{VertiportStatus.VertiportStatus}}
+
+
+Inheritance diagram for Vertiport\+Status.\+Vertiport\+Status\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=202pt]{classVertiportStatus_1_1VertiportStatus__inherit__graph}
+\end{center}
+\end{figure}
+
+
+Collaboration diagram for Vertiport\+Status.\+Vertiport\+Status\+:\nopagebreak
+\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[width=202pt]{classVertiportStatus_1_1VertiportStatus__coll__graph}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{classVertiportStatus_1_1VertiportStatus_a9f9f10f4bc44cce4a89c736c4815e0fb}{\+\_\+\+\_\+init\+\_\+\+\_\+}} (self, \mbox{\hyperlink{classVertiportStatus_1_1VertiportStatus_a0f61110071fa81cc0d26a3c8f8b90992}{vertiports}}, edges, timing, data=None, $\ast$$\ast$attr)
+\item 
+def \mbox{\hyperlink{classVertiportStatus_1_1VertiportStatus_a35243b709aa671d4b770a77c03369af6}{add\+\_\+aircraft}} (self, flights)
+\item 
+def \mbox{\hyperlink{classVertiportStatus_1_1VertiportStatus_ab29480d497b165de8ae8f33c6a91595f}{move\+\_\+aircraft}} (self, origin\+\_\+vertiport, request)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classVertiportStatus_1_1VertiportStatus_aec64a265175ebc965a61ab4cee2eec4a}{time\+\_\+steps}}
+\item 
+\mbox{\hyperlink{classVertiportStatus_1_1VertiportStatus_a0f61110071fa81cc0d26a3c8f8b90992}{vertiports}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+\begin{DoxyVerb}Class for storing the status of vertiports.
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classVertiportStatus_1_1VertiportStatus_a9f9f10f4bc44cce4a89c736c4815e0fb}\label{classVertiportStatus_1_1VertiportStatus_a9f9f10f4bc44cce4a89c736c4815e0fb}} 
+\index{VertiportStatus.VertiportStatus@{VertiportStatus.VertiportStatus}!\_\_init\_\_@{\_\_init\_\_}}
+\index{\_\_init\_\_@{\_\_init\_\_}!VertiportStatus.VertiportStatus@{VertiportStatus.VertiportStatus}}
+\doxysubsubsection{\texorpdfstring{\_\_init\_\_()}{\_\_init\_\_()}}
+{\footnotesize\ttfamily def Vertiport\+Status.\+Vertiport\+Status.\+\_\+\+\_\+init\+\_\+\+\_\+ (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{vertiports,  }\item[{}]{edges,  }\item[{}]{timing,  }\item[{}]{data = {\ttfamily None},  }\item[{$\ast$$\ast$}]{attr }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Create time-extended vertiport graph.
+
+Args:
+    vertiports (dictionary): Dictionary of vertiports with ids as keys containing 
+        latitude, longitude, landing_capacity, takeoff_capacity, and hold_capacity.
+    edges (list): List of edges where an edge has an origin_vertiport_id and destination_vertport_id.
+    timing (dictionary): Dictionary of timing information for the simulation including
+        start_time, end_time, and time_step.
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classVertiportStatus_1_1VertiportStatus_a35243b709aa671d4b770a77c03369af6}\label{classVertiportStatus_1_1VertiportStatus_a35243b709aa671d4b770a77c03369af6}} 
+\index{VertiportStatus.VertiportStatus@{VertiportStatus.VertiportStatus}!add\_aircraft@{add\_aircraft}}
+\index{add\_aircraft@{add\_aircraft}!VertiportStatus.VertiportStatus@{VertiportStatus.VertiportStatus}}
+\doxysubsubsection{\texorpdfstring{add\_aircraft()}{add\_aircraft()}}
+{\footnotesize\ttfamily def Vertiport\+Status.\+Vertiport\+Status.\+add\+\_\+aircraft (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{flights }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Add starting vertiport usage information.
+
+Args:
+    flights (list): List of flights with at least origin_vertiport_id information.
+\end{DoxyVerb}
+ \mbox{\Hypertarget{classVertiportStatus_1_1VertiportStatus_ab29480d497b165de8ae8f33c6a91595f}\label{classVertiportStatus_1_1VertiportStatus_ab29480d497b165de8ae8f33c6a91595f}} 
+\index{VertiportStatus.VertiportStatus@{VertiportStatus.VertiportStatus}!move\_aircraft@{move\_aircraft}}
+\index{move\_aircraft@{move\_aircraft}!VertiportStatus.VertiportStatus@{VertiportStatus.VertiportStatus}}
+\doxysubsubsection{\texorpdfstring{move\_aircraft()}{move\_aircraft()}}
+{\footnotesize\ttfamily def Vertiport\+Status.\+Vertiport\+Status.\+move\+\_\+aircraft (\begin{DoxyParamCaption}\item[{}]{self,  }\item[{}]{origin\+\_\+vertiport,  }\item[{}]{request }\end{DoxyParamCaption})}
+
+\begin{DoxyVerb}Move aircraft from one vertiport to another.
+
+Args:
+    origin_vertiport (str): Vertiport id where the aircraft is coming from.
+    request (dict): Dictionary containing information about the aircraft movement request
+        including destination_vertiport_id, request_departure_time, and request_arrival_time.
+\end{DoxyVerb}
+ 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classVertiportStatus_1_1VertiportStatus_aec64a265175ebc965a61ab4cee2eec4a}\label{classVertiportStatus_1_1VertiportStatus_aec64a265175ebc965a61ab4cee2eec4a}} 
+\index{VertiportStatus.VertiportStatus@{VertiportStatus.VertiportStatus}!time\_steps@{time\_steps}}
+\index{time\_steps@{time\_steps}!VertiportStatus.VertiportStatus@{VertiportStatus.VertiportStatus}}
+\doxysubsubsection{\texorpdfstring{time\_steps}{time\_steps}}
+{\footnotesize\ttfamily Vertiport\+Status.\+Vertiport\+Status.\+time\+\_\+steps}
+
+\mbox{\Hypertarget{classVertiportStatus_1_1VertiportStatus_a0f61110071fa81cc0d26a3c8f8b90992}\label{classVertiportStatus_1_1VertiportStatus_a0f61110071fa81cc0d26a3c8f8b90992}} 
+\index{VertiportStatus.VertiportStatus@{VertiportStatus.VertiportStatus}!vertiports@{vertiports}}
+\index{vertiports@{vertiports}!VertiportStatus.VertiportStatus@{VertiportStatus.VertiportStatus}}
+\doxysubsubsection{\texorpdfstring{vertiports}{vertiports}}
+{\footnotesize\ttfamily Vertiport\+Status.\+Vertiport\+Status.\+vertiports}
+
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{VertiportStatus_8py}{Vertiport\+Status.\+py}}\end{DoxyCompactItemize}

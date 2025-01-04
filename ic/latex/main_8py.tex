@@ -1,0 +1,79 @@
+\hypertarget{main_8py}{}\doxysection{main.\+py File Reference}
+\label{main_8py}\index{main.py@{main.py}}
+\doxysubsection*{Namespaces}
+\begin{DoxyCompactItemize}
+\item 
+ \mbox{\hyperlink{namespacemain}{main}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \mbox{\hyperlink{namespacemain_a5fca69960fbbd1933ee0b8cdfbe3de4f}{main.\+load\+\_\+json}} (file=None)
+\item 
+def \mbox{\hyperlink{namespacemain_abd724801d6a338fdbc6a7eebe63bc51b}{main.\+get\+\_\+vehicle\+\_\+info}} (flight, lat1, lon1, lat2, lon2)
+\item 
+def \mbox{\hyperlink{namespacemain_a16ddff81dd96d575337ea741dfd89fdf}{main.\+get\+\_\+lat\+\_\+lon}} (vertiport)
+\item 
+def \mbox{\hyperlink{namespacemain_aece3c882749514d2e33b2e9b9411d815}{main.\+calculate\+\_\+bearing}} (lat1, lon1, lat2, lon2)
+\item 
+def \mbox{\hyperlink{namespacemain_aa723bd31dea0844e032d1421aa1e6e8e}{main.\+create\+\_\+allocated\+\_\+area}} (lat1, lon1, lat2, lon2, width)
+\item 
+def \mbox{\hyperlink{namespacemain_aa73cdb55c4c781bc476b86e013da934d}{main.\+add\+\_\+commands\+\_\+for\+\_\+flight}} (flight\+\_\+id, flight, request, origin\+\_\+vertiport, destination\+\_\+vertiport, stack\+\_\+commands)
+\item 
+def \mbox{\hyperlink{namespacemain_a0974df1bb3aebffd79a0f84278cd3394}{main.\+step\+\_\+simulation}} (vertiport\+\_\+usage, vertiports, flights, allocated\+\_\+flights, stack\+\_\+commands)
+\item 
+def \mbox{\hyperlink{namespacemain_a44f8837fcfa92a578e919f429035f90b}{main.\+run\+\_\+scenario}} (data, scenario\+\_\+path, scenario\+\_\+name, file\+\_\+path, method=\char`\"{}fisher\char`\"{})
+\item 
+def \mbox{\hyperlink{namespacemain_adb152bd1404612315b9f5e50a284eb08}{main.\+evaluate\+\_\+scenario}} (path\+\_\+to\+\_\+scenario\+\_\+file, run\+\_\+gui=False)
+\item 
+def \mbox{\hyperlink{namespacemain_aa4e275f5197b9fbfc23b0cd9b7632c57}{main.\+convert\+\_\+time}} (time)
+\item 
+def \mbox{\hyperlink{namespacemain_a8b4943ade6382fe001851d6306f13cbd}{main.\+write\+\_\+scenario}} (scenario\+\_\+folder, scenario\+\_\+name, stack\+\_\+commands)
+\end{DoxyCompactItemize}
+\doxysubsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{namespacemain_a9cfe362268fd6a2b8c4268ea6a9e0699}{main.\+top\+\_\+level\+\_\+path}} = Path(\+\_\+\+\_\+file\+\_\+\+\_\+).resolve().parent.\+parent
+\item 
+int \mbox{\hyperlink{namespacemain_a5065e9c833ad1c4931d0ddfd145698ac}{main.\+T\+\_\+\+STEP}} = 10000
+\item 
+bool \mbox{\hyperlink{namespacemain_a6d1dc80d8f6e187a9d7209edd99e16e7}{main.\+MANEUVER}} = True
+\item 
+bool \mbox{\hyperlink{namespacemain_a4dc90e275dae34ba42b761ed33e83a41}{main.\+VISUALIZE}} = False
+\item 
+bool \mbox{\hyperlink{namespacemain_a252c4581ae0c850ad41fcb1fab8b2332}{main.\+LOG}} = True
+\item 
+int \mbox{\hyperlink{namespacemain_a7c8a4f30bc8040be08071aaf710fea3f}{main.\+SIMDT}} = 1
+\item 
+\mbox{\hyperlink{namespacemain_a9f3911118b78333a8f963e063f12c7ed}{main.\+parser}} = argparse.\+Argument\+Parser(description=\char`\"{}Process a true/false argument.\char`\"{})
+\item 
+\mbox{\hyperlink{namespacemain_a8bdc3f0ab6b56e404da0a4da489942ae}{main.\+action}}
+\item 
+\mbox{\hyperlink{namespacemain_a1fdabe2077f86bd72dbb433530b1f192}{main.\+help}}
+\item 
+\mbox{\hyperlink{namespacemain_add4e4c9e96030cc8c55af23e1b21a1c1}{main.\+type}}
+\item 
+\mbox{\hyperlink{namespacemain_a26f656d825a0ffd09a95f3e7953445e5}{main.\+str}}
+\item 
+\mbox{\hyperlink{namespacemain_a1344c1e698a1e688c7ae0828f75d5a48}{main.\+required}}
+\item 
+\mbox{\hyperlink{namespacemain_a0c5b8ab1603c8c5b8db5e1128a757fea}{main.\+True}}
+\item 
+\mbox{\hyperlink{namespacemain_a10926d7b7053badc9647defe0abb8adc}{main.\+args}} = parser.\+parse\+\_\+args()
+\item 
+\mbox{\hyperlink{namespacemain_a05ac9790cc1390eb6166c450286392c2}{main.\+file\+\_\+path}} = args.\+file
+\item 
+def \mbox{\hyperlink{namespacemain_a20bd89ef6e41cb2fdf7db251a4c62814}{main.\+test\+\_\+case\+\_\+data}} = load\+\_\+json(file\+\_\+path)
+\item 
+\mbox{\hyperlink{namespacemain_ae83d131f7f1e661ba03da60ed93f39cc}{main.\+file\+\_\+name}} = Path(file\+\_\+path).name
+\item 
+\mbox{\hyperlink{namespacemain_a8eb551bfdf698c0dbc27ed3f4cd68bb6}{main.\+SCN\+\_\+\+FOLDER}} = str(top\+\_\+level\+\_\+path) + args.\+scn\+\_\+folder
+\item 
+\mbox{\hyperlink{namespacemain_a22c2a6dbfc9500343d1b762b1d544e35}{main.\+SCN\+\_\+\+NAME}} = file\+\_\+name.\+split(\char`\"{}.\char`\"{})\mbox{[}0\mbox{]}
+\item 
+string \mbox{\hyperlink{namespacemain_ac5cfa575b843cf19d498d00e0dd89d9d}{main.\+path}} = f\char`\"{}\{SCN\+\_\+\+FOLDER\}/\{SCN\+\_\+\+NAME\}.scn\char`\"{}
+\item 
+def \mbox{\hyperlink{namespacemain_a6d1816eaf496b6ee02879666676d6d77}{main.\+path\+\_\+to\+\_\+scn\+\_\+file}} = run\+\_\+scenario(test\+\_\+case\+\_\+data, SCN\+\_\+\+FOLDER, SCN\+\_\+\+NAME, file\+\_\+path, args.\+method)
+\item 
+\mbox{\hyperlink{namespacemain_a6be14f7f2f8cedfce33c85ab71d03e2e}{main.\+run\+\_\+gui}}
+\end{DoxyCompactItemize}
