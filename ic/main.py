@@ -372,7 +372,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
     # data = load_json(file_path)
     
     # save allocation outputs here v
-    output_folder = f"ic/{file_name}_{design_parameters['beta']}_{design_parameters['dropout_good_valuation']}_{design_parameters['default_good_valuation']}_{design_parameters['price_default_good']}_{design_parameters['lambda_frequency']}"
+    output_folder = f"results/{file_name}_{design_parameters['beta']}_{design_parameters['dropout_good_valuation']}_{design_parameters['default_good_valuation']}_{design_parameters['price_default_good']}_{design_parameters['lambda_frequency']}"
     Path(output_folder).mkdir(parents=True, exist_ok=True)
 
     flights = data["flights"]

@@ -242,7 +242,7 @@ def update_market(x_val, values_k, market_settings, constraints, agent_goods_lis
             logging.error(f"An unexpected error occurred with solver {solver}: {e}")
             continue
     solve_time = time.time() - start_time
-    print(f"Market: Build time: {round(build_time,6)} - Solve time: {round(solve_time,6)} with solver {solver}")
+    # print(f"Market: Build time: {round(build_time,6)} - Solve time: {round(solve_time,6)} with solver {solver}")
 
     # Check if the problem was solved successfully
     if problem.status != cp.OPTIMAL:
