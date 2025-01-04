@@ -10,10 +10,20 @@ import math
 from pathlib import Path
 from multiprocessing import Pool
 import logging
+from rich.progress import Progress, BarColumn, TextColumn, TimeElapsedColumn
+from rich.console import Console
+from rich.table import Table
+import logging
+from rich.logging import RichHandler
 
 
-logging.basicConfig(filename='solver_log.txt', level=logging.INFO, 
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+# Logging optimization information
+file_logger = logging.getLogger("file_logger")
+file_logger.setLevel(logging.INFO)
+file_handler = logging.FileHandler("solver_log.txt")
+file_handler.setLevel(logging.INFO)
+file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+file_logger.addHandler(file_handler)
 
 
 # Add the bluesky package to the path
@@ -103,7 +113,7 @@ def construct_market(flights, timing_info, routes, vertiport_usage, default_good
     
   
 
-    print(f"Time to construct market: {time.time() - start_time_market_construct}")
+    print(f"Time to construct market: {round(time.time() - start_time_market_construct)}")
     return (u, agent_constraints, agent_goods_lists), (w, supply, BETA), (goods_list)
 
 
@@ -232,7 +242,7 @@ def update_market(x_val, values_k, market_settings, constraints, agent_goods_lis
             logging.error(f"An unexpected error occurred with solver {solver}: {e}")
             continue
     solve_time = time.time() - start_time
-    print(f"Market: Build time: {build_time} - Solve time: {solve_time} with solver {solver}")
+    print(f"Market: Build time: {round(build_time,6)} - Solve time: {round(solve_time,6)} with solver {solver}")
 
     # Check if the problem was solved successfully
     if problem.status != cp.OPTIMAL:
@@ -317,7 +327,7 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
             build_times.append(updates[2][0])
             solve_times.append(updates[2][1])
         # results = [update_agent(*arg) for arg in args]
-        print(f"Average build time: {np.mean(build_times)} - Average solve time: {np.mean(solve_times)}")
+        # print(f"Average build time: {np.mean(build_times)} - Average solve time: {np.mean(solve_times)}")
     else:
         num_processes = 4 # increase based on available resources
         with Pool(num_processes) as pool:
@@ -490,8 +500,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
     """
     
     """
-    print(f"running with rebate frequency: {lambda_frequency}")
-    print(f"Price upper bound: {price_upper_bound}")
+    print(f"Rebate frequency: {lambda_frequency}, Price upper bound: {price_upper_bound}")
     u, agent_constraints, agent_goods_lists, agent_indices = agent_settings
     y, p, r = initial_values
     w, supply, beta = market_settings
@@ -516,6 +525,10 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
     start_time_algorithm = time.time()  
     
     problem = None
+    console = Console(force_terminal=True)
+    console.print("[bold green]Starting Market Simulation...[/bold green]")
+
+
     while x_iter <= MAX_NUM_ITERATIONS:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
         if x_iter == 0: 
             beta_init = beta
@@ -552,8 +565,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         # if x_iter % rebate_frequency == 0:
         if True:
             update_rebates = True
-        else:
-            update_rebates = False
+
         # Update market
         k, y, p, r, problem = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, 
                                             price_default_good, problem, 
@@ -565,21 +577,38 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         social_welfare_vector.append(current_social_welfare)
 
         x_iter += 1
+
+
+
+        # Create a table with current metrics
+        table = Table.grid(expand=True)
+
+        table = Table(title=f"Iteration {x_iter}")
+        table.add_column("Metric", justify="left")
+        table.add_column("Value", justify="right")
+        table.add_row("Case Tolerance: N*sqrt(Supply)*TOL_ERROR", f"{tolerance:.7f}")
+        table.add_row("Tolerance Error: (TOL_ERROR)", f"{TOL_ERROR:.7f}")
+        table.add_row("Market Clearing Error (MCE)", f"{market_clearing_error:.7f}")
+        table.add_row("Ax - b Error", f"{iter_constraint_error:.7f}")
+        table.add_row("x - y Error", f"{iter_constraint_x_y:.7f}")
+
+        console.clear()
+        console.print(table)
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
             break
         # if x_iter ==  100:
         #     break
 
 
-
-
-        print("Iteration: ", x_iter, "- MCE: ", round(market_clearing_error, 5), "-Ax-b. Err: ", iter_constraint_error, " - Tol: ", round(tolerance,3), "x-y error:", iter_constraint_x_y)
+        # print("Iteration: ", x_iter, "- MCE: ", round(market_clearing_error, 5), "-Ax-b. Err: ", iter_constraint_error, " - Tol: ", round(tolerance,3), "x-y error:", iter_constraint_x_y)
         logging.info(f"Iteration: {x_iter}, Market Clearing Error: {market_clearing_error}, Tolerance: {tolerance}")
-    
+
+    console.print("[bold green]Simulation Complete! Optimization results in file: solver_log.txt[/bold green]")
+
         # if market_clearing_error <= tolerance:
         #     break
 
-    print(f"Time to run algorithm: {time.time() - start_time_algorithm}")
+    print(f"Time to run algorithm: {round(time.time() - start_time_algorithm,5)}")
 
     data_to_plot ={
         "x_iter": x_iter,
@@ -747,7 +776,7 @@ def plotting_market(data_to_plot, desired_goods, output_folder, market_auction_t
     plt.title("Desired Goods Agent allocation evolution")
     plt.savefig(get_filename("desired_goods_allocation_evolution"), bbox_inches='tight')
     plt.close()
-    print(f"Final Desired Goods Allocation: {[desired_goods[-1] for desired_goods in agent_desired_goods_list]}")
+    # print(f"Final Desired Goods Allocation: {[desired_goods[-1] for desired_goods in agent_desired_goods_list]}")
 
     # Market Clearing Error
     plt.figure(figsize=(10, 5))
@@ -908,7 +937,8 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     # Getting data for next auction
     allocation, rebased, dropped, = get_next_auction_data(agents_data_dict, market_data_dict)
     market_data_dict = plot_utility_functions(agents_data_dict, market_data_dict, output_folder)
-    print(f"Allocation: {allocation}")
+
+    # print(f"Allocation: {allocation}")
 
     output_data = {"market_data":market_data_dict, "agents_data":agents_data_dict, "ranked_list":ranked_list, "valuations":valuations}
     save_data(output_folder, "fisher_data_after", market_auction_time, **output_data)

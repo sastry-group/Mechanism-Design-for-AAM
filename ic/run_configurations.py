@@ -21,8 +21,9 @@ main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 for idx, (BETA, dropout_good_valuation, default_good_valuation, price_default_good, lambda_frequency, price_upper_bound) in enumerate(parameter_combinations):
     args = [
         "python", main_script_path,
-        "--file", "test_cases/casef_20240925_175552_mod3.json",
-        "--method", "vcg",
+        "--file", "test_cases/casef_20240925_175552short.json",
+        "--method", "fisher",
+        "--output_bsky", str(False),
         "--force_overwrite",
         "--BETA", str(BETA),
         "--dropout_good_valuation", str(dropout_good_valuation),
