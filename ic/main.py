@@ -36,8 +36,21 @@ LOG = True
 SIMDT = 1
 EQUITABLE_FLEETS = True
 
+
+def str2bool(value):
+    if isinstance(value, bool):
+        return value
+    if value.lower() in ("true", "1", "yes"):
+        return True
+    elif value.lower() in ("false", "0", "no"):
+        return False
+    else:
+        raise argparse.ArgumentTypeError(f"Invalid boolean value: {value}")
+    
 parser = argparse.ArgumentParser(description="Process a true/false argument.")
 parser.add_argument("--gui", action="store_true", help="Flag for running with gui.")
+parser.add_argument("--output_bsky", type=str2bool, nargs="?", const=True, default=False,
+                    help="Set to True to output Bluesky scenario file.")
 parser.add_argument(
     "--file", type=str, required=True, help="The path to the test case json file."
 )
@@ -57,7 +70,7 @@ parser.add_argument(
 # parser = argparse.ArgumentParser()
 # parser.add_argument('--file', type=str, required=True)
 # parser.add_argument('--method', type=str, default='fisher')
-# parser.add_argument('--force_overwrite', action='store_true')
+# parser.add_argument('--force_overwrite', action='store_true')  
 parser.add_argument('--BETA', type=float, default=1)
 parser.add_argument('--dropout_good_valuation', type=float, default=1)
 parser.add_argument('--default_good_valuation', type=float, default=1)
@@ -338,7 +351,6 @@ def adjust_rebased_flights(rebased_flights, flights, auction_start, auction_end)
         flights[flight_id]['valuation']= valuation*decay**i #change decay
 
     return flights
-#def run_scenario(data, scenario_path, scenario_name, method, save_scenario=True, payment_calc=True):
 
 def run_scenario(data, scenario_path, scenario_name, file_path, method, design_parameters=None, save_scenario = True, payment_calc = True):
     """
@@ -360,7 +372,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
     # data = load_json(file_path)
     
     # save allocation outputs here v
-    output_folder = f"ic/results/{file_name}_{design_parameters['beta']}_{design_parameters['dropout_good_valuation']}_{design_parameters['default_good_valuation']}_{design_parameters['price_default_good']}_{design_parameters['lambda_frequency']}"
+    output_folder = f"results/{file_name}_{design_parameters['beta']}_{design_parameters['dropout_good_valuation']}_{design_parameters['default_good_valuation']}_{design_parameters['price_default_good']}_{design_parameters['lambda_frequency']}"
     Path(output_folder).mkdir(parents=True, exist_ok=True)
 
     flights = data["flights"]
@@ -370,42 +382,50 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
     routes_data = data["routes"]
 
     fleets = data["fleets"]
-    congestion_params = data["congestion_params"]
+    if method == "vcg":
+        congestion_params = data["congestion_params"]
 
-    def C(vertiport, q):
-        """
-        Congestion cost function for a vertiport.
-        
-        Args:
-            vertiport (str): The vertiport id.
-            q (int): The number of aircraft in the hold.
-        """
-        assert float(q).is_integer() and q >= 0 and q < len(congestion_params["C"]), "q must be a non-negative integer."
-        return congestion_params["C"][q]
+        def C(vertiport, q):
+            """
+            Congestion cost function for a vertiport.
+            
+            Args:
+                vertiport (str): The vertiport id.
+                q (int): The number of aircraft in the hold.
+            """
+            assert float(q).is_integer() and q >= 0 and q < len(congestion_params["C"]), "q must be a non-negative integer."
+            return congestion_params["C"][q]
     
-    #add delays for vcg
-    max_delay = 10
-    if(method == 'vcg'):
-        for fl in data["flights"]:
-            dr = {}
-            for j, r in enumerate(data["flights"][fl]["requests"]):
-                if(r=='000'):
-                    dr['000'] = copy.deepcopy(data["flights"][fl]["requests"][r])
-                    dr['000']['delay'] = 0
-                    continue
-                for i in range(max_delay + 1):
-                    k = copy.deepcopy(data["flights"][fl]["requests"][r])
-                    k["request_departure_time"] += i
-                    k["request_arrival_time"] += i
-                    k["bid"] *= pow(0.95,i)
-                    k["valuation"] *= pow(0.95,i)
-                    k["delay"] = i
-                    id_ = str(1 + (j-1)*(max_delay+1) + i)
-                    s = '0' * (3 - len(id_)) + str(id_)
-                    dr[s] = k
-            data["flights"][fl]["requests"] = dr
+        #add delays for vcg
+        max_delay = 10
+        if(method == 'vcg'):
+            for fl in data["flights"]:
+                dr = {}
+                for j, r in enumerate(data["flights"][fl]["requests"]):
+                    if(r=='000'):
+                        dr['000'] = copy.deepcopy(data["flights"][fl]["requests"][r])
+                        dr['000']['delay'] = 0
+                        continue
+                    for i in range(max_delay + 1):
+                        k = copy.deepcopy(data["flights"][fl]["requests"][r])
+                        k["request_departure_time"] += i
+                        k["request_arrival_time"] += i
+                        k["bid"] *= pow(0.95,i)
+                        k["valuation"] *= pow(0.95,i)
+                        k["delay"] = i
+                        id_ = str(1 + (j-1)*(max_delay+1) + i)
+                        s = '0' * (3 - len(id_)) + str(id_)
+                        dr[s] = k
+                data["flights"][fl]["requests"] = dr
 
-    congestion_info = {"lambda": congestion_params["lambda"], "C": C}
+        congestion_info = {"lambda": congestion_params["lambda"], "C": C}
+            # Add fleet weighting information to flights
+        for fleet_id, fleet in fleets.items():
+            for flight_id in fleet["members"]:
+                if EQUITABLE_FLEETS:
+                    flights[flight_id]["rho"] = fleet["rho"]
+                else:
+                    flights[flight_id]["rho"] = 1
 
     # Create vertiport graph and add starting aircraft positions
     vertiport_usage = VertiportStatus(vertiports, data["routes"], timing_info)
@@ -419,13 +439,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
     max_travel_time = 60
     last_auction =  end_time - max_travel_time - auction_freq
 
-    # Add fleet weighting information to flights
-    for fleet_id, fleet in fleets.items():
-        for flight_id in fleet["members"]:
-            if EQUITABLE_FLEETS:
-                flights[flight_id]["rho"] = fleet["rho"]
-            else:
-                flights[flight_id]["rho"] = 1
+
     
 
     # Sort arriving flights by appearance time
@@ -455,7 +469,6 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
     rebased_flights = None
 
     # Iterate through each time flights appear
-    # for appearance_time in sorted(ordered_flights.keys()):
     results = []
     for prev_auction_time, auction_time in zip(auction_times[:-1], auction_times[1:]):
         # Get the current flights
@@ -500,7 +513,6 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         if not current_flights:
             continue
 
-        print('Auctioning currently between: ', prev_auction_time, auction_time)
         print("Method: ", method)
         # Determine flight allocation and payment
         current_timing_info = {
@@ -608,7 +620,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         path_to_written_file = None
     
     print("AUCTION DONE")
-    print(results)
+    # print(results)
 
     # Visualize the graph
     #if VISUALIZE:
@@ -731,7 +743,7 @@ if __name__ == "__main__":
     SCN_NAME = file_name.split(".")[0]
     path = f"{SCN_FOLDER}/{SCN_NAME}.scn"
 
-    print(SCN_NAME)
+    # print(SCN_NAME)
 
     # Check if the path exists and if the user wants to overwrite
     if os.path.exists(path):
@@ -755,9 +767,10 @@ if __name__ == "__main__":
     assert path == path_to_scn_file, "An error occured while writing the scenario file."
 
     # Evaluate scenario
-    if args.gui:
+    if args.output_bsky:
         # run_from_json(file_path, run_gui=True)
         # Always call as false because the gui does not currently work
-        evaluate_scenario(path_to_scn_file, run_gui=False)
-    else:
-        evaluate_scenario(path_to_scn_file)
+        if args.gui:
+            evaluate_scenario(path_to_scn_file, run_gui=False)
+        else:
+            evaluate_scenario(path_to_scn_file)
