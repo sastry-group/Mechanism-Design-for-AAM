@@ -23,6 +23,7 @@ for idx, (BETA, dropout_good_valuation, default_good_valuation, price_default_go
         "python", main_script_path,
         "--file", "test_cases/casef_20240925_175552_mod3.json",
         "--method", "vcg",
+        "--output_bsky", str(False),
         "--force_overwrite",
         "--BETA", str(BETA),
         "--dropout_good_valuation", str(dropout_good_valuation),
