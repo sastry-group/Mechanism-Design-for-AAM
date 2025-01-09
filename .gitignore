@@ -105,4 +105,4 @@ ssd.obj
 ic/Picklerandomstate
 ic/results/*.png
 ic/results/*
-ic/latex/*
+ic/latex/*solver_log.txt
