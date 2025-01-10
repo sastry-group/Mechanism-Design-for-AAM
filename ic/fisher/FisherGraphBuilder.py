@@ -46,11 +46,7 @@ class FisherGraphBuilder:
                 sector_times = request["sector_times"]
                 
                 decay = flight_data["decay_factor"]
-<<<<<<< HEAD
-                for ts_delay in range(1, 6): #change this to a variable
-=======
                 for ts_delay in range(5):
->>>>>>> 06618e14 (Changes and additional data processing)
                     new_arrival_time = arrival_time + ts_delay
                     new_departure_time = departure_time + ts_delay
                     decay_valuation = request["valuation"] * decay**ts_delay

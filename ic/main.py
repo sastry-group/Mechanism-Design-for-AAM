@@ -411,7 +411,8 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
     vertiports = data["vertiports"]
     timing_info = data["timing_info"]
     auction_freq = timing_info["auction_frequency"]
-    routes_data = data["routes"]
+    # routes_data = data["routes"]
+    sectors_data = data["sectors"]
 
     fleets = data["fleets"]
     if method == "vcg":
@@ -459,9 +460,9 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
                 else:
                     flights[flight_id]["rho"] = 1
 
-    # Create vertiport graph and add starting aircraft positions
-    vertiport_usage = VertiportStatus(vertiports, data["routes"], timing_info)
-    vertiport_usage.add_aircraft(flights)
+    # # Create vertiport graph and add starting aircraft positions
+    vertiport_usage = VertiportStatus(vertiports, sectors_data, timing_info)
+    # vertiport_usage.add_aircraft(flights)
 
 
     start_time = timing_info["start_time"]
@@ -536,7 +537,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         
 
         unique_vertiport_ids = set()
-        interval_routes = set()
+        interval_sectors = set()
         for flight in current_flights.values():
             origin = flight['origin_vertiport_id']
             unique_vertiport_ids.add(origin)
@@ -544,7 +545,9 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
             for request in flight['requests'].values():
                 destination = request['destination_vertiport_id']
                 unique_vertiport_ids.add(destination)
-                interval_routes.add((origin, destination))
+                if request["request_departure_time"] != 0:
+                    interval_sectors.update(request["sector_path"])
+                # interval_routes.add((origin, destination))
 
         filtered_vertiports = {vid: vertiports[vid] for vid in unique_vertiport_ids}
         filtered_sectors = {sid: sectors_data[sid] for sid in interval_sectors}
