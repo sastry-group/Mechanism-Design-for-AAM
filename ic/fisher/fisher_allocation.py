@@ -43,7 +43,7 @@ TOL_ERROR = 1e-3
 MAX_NUM_ITERATIONS = 10000
 
 
-def construct_market(flights, timing_info, routes, vertiport_usage, default_good_valuation=1, dropout_good_valuation=-1, BETA=1):
+def construct_market(flights, timing_info, sectors, vertiport_usage, default_good_valuation=1, dropout_good_valuation=-1, BETA=1):
     """
 
     """
@@ -688,7 +688,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
 
         console.clear()
         console.print(table)
-        if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
+        # if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
             break
         if x_iter == 1000:
@@ -977,7 +977,7 @@ def track_desired_goods(flights, goods_list):
 
 
 
-def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_data, vertiports, 
+def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors_data, vertiports, 
                                   output_folder=None, save_file=None, initial_allocation=True, design_parameters=None):
 
     # # building the graph
@@ -1020,7 +1020,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     #     price_upper_bound = 1000
 
     # Construct market
-    agent_information, market_information, bookkeeping = construct_market(flights, timing_info, routes_data, vertiport_usage, 
+    agent_information, market_information, bookkeeping = construct_market(flights, timing_info, sectors_data, vertiport_usage, 
                                                                           default_good_valuation=default_good_valuation, 
                                                                           dropout_good_valuation=dropout_good_valuation, BETA=BETA)
     
@@ -1031,7 +1031,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, routes_
     # y = np.random.rand(num_agents, num_goods-2)*10
     y = np.zeros((num_agents, num_goods - 2))
     desired_goods = track_desired_goods(flights, goods_list)
-    for i, agent_ids in enumerate(desired_goods):
+    for i, agent_id in enumerate(desired_goods):
         # dept_id = desired_goods[agent_ids]["desired_good_arr"]
         # arr_id = desired_goods[agent_ids]["desired_good_dep"] 
         # dept_to_arr_id = desired_goods[agent_ids]["desired_good_dep_to_arr"]

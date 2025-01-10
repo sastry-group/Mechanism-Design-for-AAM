@@ -15,8 +15,8 @@ AUCTION_DT = 10 # every 15 timesteps there is an auction
 
 # Case study settings
 # N_FLIGHTS = random.randint(50, 60)
-N_FLIGHTS = 20
-NUM_FLEETS = 10
+N_FLIGHTS = 6
+NUM_FLEETS = 2
 
 # change the request 000 for always be 0 - done
 # routes must match travel time, arrival time not random, match the travel time + startime
@@ -40,17 +40,6 @@ vertiports = {
     "V006": {"latitude": 37.25214395119753, "longitude": -122.4066509403772, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 8},
     "V007": {"latitude": 38.58856301092047, "longitude": -121.5627454937505, "landing_capacity": random.randint(1, 3), "takeoff_capacity": random.randint(1, 5), "hold_capacity": 8},
 }
-
-# This is for testing of case #3, similarly in generate_routes function set capacity = 0 to test convergence
-# vertiports = {
-#     "V001": {"latitude": 37.766699, "longitude": -122.3903664, "landing_capacity": 0, "takeoff_capacity": 0, "hold_capacity": 5},
-#     "V002": {"latitude": 37.8361761, "longitude": -122.2668028, "landing_capacity": 0, "takeoff_capacity": 0, "hold_capacity": 5},
-#     "V003": {"latitude": 37.7835538, "longitude": -122.5067642, "landing_capacity": 0, "takeoff_capacity": 0, "hold_capacity": 5},
-#     "V004": {"latitude": 37.9472484, "longitude": -122.4880737, "landing_capacity": 0, "takeoff_capacity": 0, "hold_capacity": 5},
-#     "V005": {"latitude": 37.38556649999999, "longitude": -121.9723564, "landing_capacity": 0, "takeoff_capacity": 0, "hold_capacity": 5},
-#     "V006": {"latitude": 37.25214395119753, "longitude": -122.4066509403772, "landing_capacity": 0, "takeoff_capacity": 0, "hold_capacity": 5},
-#     "V007": {"latitude": 38.58856301092047, "longitude": -121.5627454937505, "landing_capacity": 0, "takeoff_capacity": 0, "hold_capacity": 5},
-# }
 
 
 
@@ -132,6 +121,31 @@ def generate_flights():
     return flights, routes
 
 
+def generate_sectors(vertiports, num_sectors_per_vertiport=1):
+    """
+    Generates sectors based on vertiports. Initially, each sector will have the same 
+    latitude and longitude as its associated vertiport. This can be modified later for customization.
+    
+    Args:
+    - vertiports (dict): Dictionary of vertiports with latitude and longitude.
+    - num_sectors_per_vertiport (int): Number of sectors to create per vertiport.
+    
+    Returns:
+    - dict: Dictionary of sectors.
+    """
+    sectors = {}
+    sector_id = 1  # Unique sector ID
+    for vertiport_id, vertiport_data in vertiports.items():
+        for i in range(num_sectors_per_vertiport):
+            sector_key = f"S{sector_id:03d}"
+            sectors[sector_key] = {
+                "latitude": vertiport_data["latitude"],  # Same latitude as vertiport
+                "longitude": vertiport_data["longitude"],  # Same longitude as vertiport
+                "hold_capacity": random.randint(1, 3)  # Random hold capacity, can be customized
+            }
+            sector_id += 1
+    return sectors
+
 
 # Function to calculate distance between two points using Haversine formula
 def calculate_distance(origin, destination):
@@ -199,12 +213,17 @@ def generate_routes(vertiports):
 # Write JSON data to dictionary
 flights, routes = generate_flights()
 fleets = generate_fleets(list(flights.keys()))
+sectors = generate_sectors(vertiports)
+
+# Updated JSON data to include sectors
 json_data = {
     "timing_info": {"start_time": START_TIME, "end_time": END_TIME, "time_step": TIME_STEP, "auction_frequency": AUCTION_DT},
+    "congestion_params": {"lambda": 0.1, "C": {vertiport: list(np.array([0, 0.1, 0.3, 0.6, 1, 1.5, 2.1, 2.8, 3.6, 4.5, 5.5])*random.randint(1,4)) for vertiport in vertiports.keys()}},
     "fleets": fleets,
     "flights": flights,
     "vertiports": vertiports,
-    "routes": routes
+    "routes": routes,
+    "sectors": sectors 
 }
 
 # Write flight data to JSON file
