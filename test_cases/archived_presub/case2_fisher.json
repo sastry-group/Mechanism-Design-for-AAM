@@ -1,0 +1,126 @@
+{
+  "timing_info": {
+    "start_time": 10, 
+    "end_time": 40,
+    "time_step": 10
+  },
+  "fleets": {
+    "F001": ["AC001"],
+    "F002": ["AC002"]
+  },
+  "flights": {
+    "AC001": {
+      "appearance_time": 0,
+      "origin_vertiport_id": "V001",
+      "budget_constraint": 50,
+      "requests": {
+        "000": {
+          "destination_vertiport_id": "V001",
+          "request_departure_time": 0,
+          "request_arrival_time": 0,
+          "valuation": 30
+        },
+        "001": {
+          "destination_vertiport_id": "V002",
+          "request_departure_time": 10,
+          "request_arrival_time": 20,
+          "valuation": 100
+        },
+        "002": {
+          "destination_vertiport_id": "V002",
+          "request_departure_time": 20,
+          "request_arrival_time": 30,
+          "valuation": 70
+        }
+
+      }
+    },
+    "AC002": {
+      "appearance_time": 0,
+      "origin_vertiport_id": "V003",
+      "budget_constraint": 60,
+      "requests": {
+        "000": {
+          "destination_vertiport_id": "V001",
+          "request_departure_time": 0,
+          "request_arrival_time": 0,
+          "valuation": 30
+        },
+        "001": {
+          "destination_vertiport_id": "V002",
+          "request_departure_time": 10,
+          "request_arrival_time": 30,
+          "valuation": 100
+        },
+        "002": {
+          "destination_vertiport_id": "V002",
+          "request_departure_time": 20,
+          "request_arrival_time": 40,
+          "valuation": 80
+        }
+      }
+    }
+  },
+  "vertiports": {
+    "V001": {
+      "latitude": 37.7749,
+      "longitude": -122.4194,
+      "landing_capacity": 1,
+      "takeoff_capacity": 1,
+      "hold_capacity": 2
+    },
+    "V002": {
+      "latitude": 34.0522,
+      "longitude": -118.2437,
+      "landing_capacity": 1,
+      "takeoff_capacity": 1,
+      "hold_capacity": 2
+    },
+    "V003": {
+      "latitude": 40.7128,
+      "longitude": -74.0060,
+      "landing_capacity": 1,
+      "takeoff_capacity": 1,
+      "hold_capacity": 2
+    },
+    "V004": {
+      "latitude": 41.8781,
+      "longitude": -87.6298,
+      "landing_capacity": 1,
+      "takeoff_capacity": 1,
+      "hold_capacity": 2
+    }
+  },
+  "routes": [
+    {
+      "origin_vertiport_id": "V001",
+      "destination_vertiport_id": "V002",
+      "travel_time": 10
+    },
+    {
+      "origin_vertiport_id": "V002",
+      "destination_vertiport_id": "V003",
+      "travel_time": 20
+    },
+    {
+      "origin_vertiport_id": "V003",
+      "destination_vertiport_id": "V004",
+      "travel_time": 10
+    },
+    {
+      "origin_vertiport_id": "V002",
+      "destination_vertiport_id": "V001",
+      "travel_time": 10
+    },
+    {
+      "origin_vertiport_id": "V003",
+      "destination_vertiport_id": "V002",
+      "travel_time": 20
+    },
+    {
+      "origin_vertiport_id": "V004",
+      "destination_vertiport_id": "V003",
+      "travel_time": 10
+    }
+  ]
+}
