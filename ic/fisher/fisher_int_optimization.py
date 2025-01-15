@@ -71,10 +71,13 @@ def track_delayed_goods(agents_data_dict, market_data_dict):
             if "dep" in good[0] and "arr" in good[1]:
                 good_tuple = (good[0], good[1])
                 delayed_goods.append(good_tuple)
-        delayed_goods.pop(0)
-        agent_data['delayed_goods'] = delayed_goods
-        delayed_goods_indices = [goods_list.index(good) for good in delayed_goods]
-        agent_data["idx_delayed_goods"] = delayed_goods_indices
+        if good == "dropout_good":
+            print(f"There is a droput of agent {agent_id}")
+        elif delayed_goods:
+            delayed_goods.pop(0)
+            agent_data['delayed_goods'] = delayed_goods
+            delayed_goods_indices = [goods_list.index(good) for good in delayed_goods]
+            agent_data["idx_delayed_goods"] = delayed_goods_indices
     return agents_data_dict
 
 

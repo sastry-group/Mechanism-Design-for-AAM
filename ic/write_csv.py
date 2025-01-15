@@ -155,13 +155,20 @@ def write_customer_board(flights, agents_data, output_folder):
         allocated_flight = value["good_allocated"]
         request = flights[key]["requests"]["001"]
         origin_vertiport_id, dep_time, destination_vertiport_id, arr_time = None, None, None, None
+        payment = value["payment"]
         
-        if allocated_flight:
+        if value.get("status") == "allocated":
             dep_info, arr_info = allocated_flight[0], allocated_flight[1]
             origin_vertiport_id, dep_time = dep_info.split('_')[0], dep_info.split('_')[1]
             destination_vertiport_id, arr_time = arr_info.split('_')[0], arr_info.split('_')[1]
-            payment = value["payment"]
+            # payment = value["payment"]
             status = value["status"]
+        elif value.get("status") == "rebased":
+            status = "rebased"
+            origin_vertiport_id = flights[key]["origin_vertiport_id"]
+            # dep_time = request["request_departure_time"]
+            destination_vertiport_id = request["destination_vertiport_id"]
+            # arr_time = request["request_arrival_time"]
         else:
             status = "cancelled"
             origin_vertiport_id = flights[key]["origin_vertiport_id"]
@@ -203,18 +210,20 @@ def write_SP_board(edge_information, agents_data, output_folder):
         arr_time = request["request_arrival_time"]
         destination_vertiport_id = request["destination_vertiport_id"]
         allocated_origin_vertiport, allocated_dep_time, allocated_destination_vertiport,allocated_arr_time = None, None, None, None        
-        if allocated_flight:
+        if value.get("status") == "allocated":
             dep_info, arr_info = allocated_flight[0], allocated_flight[1]
             allocated_origin_vertiport, allocated_dep_time = dep_info.split('_')[0], dep_info.split('_')[1]
             allocated_destination_vertiport, allocated_arr_time = arr_info.split('_')[0], arr_info.split('_')[1]
             payment = value["payment"]
-            status = value["status"]
-        else:
-            status = "cancelled"
+        elif value.get("status") == "rebased":
             origin_vertiport_id = value["flight_info"]["origin_vertiport_id"]
             # dep_time = request["request_departure_time"]
             destination_vertiport_id = request["destination_vertiport_id"]
             # arr_time = request["request_arrival_time"]
+        else:
+            origin_vertiport_id = value["flight_info"]["origin_vertiport_id"]
+            # dep_time = request["request_departure_time"]
+            destination_vertiport_id = request["destination_vertiport_id"]
 
         sp_board_data.append([
             key, len(value["flight_info"]["requests"]), (origin_vertiport_id, destination_vertiport_id), (dep_time, arr_time), 
@@ -239,58 +248,33 @@ def write_network_board(market_data_dict, agent_data_dict, output_folder):
     Writes a network-facing board including market parameters, prices, and valuations.
     """
     num_iterations = market_data_dict["num_iterations"]
-    design_params = market_data_dict["market_parameters"]
+    design_parameters = market_data_dict["market_parameters"]
     network_board_data = []
-    goods = market_data_dict["goods_list"]
-    total_payment = 0
-    utility_ratio = market_data_dict["total_fisher_utility"] / market_data_dict["total_max_utility"]
-    routes = []
 
-    agent_ids = []
-    original_budgets = []
-    valuations = []
-    statuses = []
-    allocated_flights = []
-    end_capacities = []
+    # for agent_id, agent_data in agent_data_dict.items():
+    #     origin_vertiport = agent_data["flight_info"]["origin_vertiport_id"]
+    #     destination_vertiport = agent_data["flight_info"]["requests"]["001"]["destination_vertiport_id"]
+    #     original_budget = agent_data["original_budget"]
+    #     valuation = agent_data["valuation"]
+    #     network_board_data.append([
+    #         num_iterations, num_agents, contested_routes, design_parameters, final_prices, valuations,
+    #         agent_id, origin_vertiport, destination_vertiport, original_budget, valuation
+    #     ])
 
-    for agent_id, agent_data in agent_data_dict.items():
-        agent_ids.append(agent_id)
-        original_budgets.append(agent_data["original_budget"])
-        valuations.append(agent_data["flight_info"]["requests"]["001"]["valuation"])
-        statuses.append(agent_data["status"])
-        allocated_flight = agent_data["good_allocated"]
-        allocated_flights.append(allocated_flight)
-        allocated_id = goods.index(allocated_flight) if allocated_flight else None
-        end_capacities.append(market_data_dict["capacity"][allocated_id] if allocated_id is not None else None)
-        total_payment += agent_data["payment"]
+    initial_capacity = market_data_dict["original_capacity"]
+    end_capacity = market_data_dict["capacity"]
+    num_agents = len(agent_data_dict)
+    final_prices = market_data_dict["prices"]
 
-    network_board_data = {
-        "No. Iterations": [num_iterations],
-        "No. Agents": [len(agent_data_dict)],
-        "Total Payment": [total_payment],
-        "Utility Ratio": [utility_ratio],
-        "Design Parameters": [design_params],
-        "Aircraft": [agent_ids],  # This will be a list of agents
-        "Routes": [routes],
-        "End Capacity": [end_capacities],
-        "Aircraft Air Credit": [original_budgets],
-        "Valuation": [valuations],
-        "Status": [statuses]
-    }
 
-    # Find the maximum length of all the lists
-    max_len = max([len(v[0]) if isinstance(v[0], list) else 1 for v in network_board_data.values()])
+    network_board_data.append([
+        num_iterations, num_agents, initial_capacity, end_capacity, design_parameters, final_prices
+    ])    
 
-    # Ensure all lists have the same length by padding them with None
-    for key, value in network_board_data.items():
-        if isinstance(value[0], list):
-            network_board_data[key] = value[0] + [None] * (max_len - len(value[0]))
-        else:
-            network_board_data[key] = value * max_len
-
-    # Create the DataFrame
-    network_board_df = pd.DataFrame(network_board_data)
-
-    # Save to CSV
+    network_board_df = pd.DataFrame(network_board_data, columns=[
+        "No. Iterations", "No. Agents", "Initial Capacity", "End Capacity", 
+        "Design Parameters (price of default good, defautlt good valuation, dropout good val, beta, price upper bound)", "Final Prices"
+    ])
+    
     network_board_file = os.path.join(output_folder, "network_board.csv")
-    network_board_df.to_csv(network_board_file, index=False)
+    write_to_csv(network_board_df, network_board_file)
