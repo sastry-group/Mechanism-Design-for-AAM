@@ -1,7 +1,20 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
 
+
+def set_file_name(file_name, output_folder, method, force_overwrite):
+    """
+    Set the file name for the output file.
+    """
+    if not file_name:
+        file_name = "output"
+    if not output_folder:
+        output_folder = "output"
+    if not method:
+        method = "fisher"
+    if force_overwrite:
+        return f"{output_folder}/{file_name}_{method}.json"
+    return f"{output_folder}/{file_name}_{method}_{np.random.randint(1000000)}.json"
 
 
 def process_allocations(x, edge_information, agent_goods_lists, flights):
@@ -112,7 +125,7 @@ def rank_allocations(agents_data, market_data):
 
     ranked_agents = {}
     for flight_id, data in agents_data.items():
-        desired_good_idx = data['desired_good_info']["desired_good_dep_to_arr"]
+        desired_good_idx = data['desired_good_info']["desired_edge_idx"]
         desired_good_allocation = data['fisher_allocation'][desired_good_idx]
         ranked_agents[flight_id] = {"fisher_desired_good_allocation": desired_good_allocation}
         ranked_agents[flight_id]["desired_good_id"] = desired_good_idx
@@ -143,6 +156,7 @@ def find_dep_and_arrival_nodes(edges):
     
     return dep_edge[1], arr_edge[0]
 
+
 def get_next_auction_data(agent_data, market_data):
     allocation, rebased, dropped = [], [], []
     for  flight_id, data in agent_data.items():
@@ -154,7 +168,7 @@ def get_next_auction_data(agent_data, market_data):
         # print(f"Allocation indices: {allocation_indices}")
         print(f"Allocated goods: {[data['agent_goods_list'][index] for index in allocation_indices]}")
         if data['status'] == 'allocated':
-            desired_good_idx = data['desired_good_info']["desired_good_dep_to_arr"]
+            desired_good_idx = data['desired_good_info']["desired_edge_idx"]
             int_allocation_long = np.zeros(len(data["fisher_allocation"]))
             int_allocation_long[data["agent_edge_indices"]] = data["final_allocation"][:-1] 
             int_allocation_long[-1] = data["final_allocation"][-1]
@@ -163,7 +177,6 @@ def get_next_auction_data(agent_data, market_data):
                 # allocation.append((flight_id, good_tuple))
                 agent_data[flight_id]["good_allocated"] = good_tuple
                 allocation.append((flight_id, good_tuple))
-                # agent_data[flight_id]["good_allocated_idx_short_list"] = data["agent_goods_list"].index(good_tuple)
             elif round(int_allocation_long[-1]) == 1:
                 data['status'] = 'rebased'
                 rebased.append(flight_id)
@@ -219,13 +232,15 @@ def compute_utilites(agent_data):
     """
     Compute the utility for an agent
     """
-    agent_utility_vec = agent_data["utility"]
-    dropout_utility = agent_utility_vec[-1]
+
+    agent_utility_vec = np.array(agent_data["utility"]) 
+    dropout_utility = agent_utility_vec[-1] 
     default_utility = agent_utility_vec[-2]
-    allocated_good_utility = agent_utility_vec[agent_data["good_allocated_idx_short_list"]]
-    x_allocated = agent_data["final_allocation"][agent_data["good_allocated_idx_short_list"]]
+    allocated_good_idx = np.where(agent_data["final_allocation"] == 1)[0]
+    allocated_good_utility = agent_utility_vec[allocated_good_idx]
+    x_allocated = agent_data["final_allocation"][allocated_good_idx]
     desired_good_utility = agent_data["flight_info"]["requests"]["001"]["valuation"]
-    agent_fu = allocated_good_utility *  x_allocated + default_utility * agent_data["final_allocation"][-2] + dropout_utility * agent_data["final_allocation"][-1]
+    agent_fu = np.sum(allocated_good_utility *  x_allocated) + default_utility * agent_data["final_allocation"][-2] + dropout_utility * agent_data["final_allocation"][-1]
     agent_fu_max = desired_good_utility
     return agent_fu, agent_fu_max
 

@@ -209,7 +209,7 @@ def find_capacity(goods_list, route_data, vertiport_data):
                 capacity = edge['hold_capacity'] - edge['hold_usage']
                 # print(f"Node hold capacity: {node.get('hold_capacity')}")
                 # print(f"Node usage capacity: {node.get('hold_usage')}")
-                print(f"Capacity on edge {origin} to {destination}: {capacity}")
+                # print(f"Capacity on edge {origin} to {destination}: {capacity}")
         else:
             if origin_base[0] == 'V':
                 # Traveling from vertiport to sector
@@ -851,9 +851,9 @@ def plotting_market(data_to_plot, desired_goods, output_folder, market_auction_t
     plt.close()
 
 
-
     # Desired goods evolution
     plt.figure(figsize=(10, 5))
+    # print(f"Allocations: {agent_allocations}")
     agent_desired_goods_list = []
     for agent in enumerate(desired_goods):
         agent_id = agent[0]
@@ -862,8 +862,8 @@ def plotting_market(data_to_plot, desired_goods, output_folder, market_auction_t
         # arr_index = desired_goods[agent_name]["desired_good_arr"]
         label = f"Flight:{agent_name}, {desired_goods[agent_name]['desired_edge']}" 
         # plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_id][dep_index] for i in range(len(agent_allocations))], '-', label=f"{agent_name}_dep good")
-        dep_to_arr_index = desired_goods[agent_name]["desired_good_dep_to_arr"]
-        agent_desired_goods = [agent_allocations[i][agent_id][dep_to_arr_index] for i in range(len(agent_allocations))]
+        dep_index = desired_goods[agent_name]["desired_edge_idx"]
+        agent_desired_goods = [agent_allocations[i][agent_id][dep_index] for i in range(len(agent_allocations))]
         agent_desired_goods_list.append(agent_desired_goods)
         plt.plot(range(1, x_iter + 1), agent_desired_goods, '--', label=label)
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
@@ -871,7 +871,7 @@ def plotting_market(data_to_plot, desired_goods, output_folder, market_auction_t
     plt.title("Desired Goods Agent allocation evolution")
     plt.savefig(get_filename("desired_goods_allocation_evolution"), bbox_inches='tight')
     plt.close()
-    # print(f"Final Desired Goods Allocation: {[desired_goods[-1] for desired_goods in agent_desired_goods_list]}")
+    print(f"Final Desired Goods Allocation: {[desired_goods[-1] for desired_goods in agent_desired_goods_list]}")
 
     # Market Clearing Error
     plt.figure(figsize=(10, 5))
