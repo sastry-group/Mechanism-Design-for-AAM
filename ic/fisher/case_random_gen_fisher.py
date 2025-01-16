@@ -140,7 +140,7 @@ def generate_flights():
         auction_interval = random.choice(
             auction_intervals[: (np.abs(np.array(auction_intervals) - last_auction)).argmin()])
         
-        appearance_time = random.randint(1, 9) # CHANGE FOR A LONGER RECEDING HORIZON
+        appearance_time = random.randint(1, 20) # CHANGE FOR A LONGER RECEDING HORIZON
 
         origin_vertiport_id = random.choice(allowed_origin_vertiport)
         allowed_origin_vertiport.remove(origin_vertiport_id)
