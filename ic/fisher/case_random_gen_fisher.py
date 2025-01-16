@@ -11,7 +11,8 @@ from math import radians, sin, cos, sqrt, atan2
 START_TIME = 1 # multiple of timestep
 END_TIME = 100
 TIME_STEP = 1
-AUCTION_DT = 10 # every 15 timesteps there is an auction
+AUCTION_DT = 10 # AUCTION FREQUENCY
+SPEED = 90 # knots
 
 # Case study settings
 # N_FLIGHTS = random.randint(50, 60)
@@ -48,77 +49,156 @@ total_capacity = sum(vertiport["hold_capacity"] for vertiport in vertiports.valu
 assert total_capacity >= N_FLIGHTS, f"Total holding capacity ({total_capacity}) must be greater than or equal to the number of flights ({N_FLIGHTS})"
 
 
-# Function to generate random flights
+def calculate_sector_times(origin, destination, sector_path, request_departure_time, request_arrival_time):
+    """
+    Calculate the times at which a flight will cross each sector along its path, based on the speed.
+
+    Args:
+    - origin (dict): Origin vertiport data with latitude and longitude.
+    - destination (dict): Destination vertiport data with latitude and longitude.
+    - sector_path (list): Ordered list of sectors along the path.
+    - request_departure_time (int): Departure time of the flight.
+
+    Returns:
+    - list: Times at which the flight crosses each sector.
+    """
+    # sector_distances = [calculate_distance(origin, sectors[sector_path[0]])]
+    sector_distances = []
+
+    for i in range(len(sector_path) - 1):
+        sector_distances.append(calculate_distance(sectors[sector_path[i]], sectors[sector_path[i + 1]]))
+
+    sector_distances.append(calculate_distance(sectors[sector_path[-1]], destination))
+
+
+    sector_times = [request_departure_time]
+
+    for distance in sector_distances:
+        if distance == 0:
+            travel_time = 0
+        else:
+            # assuming a 10 km radius for the sector
+            sector_entrance_distance = distance - 10 
+            travel_time = math.ceil(sector_entrance_distance  * 0.5399568 * 60  / SPEED)
+        sector_times.append(sector_times[-1] + travel_time)
+    
+    sector_times = sector_times[:-1] # Exclude the last element (arrival at destination)
+    sector_times.append(request_arrival_time)
+
+    return sector_times  
+
+def get_sectors_along_path(origin_id, destination_id, vertiports, proximity_miles=3):
+    """
+    Identify sectors along the path between origin and destination vertiports based on proximity.
+    
+    Args:
+    - origin_id (str): Origin vertiport ID.
+    - destination_id (str): Destination vertiport ID.
+    - vertiports (dict): Dictionary of vertiports with their latitude and longitude.
+    - proximity_miles (float): Proximity threshold in miles to consider a sector along the path.
+    
+    Returns:
+    - list: Ordered list of sectors along the path.
+    """
+    origin = vertiports[origin_id]
+    destination = vertiports[destination_id]
+    sectors_along_path = []
+
+    for sector_id, sector_data in sectors.items():
+        # Calculate distance from the sector to the path endpoints
+        distance_to_origin = calculate_distance(origin, sector_data) * 0.621371  # Convert km to miles
+        distance_to_destination = calculate_distance(destination, sector_data) * 0.621371  # Convert km to miles
+
+        # If the sector is within proximity, add it to the path
+        if distance_to_origin <= proximity_miles or distance_to_destination <= proximity_miles:
+            sectors_along_path.append(sector_id)
+
+    # Ensure sectors are ordered based on their proximity to the origin
+    sectors_along_path = sorted(sectors_along_path, key=lambda s: calculate_distance(origin, sectors[s]))
+    return sectors_along_path
+
 def generate_flights():
     flights = {}
     vertiports_list = list(vertiports.keys())
-    allowed_origin_vertiport = [vertiport_id for vertiport_id in vertiports_list for _ in range(vertiports[vertiport_id]["hold_capacity"])]
-    # appearance_time = 0
+    allowed_origin_vertiport = [
+        vertiport_id
+        for vertiport_id in vertiports_list
+        for _ in range(vertiports[vertiport_id]["hold_capacity"])
+    ]
     routes = generate_routes(vertiports)
-    # change this in how the file is generated
-    route_dict = {(route["origin_vertiport_id"], route["destination_vertiport_id"]): route["travel_time"] for route in routes}
+    route_dict = {
+        (route["origin_vertiport_id"], route["destination_vertiport_id"]): route["travel_time"]
+        for route in routes
+    }
 
     max_travel_time = route_dict[max(route_dict, key=route_dict.get)]
-    last_auction =  END_TIME - max_travel_time - AUCTION_DT
+    last_auction = END_TIME - max_travel_time - AUCTION_DT
     auction_intervals = list(range(START_TIME, END_TIME, AUCTION_DT))
 
-    for i in range(N_FLIGHTS):  
-        flight_id = f"AC{i+1:03d}"
+    for i in range(N_FLIGHTS):
+        flight_id = f"AC{i + 1:03d}"
+        auction_interval = random.choice(
+            auction_intervals[: (np.abs(np.array(auction_intervals) - last_auction)).argmin()])
         
-        # Select a random auction interval for the appearance time
-        auction_interval = random.choice(auction_intervals[:(np.abs(np.array(auction_intervals) - last_auction)).argmin()])
-        appearance_time = random.randint(1,9)
-        # appearance_time = random.randint(auction_interval, auction_interval + AUCTION_DT) # to avoid flights appearing after the last auction, this is also constraint by the maximu travel time for node creation
-        # appearance_time = random.randint(1, 50) #needs to be changes using end time variable
+        appearance_time = random.randint(1, 9) # CHANGE FOR A LONGER RECEDING HORIZON
 
-        # Choose origin vertiport
         origin_vertiport_id = random.choice(allowed_origin_vertiport)
         allowed_origin_vertiport.remove(origin_vertiport_id)
-        
+
         destination_vertiport_id = random.choice(vertiports_list)
         while destination_vertiport_id == origin_vertiport_id:
             destination_vertiport_id = random.choice(vertiports_list)
 
-        # request_departure_time = appearance_time + random.randint(5, 10)
-        request_departure_time = random.randint(auction_interval + AUCTION_DT, auction_interval + 2*AUCTION_DT)
-        # delay = random.randint(1, 5)
-        # second_departure_time = request_departure_time + delay
-        travel_time = route_dict.get((origin_vertiport_id , destination_vertiport_id), None)
+        # request_departure_time = random.randint(
+        #     auction_interval + AUCTION_DT, auction_interval + 2 * AUCTION_DT)
+        
+        request_departure_time = random.randint(appearance_time +   AUCTION_DT, appearance_time + 2 * AUCTION_DT)
+        
+        travel_time = route_dict.get((origin_vertiport_id, destination_vertiport_id), None)
         request_arrival_time = request_departure_time + travel_time
-        # second_arrival_time = request_arrival_time + delay
 
         valuation = random.randint(100, 200)
         budget_constraint = random.randint(50, 200)
-        # second_valuation = valuation - random.randint(5,10)
-        flight_info = { # change the request to be parking or move if nonalloc
+
+        # Determine the sectors along the path
+        sector_path = get_sectors_along_path(
+            origin_vertiport_id, destination_vertiport_id, vertiports
+        )
+
+        # Calculate sector times
+        sector_times = calculate_sector_times(
+            vertiports[origin_vertiport_id],
+            vertiports[destination_vertiport_id],
+            sector_path,
+            request_departure_time, request_arrival_time)
+
+        flight_info = {
             "appearance_time": appearance_time,
             "origin_vertiport_id": origin_vertiport_id,
             "budget_constraint": budget_constraint,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
-                    "destination_vertiport_id": origin_vertiport_id,
+                    "bid": 1,
+                    "valuation": 1,
                     "request_departure_time": 0,
                     "request_arrival_time": 0,
-                    "valuation": 1,
+                    "destination_vertiport_id": origin_vertiport_id,
                 },
                 "001": {
+                    "bid": random.randint(100, 200),
+                    "valuation": valuation,
+                    "sector_path": sector_path,
+                    "sector_times": sector_times,
                     "destination_vertiport_id": destination_vertiport_id,
                     "request_departure_time": request_departure_time,
                     "request_arrival_time": request_arrival_time,
-                    "valuation": valuation,
                 },
-                # "002": {
-
-                #     "destination_vertiport_id": destination_vertiport_id,
-                #     "request_departure_time": second_departure_time,
-                #     "request_arrival_time": second_arrival_time,
-                #     "valuation": second_valuation,  
-                # }
-            }
+            },
         }
         flights[flight_id] = flight_info
     return flights, routes
+
 
 
 def generate_sectors(vertiports, num_sectors_per_vertiport=1):
@@ -139,15 +219,15 @@ def generate_sectors(vertiports, num_sectors_per_vertiport=1):
         for i in range(num_sectors_per_vertiport):
             sector_key = f"S{sector_id:03d}"
             sectors[sector_key] = {
-                "latitude": vertiport_data["latitude"],  # Same latitude as vertiport
-                "longitude": vertiport_data["longitude"],  # Same longitude as vertiport
-                "hold_capacity": random.randint(1, 3)  # Random hold capacity, can be customized
+                "latitude": vertiport_data["latitude"],  
+                "longitude": vertiport_data["longitude"],  
+                "hold_capacity": random.randint(5, 10) 
             }
             sector_id += 1
     return sectors
 
 
-# Function to calculate distance between two points using Haversine formula
+
 def calculate_distance(origin, destination):
     """
     This function calculates distance from two vertiports
@@ -162,21 +242,19 @@ def calculate_distance(origin, destination):
     lat2 = radians(destination["latitude"])
     lon2 = radians(destination["longitude"])
 
-    # Calculate the change in coordinates
     dlon = lon2 - lon1
     dlat = lat2 - lat1
 
-    # Apply Haversine formula
+    # Haversine formula
     a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
     c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
-    # Calculate distance
     distance = R * c
     return distance
 
 
 
-# Generate fleets
+
 def generate_fleets(flights_data):
     fleets = {}
     # flights = list(generate_flights().keys())
@@ -199,8 +277,7 @@ def generate_routes(vertiports):
                 # this could be bad code practice below to input unformatted data, might change later
                 # this is also somthing that will be moved to each agent's bid
                 distance = calculate_distance(origin_data, destination_data) # km
-                speed = 90 # placeholder, we need to add specific vehicle speed in knots (Wisk)
-                travel_time = math.ceil(distance * 0.5399568 * 60  / speed)   # cover distance from km to naut.miles then hr to min
+                travel_time = math.ceil(distance * 0.5399568 * 60  / SPEED)   # cover distance from km to naut.miles then hr to min
                 route = {
                     "origin_vertiport_id": origin_id, 
                     "destination_vertiport_id": destination_id, 
@@ -210,23 +287,35 @@ def generate_routes(vertiports):
                 routes.append(route)
     return routes
 
-# Write JSON data to dictionary
+
+
+sectors = generate_sectors(vertiports)
 flights, routes = generate_flights()
 fleets = generate_fleets(list(flights.keys()))
-sectors = generate_sectors(vertiports)
 
-# Updated JSON data to include sectors
+
 json_data = {
-    "timing_info": {"start_time": START_TIME, "end_time": END_TIME, "time_step": TIME_STEP, "auction_frequency": AUCTION_DT},
-    "congestion_params": {"lambda": 0.1, "C": {vertiport: list(np.array([0, 0.1, 0.3, 0.6, 1, 1.5, 2.1, 2.8, 3.6, 4.5, 5.5])*random.randint(1,4)) for vertiport in vertiports.keys()}},
+    "timing_info": {
+        "start_time": START_TIME,
+        "end_time": END_TIME,
+        "time_step": TIME_STEP,
+        "auction_frequency": AUCTION_DT,
+    },
+    "congestion_params": {
+        "lambda": 0.1,
+        "C": {
+        vertiport: [round(value, 2) for value in list(
+            np.array([0, 0.1, 0.3, 0.6, 1, 1.5, 2.1, 2.8, 3.6, 4.5, 5.5])
+            * random.randint(1, 4))] for vertiport in vertiports.keys()},
+    },
     "fleets": fleets,
     "flights": flights,
     "vertiports": vertiports,
     "routes": routes,
-    "sectors": sectors 
+    "sectors": sectors,
 }
 
-# Write flight data to JSON file
+
 current_datetime = datetime.now()
 formatted_datetime = current_datetime.strftime("%Y%m%d_%H%M%S")
 
