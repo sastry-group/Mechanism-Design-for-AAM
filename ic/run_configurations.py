@@ -22,8 +22,9 @@ for idx, (BETA, dropout_good_valuation, default_good_valuation, price_default_go
     args = [
         "python", main_script_path,
         "--file", "test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap5_withReturn.json",
-        # "--file", "test_cases/small_receding_toulouse_case_withC.json",
-        # "--file", "test_cases/casef_20250109_174256.json",
+        # "--file", "test_cases/archived_presub/small_receding_toulouse_case_withC.json",
+        # "--file", "test_cases/archived_presub/casef_20250109_174256.json",
+        "--file", "test_cases/casef_20250115_205310.json",
         "--method", "fisher",
         "--output_bsky", str(False),
         "--force_overwrite",
