@@ -1067,12 +1067,13 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     
 
     print("---FINAL ALLOCATION---")
-    # for agent_x, desired_good in zip(x, desired_goods):
-    # print(f"Agent allocation of goods: {[goods_list[i] for i in np.where(x[0] > 0.1)[0]]}")
-    print(f"Partial allocation for 0th agent: {[goods_list[i] for i in np.where(x[0] > 0.1)[0]]}")
-    print(f"Partial allocation for 1st agent: {[goods_list[i] for i in np.where(x[1] > 0.1)[0]]}")
-    print(f"Partially allocated good values: {[x[0][i] for i in np.where(x[0] > 0.1)[0]]}")
-    print(f"Partially allocated good values: {[x[1][i] for i in np.where(x[1] > 0.1)[0]]}")
+    for agent_x, desired_good in zip(x, desired_goods):
+        print(f"Agent allocation of goods: {[goods_list[i] for i in np.where(x[0] > 0.1)[0]]}")
+        print(f"Partially allocated good values: {[x[0][i] for i in np.where(x[0] > 0.1)[0]]}")
+    # print(f"Partial allocation for 0th agent: {[goods_list[i] for i in np.where(x[0] > 0.1)[0]]}")
+    # print(f"Partial allocation for 1st agent: {[goods_list[i] for i in np.where(x[1] > 0.1)[0]]}")
+    # print(f"Partially allocated good values: {[x[0][i] for i in np.where(x[0] > 0.1)[0]]}")
+    # print(f"Partially allocated good values: {[x[1][i] for i in np.where(x[1] > 0.1)[0]]}")
     # print(f"Full agent allocations: {x[2][-2]}")
     # print(f"Goods list: {goods_list}")
     # print(f"{np.where(np.array(goods_list) == ('S001_37', 'S002_37'))}")
