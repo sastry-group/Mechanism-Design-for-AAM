@@ -76,8 +76,6 @@ grpcio==1.62.1
 gurobipy==11.0.1
 gym==0.26.2
 gym-notices==0.0.8
-hj-reachability-utils @ file:///home/gaby/Documents/UCB/Safety/GITrepo/safety_dynamics/safe_aam/hj_reachability_utils
-hj_reachability==0.6.0
 ic-bluesky==0.0.1
 idna==3.8
 importlib_metadata==7.1.0
