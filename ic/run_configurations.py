@@ -25,7 +25,7 @@ for idx, (BETA, dropout_good_valuation, default_good_valuation, price_default_go
         # "--file", "test_cases/archived_presub/small_receding_toulouse_case_withC.json",
         # "--file", "test_cases/archived_presub/casef_20250109_174256.json",
         # "--file", "test_cases/casef_20250115_205310.json",
-        "--file", "test_cases/casef_20250116_153516.json",
+        # "--file", "test_cases/casef_20250116_153516.json",
         "--method", "fisher",
         "--output_bsky", str(False),
         "--force_overwrite",

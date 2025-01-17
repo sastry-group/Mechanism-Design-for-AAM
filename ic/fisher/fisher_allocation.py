@@ -236,40 +236,6 @@ def find_capacity(goods_list, route_data, vertiport_data):
 
     return capacities
 
-def update_basic_market(x, values_k, market_settings, constraints):
-    '''Update market consumption, prices, and rebates'''
-    shape = np.shape(x)
-    num_agents = shape[0]
-    num_goods = shape[1]
-    k, p_k, r_k = values_k
-    supply, beta = market_settings
-    
-    # Update consumption
-    y = cp.Variable((num_agents, num_goods))
-    objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(x - y, 'fro')) - (beta / 2) * cp.square(cp.norm(cp.sum(y, axis=0) - supply, 2)))
-    # cp_constraints = [y >= 0]
-    # problem = cp.Problem(objective, cp_constraints)
-    problem = cp.Problem(objective)
-    problem.solve(solver=cp.CLARABEL)
-    y_k_plus_1 = y.value
-
-    # Update prices
-    p_k_plus_1 = p_k + beta * (np.sum(y_k_plus_1, axis=0) - supply)
-    for i in range(len(p_k_plus_1)):
-        if p_k_plus_1[i] < 0:
-            p_k_plus_1[i] = 0
-
-    # Update each agent's rebates
-    r_k_plus_1 = []
-    for i in range(num_agents):
-        agent_constraints = constraints[i]
-        if UPDATED_APPROACH:
-            constraint_violations = np.array([agent_constraints[0][j] @ x[i] - agent_constraints[1][j] for j in range(len(agent_constraints[1]))])
-
-        else:
-            constraint_violations = np.array([max(agent_constraints[0][j] @ x[i] - agent_constraints[1][j], 0) for j in range(len(agent_constraints[1]))])
-        r_k_plus_1.append(r_k[i] + beta * constraint_violations)
-    return k + 1, y_k_plus_1, p_k_plus_1, r_k_plus_1
 
 
 def update_market(x_val, values_k, market_settings, constraints, agent_goods_lists, goods_list, 
@@ -379,14 +345,6 @@ def update_market(x_val, values_k, market_settings, constraints, agent_goods_lis
     return k + 1, y_k_plus_1, p_k_plus_1, r_k_plus_1, problem
 
 
-def update_basic_agents(w, u, p, r, constraints, y, beta, rational=False):
-    num_agents = len(w)
-    num_goods = len(p)
-    x = np.zeros((num_agents, num_goods))
-    for i in range(num_agents):
-        x[i,:] = update_agent(w[i], u[i,:], p, r[i], constraints[i], y[i,:], beta, rational=rational)
-    # print(x)
-    return x
 
 
 def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, beta, x_iter, update_frequency, rational=False, parallel=False, integral=False):
@@ -523,64 +481,6 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_freque
 
 
     return x_i.value, w_adj, (build_time, solve_time)
-
-
-def run_basic_market(initial_values, agent_settings, market_settings, plotting=False, rational=False):
-    u, agent_constraints = agent_settings
-    y, p, r = initial_values
-    w, supply, beta = market_settings
-
-    x_iter = 0
-    prices = []
-    rebates = []
-    overdemand = []
-    agent_allocations = []
-    error = [] * len(agent_constraints)
-    while x_iter <= 100:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
-        # Update agents
-        x = update_basic_agents(w, u, p, r, agent_constraints, y, beta, rational=rational)
-        agent_allocations.append(x)
-        overdemand.append(np.sum(x, axis=0) - supply.flatten())
-        for agent_index in range(len(agent_constraints)):
-            constraint_error = agent_constraints[agent_index][0] @ x[agent_index] - agent_constraints[agent_index][1]
-            if x_iter == 0:
-                error.append([constraint_error])
-            else:
-                error[agent_index].append(constraint_error)
-
-        # Update market
-        k, y, p, r = update_basic_market(x, (1, p, r), (supply, beta), agent_constraints)
-        rebates.append([rebate_list for rebate_list in r])
-        prices.append(p)
-        x_iter += 1
-    if plotting:
-        for good_index in range(len(p)):
-            plt.plot(range(1, x_iter+1), [prices[i][good_index] for i in range(len(prices))], label=f"Good {good_index}")
-        plt.xlabel('x_iter')
-        plt.ylabel('Prices')
-        plt.title("Price evolution")
-        plt.legend()
-        plt.show()
-        plt.plot(range(1, x_iter+1), overdemand)
-        plt.xlabel('x_iter')
-        plt.ylabel('Demand - Supply')
-        plt.title("Overdemand evolution")
-        plt.show()
-        for agent_index in range(len(agent_constraints)):
-            plt.plot(range(1, x_iter+1), error[agent_index])
-        plt.title("Constraint error evolution")
-        plt.show()
-        for constraint_index in range(len(rebates[0])):
-            plt.plot(range(1, x_iter+1), [rebates[i][constraint_index] for i in range(len(rebates))])
-        plt.title("Rebate evolution")
-        plt.show()
-        for agent_index in range(len(agent_allocations[0])):
-            plt.plot(range(1, x_iter+1), [agent_allocations[i][agent_index] for i in range(len(agent_allocations))])
-        plt.title("Agent allocation evolution")
-        plt.show()
-    print(f"Error: {[error[i][-1] for i in range(len(error))]}")
-    print(f"Overdemand: {overdemand[-1][:]}")
-    return x, p, r, overdemand
 
 
 
@@ -769,10 +669,11 @@ def plotting_market(data_to_plot, desired_goods, output_folder, market_auction_t
 
     # x_iter, prices, p, overdemand, error, abs_error, rebates, agent_allocations, market_clearing, agent_constraints, yplot, social_welfare, desired_goods = data_to_plot
     def get_filename(base_name):
+        case_name = output_folder.split("/")[-1]
         if market_auction_time:
-            return f"{output_folder}/{base_name}_a{market_auction_time}.png"
+            return f"{output_folder}/{base_name}_a{market_auction_time}_{case_name}.png"
         else:
-            return f"{output_folder}/{base_name}.png"
+            return f"{output_folder}/{base_name}_{case_name}.png"
     
     # Price evolution
     plt.figure(figsize=(10, 5))
@@ -860,9 +761,9 @@ def plotting_market(data_to_plot, desired_goods, output_folder, market_auction_t
         agent_name = agent[1]       
         # dep_index = desired_goods[agent_name]["desired_good_dep"]
         # arr_index = desired_goods[agent_name]["desired_good_arr"]
-        label = f"Flight:{agent_name}, {desired_goods[agent_name]['desired_edge']}" 
+        label = f"Flight:{agent_name}, {desired_goods[agent_name]['desired_dep_edge']}" 
         # plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_id][dep_index] for i in range(len(agent_allocations))], '-', label=f"{agent_name}_dep good")
-        dep_index = desired_goods[agent_name]["desired_edge_idx"]
+        dep_index = desired_goods[agent_name]["desired_dep_edge_idx"]
         agent_desired_goods = [agent_allocations[i][agent_id][dep_index] for i in range(len(agent_allocations))]
         agent_desired_goods_list.append(agent_desired_goods)
         plt.plot(range(1, x_iter + 1), agent_desired_goods, '--', label=label)
@@ -942,21 +843,25 @@ def track_desired_goods(flights, goods_list):
         desired_dep_time = desired_request["request_departure_time"]
         desired_vertiport = desired_request["destination_vertiport_id"]
         desired_arrival_time = desired_request["request_arrival_time"]
-        desired_edge = (f"{origin_vertiport}_{desired_dep_time}", f"{origin_vertiport}_{desired_dep_time}_dep")
-        flights_desired_goods = [desired_edge]
+        desired_transit_edges = []
+        desired_dep_edge = (f"{origin_vertiport}_{desired_dep_time}", f"{origin_vertiport}_{desired_dep_time}_dep")
+        flights_desired_goods = [desired_dep_edge]
         for i in range(appearance_time, desired_dep_time):
             flights_desired_goods.append((f"{origin_vertiport}_{i}", f"{origin_vertiport}_{i+1}"))
         flights_desired_goods.append((f"{origin_vertiport}_{desired_dep_time}_dep", f"{desired_request['sector_path'][0]}_{desired_request['sector_times'][0]}"))
+        desired_transit_edges.append((f"{origin_vertiport}_{desired_dep_time}_dep", f"{desired_request['sector_path'][0]}_{desired_request['sector_times'][0]}"))
         for i in range(len(desired_request["sector_path"])):
             sector = desired_request["sector_path"][i]
             start_time = desired_request["sector_times"][i]
             end_time = desired_request["sector_times"][i+1]
             for sector_time in range(start_time, end_time):
                 flights_desired_goods.append((f"{sector}_{sector_time}", f"{sector}_{sector_time+1}"))
+
             if i < len(desired_request["sector_path"]) - 1:
                 next_sector = desired_request["sector_path"][i+1]
                 flights_desired_goods.append((f"{sector}_{end_time}", f"{next_sector}_{end_time}"))
         if desired_vertiport is not None:
+            desired_arr_edge = (f"{sector}_{end_time}", f"{desired_vertiport}_{desired_arrival_time}_arr")
             flights_desired_goods.append((f"{sector}_{end_time}", f"{desired_vertiport}_{desired_arrival_time}_arr"))
             flights_desired_goods.append((f"{desired_vertiport}_{desired_arrival_time}_arr", f"{desired_vertiport}_{desired_arrival_time}"))
             # desired_good_dep_to_arr = (f"{origin_vertiport}_{desired_dep_time}_dep", f"{desired_vertiport}_{desired_arrival_time}_arr")
@@ -970,8 +875,11 @@ def track_desired_goods(flights, goods_list):
         index_list = []
         for good in flights_desired_goods:
             index_list.append(goods_list.index(good))
-        desired_goods[flight_id] = {"good_indices": index_list, "desired_edge_idx": goods_list.index(desired_edge), 
-                                    "desired_edge": desired_edge}
+        desired_goods[flight_id] = {"good_indices": index_list, "desired_dep_edge_idx": goods_list.index(desired_dep_edge), 
+                                    "desired_dep_edge": desired_dep_edge, "desired_paths": flights_desired_goods, 
+                                    "desired_arr_edge": desired_arr_edge, "desired_transit_edges": desired_transit_edges, 
+                                    "desired_arr_edge_idx": goods_list.index(desired_arr_edge), 
+                                    "desired_transit_edges_idx": [goods_list.index(desired_transit_edges[i]) for i in range(len(desired_transit_edges))]}
 
     return desired_goods
 

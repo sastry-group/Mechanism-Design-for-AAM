@@ -404,7 +404,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
 
     file_name = file_path.split("/")[-1].split(".")[0]
     # data = load_json(file_path)
-    output_folder = f"ic/results/{file_name}_{method}_beta{design_parameters['beta']}_dval{design_parameters['dropout_good_valuation']}_outval{design_parameters['default_good_valuation']}_pout{design_parameters['price_default_good']}_freq{design_parameters['lambda_frequency']}_pbound{design_parameters['price_upper_bound']}_receding"
+    output_folder = f"ic/results/{file_name}_{method}_b-{design_parameters['beta']}_dval{design_parameters['dropout_good_valuation']}_outval{design_parameters['default_good_valuation']}_pout{design_parameters['price_default_good']}_freq{design_parameters['lambda_frequency']}_pbound{design_parameters['price_upper_bound']}_receding_{time.time()}"
     Path(output_folder).mkdir(parents=True, exist_ok=True)
 
     flights = data["flights"]

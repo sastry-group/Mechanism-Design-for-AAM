@@ -71,6 +71,7 @@ def store_agent_data(flights, fisher_allocations, agent_information,
                     adjusted_budgets, desired_goods, agent_goods_lists, edge_information):
 
     
+    
     flights_list = list(flights.keys())
     utility, agent_constraints, agent_goods_lists, _ = agent_information
     agent_allocations, agent_dropout_x, agent_indices, agent_edge_information = process_allocations(fisher_allocations, edge_information, agent_goods_lists, flights)
@@ -125,11 +126,11 @@ def rank_allocations(agents_data, market_data):
 
     ranked_agents = {}
     for flight_id, data in agents_data.items():
-        desired_good_idx = data['desired_good_info']["desired_edge_idx"]
+        desired_good_idx = data['desired_good_info']["desired_dep_edge_idx"]
         desired_good_allocation = data['fisher_allocation'][desired_good_idx]
         ranked_agents[flight_id] = {"fisher_desired_good_allocation": desired_good_allocation}
         ranked_agents[flight_id]["desired_good_id"] = desired_good_idx
-        ranked_agents[flight_id]["desired_good"] = data['desired_good_info']["desired_edge"]
+        ranked_agents[flight_id]["desired_good"] = data['desired_good_info']["desired_dep_edge"]
     # Sort agents by their fisher allocation for the desired good in descending order
     sorted_agent_dict = sorted(ranked_agents.items(), key=lambda item: item[1]["fisher_desired_good_allocation"], reverse=True)
     
@@ -168,12 +169,12 @@ def get_next_auction_data(agent_data, market_data):
         # print(f"Allocation indices: {allocation_indices}")
         print(f"Allocated goods: {[data['agent_goods_list'][index] for index in allocation_indices]}")
         if data['status'] == 'allocated':
-            desired_good_idx = data['desired_good_info']["desired_edge_idx"]
+            desired_good_idx = data['desired_good_info']["desired_dep_edge_idx"]
             int_allocation_long = np.zeros(len(data["fisher_allocation"]))
             int_allocation_long[data["agent_edge_indices"]] = data["final_allocation"][:-1] 
             int_allocation_long[-1] = data["final_allocation"][-1]
             if round(int_allocation_long[desired_good_idx]) == 1:
-                good_tuple = (data['desired_good_info']["desired_edge"])
+                good_tuple = (data['desired_good_info']["desired_dep_edge"])
                 # allocation.append((flight_id, good_tuple))
                 agent_data[flight_id]["good_allocated"] = good_tuple
                 allocation.append((flight_id, good_tuple))
