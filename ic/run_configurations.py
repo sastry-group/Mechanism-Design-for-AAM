@@ -21,7 +21,7 @@ main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 for idx, (BETA, dropout_good_valuation, default_good_valuation, price_default_good, lambda_frequency, price_upper_bound) in enumerate(parameter_combinations):
     args = [
         "python", main_script_path,
-        "--file", "test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap5_withReturn.json",
+        # "--file", "test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap5_withReturn.json",
         # "--file", "test_cases/archived_presub/small_receding_toulouse_case_withC.json",
         # "--file", "test_cases/archived_presub/casef_20250109_174256.json",
         # "--file", "test_cases/casef_20250115_205310.json",
