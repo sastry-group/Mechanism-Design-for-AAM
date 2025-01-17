@@ -126,9 +126,18 @@ def write_output(flights, edge_information, market_data_dict,
 
         allocated_flight = agent_data.get("good_allocated", [])
         allocated_dep_time, allocated_arr_time = None, None
-        if allocated_flight:
+        if agent_data.get("status") == "allocated" or agent_data.get("status") == "delayed":
             allocated_dep_time = allocated_flight[0].split("_")[1]
             allocated_arr_time = allocated_flight[1].split("_")[1]
+        elif agent_data.get("status")== "rebased":
+            allocated_dep_time = 0
+            allocated_arr_time = 0
+        elif agent_data.get("status") == "dropped":
+            allocated_dep_time = 0
+            allocated_arr_time = 0
+        else:
+            allocated_dep_time = "unknow"
+            allocated_arr_time = "unknow"
 
         max_capacity = (dep_capacity, next_sector_capacity, arr_capacity)
         status = agent_data.get("status", "unknown")
