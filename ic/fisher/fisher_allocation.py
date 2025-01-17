@@ -769,10 +769,11 @@ def plotting_market(data_to_plot, desired_goods, output_folder, market_auction_t
 
     # x_iter, prices, p, overdemand, error, abs_error, rebates, agent_allocations, market_clearing, agent_constraints, yplot, social_welfare, desired_goods = data_to_plot
     def get_filename(base_name):
+        case_name = output_folder.split("/")[-1]
         if market_auction_time:
-            return f"{output_folder}/{base_name}_a{market_auction_time}.png"
+            return f"{output_folder}/{base_name}_a{market_auction_time}_{case_name}.png"
         else:
-            return f"{output_folder}/{base_name}.png"
+            return f"{output_folder}/{base_name}_{case_name}.png"
     
     # Price evolution
     plt.figure(figsize=(10, 5))
@@ -860,9 +861,9 @@ def plotting_market(data_to_plot, desired_goods, output_folder, market_auction_t
         agent_name = agent[1]       
         # dep_index = desired_goods[agent_name]["desired_good_dep"]
         # arr_index = desired_goods[agent_name]["desired_good_arr"]
-        label = f"Flight:{agent_name}, {desired_goods[agent_name]['desired_edge']}" 
+        label = f"Flight:{agent_name}, {desired_goods[agent_name]['desired_dep_edge']}" 
         # plt.plot(range(1, x_iter + 1), [agent_allocations[i][agent_id][dep_index] for i in range(len(agent_allocations))], '-', label=f"{agent_name}_dep good")
-        dep_index = desired_goods[agent_name]["desired_edge_idx"]
+        dep_index = desired_goods[agent_name]["desired_dep_edge_idx"]
         agent_desired_goods = [agent_allocations[i][agent_id][dep_index] for i in range(len(agent_allocations))]
         agent_desired_goods_list.append(agent_desired_goods)
         plt.plot(range(1, x_iter + 1), agent_desired_goods, '--', label=label)
@@ -942,21 +943,25 @@ def track_desired_goods(flights, goods_list):
         desired_dep_time = desired_request["request_departure_time"]
         desired_vertiport = desired_request["destination_vertiport_id"]
         desired_arrival_time = desired_request["request_arrival_time"]
-        desired_edge = (f"{origin_vertiport}_{desired_dep_time}", f"{origin_vertiport}_{desired_dep_time}_dep")
-        flights_desired_goods = [desired_edge]
+        desired_transit_edges = []
+        desired_dep_edge = (f"{origin_vertiport}_{desired_dep_time}", f"{origin_vertiport}_{desired_dep_time}_dep")
+        flights_desired_goods = [desired_dep_edge]
         for i in range(appearance_time, desired_dep_time):
             flights_desired_goods.append((f"{origin_vertiport}_{i}", f"{origin_vertiport}_{i+1}"))
         flights_desired_goods.append((f"{origin_vertiport}_{desired_dep_time}_dep", f"{desired_request['sector_path'][0]}_{desired_request['sector_times'][0]}"))
+        desired_transit_edges.append((f"{origin_vertiport}_{desired_dep_time}_dep", f"{desired_request['sector_path'][0]}_{desired_request['sector_times'][0]}"))
         for i in range(len(desired_request["sector_path"])):
             sector = desired_request["sector_path"][i]
             start_time = desired_request["sector_times"][i]
             end_time = desired_request["sector_times"][i+1]
             for sector_time in range(start_time, end_time):
                 flights_desired_goods.append((f"{sector}_{sector_time}", f"{sector}_{sector_time+1}"))
+
             if i < len(desired_request["sector_path"]) - 1:
                 next_sector = desired_request["sector_path"][i+1]
                 flights_desired_goods.append((f"{sector}_{end_time}", f"{next_sector}_{end_time}"))
         if desired_vertiport is not None:
+            desired_arr_edge = (f"{sector}_{end_time}", f"{desired_vertiport}_{desired_arrival_time}_arr")
             flights_desired_goods.append((f"{sector}_{end_time}", f"{desired_vertiport}_{desired_arrival_time}_arr"))
             flights_desired_goods.append((f"{desired_vertiport}_{desired_arrival_time}_arr", f"{desired_vertiport}_{desired_arrival_time}"))
             # desired_good_dep_to_arr = (f"{origin_vertiport}_{desired_dep_time}_dep", f"{desired_vertiport}_{desired_arrival_time}_arr")
@@ -970,8 +975,11 @@ def track_desired_goods(flights, goods_list):
         index_list = []
         for good in flights_desired_goods:
             index_list.append(goods_list.index(good))
-        desired_goods[flight_id] = {"good_indices": index_list, "desired_edge_idx": goods_list.index(desired_edge), 
-                                    "desired_edge": desired_edge}
+        desired_goods[flight_id] = {"good_indices": index_list, "desired_dep_edge_idx": goods_list.index(desired_dep_edge), 
+                                    "desired_dep_edge": desired_dep_edge, "desired_paths": flights_desired_goods, 
+                                    "desired_arr_edge": desired_arr_edge, "desired_transit_edges": desired_transit_edges, 
+                                    "desired_arr_edge_idx": goods_list.index(desired_arr_edge), 
+                                    "desired_transit_edges_idx": [goods_list.index(desired_transit_edges[i]) for i in range(len(desired_transit_edges))]}
 
     return desired_goods
 
