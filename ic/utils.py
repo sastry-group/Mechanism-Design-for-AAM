@@ -161,13 +161,13 @@ def find_dep_and_arrival_nodes(edges):
 def get_next_auction_data(agent_data, market_data):
     allocation, rebased, dropped = [], [], []
     for  flight_id, data in agent_data.items():
-        print(f"Processing flight {flight_id}")
+        # print(f"Processing flight {flight_id}")
         # print(f"Goods list: {data['agent_goods_list']}")
         # print(f"Final allocation: {data['final_allocation']}")
         allocation_indices = np.where(data["final_allocation"] == 1)[0]
         allocation_indices = [int(alloc) for alloc in allocation_indices]
         # print(f"Allocation indices: {allocation_indices}")
-        print(f"Allocated goods: {[data['agent_goods_list'][index] for index in allocation_indices]}")
+        # print(f"Allocated goods: {[data['agent_goods_list'][index] for index in allocation_indices]}")
         if data['status'] == 'allocated':
             desired_good_idx = data['desired_good_info']["desired_dep_edge_idx"]
             int_allocation_long = np.zeros(len(data["fisher_allocation"]))
@@ -194,7 +194,7 @@ def get_next_auction_data(agent_data, market_data):
                 else:
                     data['status'] = 'parked'
 
-                print("Check allocation")
+                # print("Check allocation")
                 # else:
                 #     data['status'] = 'rebased'
                 #     good_tuple = ('VOOO', 'V000')
