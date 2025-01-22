@@ -12,11 +12,24 @@ import math
 import numpy as np
 import re
 import copy
+from datetime import datetime
+from logging_config import setup_logger
+import logging
+
+def initialize_logger(log_folder):
+    logger = setup_logger(
+        logger_name="global_logger",
+        log_file_name="simulation_log.txt",
+        log_folder=log_folder,
+        log_level=logging.DEBUG  # Capture DEBUG and above levels
+    )
+    logger.info("Logger initialized successfully.")
+    return logger
 
 
 # Add the bluesky package to the path
 top_level_path = Path(__file__).resolve().parent.parent
-print(str(top_level_path))
+# print(str(top_level_path))
 sys.path.append(str(top_level_path))
 
 import bluesky as bs
@@ -92,7 +105,8 @@ def load_json(file=None):
     
     with open(file, "r", encoding="utf-8") as f:
         data = json.load(f)
-        print(f"Opened file {file}")
+        logger.info(f"Opened file {file}")
+        # print(f"Opened file {file}")
     return data
 
 
@@ -374,7 +388,7 @@ def adjust_interval_flights(allocated_flights, flights):
 def adjust_rebased_flights(rebased_flights, flights, auction_start, auction_end):
     for i, flight_id in enumerate(rebased_flights):
         flights[flight_id]["appearance_time"] = auction_start
-        print(f"Flight {flight_id} appearance time: {auction_start}")
+        # print(f"Flight {flight_id} appearance time: {auction_start}")
         valuation = flights[flight_id]["requests"]['001']["valuation"]
         decay = flights[flight_id]["decay_factor"]
         travel_time = flights[flight_id]["requests"]['001']['request_arrival_time'] - flights[flight_id]["requests"]['001']['request_departure_time']
@@ -386,7 +400,35 @@ def adjust_rebased_flights(rebased_flights, flights, auction_start, auction_end)
 
     return flights
 
-def run_scenario(data, scenario_path, scenario_name, file_path, method, design_parameters=None, save_scenario = True, payment_calc = True):
+
+
+
+def create_output_folder(design_parameters, file_path, method, base_dir="ic/results"):
+    """
+    Creates a main folder for storing simulation outputs, including subfolders for logs, results, and plots.
+    The folder name incorporates design parameters for easy identification.
+    """
+    file_name = file_path.split("/")[-1].split(".")[0]
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    folder_name = (
+        f"{file_name}_{method}_b-{design_parameters['beta']}_"
+        f"dval{design_parameters['dropout_good_valuation']}_"
+        f"outval{design_parameters['default_good_valuation']}_"
+        f"pout{design_parameters['price_default_good']}_"
+        f"freq{design_parameters['lambda_frequency']}_"
+        f"pbound{design_parameters['price_upper_bound']}_"
+        f"receding_{timestamp}"
+    )
+    main_output_folder = os.path.join(base_dir, folder_name)
+    # Path(output_folder).mkdir(parents=True, exist_ok=True)
+    os.makedirs(main_output_folder, exist_ok=True)
+    subfolders = ["log", "results", "plots"]
+    for subfolder in subfolders:
+        os.makedirs(os.path.join(main_output_folder, subfolder), exist_ok=True)
+
+    return main_output_folder
+
+def run_scenario(data, scenario_path, scenario_name, output_folder, method, design_parameters=None, save_scenario = True, payment_calc = True):
     """
     Create and run a scenario based on the given data. Save it to the specified path.
 
@@ -402,10 +444,12 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
     """
     # added by Gaby, creating save folder path
 
-    file_name = file_path.split("/")[-1].split(".")[0]
+
     # data = load_json(file_path)
-    output_folder = f"ic/results/{file_name}_{method}_b-{design_parameters['beta']}_dval{design_parameters['dropout_good_valuation']}_outval{design_parameters['default_good_valuation']}_pout{design_parameters['price_default_good']}_freq{design_parameters['lambda_frequency']}_pbound{design_parameters['price_upper_bound']}_receding_{time.time()}"
-    Path(output_folder).mkdir(parents=True, exist_ok=True)
+    # 
+    # output_folder = f"ic/results/{file_name}_{method}_b-{design_parameters['beta']}_dval{design_parameters['dropout_good_valuation']}_outval{design_parameters['default_good_valuation']}_pout{design_parameters['price_default_good']}_freq{design_parameters['lambda_frequency']}_pbound{design_parameters['price_upper_bound']}_receding_{time.time()}"
+    logger = logging.getLogger("global_logger")
+    logger.info(f"Starting scenario run with method: {method}")
 
     flights = data["flights"]
     vertiports = data["vertiports"]
@@ -488,7 +532,8 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
     max_travel_time = 6
     last_auction =  end_time - max(max_travel_time,auction_freq)
     auction_times = list(np.arange(0, last_auction+1, auction_freq))
-    print(f"Last auction: {last_auction}")
+    # print(f"Last auction: {last_auction}")
+    logger.info(f"Last auction: {last_auction}")
 
     # Initialize stack commands
     stack_commands = ["00:00:00.00>TRAILS OFF\n00:00:00.00>PAN CCR\n00:00:00.00>ZOOM 1\n00:00:00.00>CDMETHOD STATEBASED\n00:00:00.00>DTMULT 30\n"]
@@ -504,7 +549,8 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
 
     # Iterate through each time flights appear
     results = []
-    print("Auction times: ", auction_times)
+    logger.info(f"Auction times: {auction_times}")
+    # print("Auction times: ", auction_times)
     for prev_auction_time, auction_time in zip(auction_times[:-1], auction_times[1:]):
         # Get the current flights
         # current_flight_ids = ordered_flights[appearance_time]
@@ -514,8 +560,9 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
 
         # This is to ensure it doest not rebase the flights beyond simulation end time
         if rebased_flights and auction_time <= last_auction + 1:
-           print("Rebasing flights")
-           flights = adjust_rebased_flights(rebased_flights, flights, prev_auction_time, auction_time)
+        #    print("Rebasing flights")
+            logger.info("Rebasing flights")
+            flights = adjust_rebased_flights(rebased_flights, flights, prev_auction_time, auction_time)
         
         # Sort arriving flights by appearance time
         ordered_flights = {}
@@ -528,7 +575,8 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         
         relevant_appearances = [key for key in ordered_flights.keys() if key >= prev_auction_time and key < auction_time]
         current_flight_ids = sum([ordered_flights[appearance_time] for appearance_time in relevant_appearances], [])
-        print("Current flight ids: ", current_flight_ids)
+        # print("Current flight ids: ", current_flight_ids)
+        logger.debug(f"Current flight ids: {current_flight_ids}")
         if len(current_flight_ids) == 0:
             continue
         current_flights = {
@@ -556,13 +604,15 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
         # filtered_vertiport_usage = VertiportStatus(filtered_vertiports, filtered_sectors, timing_info)
         # filtered_vertiport_usage.add_aircraft(interval_flights)
 
-        print("Performing auction for interval: ", prev_auction_time, " to ", auction_time) 
+        # print("Performing auction for interval: ", prev_auction_time, " to ", auction_time) 
+        logger.info(f"Performing auction for interval: {prev_auction_time} to {auction_time}")
         write_market_interval(prev_auction_time, auction_time, current_flights, output_folder)
 
         if not current_flights:
             continue
 
-        print("Method: ", method)
+        # print("Method: ", method)
+        logger.info(f"Method: {method}")
         # Determine flight allocation and payment
         current_timing_info = {
             "start_time" : timing_info["start_time"],
@@ -591,9 +641,12 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
                 vertiport_usage, current_flights, current_timing_info, filtered_sectors, filtered_vertiports,
                 output_folder, save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
             )
-            print(f"Allocated flights: {allocated_flights}")
-            print(f"Rebased flights: {rebased_flights}")
-            print(f"Social welfare: {sum([val for val in valuations.values()])}")
+            # print(f"Allocated flights: {allocated_flights}")
+            # print(f"Rebased flights: {rebased_flights}")
+            # print(f"Social welfare: {sum([val for val in valuations.values()])}")
+            logger.debug(f"Allocated flights: {allocated_flights}")
+            logger.debug(f"Rebased flights: {rebased_flights}")
+            logger.debug(f"Social welfare: {sum([val for val in valuations.values()])}")
             allocated_requests = []
             for flight_id, allocated_dep in allocated_flights:
                 dep_time = int(allocated_dep[0].split("_")[1])
@@ -609,7 +662,8 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
                     allocated_request["valuation"] = allocated_request["valuation"]*flight["decay_factor"]**delay
                     allocated_requests.append((flight_id, allocated_request))
                     break
-            print(f"Allocated requests: {allocated_requests}")
+            # print(f"Allocated requests: {allocated_requests}")
+            logger.debug(f"Allocated requests: {allocated_requests}")
             vertiport_usage = step_simulation_delay_fisher(
                 vertiport_usage, vertiports, flights, allocated_requests, stack_commands, auction_freq
             )
@@ -625,11 +679,15 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
                 vertiport_usage, vertiports, flights, allocated_flights, stack_commands
             )
 
-            print("ALLOCATED FLIGHTS")
+            # print("ALLOCATED FLIGHTS")
+            logger.debug("ALLOCATED FLIGHTS")
             for af in allocated_flights:
-                print("flight id: ", af[0], "request id: ", af[1]," delay: ", af[2],"value: ", af[3], )
-            print('---------')
-            print(f"Social welfare: {[sum(af[3] for af in allocated_flights)]}")
+                # print("flight id: ", af[0], "request id: ", af[1]," delay: ", af[2],"value: ", af[3], )
+                logger.debug(f"flight id: {af[0]}, request id: {af[1]}, delay: {af[2]}, value: {af[3]}")    
+            logger.debug("---------")
+            # print('---------')
+            # print(f"Social welfare: {[sum(af[3] for af in allocated_flights)]}")
+            logger.debug(f"Social welfare: {[sum(af[3] for af in allocated_flights)]}")
             allocated_flights = [i[0:2] for i in allocated_flights]
         
         elif method == "ascending-auction-profitbased":
@@ -644,11 +702,11 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
                 vertiport_usage, vertiports, flights, allocated_flights, stack_commands
             )
 
-            print("ALLOCATED FLIGHTS")
+            # print("ALLOCATED FLIGHTS")
             for af in allocated_flights:
                 print("flight id: ", af[0], "request id: ", af[1]," delay: ", af[2],"value: ", af[3], )
-            print('---------')
-            print(f"Social welfare: {[sum(af[3] for af in allocated_flights)]}")
+            # print('---------')
+            # print(f"Social welfare: {[sum(af[3] for af in allocated_flights)]}")
             allocated_flights = [i[0:2] for i in allocated_flights]
         elif method == "ff":
             allocated_flights, payments = ff_allocation_and_payment(
@@ -660,7 +718,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
 
         simulation_end_time = time.time()
         elapsed_time = simulation_end_time - simulation_start_time
-        print(f"Elapsed time: {elapsed_time} seconds")
+        # print(f"Elapsed time: {elapsed_time} seconds")
 
         # Evaluate the allocation
         
@@ -679,7 +737,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
             congestion_costs = congestion_info["lambda"] * sum([C(vertiport_usage.nodes[node]["vertiport_id"], vertiport_usage.nodes[node]["hold_usage"]) for node in vertiport_usage.nodes])
             if method == "vcg":
                 assert sw - (valuation - congestion_costs) <= 0.01, "Social welfare calculation incorrect."
-            print(f"Social welfare: {valuation - congestion_costs}")
+            # print(f"Social welfare: {valuation - congestion_costs}")
             results.append((allocated_flights, payments, valuation, congestion_costs))
 
     # Write the scenario to a file
@@ -688,7 +746,7 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
     else:
         path_to_written_file = None
     
-    print("AUCTION DONE")
+    # print("AUCTION DONE")
     # print(results)
 
     # Visualize the graph
@@ -794,48 +852,51 @@ if __name__ == "__main__":
         "lambda_frequency": lambda_frequency,
         "price_upper_bound": price_upper_bound
         }
-    
-
-    # running from launch
+    method = args.method    
     file_path = args.file 
     assert Path(file_path).is_file(), f"File at {file_path} does not exist."
+
+    output_folder = create_output_folder(design_parameters, file_path, method)
+    log_folder = os.path.join(output_folder, "log")
+    logger = initialize_logger(log_folder)  # Initialize logger here
+
+
     test_case_data = load_json(file_path)
     file_name = Path(file_path).name
 
+    
     # Create the scenario
     if args.scn_folder is not None:
         SCN_FOLDER = str(top_level_path) + args.scn_folder
     else:
-        print(str(top_level_path))
+        # print(str(top_level_path))
         SCN_FOLDER = str(top_level_path) + "/scenario/TEST_IC"
-        print(SCN_FOLDER)
+        # print(SCN_FOLDER)
     SCN_NAME = file_name.split(".")[0]
     path = f"{SCN_FOLDER}/{SCN_NAME}.scn"
 
-    # print(SCN_NAME)
 
-    # Check if the path exists and if the user wants to overwrite
+
+
     if os.path.exists(path):
         # Directly proceed if force overwrite is enabled; else, prompt the user
-        if (
-            not args.force_overwrite
-            and input(
+        if (not args.force_overwrite and input(
                 "The scenario file already exists. Do you want to overwrite it? (y/n): "
             ).lower()
             != "y"
         ):
-            print("File not overwritten. Exiting...")
-            sys.exit()
+            logger.info("File not overwritten. Exiting...")
+            sys.exit(0)
 
-    # Create the scenario file and double check the correct path was used
-    #print("SCN_FOLDER: ", SCN_FOLDER)
-    #print("SCN_NAME:", SCN_NAME)
-    #print("FILE_PATH: ",file_path)
-    path_to_scn_file, results = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME, file_path, args.method, design_parameters)
-    print(path_to_scn_file)
-    assert path == path_to_scn_file, "An error occured while writing the scenario file."
+    # Run scenario and handle errors
+    try:
+        path_to_scn_file, results = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME, output_folder, method, design_parameters)
+        logger.info(f"Scenario file written to: {path_to_scn_file}")
+    except Exception as e:
+        logger.error(f"Error while running the scenario: {e}")
+        sys.exit(1)
 
-    # Evaluate scenario
+    # BLUESKY SIM 
     if args.output_bsky:
         # run_from_json(file_path, run_gui=True)
         # Always call as false because the gui does not currently work
