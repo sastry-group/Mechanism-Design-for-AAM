@@ -1,7 +1,13 @@
-# Incentive Compatible Vertiport Reservation in Advanced Air Mobility
+# Mechanism Design Algorithms for Vertiport Reservation and Airspace Allocation for AAM
 
-This is a fork of the Bluesky repo for Air Traffic Simulation. This repo is associated with the paper "Incentive-Compatible Vertiport Reservation in Advanced Air Mobility: An Auction-Based Approach" presented at CDC 2024, which implements an incentive compatible
-approach to vertiport management. The paper can be found at [https://arxiv.org/pdf/2403.18166](https://arxiv.org/pdf/2403.18166).
+This is a repository with the following mechanism design algorithms showcased with Advanced Air Mobility applications but can be used for other applications with :
+- Fisher Market with Linear Constraints
+- Ascending Auction
+
+This repository is associated with the following papers: 
+
+- Pan-Yang Su, Chinmay Maheshwari, Victoria Tuck, and Shankar Sastry. [Incentive-compatible congestion management in advanced air mobility: An auction-based approach. 2024. https://arxiv.org/pdf/2403.18166](https://arxiv.org/pdf/2403.18166).
+- Maheshwari, C., Mendoza, M.G., Tuck, V., Su, P., Qin, V.L., Seshia, S.A., Balakrishnan, H., & Sastry, S. (2024). [Privacy Preserving Mechanisms for Coordinating Airspace Usage in Advanced Air Mobility.](https://arxiv.org/abs/2411.03582) 
 
 Note: Make sure you have Python 3 and pip installed on your system before proceeding with the installation.
 
@@ -10,26 +16,27 @@ You need to get a [Gurobi](https://www.gurobi.com/) license, there is a free reg
 You can follow their steps to get their license installed in the system.
 
 
+
 To install and run the BlueSky simulator, follow these steps:
 1. Clone the repo
     ```bash
-    git clone https://github.com/victoria-tuck/bluesky-IC.git
+    git clone https://github.com/sastry-group/Mechanism-Design-for-AAM.git
     ```
 
 2. We recommend creating a virtual environment using `venv`:
     ```bash
-    cd bluesky-IC
-    python3 -m venv venv
+    cd Mechanism-Design-for-AAM
+    python3 -m venv mechanism-design
     ```
 
 3. Activate the virtual environment:
     - For Windows:
       ```bash
-      .\bluesky-env\Scripts\activate
+      .\mechanism-design\Scripts\activate
       ```
     - For macOS/Linux:
       ```bash
-      source bluesky-env/bin/activate
+      source mechanism-design/bin/activate
       ```
     (Use ```deactivate``` to exit the virtual environment when finished)
 
@@ -38,17 +45,17 @@ To install and run the BlueSky simulator, follow these steps:
     pip3 install -r requirements.txt
     ```
 
-5. Run the BlueSky simulator:
+<!-- 5. Run the BlueSky simulator:
     ```bash
     python3 BlueSky.py
-    ```
+    ``` -->
 
 6. Running the IC-package:
    1. Create database in .test_cases
    2. cd ic/
    3. To create the scenario based on the case run python3 ic/case_random_generator.py
    4. python3 ic/main.py --file test_cases/case1.json --scn_folder /scenario/TEST_IC --method "vcg"
-   5. Run ```python3 Bluesky.py``` and load the scenario
+   <!-- 5. Run ```python3 Bluesky.py``` and load the scenario -->
 
 7. To compare First-come, First-served to our approach, run 
     ```bash
