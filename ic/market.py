@@ -7,7 +7,6 @@ from pathlib import Path
 import networkx as nx
 from rich.console import Console
 from rich.table import Table
-import os
 from multiprocessing import Pool, cpu_count
 import csv
 import json
@@ -108,13 +107,13 @@ def construct_market(flights, timing_info, sectors, vertiport_usage, output_fold
                 A[-1, arrival_index] = -1
                 # valuations.append(0)
 
-        if flight_id == "AC005":
-            for row in A:
-        # row = inc_matrix[-15,:]
-                positive_indices = [edges[index] for index in np.where(row == 1)[0]]
-                negative_indices = [edges[index] for index in np.where(row == -1)[0]]
-                # print(f"{positive_indices} - {negative_indices}")
-                logger.debug(f"Construct market AC005: {positive_indices} - {negative_indices}")
+        # if flight_id == "AC005":
+        #     for row in A:
+        # # row = inc_matrix[-15,:]
+        #         positive_indices = [edges[index] for index in np.where(row == 1)[0]]
+        #         negative_indices = [edges[index] for index in np.where(row == -1)[0]]
+        #         # print(f"{positive_indices} - {negative_indices}")
+        #         logger.debug(f"Construct market AC005: {positive_indices} - {negative_indices}")
 
 
         b = np.zeros(len(A))

@@ -21,7 +21,8 @@ top_level_path = Path(__file__).resolve().parent.parent
 print(str(top_level_path))
 sys.path.append(str(top_level_path))
 
-from fisher.fisher_allocation import find_capacity
+# from fisher.fisher_allocation import find_capacity
+from ic.market import find_capacity
 
 UPDATED_APPROACH = True
 TOL_ERROR = 1e-3
