@@ -894,7 +894,7 @@ if __name__ == "__main__":
         logger.info(f"Scenario file written to: {path_to_scn_file}")
     except Exception as e:
         logger.error(f"Error while running the scenario: {e}")
-        sys.exit(1)
+        sys.exit()
 
     # BLUESKY SIM 
     if args.output_bsky:

@@ -11,6 +11,7 @@ def full_list_string(lst):
 def write_to_csv(dataframe, filepath, mode='w', header=True):
     """Helper function to write DataFrame to a CSV file with error handling."""
     try:
+        # filepath = f"{filepath}"
         dataframe.to_csv(filepath, index=False, mode=mode, header=header)
         # print(f"Data written to {filepath}")
     except Exception as e:
@@ -29,7 +30,7 @@ def write_market_interval(auction_start, auction_end, interval_flights, output_f
         "Flights in Interval": [full_list_string(interval_flights)]
     }
     market_interval_df = pd.DataFrame(market_interval_data)
-    market_interval_file = os.path.join(output_folder, "market_interval.csv")
+    market_interval_file = os.path.join(f"{output_folder}/results/", "market_interval.csv")
     mode = 'w' if not os.path.isfile(market_interval_file) else 'a'
     write_to_csv(market_interval_df, market_interval_file, mode, header=(mode == 'w'))
 
@@ -47,7 +48,7 @@ def write_market_data(edge_information, prices, new_prices, capacity, end_capaci
     
     columns = ["Auction Time", "Edge Label", "Good", "Fisher Prices", "New Prices", "Capacity", "End Capacity"]
     market_df = pd.DataFrame(market_data, columns=columns)
-    market_file = os.path.join(output_folder, f"market_{market_auction_time}.csv")
+    market_file = os.path.join(f"{output_folder}/results/", f"market_{market_auction_time}.csv")
     mode = 'w' if not os.path.isfile(market_file) else 'a'
     write_to_csv(market_df, market_file, mode, header=(mode == 'w'))
 
@@ -67,7 +68,7 @@ def write_agent_data(agent_id, agents_data, edge_information, output_folder):
     }
     
     agent_df = pd.DataFrame(dict([(k, pd.Series(v)) for k, v in data_to_write.items()]))
-    agent_file = os.path.join(output_folder, f"{agent_id}.csv")
+    agent_file = os.path.join(f"{output_folder}/results/", f"{agent_id}.csv")
     mode = 'w' if not os.path.isfile(agent_file) else 'a'
     write_to_csv(agent_df, agent_file, mode, header=(mode == 'w'))
 
@@ -97,7 +98,7 @@ def write_results_table(flights, agents_data, output_folder):
         "Desired Departure (ts)", "Allocation (ts)", "Payment"
     ])
 
-    market_results_file = os.path.join(output_folder, "market_results_table.csv")
+    market_results_file = os.path.join(f"{output_folder}/results/", "market_results_table.csv")
     mode = 'w' if not os.path.isfile(market_results_file) else 'a'
     write_to_csv(market_results_df, market_results_file, mode, header=(mode == 'w'))
 
@@ -159,7 +160,7 @@ def write_output(flights, edge_information, market_data_dict,
     ]
 
     df = pd.DataFrame(data, columns=columns)
-    output_file = os.path.join(output_folder, f"results_table_{market_auction_time}.csv")
+    output_file = os.path.join(f"{output_folder}/results/", f"results_table_{market_auction_time}.csv")
     write_results_table(flights, agents_data, output_folder)
     write_market_data(edge_information, prices, new_prices, capacity, end_capacity, market_auction_time, output_folder)
     write_to_csv(df, output_file)
@@ -196,9 +197,11 @@ def save_data(output_folder, file_name, market_auction_time, **kwargs):
     Saves additional data to a pickle file for later use.
     """
     try:
-        with open(f'{output_folder}/{file_name}_{market_auction_time}.pkl', 'wb') as f:
+        file_path = f'{output_folder}/results/{file_name}_{market_auction_time}.pkl'
+        with open(file_path, 'wb') as f:
             pickle.dump(kwargs, f)
-        print(f"Data saved to {file_name}_{market_auction_time}.pkl")
+
+        print(f"Data saved to {file_path}")
     except Exception as e:
         print(f"Error saving data: {e}")
 
