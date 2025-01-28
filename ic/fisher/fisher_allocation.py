@@ -304,6 +304,7 @@ def update_market(x_val, values_k, market_settings, constraints, agent_goods_lis
         logging.info("Optimization result: %s", result)
 
     y_k_plus_1 = y.value
+    y_bar_k_plus_1 = y_bar.value
 
     # Update prices
     # p_k_plus_1 = np.zeros(p_k.shape)
@@ -311,7 +312,7 @@ def update_market(x_val, values_k, market_settings, constraints, agent_goods_lis
     # (3) do not update price, dont add it in optimization, 
     # (4) update price and add it in optimization, 
     # (5) dont update price but add it in optimization
-    p_k_plus_1 = p_k_val[:-2] + beta * (np.sum(y_k_plus_1, axis=0) - supply[:-2]) #(3) default 
+    p_k_plus_1 = p_k_val[:-2] + beta * (np.sum(y_k_plus_1, axis=0) + y_bar_k_plus_1 - supply[:-2]) #(3) default 
     
     # p_k_plus_1 = p_k[:-1] + beta * (np.sum(y_k_plus_1, axis=0) - supply[:-1]) #(4)
     # p_k_plus_1 = p_k[:-2] + beta * (np.sum(y_k_plus_1[:,:-2], axis=0) - supply[:-2]) #(5)
@@ -534,8 +535,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         overdemand.append(np.sum(x[:,:-2], axis=0) - supply[:-2].flatten())
         x_ij = np.sum(x[:,:-2], axis=0) # removing default and dropout good
         excess_demand = x_ij - supply[:-2]
-        clipped_excess_demand = np.where(p[:-2] > 0, excess_demand, np.maximum(0, excess_demand)) # price removing default and dropout good
-        market_clearing_error = np.linalg.norm(clipped_excess_demand, ord=2)
+        # clipped_excess_demand = np.where(p[:-2] > 0, excess_demand, np.maximum(0, excess_demand)) # price removing default and dropout good
+        market_clearing_error = np.linalg.norm(excess_demand.T * p[:-2], ord=2)
         market_clearing.append(market_clearing_error)
 
         iter_constraint_error = 0
