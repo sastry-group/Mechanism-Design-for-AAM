@@ -533,11 +533,6 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
             x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, x_iter, lambda_frequency, rational=rational, integral=INTEGRAL_APPROACH)
         agent_allocations.append(x) # 
         overdemand.append(np.sum(x[:,:-2], axis=0) - supply[:-2].flatten())
-        x_ij = np.sum(x[:,:-2], axis=0) # removing default and dropout good
-        excess_demand = x_ij - supply[:-2]
-        # clipped_excess_demand = np.where(p[:-2] > 0, excess_demand, np.maximum(0, excess_demand)) # price removing default and dropout good
-        market_clearing_error = np.linalg.norm(excess_demand.T * p[:-2], ord=2)
-        market_clearing.append(market_clearing_error)
 
         iter_constraint_error = 0
         iter_constraint_x_y = 0
@@ -570,6 +565,11 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, rat
         prices.append(p)
         current_social_welfare = social_welfare(x, p, u, supply, agent_indices)
         social_welfare_vector.append(current_social_welfare)
+
+        x_ij = np.sum(x[:,:-2], axis=0) # removing default and dropout good
+        excess_demand = x_ij - supply[:-2]
+        market_clearing_error = abs(p[:-2].T @ excess_demand)
+        market_clearing.append(market_clearing_error)
 
         x_iter += 1
 
