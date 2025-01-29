@@ -8,6 +8,7 @@ import networkx as nx
 from rich.console import Console
 from rich.table import Table
 from multiprocessing import Pool, cpu_count
+from concurrent.futures import ThreadPoolExecutor
 import csv
 import json
 
@@ -337,50 +338,37 @@ def update_market(x_val, values_k, market_settings, constraints, agent_goods_lis
     return k + 1, y_k_plus_1, p_k_plus_1, r_k_plus_1, problem
 
 
-
-
 def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, beta, x_iter, update_frequency, rational=False, parallel=False, integral=False):
+    
     num_agents, num_goods = len(w), len(p)
-
+    if num_agents < 10:
+        parallel = False
     agent_indices = range(num_agents)
     agent_prices = [np.array([p[goods_list.index(good)] for good in agent_goods_lists[i]]) for i in agent_indices]
     agent_utilities = [np.array(u[i]) for i in agent_indices]
     agent_ys = [np.array([y[i, goods_list.index(good)] for good in agent_goods_lists[i][:-2]]) for i in agent_indices]
-    # agent_ys = [np.array([y[i, goods_list[:-2].index(good)] for good in agent_goods_lists[i][:-2]]) for i in agent_indices] # removing dropout and detault good (3)
-    # agent_ys = [np.array([y[i, goods_list[:-1].index(good)] for good in agent_goods_lists[i][:-1]]) for i in agent_indices] # removing dropout (4)
+
     args = [(w[i], agent_utilities[i], agent_prices[i], r[i], constraints[i], agent_ys[i], beta, x_iter, update_frequency, rational, integral) for i in agent_indices]
 
-    # Update agents in parallel or not depending on parallel flag
-    # parallel = True
-    if not parallel:
-        results = []
-        adjusted_budgets = []
-        build_times = []
-        solve_times = []
-        for arg in args:
-            updates =  update_agent(*arg)
-            results.append(updates[0])
-            adjusted_budgets.append(updates[1])
-            build_times.append(updates[2][0])
-            solve_times.append(updates[2][1])
-        # results = [update_agent(*arg) for arg in args]
-        # print(f"Average build time: {np.mean(build_times)} - Average solve time: {np.mean(solve_times)}")
+    results = []
+    adjusted_budgets = []
+
+    if parallel:
+        num_threads = min(10, len(agent_indices))  
+        with ThreadPoolExecutor(max_workers=num_threads) as executor:
+            results = list(executor.map(lambda a: update_agent(*a), args))
+
     else:
-        # num_processes = 4 # increase based on available resources
-        num_processes = min(cpu_count(), len(agent_indices))
-        with Pool(num_processes) as pool:
-            pooled_results = pool.starmap(update_agent, args)
-            results = [result[0] for result in pooled_results]
-            adjusted_budgets = [result[1] for result in pooled_results]
-            build_times = [result[2][0] for result in pooled_results]
-            solve_times = [result[2][1] for result in pooled_results]
-        # print(f"Average build time: {np.mean(build_times)} - Average solve time: {np.mean(solve_times)}")
-        logger.info(f"Average build time: {np.mean(build_times)} - Average solve time: {np.mean(solve_times)}")
+        for arg in args:
+            results.append(update_agent(*arg))
+
     x = np.zeros((num_agents, num_goods))
-    for i, agent_x in zip(agent_indices, results):
+    for i, (agent_x, adj_budget, _) in enumerate(results):
         for good in goods_list:
             if good in agent_goods_lists[i]:
                 x[i, goods_list.index(good)] = agent_x[agent_goods_lists[i].index(good)]
+        adjusted_budgets.append(adj_budget)
+
     return x, adjusted_budgets
 
 def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_frequency, rational=False, integral=True, solver=cp.SCS):
@@ -427,8 +415,10 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_freque
         # lagrangians = - p.T @ x_i - r_i.T @ (A_i @ x_i - b_i) # the price of dropout good is 0
         lagrangians = - p.T @ x_i - r_i * (A_i[0][:] @ x_i - b_i[0])
         nominal_objective = w_adj * cp.log(objective_terms)
+        
         objective = cp.Maximize(nominal_objective + lagrangians + regularizers)
         cp_constraints = [x_i >= 0, x_i<= 1, A_i[1:] @ x_i == b_i[1:]]
+        
         # cp_constraints = [x_i >= 0, A_bar @ x_i[:-2] + x_i[-2] >= 0]
     else:
         regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.sum([cp.square(cp.maximum(A_i[t] @ x_i - b_i[t], 0)) for t in range(num_constraints)])
@@ -441,37 +431,63 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_freque
     # problem.solve(solver=solver, verbose=False)
 
     build_time = time.time() - start_time
+
+    # timing again
     start_time = time.time()
+    solution_found = False
+    result = np.zeros(num_goods)  # Default fallback
+
     if integral:
         solvers = [cp.MOSEK]
     else:
         solvers = [cp.SCS, cp.CLARABEL, cp.MOSEK, cp.OSQP, cp.ECOS, cp.CVXOPT]
+    
+    # for solver in solvers:
+    #     try:
+    #         if solver == cp.MOSEK:
+    #             result = problem.solve(solver=solver, mosek_params={"MSK_DPAR_INTPNT_CO_TOL_REL_GAP": 1e-7})
+    #         else:
+    #             result = problem.solve(solver=solver)
+    #         logger.info(f"Agent Opt - Problem solved with solver {solver}")
+    #         break
+    #     except cp.error.SolverError as e:
+    #         # print(f"Solver error {e}")
+    #         logger.error(f"Agent Opt - Solver {solver} failed: {e}")
+    #         continue
+    #     except Exception as e:
+    #         # print(f"Solver error {e}")
+    #         logger.error(f"Agent Opt - An unexpected error occurred with solver {solver}: {e}")
+    #         continue
+    # solve_time = time.time() - start_time
+    # # print(f"Solver used: {problem.solver_stats.solver_name}")
+    # # print(f"Solver stats: {problem.solver_stats}")
+    # # print(f"Problem status: {problem.status}")
+    
+    # # Check if the problem was solved successfully
+    # if problem.status != cp.OPTIMAL:
+    #     logger.error("Agent Opt - Failed to solve the problem with all solvers.")
+    # else:
+    #     logger.info("Agent opt - Optimization result: %s", result)
+
     for solver in solvers:
         try:
-            if solver == cp.MOSEK:
-                result = problem.solve(solver=solver, mosek_params={"MSK_DPAR_INTPNT_CO_TOL_REL_GAP": 1e-7})
+            problem.solve(solver=solver, warm_start=True)  # Warm-start enabled
+            if problem.status == cp.OPTIMAL:
+                result = x_i.value  # Store result
+                solution_found = True
+                logging.info(f"Agent Opt - Problem solved with {solver} in {time.time() - start_time:.4f} sec")
+                break  # Stop trying solvers once a valid solution is found
             else:
-                result = problem.solve(solver=solver)
-            logger.info(f"Agent Opt - Problem solved with solver {solver}")
-            break
+                logging.warning(f"Agent Opt - Solver {solver} did not return an optimal solution. Status: {problem.status}")
         except cp.error.SolverError as e:
-            # print(f"Solver error {e}")
-            logger.error(f"Agent Opt - Solver {solver} failed: {e}")
-            continue
+            logging.warning(f"Agent Opt - Solver {solver} failed: {e}")
         except Exception as e:
-            # print(f"Solver error {e}")
-            logger.error(f"Agent Opt - An unexpected error occurred with solver {solver}: {e}")
-            continue
+            logging.warning(f"Agent Opt - Unexpected error with solver {solver}: {e}")
+
     solve_time = time.time() - start_time
-    # print(f"Solver used: {problem.solver_stats.solver_name}")
-    # print(f"Solver stats: {problem.solver_stats}")
-    # print(f"Problem status: {problem.status}")
-    
-    # Check if the problem was solved successfully
-    if problem.status != cp.OPTIMAL:
-        logger.error("Agent Opt - Failed to solve the problem with all solvers.")
-    else:
-        logger.info("Agent opt - Optimization result: %s", result)
+
+    if not solution_found:
+        logging.error(f"Agent Opt - All solvers failed. Using zero allocation fallback.")
 
 
     return x_i.value, w_adj, (build_time, solve_time)
