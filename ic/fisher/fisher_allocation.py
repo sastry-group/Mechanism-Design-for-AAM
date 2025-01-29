@@ -12,7 +12,7 @@ from rich.console import Console
 from rich.table import Table
 import logging
 from rich.logging import RichHandler
-
+import time
 
 logger = logging.getLogger("global_logger")
 
@@ -109,7 +109,8 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
                                   output_folder=None, save_file=None, initial_allocation=True, design_parameters=None):
 
     logger = logging.getLogger("global_logger")
-    logger.info("Starting Fisher allocation and payment process.")
+    logger.info("Starting Fisher Allocation and Payment Process.")
+    start_market_time = time.time()
 
     market_auction_time=timing_info["auction_start"]
     if market_auction_time>5:
@@ -193,12 +194,14 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     agent_information = (*agent_information, agent_indices)
     # x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
     logger.info("Running market...")
-    logger.info("start time", )
+    
     x, prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot = run_market((y,p,r), agent_information, market_information, 
                                                              bookkeeping, rational=False, price_default_good=price_default_good, 
                                                              lambda_frequency=lambda_frequency, price_upper_bound=price_upper_bound)
     logger.info("Market run complete.")
-    
+    end_fisher_time =  time.time() - start_market_time
+    console = Console(force_terminal=True)
+    console.print(f"[bold green]Fisher Algorithm runtime {end_fisher_time}...[/bold green]")
 
     # print("---FINAL ALLOCATION---")
     logger.debug("---FINAL ALLOCATION---")
@@ -249,6 +252,10 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
 
     # Getting data for next auction
     allocation, rebased, dropped, = get_next_auction_data(agents_data_dict, market_data_dict)
+
+    logger.info("Time to run entire fisher")
+    console.print(f"[bold green] Algorithm 1 & 2 runtime {time.time() - start_market_time}...[/bold green]")
+
     market_data_dict = plot_utility_functions(agents_data_dict, market_data_dict, output_folder)
 
     # print(f"Allocation: {allocation}")
