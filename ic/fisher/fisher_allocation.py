@@ -193,9 +193,11 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     agent_information = (*agent_information, agent_indices)
     # x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
     logger.info("Running market...")
+    logger.info("start time", )
     x, prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot = run_market((y,p,r), agent_information, market_information, 
                                                              bookkeeping, rational=False, price_default_good=price_default_good, 
                                                              lambda_frequency=lambda_frequency, price_upper_bound=price_upper_bound)
+    logger.info("Market run complete.")
     
 
     # print("---FINAL ALLOCATION---")
