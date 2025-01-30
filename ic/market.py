@@ -354,7 +354,9 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
     adjusted_budgets = []
 
     if parallel:
-        num_threads = min(10, len(agent_indices))  
+        # num_cores = cpu_count()
+        num_threads = min(12, len(agent_indices)) 
+        logging.info(f"Running update_agents in parallel with {num_threads} threads/ CPUs.") 
         with ThreadPoolExecutor(max_workers=num_threads) as executor:
             results = list(executor.map(lambda a: update_agent(*a), args))
 
