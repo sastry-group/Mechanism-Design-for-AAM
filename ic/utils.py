@@ -161,13 +161,13 @@ def find_dep_and_arrival_nodes(edges):
 def get_next_auction_data(agent_data, market_data):
     allocation, rebased, dropped = [], [], []
     for  flight_id, data in agent_data.items():
-        print(f"Processing flight {flight_id}")
+        # print(f"Processing flight {flight_id}")
         # print(f"Goods list: {data['agent_goods_list']}")
         # print(f"Final allocation: {data['final_allocation']}")
         allocation_indices = np.where(data["final_allocation"] == 1)[0]
         allocation_indices = [int(alloc) for alloc in allocation_indices]
         # print(f"Allocation indices: {allocation_indices}")
-        print(f"Allocated goods: {[data['agent_goods_list'][index] for index in allocation_indices]}")
+        # print(f"Allocated goods: {[data['agent_goods_list'][index] for index in allocation_indices]}")
         if data['status'] == 'allocated':
             desired_good_idx = data['desired_good_info']["desired_dep_edge_idx"]
             int_allocation_long = np.zeros(len(data["fisher_allocation"]))
@@ -194,7 +194,7 @@ def get_next_auction_data(agent_data, market_data):
                 else:
                     data['status'] = 'parked'
 
-                print("Check allocation")
+                # print("Check allocation")
                 # else:
                 #     data['status'] = 'rebased'
                 #     good_tuple = ('VOOO', 'V000')
@@ -245,54 +245,3 @@ def compute_utilites(agent_data):
     agent_fu_max = desired_good_utility
     return agent_fu, agent_fu_max
 
-
-def plot_utility_functions(agents_data_dict, market_data_dict, output_folder):
-    agent_names = []
-    max_utilities = []
-    end_utilities = []
-    ascending_utilities = []  # Placeholder for Ascending Auction utilities
-    total_max_utility = 0
-    total_fisher_utility = 0
-    
-    for agent_name, agent in agents_data_dict.items():
-        agent_names.append(agent_name)
-        agent_fu, agent_max_fu = compute_utilites(agent)
-        max_utilities.append(agent_max_fu)
-        end_utilities.append(agent_fu)
-        total_max_utility += agent_max_fu
-        total_fisher_utility += agent_fu
-        ascending_utilities.append(agent_fu - 30)  # Placeholder logic for ascending auction
-    
-    market_data_dict['total_max_utility'] = total_max_utility
-    market_data_dict['total_fisher_utility'] = total_fisher_utility
-
-    bar_width = 0.25  # Narrower bar width since we have three bars
-    indices = np.arange(len(agent_names))
-
-    plt.figure(figsize=(12, 8))
-
-    # Plot Max Utility (light blue)
-    plt.bar(indices - bar_width, max_utilities, bar_width, 
-            color='lightblue', label='Max Utility')
-
-    # Plot Fisher Market (blue)
-    plt.bar(indices, end_utilities, bar_width, 
-            color='blue', label='Fisher Market')
-
-    # Plot Ascending Auction (light green)
-    plt.bar(indices + bar_width, ascending_utilities, bar_width, 
-            color='lightgreen', label='Ascending Auction')
-
-    # Add labels, title, and legend
-    plt.xlabel('Agents')
-    plt.ylabel('Utility')
-    plt.xticks(indices, agent_names, rotation=45)
-
-    # Simplified color-coded legend
-    plt.legend(loc='upper right')
-
-    # Save the figure
-    plt.tight_layout()
-    plt.savefig(f"{output_folder}/utility_distribution.png")
-    plt.close()
-    return market_data_dict
