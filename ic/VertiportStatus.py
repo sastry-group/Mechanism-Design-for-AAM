@@ -72,7 +72,7 @@ class VertiportStatus(nx.DiGraph):
                 attributes = {"hold_capacity": sector["hold_capacity"], "hold_usage": 0}
                 self.add_edge(time_extended_start, time_extended_end, **attributes)
 
-        print(f"Added nodes: {self.nodes} and edges {self.edges}")
+        # print(f"Added nodes: {self.nodes} and edges {self.edges}")
 
 
     def add_aircraft(self, flights):
@@ -159,7 +159,7 @@ class VertiportStatus(nx.DiGraph):
                 assert self[time_extended_origin_start][time_extended_origin_end]["hold_usage"] >= 0 and \
                     self[time_extended_origin_start][time_extended_origin_end]["hold_usage"] <= self[time_extended_origin_start][time_extended_origin_end]["hold_capacity"], \
                     f"Vertiport {origin_vertiport} at time {start_time} to {next_time} has incorrect hold usage."
-                print(f"Adding {time_extended_origin_start} to {time_extended_origin_end} with current hold_usage {self[time_extended_origin_start][time_extended_origin_end]['hold_usage']} and capacity {self[time_extended_origin_start][time_extended_origin_end]['hold_capacity']}")
+                # print(f"Adding {time_extended_origin_start} to {time_extended_origin_end} with current hold_usage {self[time_extended_origin_start][time_extended_origin_end]['hold_usage']} and capacity {self[time_extended_origin_start][time_extended_origin_end]['hold_capacity']}")
                 
             
             # Add the aircraft to the destination vertiport
@@ -170,7 +170,7 @@ class VertiportStatus(nx.DiGraph):
                 assert self[time_extended_destination_start][time_extended_destination_end]["hold_usage"] >= 0 and \
                     self[time_extended_destination_start][time_extended_destination_end]["hold_usage"] <= self[time_extended_destination_start][time_extended_destination_end]["hold_capacity"], \
                     f"Vertiport {destination_vertiport} at time {start_time} to {next_time} has incorrect hold usage."
-                print(f"Adding {time_extended_destination_start} to {time_extended_destination_end} with current hold_usage {self[time_extended_destination_start][time_extended_destination_end]['hold_usage']} and capacity {self[time_extended_destination_start][time_extended_destination_end]['hold_capacity']}")
+                # print(f"Adding {time_extended_destination_start} to {time_extended_destination_end} with current hold_usage {self[time_extended_destination_start][time_extended_destination_end]['hold_usage']} and capacity {self[time_extended_destination_start][time_extended_destination_end]['hold_capacity']}")
                 
         # Add aircraft sector traversal
         sector_path = request["sector_path"]
@@ -184,7 +184,7 @@ class VertiportStatus(nx.DiGraph):
                 self[start_node][end_node]["hold_usage"] += 1
                 assert self[start_node][end_node]["hold_usage"] >= 0 and self[start_node][end_node]["hold_usage"] <= self[start_node][end_node]["hold_capacity"], \
                     f"Sector {current_sector} at time {ts} to time {ts+1} has incorrect hold usage."
-                print(f"Adding {start_node} to {end_node} with current hold_usage {self[start_node][end_node]['hold_usage']} and capacity {self[start_node][end_node]['hold_capacity']}")
+                # print(f"Adding {start_node} to {end_node} with current hold_usage {self[start_node][end_node]['hold_usage']} and capacity {self[start_node][end_node]['hold_capacity']}")
                 # if start_node == "S002_35" and end_node == "S002_36":
                 #     print(f"Adding ({start_node}, {end_node})") 
                 
@@ -195,11 +195,11 @@ class VertiportStatus(nx.DiGraph):
         self[time_extended_origin][time_extended_origin + "_dep"]["takeoff_usage"] += 1
         assert self[time_extended_origin][time_extended_origin + "_dep"]["takeoff_usage"] <= self[time_extended_origin][time_extended_origin + "_dep"]["takeoff_capacity"], \
             f"Vertiport {origin_vertiport} at time {departure_time} over takeoff capacity."
-        print(f"Adding {time_extended_origin} to {time_extended_origin + '_dep'} with current takeoff_usage {self[time_extended_origin][time_extended_origin + '_dep']['takeoff_usage']} and capacity {self[time_extended_origin][time_extended_origin + '_dep']['takeoff_capacity']}")
+        # print(f"Adding {time_extended_origin} to {time_extended_origin + '_dep'} with current takeoff_usage {self[time_extended_origin][time_extended_origin + '_dep']['takeoff_usage']} and capacity {self[time_extended_origin][time_extended_origin + '_dep']['takeoff_capacity']}")
         self[time_extended_destination + "_arr"][time_extended_destination]["landing_usage"] += 1
         assert self[time_extended_destination + "_arr"][time_extended_destination]["landing_usage"] <= self[time_extended_destination + "_arr"][time_extended_destination]["landing_capacity"], \
             f"Vertiport {destination_vertiport} at time {arrival_time} over landing capacity."
-        print(f"Adding {time_extended_destination + '_arr'} to {time_extended_destination} with current landing_usage {self[time_extended_destination + '_arr'][time_extended_destination]['landing_usage']} and capacity {self[time_extended_destination + '_arr'][time_extended_destination]['landing_capacity']}")
+        # print(f"Adding {time_extended_destination + '_arr'} to {time_extended_destination} with current landing_usage {self[time_extended_destination + '_arr'][time_extended_destination]['landing_usage']} and capacity {self[time_extended_destination + '_arr'][time_extended_destination]['landing_capacity']}")
 
 def draw_graph(graph):
     """
