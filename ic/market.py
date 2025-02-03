@@ -413,15 +413,16 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_freque
         logger.debug(f"Agent {x_iter} - Updating budget: {w_i}")
         # print(f"{x_iter % update_frequency}")
         # lambda_i = r_i.T @ b_i # update lambda
-        lambda_i = r_i * b_i[0]
+        lambda_i = r_i * b_i[0][0]
         w_adj = w_i + lambda_i
         # print(w_adj)
         w_adj = max(w_adj, 0)
+        # logger.info(f"Adjusted budget: {w_adj}")
     else:
         w_adj = w_i
     # w_adj = abs(w_adj) 
 
-    # print(f"Adjusted budget: {w_adj}")
+    #logger.info(f"Non-adjusted budget: {w_adj}")
     # optimizer check
     x_i = cp.Variable((num_goods,1), integer=integral)
     if rational:
@@ -436,7 +437,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_freque
         # objective_terms = v_i.T @ x_i[:-2] + v_i_o * x_i[-2] + v_i_d * x_i[-1]
         objective_terms = u_i.T @ x_i
         # regularizers = - (beta / 2) * cp.square(cp.norm(x_i[:-1] - y_i, 2)) - (beta / 2) * cp.square(cp.norm(A_i @ x_i - b_i, 2))  #(4)
-        regularizers = - (beta / 2) * cp.square(cp.norm(x_i[:-2] - y_i, 2)) - (beta / 2) *cp.square(cp.norm(A_i[0][:] @ x_i - b_i[0], 2)) # - (beta / 2) * cp.square(cp.norm(A_i @ x_i - b_i, 2))        
+        regularizers = - (beta / 2) * cp.square(cp.norm(x_i[:-2] - y_i, 2)) - (beta / 2) * cp.square(cp.norm(A_i[0][:] @ x_i - b_i[0], 2)) # - (beta / 2) * cp.square(cp.norm(A_i @ x_i - b_i, 2))     
         # regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.square(cp.norm(A_i @ x_i - b_i, 2)) 
         # lagrangians = - p.T @ x_i - r_i.T @ (A_i @ x_i - b_i) # the price of dropout good is 0
         lagrangians = - p.T @ x_i - r_i * (A_i[0][:] @ x_i - b_i[0])
@@ -653,7 +654,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         # if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
             break
-        if x_iter == 100:
+        if x_iter == 300:
             break
 
 
