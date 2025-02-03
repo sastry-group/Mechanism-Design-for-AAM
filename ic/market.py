@@ -242,7 +242,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
     num_agents = len(agent_goods_lists)
     k, p_k, r_k = values_k
     supply, beta = market_settings
-    x_sparse_array, y_sparse_array, sparse_agent_x_inds, sparse_agent_y_inds = sparse_representation
+    x_sparse_array, y_sparse_array, sparse_agent_x_inds, sparse_agent_y_inds, y_sum_matrix = sparse_representation
     # Update consumption
     # y = cp.Variable((num_agents, num_goods - 2)) # dropout and default removed
     # y = cp.Variable((num_agents, num_goods - 1)) # dropout removed (4)
@@ -259,8 +259,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
     short_p_k = np.array(p_k[:-2]).reshape(-1,1)
     x = np.array(x).reshape(-1,1)
     short_supply = np.array(supply[:-2]).reshape(-1,1)
-    y_summing_matrix = np.array([[1 if elem == i else 0 for elem in y_sparse_array] for i in range(num_goods - 2)])
-    y_sum = y_summing_matrix @ y
+    y_sum = y_sum_matrix @ y
     # print(f"y summing matrix: {y_summing_matrix}")
     # y_sum = cp.vstack([cp.sum(y[y_sparse_array == i]) for i in range(num_goods - 2)])
     # print(f"Num goods: {num_goods}")
@@ -368,7 +367,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
 
 def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, beta, x_iter, update_frequency, sparse_representation, rational=False, parallel=False, integral=False):   
     num_agents, num_goods = len(w), len(p)
-    x_sparse_array, y_sparse_array, sparse_agent_x_inds, sparse_agent_y_inds = sparse_representation
+    x_sparse_array, y_sparse_array, sparse_agent_x_inds, sparse_agent_y_inds, _ = sparse_representation
     if num_agents < 10:
         parallel = False
     agent_indices = range(num_agents)
@@ -532,7 +531,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     y, p, r = initial_values
     w, supply, beta = market_settings
     goods_list = bookkeeping
-    x_sparse_array, y_sparse_array, sparse_agent_x_inds, sparse_agent_y_inds = sparse_representation
+    x_sparse_array, y_sparse_array, sparse_agent_x_inds, sparse_agent_y_inds, _ = sparse_representation
 
     x_iter = 0
     prices = []
@@ -557,6 +556,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     console.print("[bold green]Starting Market Simulation...[/bold green]")
 
     iteration_data = []  
+    iter_start = time.time()
 
     while x_iter <= MAX_NUM_ITERATIONS:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
         # if x_iter == 0: 
@@ -632,6 +632,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
             "social_welfare": current_social_welfare,
         }
         iteration_data.append(iteration_snapshot)
+        iter_end = time.time()
         x_iter += 1
 
 
@@ -649,6 +650,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         table.add_row("x - y Error", f"{iter_constraint_x_y:.7f}")
         table.add_row("Time to solve market", f"{market_solve_t:.7f}")
         table.add_row("Time to run algorithm", f"{agent_solve_t:.7f}")
+        table.add_row("Iter time: ", f"{iter_end - iter_start:.7f}")
 
         console.clear()
         console.print(table)
@@ -659,7 +661,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
             break
         if x_iter == 300:
             break
-
+        
+        iter_start = time.time()
 
         # print("Iteration: ", x_iter, "- MCE: ", round(market_clearing_error, 5), "-Ax-b. Err: ", iter_constraint_error, " - Tol: ", round(tolerance,3), "x-y error:", iter_constraint_x_y)
         logger.info(f"Iteration: {x_iter}, Market Clearing Error: {market_clearing_error}, Tolerance: {tolerance}")

@@ -179,6 +179,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
         y_start = y_end
     y_sparse_array = np.concatenate(y_agent_indices)
     x_sparse_array = np.concatenate(agent_indices)
+    y_sum_matrix = np.array([[1 if elem == i else 0 for elem in y_sparse_array] for i in range(num_goods - 2)])
 
     # y = np.random.rand(num_agents, num_goods-2)*10
     y = np.zeros((num_agents, num_goods - 2))
@@ -217,7 +218,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     logger.info("Running market...")
     
     x, prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot = run_market((y,p,r), agent_information, market_information, 
-                                                             bookkeeping, (x_sparse_array, y_sparse_array, sparse_agent_x_inds, sparse_agent_y_inds),
+                                                             bookkeeping, (x_sparse_array, y_sparse_array, sparse_agent_x_inds, sparse_agent_y_inds, y_sum_matrix),
                                                              rational=False, price_default_good=price_default_good, 
                                                              lambda_frequency=lambda_frequency, price_upper_bound=price_upper_bound)
     logger.info("Market run complete.")
