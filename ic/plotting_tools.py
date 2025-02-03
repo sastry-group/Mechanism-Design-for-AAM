@@ -146,8 +146,8 @@ def plotting_market(data_to_plot, desired_goods, output_folder, market_auction_t
     plt.figure(figsize=(10, 5))
     for agent_index in range(len(yplot[0])):
         plt.plot(range(1, x_iter + 1), [yplot[i][agent_index][:-2] for i in range(len(yplot))])
-        plt.plot(range(1, x_iter + 1), [yplot[i][agent_index][-2] for i in range(len(yplot))], 'b--', label="Default Good")
-        plt.plot(range(1, x_iter + 1), [yplot[i][agent_index][-1] for i in range(len(yplot))], 'r-.', label="Dropout Good")
+        # plt.plot(range(1, x_iter + 1), [yplot[i][agent_index][-2] for i in range(len(yplot))], 'b--', label="Default Good")
+        # plt.plot(range(1, x_iter + 1), [yplot[i][agent_index][-1] for i in range(len(yplot))], 'r-.', label="Dropout Good")
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.xlabel('x_iter')
     plt.title("Y-values")
