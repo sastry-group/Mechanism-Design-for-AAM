@@ -287,6 +287,7 @@ def update_market(x_val, values_k, market_settings, constraints, agent_goods_lis
             logger.error(f"An unexpected error occurred with solver {solver}: {e}")
             continue
     solve_time = time.time() - start_time
+    logger.info(f"Market: Build time: {round(build_time,6)} - Solve time: {round(solve_time,6)} with solver {solver}")
     # print(f"Market: Build time: {round(build_time,6)} - Solve time: {round(solve_time,6)} with solver {solver}")
 
     # Check if the problem was solved successfully
@@ -353,15 +354,17 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
     results = []
     adjusted_budgets = []
 
+    
     if parallel:
-        # num_cores = cpu_count()
-        num_threads = min(12, len(agent_indices)) 
+        
+        num_threads = min(16, len(agent_indices)) 
         logger.info(f"Running update_agents in parallel with {num_threads} threads/ CPUs.") 
         with ThreadPoolExecutor(max_workers=num_threads) as executor:
             results = list(executor.map(lambda a: update_agent(*a), args))
 
     else:
         for arg in args:
+            logger.info(f"Not running update_agents in parallel / there are {cpu_count()} CPUs.") 
             results.append(update_agent(*arg))
 
     x = np.zeros((num_agents, num_goods))
