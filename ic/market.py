@@ -374,7 +374,7 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
     agent_prices = [np.array([p[goods_list.index(good)] for good in agent_goods_lists[i]]) for i in agent_indices]
     agent_utilities = [np.array(u[i]) for i in agent_indices]
     # agent_ys = [np.array([y[i, goods_list.index(good)] for good in agent_goods_lists[i][:-2]]) for i in agent_indices]
-    agent_ys = [np.array(y[y_sparse_array[inds]]) for inds in sparse_agent_y_inds]
+    agent_ys = [np.array(y[inds]).reshape(-1,1) for inds in sparse_agent_y_inds]
     args = [(w[i], agent_utilities[i], agent_prices[i], r[i], constraints[i], agent_ys[i], beta, x_iter, update_frequency, rational, integral) for i in agent_indices]
 
     results = []
@@ -563,12 +563,13 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         #     beta = beta_init/np.sqrt(x_iter)
             # beta = beta_init / (x_iter + 1)
         
-        if x_iter == 0:
-            x = np.zeros((len(x_sparse_array), 1))
-            # x[:,:-2] = y # Maybe change back later
-            adjusted_budgets = w
-        else:
-            x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, x_iter, lambda_frequency, sparse_representation, rational=rational, integral=INTEGRAL_APPROACH)
+        # if x_iter == 0:
+        #     x = np.zeros((len(x_sparse_array), 1))
+        #     # x[:-2] = y # Maybe change back later
+        #     adjusted_budgets = w
+        # else:
+        x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, x_iter, 
+                                            lambda_frequency, sparse_representation, rational=rational, integral=INTEGRAL_APPROACH)
         x_allocations.append(x) # 
         # x_sum = np.hstack([np.sum(x[sparse_agent_x_inds[i][:-2]]) for i in range(len(agent_goods_lists))])
         x_sum = np.array([np.sum(x[x_sparse_array == i]) for i in range(len(goods_list))])[:-2]
