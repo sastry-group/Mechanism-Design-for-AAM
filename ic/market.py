@@ -270,7 +270,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
     # print(f"y bar shape: {y_bar.shape}")
     # print(f"Short supply shape: {short_supply.shape}")
     # print(f"Short p_k shape: {short_p_k.shape}")
-    objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(short_x - y, 2)) - (beta / 2) * cp.square(cp.norm(y_sum + y_bar - short_supply, 2))  - short_p_k.T @ y_bar)
+    objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(short_x - y, 'fro')) - (beta / 2) * cp.square(cp.norm(y_sum + y_bar - short_supply, 2))  - short_p_k.T @ y_bar) 
     cp_constraints = [y_bar >= 0, y<=1, y_bar<=short_supply] # remove default and dropout good
     problem = cp.Problem(objective, cp_constraints)
     warm_start = False
@@ -325,8 +325,9 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
     # print(f"Current y bar: {y_bar_k_plus_1.shape}")
     # print(f"Supply: {supply[:-2].shape}")
     # print(f"y_k shape: {np.array([np.sum(y_k_plus_1[y_sparse_array == i]) for i in range(num_goods - 2)]).shape}")
-    p_k_plus_1 = np.array(p_k[:-2]).reshape(-1,1) + beta * (np.array([np.sum(y_k_plus_1[y_sparse_array == i]) for i in range(num_goods - 2)]).reshape(-1,1) + y_bar_k_plus_1.reshape(-1,1) - np.array(supply[:-2]).reshape(-1,1)) #(3) default 
-    # print(f"Updated prices: {p_k_plus_1}")
+    p_k_plus_1 = np.array(p_k[:-2]).reshape(-1,1) + beta * (np.array([np.sum([y_k_plus_1[y_sparse_array == i]]) for i in range(num_goods - 2)]).reshape(-1,1) + 
+                                                            y_bar_k_plus_1.reshape(-1,1) - np.array(supply[:-2]).reshape(-1,1)) #(3) default 
+    logger.info(f"Updated prices: {p_k_plus_1}")
     # p_k_plus_1 = p_k[:-1] + beta * (np.sum(y_k_plus_1, axis=0) - supply[:-1]) #(4)
     # p_k_plus_1 = p_k[:-2] + beta * (np.sum(y_k_plus_1[:,:-2], axis=0) - supply[:-2]) #(5)
     # p_k_plus_1 = p_k + beta * (np.sum(y_k_plus_1, axis=0) - supply)
@@ -349,15 +350,16 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
             agent_constraints = constraints[i]
             # agent_x = np.array([x.value[i, goods_list.index(good)] for good in agent_goods_lists[i]])
             # agent_x = np.array([x.value[i, goods_list.index(good)] for good in agent_goods_lists[i]])
-            agent_x = np.array([x[sparse_agent_x_inds[i]]])
+            agent_x = np.array([x[sparse_agent_x_inds[i]]]).reshape(-1,1)
             if UPDATED_APPROACH:
                 # agent_x = np.array([x[i, goods_list[:-1].index(good)] for good in agent_goods_lists[i][:-1]])
-                agent_x = np.array([x[sparse_agent_x_inds[i]]])
+                agent_x = np.array([x[sparse_agent_x_inds[i]]]).reshape(-1,1)
                 constraint_violations = np.array([agent_constraints[0][j] @ agent_x - agent_constraints[1][j] for j in range(len(agent_constraints[1]))])
             else:
                 constraint_violations = np.array([max(agent_constraints[0][j] @ agent_x - agent_constraints[1][j], 0) for j in range(len(agent_constraints[1]))])
 
-            r_k_plus_1.append(r_k[i] + beta * constraint_violations[0])
+            # print(f"Constraint violations: {constraint_violations}")
+            r_k_plus_1.append(r_k[i] + beta * constraint_violations[0][0])
     else:
         r_k_plus_1 = r_k
     return k + 1, y_k_plus_1, p_k_plus_1, r_k_plus_1, problem
@@ -437,7 +439,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_freque
         regularizers = - (beta / 2) * cp.square(cp.norm(x_i[:-2] - y_i, 2)) - (beta / 2) *cp.square(cp.norm(A_i[0][:] @ x_i - b_i[0], 2)) # - (beta / 2) * cp.square(cp.norm(A_i @ x_i - b_i, 2))        
         # regularizers = - (beta / 2) * cp.square(cp.norm(x_i - y_i, 2)) - (beta / 2) * cp.square(cp.norm(A_i @ x_i - b_i, 2)) 
         # lagrangians = - p.T @ x_i - r_i.T @ (A_i @ x_i - b_i) # the price of dropout good is 0
-        lagrangians = - p.T @ x_i - r_i @ (A_i[0][:] @ x_i - b_i[0])
+        lagrangians = - p.T @ x_i - r_i * (A_i[0][:] @ x_i - b_i[0])
         nominal_objective = w_adj * cp.log(objective_terms)
         
         objective = cp.Maximize(nominal_objective + lagrangians + regularizers)
@@ -534,9 +536,9 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     prices = []
     rebates = []
     overdemand = []
-    agent_allocations = []
+    x_allocations = []
     market_clearing = []
-    yplot= []
+    y_allocations= []
     error = [] * len(agent_constraints)
     abs_error = [] * len(agent_constraints)
     social_welfare_vector = []
@@ -567,7 +569,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
             adjusted_budgets = w
         else:
             x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, x_iter, lambda_frequency, sparse_representation, rational=rational, integral=INTEGRAL_APPROACH)
-        agent_allocations.append(x) # 
+        x_allocations.append(x) # 
         # x_sum = np.hstack([np.sum(x[sparse_agent_x_inds[i][:-2]]) for i in range(len(agent_goods_lists))])
         x_sum = np.array([np.sum(x[x_sparse_array == i]) for i in range(len(goods_list))])[:-2]
         overdemand.append(x_sum - supply[:-2].flatten())
@@ -602,7 +604,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         k, y, p, r, problem = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, 
                                             price_default_good, problem, sparse_representation,
                                             update_rebates=update_rebates, integral=INTEGRAL_APPROACH, price_upper_bound=price_upper_bound)
-        yplot.append(y)
+        y_allocations.append(y)
         rebates.append([[rebate] for rebate in r])
         prices.append(p)
         # current_social_welfare = social_welfare(x, p, u, supply, agent_indices)
@@ -611,7 +613,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
 
         # x_ij = np.sum(x[:,:-2], axis=0) # removing default and dropout good
         excess_demand = x_sum - supply[:-2]
-        logger.info(f"Excess demand: {excess_demand.shape}")
+        # logger.info(f"Excess demand: {excess_demand.shape}")
         p = p.T
         # clipped_excess_demand = np.where(p[:-2] > 0, excess_demand, np.maximum(0, excess_demand)) # price removing default and dropout good
         # market_clearing_error = np.linalg.norm(clipped_excess_demand, ord=2)
@@ -645,11 +647,12 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
 
         console.clear()
         console.print(table)
-        
+        logger.info(f"Excess demand: {excess_demand.shape}")
+        logger.info(f"Prices: {p}")        
         # if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
             break
-        if x_iter == 1000:
+        if x_iter == 100:
             break
 
 
@@ -665,7 +668,21 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         #     break
 
     # print(f"Time to run algorithm: {round(time.time() - start_time_algorithm,5)}")
-    logger.info(f"Time to run algorithm: {round(time.time() - start_time_algorithm,5)}")    
+    logger.info(f"Time to run algorithm: {round(time.time() - start_time_algorithm,5)}")   
+
+    # Todo: Convert sparse x and y to dense representation
+    yplot = []
+    for y in y_allocations:
+        dense_y = np.zeros((num_agents, len(goods_list) - 2))
+        for i in range(num_agents):
+            dense_y[i, np.array(y_sparse_array[sparse_agent_y_inds[i]]).reshape(-1,1)] = np.array(y[sparse_agent_y_inds[i]]).reshape(-1,1)
+        yplot.append(dense_y)
+    agent_allocations = []
+    for x in x_allocations:
+        dense_x = np.zeros((num_agents, len(goods_list)))
+        for i in range(num_agents):
+            dense_x[i, np.array(x_sparse_array[sparse_agent_x_inds[i]]).reshape(-1,1)] = np.array(x[sparse_agent_x_inds[i]]).reshape(-1,1)
+        agent_allocations.append(dense_x)
 
     data_to_plot ={
         "x_iter": x_iter,
@@ -675,6 +692,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         "error": error,
         "abs_error": abs_error,
         "rebates": rebates,
+        "x_allocations": x_allocations,        
         "agent_allocations": agent_allocations,
         "market_clearing": market_clearing,
         "agent_constraints": agent_constraints,
@@ -690,7 +708,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
 
     # print(f"Error: {[error[i][-1] for i in range(len(error))]}")
     # print(f"Overdemand: {overdemand[-1][:]}")
-    return x, last_prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot
+    return dense_x, last_prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot
 
 
 def social_welfare(x, p, u, supply, agent_indices):
