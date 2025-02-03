@@ -160,8 +160,31 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     goods_list = bookkeeping
     num_goods, num_agents = len(goods_list), len(flights)
     u, agent_constraints, agent_goods_lists = agent_information
+    _ , capacity, _ = market_information
+    agent_indices = map_goodslist_to_agent_goods(goods_list, agent_goods_lists)
+    agent_information = (*agent_information, agent_indices)
+    # Sparse Representation
+    sparse_agent_x_inds = []
+    sparse_agent_y_inds = []
+    x_start = 0
+    y_start = 0
+    y_agent_indices = []
+    for inds in agent_indices:
+        x_end = len(inds) + x_start
+        y_end = len(inds) - 2 + y_start
+        sparse_agent_x_inds.append(list(np.arange(x_start, x_end)))
+        sparse_agent_y_inds.append(list(np.arange(y_start, y_end)))
+        y_agent_indices.append(inds[:-2])
+        x_start = x_end
+        y_start = y_end
+    y_sparse_array = np.concatenate(y_agent_indices)
+    x_sparse_array = np.concatenate(agent_indices)
+    y_sum_matrix = np.array([[1 if elem == i else 0 for elem in y_sparse_array] for i in range(num_goods - 2)])
+
     # y = np.random.rand(num_agents, num_goods-2)*10
     y = np.zeros((num_agents, num_goods - 2))
+    dense_y = np.zeros((num_agents, num_goods - 2))
+    # y = np.zeros((len(sparse_goods_representation), 1))
     desired_goods = track_desired_goods(flights, goods_list)
     for i, agent_id in enumerate(desired_goods):
         # dept_id = desired_goods[agent_ids]["desired_good_arr"]
@@ -172,6 +195,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
         # y[i][desired_goods[agent_id]["good_indices"][0]] = 1
         for good_idx in desired_goods[agent_id]["good_indices"]:
             y[i][good_idx] = 1
+            dense_y[i][good_idx] = 1
         # print(f"Initial allocation for agent {i}: {y[i]}")
         # print(f"Goods: {agent_goods_lists[i]}")
         # ybar = np.array([y[i, goods_list.index(good)] for good in agent_goods_lists[i][:-2]] + [0,0])
@@ -184,19 +208,18 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
         # print(f"A: {agent_constraints[i][0]}")
         # assert all(agent_constraints[i][0] @ ybar - agent_constraints[i][1] == 0), f"Initial allocation for agent {i} does not satisfy constraints for agent {i}"
     # y = np.random.rand(num_agents, num_goods)
+    y = np.concatenate([[agent_y[ind] for ind in y_sparse_array[inds]] for agent_y, inds in zip(dense_y, sparse_agent_y_inds)])
     p = np.zeros(num_goods)
     p[-2] = price_default_good 
     p[-1] = 0 # dropout good
     # r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
     r = np.zeros(num_agents)
-    _ , capacity, _ = market_information
-    agent_indices = map_goodslist_to_agent_goods(goods_list, agent_goods_lists)
-    agent_information = (*agent_information, agent_indices)
     # x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
     logger.info("Running market...")
     
     x, prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot = run_market((y,p,r), agent_information, market_information, 
-                                                             bookkeeping, rational=False, price_default_good=price_default_good, 
+                                                             bookkeeping, (x_sparse_array, y_sparse_array, sparse_agent_x_inds, sparse_agent_y_inds, y_sum_matrix),
+                                                             rational=False, price_default_good=price_default_good, 
                                                              lambda_frequency=lambda_frequency, price_upper_bound=price_upper_bound)
     logger.info("Market run complete.")
     end_fisher_time =  time.time() - start_market_time
