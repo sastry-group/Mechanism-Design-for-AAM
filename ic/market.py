@@ -270,7 +270,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
     # print(f"y bar shape: {y_bar.shape}")
     # print(f"Short supply shape: {short_supply.shape}")
     # print(f"Short p_k shape: {short_p_k.shape}")
-    objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(short_x - y, 'fro')) - (beta / 2) * cp.square(cp.norm(y_sum + y_bar - short_supply, 2))  - short_p_k.T @ y_bar) 
+    objective = cp.Maximize(-(beta / 2) * cp.square(cp.norm(short_x - y, 2)) - (beta / 2) * cp.square(cp.norm(y_sum + y_bar - short_supply, 2))  - short_p_k.T @ y_bar)
     cp_constraints = [y_bar >= 0, y<=1, y_bar<=short_supply] # remove default and dropout good
     problem = cp.Problem(objective, cp_constraints)
     warm_start = False
@@ -354,6 +354,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
             if UPDATED_APPROACH:
                 # agent_x = np.array([x[i, goods_list[:-1].index(good)] for good in agent_goods_lists[i][:-1]])
                 agent_x = np.array([x[sparse_agent_x_inds[i]]]).reshape(-1,1)
+                logger.info(f"Constraints: {agent_constraints[1]}")
                 constraint_violations = np.array([agent_constraints[0][j] @ agent_x - agent_constraints[1][j] for j in range(len(agent_constraints[1]))])
             else:
                 constraint_violations = np.array([max(agent_constraints[0][j] @ agent_x - agent_constraints[1][j], 0) for j in range(len(agent_constraints[1]))])
@@ -362,7 +363,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
             r_k_plus_1.append(r_k[i] + beta * constraint_violations[0][0])
     else:
         r_k_plus_1 = r_k
-    return k + 1, y_k_plus_1, p_k_plus_1, r_k_plus_1, problem
+    return k + 1, y_k_plus_1, p_k_plus_1, r_k_plus_1, problem, solve_time
 
 
 def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, beta, x_iter, update_frequency, sparse_representation, rational=False, parallel=False, integral=False):   
@@ -395,7 +396,7 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
 
     x = np.concatenate(results, axis=0)
 
-    return x, adjusted_budgets
+    return x, adjusted_budgets, sum(solve_times)
 
 def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_frequency, rational=False, integral=True, solver=cp.SCS):
     """
@@ -569,8 +570,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         #     # x[:-2] = y # Maybe change back later
         #     adjusted_budgets = w
         # else:
-        x, adjusted_budgets = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, beta, x_iter, 
-                                            lambda_frequency, sparse_representation, rational=rational, integral=INTEGRAL_APPROACH)
+        x, adjusted_budgets, agent_solve_t = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, 
+                                                           beta, x_iter, lambda_frequency, sparse_representation, rational=rational, integral=INTEGRAL_APPROACH)
         x_allocations.append(x) # 
         # x_sum = np.hstack([np.sum(x[sparse_agent_x_inds[i][:-2]]) for i in range(len(agent_goods_lists))])
         x_sum = np.array([np.sum(x[x_sparse_array == i]) for i in range(len(goods_list))])[:-2]
@@ -603,7 +604,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
             update_rebates = True
 
         # Update market
-        k, y, p, r, problem = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, 
+        k, y, p, r, problem, market_solve_t = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, 
                                             price_default_good, problem, sparse_representation,
                                             update_rebates=update_rebates, integral=INTEGRAL_APPROACH, price_upper_bound=price_upper_bound)
         y_allocations.append(y)
@@ -646,6 +647,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         table.add_row("Market Clearing Error (MCE)", f"{market_clearing_error:.7f}")
         table.add_row("Ax - b Error", f"{iter_constraint_error:.7f}")
         table.add_row("x - y Error", f"{iter_constraint_x_y:.7f}")
+        table.add_row("Time to solve market", f"{market_solve_t:.7f}")
+        table.add_row("Time to run algorithm", f"{agent_solve_t:.7f}")
 
         console.clear()
         console.print(table)
