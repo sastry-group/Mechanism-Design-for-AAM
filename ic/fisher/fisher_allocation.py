@@ -328,6 +328,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
     # print(f"Current y bar: {y_bar_k_plus_1.shape}")
     # print(f"Supply: {supply[:-2].shape}")
     # print(f"y_k shape: {np.array([np.sum(y_k_plus_1[y_sparse_array == i]) for i in range(num_goods - 2)]).shape}")
+    primal_residual = np.linalg.norm(np.array([np.sum([y_k_plus_1[y_sparse_array == i]]) for i in range(num_goods - 2)]).reshape(-1,1) + y_bar_k_plus_1.reshape(-1,1) - np.array(supply[:-2]).reshape(-1,1))
     p_k_plus_1 = np.array(p_k[:-2]).reshape(-1,1) + beta * (np.array([np.sum([y_k_plus_1[y_sparse_array == i]]) for i in range(num_goods - 2)]).reshape(-1,1) + y_bar_k_plus_1.reshape(-1,1) - np.array(supply[:-2]).reshape(-1,1)) #(3) default 
     
     print(f"Updated prices: {p_k_plus_1}")
@@ -364,7 +365,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
             r_k_plus_1.append(r_k[i] + beta * constraint_violations[0][0])
     else:
         r_k_plus_1 = r_k
-    return k + 1, y_k_plus_1, p_k_plus_1, r_k_plus_1, problem, solve_time
+    return k + 1, y_k_plus_1, p_k_plus_1, r_k_plus_1, problem, solve_time, primal_residual
 
 
 
@@ -516,10 +517,12 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     print(f"Rebate frequency: {lambda_frequency}, Price upper bound: {price_upper_bound}")
     u, agent_constraints, agent_goods_lists, agent_indices = agent_settings
     y, p, r = initial_values
-    w, supply, beta = market_settings
+    w, supply, beta_init = market_settings
     goods_list = bookkeeping
     x_sparse_array, y_sparse_array, sparse_agent_x_inds, sparse_agent_y_inds, _ = sparse_representation
 
+    beta_incr, beta_decr, mu = 2, 2, 10
+    beta = beta_init
     x_iter = 0
     prices = []
     rebates = []
@@ -589,8 +592,9 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         if True:
             update_rebates = True
 
+        prev_y = y
         # Update market
-        k, y, p, r, problem, market_solve_t = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, 
+        k, y, p, r, problem, market_solve_t, primal_residual = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, 
                                             price_default_good, problem, sparse_representation,
                                             update_rebates=update_rebates, integral=INTEGRAL_APPROACH, price_upper_bound=price_upper_bound)
         y_allocations.append(y)
@@ -631,10 +635,19 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         print(f"Excess demand: {excess_demand}")
         print(f"Prices: {p}")
         # if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
-        if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
+        if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.05) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
             break
         if x_iter == 300:
             break
+
+        # dual_residual = np.linalg.norm(beta * (y - prev_y))
+        mask = (x_sparse_array != (len(goods_list) - 1)) & (x_sparse_array != (len(goods_list) - 2))
+        dual_residual = np.linalg.norm(x[mask] - y)
+        # dual_residual = np.linalg.norm(x - y)
+        if primal_residual/0.1 > mu * dual_residual/tolerance*2:
+            beta = beta_incr * beta
+        elif dual_residual/tolerance*2 > mu * primal_residual/0.1:
+            beta = beta / beta_decr
 
         iter_start = time.time()
 
@@ -950,20 +963,20 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
 
     # # building the graph
     market_auction_time=timing_info["auction_start"]
-    if market_auction_time>5:
-        price_default_good = 10
-        default_good_valuation = 1
-        dropout_good_valuation = 40
-        BETA = 50
-        lambda_frequency = 50
-        price_upper_bound = 3000
-    else:
-        price_default_good = design_parameters["price_default_good"]
-        default_good_valuation = design_parameters["default_good_valuation"]
-        dropout_good_valuation = design_parameters["dropout_good_valuation"]
-        BETA = design_parameters["beta"]
-        lambda_frequency = design_parameters["lambda_frequency"]
-        price_upper_bound = design_parameters["price_upper_bound"]       
+    # if market_auction_time>5:
+    #     price_default_good = 10
+    #     default_good_valuation = 1
+    #     dropout_good_valuation = 40
+    #     BETA = 50
+    #     lambda_frequency = 50
+    #     price_upper_bound = 3000
+    # else:
+    price_default_good = design_parameters["price_default_good"]
+    default_good_valuation = design_parameters["default_good_valuation"]
+    dropout_good_valuation = design_parameters["dropout_good_valuation"]
+    BETA = design_parameters["beta"]
+    lambda_frequency = design_parameters["lambda_frequency"]
+    price_upper_bound = design_parameters["price_upper_bound"]       
     # start_time_graph_build = time.time()
     # builder = FisherGraphBuilder(vertiport_usage, timing_info)
     # market_graph = builder.build_graph(flights)

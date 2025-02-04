@@ -505,11 +505,13 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
     # Iterate through each time flights appear
     results = []
     print("Auction times: ", auction_times)
+
+    round = 1
     for prev_auction_time, auction_time in zip(auction_times[:-1], auction_times[1:]):
         # Get the current flights
         # current_flight_ids = ordered_flights[appearance_time]
         
-        if prev_auction_time > 10:
+        if prev_auction_time > 30:
             break
 
         # This is to ensure it doest not rebase the flights beyond simulation end time
@@ -587,6 +589,8 @@ def run_scenario(data, scenario_path, scenario_name, file_path, method, design_p
                 vertiport_usage, vertiports, flights, allocated_flights, stack_commands
             )
         elif method == "fisher":
+            design_parameters["beta"] = 100 * round
+            round += 1
             allocated_flights, rebased_flights, payments, valuations = fisher_allocation_and_payment(
                 vertiport_usage, current_flights, current_timing_info, filtered_sectors, filtered_vertiports,
                 output_folder, save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
