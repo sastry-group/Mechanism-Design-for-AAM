@@ -20,7 +20,7 @@ from fisher.FisherGraphBuilder import FisherGraphBuilder
 
 INTEGRAL_APPROACH = False
 UPDATED_APPROACH = True
-TOL_ERROR = 1e-3
+TOL_ERROR = 1e-2
 MAX_NUM_ITERATIONS = 10000
 
 logger = logging.getLogger("global_logger")
