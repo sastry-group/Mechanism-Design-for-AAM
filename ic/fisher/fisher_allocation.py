@@ -117,7 +117,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
         price_default_good = 10
         default_good_valuation = 1
         dropout_good_valuation = 40
-        BETA = 50
+        BETA = 30
         lambda_frequency = 50
         price_upper_bound = 3000
     else:
@@ -208,6 +208,8 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
         # print(f"A: {agent_constraints[i][0]}")
         # assert all(agent_constraints[i][0] @ ybar - agent_constraints[i][1] == 0), f"Initial allocation for agent {i} does not satisfy constraints for agent {i}"
     # y = np.random.rand(num_agents, num_goods)
+    # start the prices witht the preiovus prices 
+    # remove them overcapacity 
     y = np.concatenate([[agent_y[ind] for ind in y_sparse_array[inds]] for agent_y, inds in zip(dense_y, sparse_agent_y_inds)])
     p = np.zeros(num_goods)
     p[-2] = price_default_good 
