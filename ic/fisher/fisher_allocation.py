@@ -106,7 +106,7 @@ def track_desired_goods(flights, goods_list):
 
 
 def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors_data, vertiports, 
-                                  output_folder=None, save_file=None, initial_allocation=True, design_parameters=None):
+                                  output_folder=None, save_file=None, initial_allocation=True, design_parameters=None, previous_prices=None):
 
     logger = logging.getLogger("global_logger")
     logger.info("Starting Fisher Allocation and Payment Process.")
@@ -211,7 +211,12 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     # start the prices witht the preiovus prices 
     # remove them overcapacity 
     y = np.concatenate([[agent_y[ind] for ind in y_sparse_array[inds]] for agent_y, inds in zip(dense_y, sparse_agent_y_inds)])
-    p = np.zeros(num_goods)
+
+    if market_auction_time == 0 or previous_prices is None:
+        p = np.zeros(num_goods)
+    else:
+        p = previous_prices
+
     p[-2] = price_default_good 
     p[-1] = 0 # dropout good
     # r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
@@ -229,12 +234,12 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     console.print(f"[bold green]Fisher Algorithm runtime {end_fisher_time}...[/bold green]")
 
     # print("---FINAL ALLOCATION---")
-    logger.debug("---FINAL ALLOCATION---")
-    for agent_x, desired_good in zip(x, desired_goods):
-        # print(f"Agent allocation of goods: {[goods_list[i] for i in np.where(x[0] > 0.1)[0]]}")
-        # print(f"Partially allocated good values: {[x[0][i] for i in np.where(x[0] > 0.1)[0]]}")
-        logger.debug(f"Agent allocation of goods: {[goods_list[i] for i in np.where(x[0] > 0.1)[0]]}")
-        logger.debug(f"Partially allocated good values: {[x[0][i] for i in np.where(x[0]> 0.1)[0]]}")
+    # logger.debug("---FINAL ALLOCATION---")
+    # for agent_x, desired_good in zip(x, desired_goods):
+    #     # print(f"Agent allocation of goods: {[goods_list[i] for i in np.where(x[0] > 0.1)[0]]}")
+    #     # print(f"Partially allocated good values: {[x[0][i] for i in np.where(x[0] > 0.1)[0]]}")
+    #     logger.debug(f"Agent allocation of goods: {[goods_list[i] for i in np.where(x[0] > 0.1)[0]]}")
+    #     logger.debug(f"Partially allocated good values: {[x[0][i] for i in np.where(x[0]> 0.1)[0]]}")
     # print(f"Partial allocation for 0th agent: {[goods_list[i] for i in np.where(x[0] > 0.1)[0]]}")
     # print(f"Partial allocation for 1st agent: {[goods_list[i] for i in np.where(x[1] > 0.1)[0]]}")
     # print(f"Partially allocated good values: {[x[0][i] for i in np.where(x[0] > 0.1)[0]]}")
@@ -258,7 +263,10 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     'goods_list': goods_list,
     'capacity': capacity,
     'data_to_plot': data_to_plot,
-    'agent_goods_lists': agent_goods_lists}
+    'agent_goods_lists': agent_goods_lists,
+    'num_agents': num_agents,
+    'num_goods': num_goods,
+    }
     save_data(output_folder, "fisher_data", market_auction_time, **extra_data)
     plotting_market(data_to_plot, desired_goods, output_folder, market_auction_time)
     
@@ -278,7 +286,6 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     # Getting data for next auction
     allocation, rebased, dropped, = get_next_auction_data(agents_data_dict, market_data_dict)
 
-    logger.info("Time to run entire fisher")
     console.print(f"[bold green] Algorithm 1 & 2 runtime {time.time() - start_market_time}...[/bold green]")
 
     market_data_dict = plot_utility_functions(agents_data_dict, market_data_dict, output_folder)
@@ -292,7 +299,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     write_output(flights, edge_information, market_data_dict, 
                 agents_data_dict, market_auction_time, output_folder)
 
-    return allocation, rebased, dropped, valuations
+    return allocation, rebased, dropped, valuations, prices
     
 
 
