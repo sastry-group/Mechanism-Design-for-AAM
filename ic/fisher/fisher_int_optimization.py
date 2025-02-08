@@ -73,6 +73,7 @@ def track_delayed_goods(agents_data_dict, market_data_dict):
                 delayed_goods.append(good_tuple)
         if good == "dropout_good":
             print(f"There is a droput of agent {agent_id}")
+            # logger.info(f"There is a droput of agent {agent_id}")
         elif delayed_goods:
             delayed_goods.pop(0)
             agent_data['delayed_goods'] = delayed_goods

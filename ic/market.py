@@ -651,8 +651,10 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         # print("Iteration: ", x_iter, "- MCE: ", round(market_clearing_error, 5), "-Ax-b. Err: ", iter_constraint_error, " - Tol: ", round(tolerance,3), "x-y error:", iter_constraint_x_y)
         logger.info(f"Iteration: {x_iter}, Market Clearing Error: {market_clearing_error}, Tolerance: {tolerance}")
 
+    fisher_run_time = round(time.time() - start_time_algorithm,5)
+    logger.info(f"Time to run algorithm: {fisher_run_time}")  
     console.print("[bold green]Simulation Complete! Optimization results in file: /results/log[/bold green]")
-
+ 
 
     save_iteration_data(iteration_data, "iteration_data", output_dir="results")
 
@@ -660,7 +662,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         #     break
 
     # print(f"Time to run algorithm: {round(time.time() - start_time_algorithm,5)}")
-    logger.info(f"Time to run algorithm: {round(time.time() - start_time_algorithm,5)}")   
+    
+
 
     # Todo: Convert sparse x and y to dense representation
     yplot = []
@@ -690,6 +693,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         "agent_constraints": agent_constraints,
         "yplot": yplot,
         "social_welfare_vector": social_welfare_vector,
+        "fisher_run_time": fisher_run_time
     }
 
 
