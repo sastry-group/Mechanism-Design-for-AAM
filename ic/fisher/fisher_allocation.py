@@ -543,6 +543,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     console.print("[bold green]Starting Market Simulation...[/bold green]")
 
     iter_start = time.time()
+    market_run_times = []
 
     while x_iter <= MAX_NUM_ITERATIONS:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
         # if x_iter == 0: 
@@ -609,6 +610,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         x_iter += 1
 
         iter_end = time.time()
+        market_run_times.append(market_solve_t)
 
         # Create a table with current metrics
         table = Table.grid(expand=True)
@@ -633,7 +635,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         # if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
             break
-        if x_iter == 300:
+        if x_iter == 500:
             break
 
         iter_start = time.time()
@@ -642,6 +644,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         logging.info(f"Iteration: {x_iter}, Market Clearing Error: {market_clearing_error}, Tolerance: {tolerance}")
 
     console.print("[bold green]Simulation Complete! Optimization results in file: solver_log.txt[/bold green]")
+    print(f"Average market time: {np.mean(market_run_times)}")
 
         # if market_clearing_error <= tolerance:
         #     break
@@ -950,7 +953,8 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
 
     # # building the graph
     market_auction_time=timing_info["auction_start"]
-    if market_auction_time>5:
+    if False:
+    # if market_auction_time>5:
         price_default_good = 10
         default_good_valuation = 1
         dropout_good_valuation = 40

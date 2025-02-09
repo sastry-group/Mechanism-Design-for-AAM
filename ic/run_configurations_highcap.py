@@ -3,7 +3,7 @@ import os
 from itertools import product
 
 # Define the parameter values to vary
-BETA_values = [50] #, 100, 1000, 10000]
+BETA_values = [1000] #, 100, 1000, 10000]
 dropout_good_valuation_values = [40]
 default_good_valuation_values = [1]
 price_default_good_values = [1]
@@ -21,12 +21,12 @@ main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 for idx, (BETA, dropout_good_valuation, default_good_valuation, price_default_good, lambda_frequency, price_upper_bound) in enumerate(parameter_combinations):
     args = [
         "python", main_script_path,
-        "--file", "test_cases/toulouse_case.json",
+        "--file", "test_cases/toulouse_case_cap4.json",
         # "--file", "test_cases/modified_toulouse_case3_withC_cap4_withReturn.json",
         # "--file", "test_cases/3agent_small_toulouse_case_withC.json",
         # "--file", "test_cases/casef_20240917_081204.json",
-        "--method", "fisher",
-        # "--method", "ascending-auction-budgetbased", 
+        # "--method", "fisher",
+        "--method", "ascending-auction-budgetbased", 
         # "--method", "ascending-auction-profitbased",
         "--force_overwrite",
         "--BETA", str(BETA),
