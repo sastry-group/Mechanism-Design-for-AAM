@@ -15,6 +15,7 @@ import copy
 from datetime import datetime
 from logging_config import setup_logger
 import logging
+import traceback
 
 def initialize_logger(log_folder):
     logger = setup_logger(
@@ -895,7 +896,7 @@ if __name__ == "__main__":
         path_to_scn_file, results = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME, output_folder, method, design_parameters)
         logger.info(f"Scenario file written to: {path_to_scn_file}")
     except Exception as e:
-        logger.error(f"Error while running the scenario: {e}")
+        logger.error(f"Error while running the scenario: {e}\n{traceback.format_exc()}")
         sys.exit()
 
     # BLUESKY SIM 
