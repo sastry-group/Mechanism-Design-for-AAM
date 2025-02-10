@@ -13,6 +13,7 @@ from rich.table import Table
 import logging
 from rich.logging import RichHandler
 import time
+import traceback
 
 logger = logging.getLogger("global_logger")
 
@@ -223,11 +224,17 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     r = np.zeros(num_agents)
     # x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
     logger.info("Running market...")
-    
-    x, prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot = run_market((y,p,r), agent_information, market_information, 
-                                                             bookkeeping, (x_sparse_array, y_sparse_array, sparse_agent_x_inds, sparse_agent_y_inds, y_sum_matrix),
-                                                             rational=False, price_default_good=price_default_good, 
-                                                             lambda_frequency=lambda_frequency, price_upper_bound=price_upper_bound)
+
+
+    try:
+        x, prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot = run_market((y,p,r), agent_information, market_information, 
+                                                                bookkeeping, (x_sparse_array, y_sparse_array, sparse_agent_x_inds, sparse_agent_y_inds, y_sum_matrix),
+                                                                rational=False, price_default_good=price_default_good, 
+                                                                lambda_frequency=lambda_frequency, price_upper_bound=price_upper_bound)
+    except Exception as e:
+        logger.error(f"Error in run_market at auction time {market_auction_time}:\n{traceback.format_exc()}")
+        return None, None, None, None, None  # Avoid crashing, return safe values
+
     logger.info("Market run complete.")
     end_fisher_time =  time.time() - start_market_time
     console = Console(force_terminal=True)
