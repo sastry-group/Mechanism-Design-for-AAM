@@ -635,7 +635,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         # if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
             break
-        if x_iter == 500:
+        if x_iter == 5:
             break
 
         iter_start = time.time()

@@ -437,20 +437,18 @@ def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, 
     #print(allocated_requests)
     
     
-    print('S - AR REQUESTS')
-    print(allocated_requests)                                       
-    print('E - AR REQUESTS')
+    # print('S - AR REQUESTS')
+    # print(allocated_requests)                                       
+    # print('E - AR REQUESTS')
 
-    allocation = []
-
-    allocation = [ar.flight for ar in allocated_requests]
-    rebased = None
+    allocation  = [(ar.flight_id, ('_'.join(ar.dep_id.split("_")[:-1]), ar.dep_id)) for ar in allocated_requests if ar.delay != -1]
+    rebased = { ar.flight_id: flights[ar.flight_id] for ar in allocated_requests if ar.delay == -1}
 
     #write_output(flights, agent_constraints, edge_information, prices, new_prices, capacity, end_capacity,
     #            agent_allocations, agent_indices, agent_edge_information, agent_goods_lists, 
     #            int_allocations, new_allocations_goods, u, adjusted_budgets, payment, end_agent_status_data, market_auction_time, output_folder)
     costs_ = [ar.value - ar.findCost(timing_info["auction_start"]) for ar in allocated_requests]
-    return allocation, costs_
+    return allocation, rebased, costs_
 
 
 
