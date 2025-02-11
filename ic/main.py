@@ -550,7 +550,7 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
 
     # Iterate through each time flights appear
     results = []
-    previous_prices = None 
+    prev_auction_prices = None 
     logger.info(f"Auction times: {auction_times}")
 
     for prev_auction_time, auction_time in zip(auction_times[:-1], auction_times[1:]):
@@ -642,11 +642,11 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
             allocated_flights, rebased_flights, payments, valuations, prices = fisher_allocation_and_payment(
                 vertiport_usage, current_flights, current_timing_info, filtered_sectors, filtered_vertiports,
                 output_folder, save_file=scenario_name, initial_allocation=initial_allocation, 
-                design_parameters=design_parameters, previous_prices=previous_prices)
+                design_parameters=design_parameters, previous_price_data=prev_auction_prices)
             # print(f"Allocated flights: {allocated_flights}")
             # print(f"Rebased flights: {rebased_flights}")
             # print(f"Social welfare: {sum([val for val in valuations.values()])}")
-            prev_auction_time = prices
+            prev_auction_prices = prices
             logger.debug(f"Allocated flights: {allocated_flights}")
             logger.debug(f"Rebased flights: {rebased_flights}")
             # logger.debug(f"Social welfare: {sum([val for val in valuations.values()])}")
