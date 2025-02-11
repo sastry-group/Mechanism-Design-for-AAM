@@ -189,7 +189,7 @@ def process_request(id_, req_id, depart_port, arrive_port, sector_path, sector_t
             b.goods.append(Good((sector_path[-1] + '_' + str(adjusted_arrive_time), arrive_port + '_' + str(adjusted_arrive_time) + '_arr')))
             b.goods.append(Good((arrive_port + '_' + str(adjusted_arrive_time) + '_arr', arrive_port + '_' + str(adjusted_arrive_time))))
             final_time = ((adjusted_arrive_time // auction_period) + 1) * auction_period
-            print(f"Final time: {final_time}")
+            # print(f"Final time: {final_time}")
             b.populate(adjusted_arrive_time, final_time, arrive_port)
         # for i in range(depart_time + 1, arrive_time, step):
         #     curtimesarray[i].spot = depart_port+arrive_port
