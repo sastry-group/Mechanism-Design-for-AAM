@@ -105,21 +105,41 @@ def track_desired_goods(flights, goods_list):
 
     return desired_goods
 
+def map_previous_prices(previous_price_data, new_goods_list):
+    """
+    Maps previous prices to new goods, ensuring only relevant prices are carried forward.
+
+    Parameters:
+    - previous_price_data (dict): Dictionary with {old_good: old_price}.
+    - new_goods_list (list): List of goods in the new auction.
+
+    Returns:
+    - np.array: Updated price array for the new auction.
+    """
+
+    new_prices = np.zeros(len(new_goods_list)) 
+
+
+    for i, good in enumerate(new_goods_list):
+        if good in previous_price_data:
+            new_prices[i] = previous_price_data[good]
+
+    return new_prices
 
 def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors_data, vertiports, 
-                                  output_folder=None, save_file=None, initial_allocation=True, design_parameters=None, previous_prices=None):
+                                  output_folder=None, save_file=None, initial_allocation=True, design_parameters=None, previous_price_data=None):
 
     logger = logging.getLogger("global_logger")
     logger.info("Starting Fisher Allocation and Payment Process.")
     start_market_time = time.time()
 
     market_auction_time=timing_info["auction_start"]
-    if market_auction_time>5:
+    if market_auction_time > 5:
         price_default_good = 10
         default_good_valuation = 1
         dropout_good_valuation = 40
-        BETA = 30
-        lambda_frequency = 50
+        BETA = design_parameters["beta"]*2
+        lambda_frequency = 30
         price_upper_bound = 3000
     else:
         price_default_good = design_parameters["price_default_good"]
@@ -213,10 +233,10 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     # remove them overcapacity 
     y = np.concatenate([[agent_y[ind] for ind in y_sparse_array[inds]] for agent_y, inds in zip(dense_y, sparse_agent_y_inds)])
 
-    if market_auction_time == 0 or previous_prices is None:
+    if market_auction_time == 0 or previous_price_data is None:
         p = np.zeros(num_goods)
     else:
-        p = previous_prices
+        p =  map_previous_prices(previous_price_data, goods_list)
 
     p[-2] = price_default_good 
     p[-1] = 0 # dropout good
@@ -284,6 +304,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
 
     agents_data_dict = store_agent_data(flights, x, agent_information, adjusted_budgets, desired_goods, agent_goods_lists, edge_information)
     market_data_dict = store_market_data(extra_data, design_parameters, market_auction_time)
+    price_map = {goods_list[i]: prices[i] for i in range(len(goods_list)) if prices[i] > 0.01}
     agents_data_dict = track_delayed_goods(agents_data_dict, market_data_dict)
     # Rank agents based on their allocation and settling any contested goods
     sorted_agent_dict, ranked_list = rank_allocations(agents_data_dict, market_data_dict)
@@ -306,7 +327,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     write_output(flights, edge_information, market_data_dict, 
                 agents_data_dict, market_auction_time, output_folder)
 
-    return allocation, rebased, dropped, valuations, prices
+    return allocation, rebased, dropped, valuations, price_map 
     
 
 

@@ -112,8 +112,8 @@ def store_market_data(extra_data, design_parameters, market_auction_time):
         'fisher_iterations': extra_data["data_to_plot"]["x_iter"],
         'num_agents': extra_data["num_agents"],
         'num_goods': extra_data["num_goods"],
-      
     }
+    
     return market_data
 
 
