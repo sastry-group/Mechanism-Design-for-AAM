@@ -7,7 +7,7 @@ BETA_values = [50] #, 100, 1000, 10000]
 dropout_good_valuation_values = [40]
 default_good_valuation_values = [1]
 price_default_good_values = [1]
-lambda_frequency_values = [30]
+lambda_frequency_values = [500, 30]
 price_upper_bound_values = [3000]
 # num_CPUS = 1
 
@@ -16,7 +16,8 @@ price_upper_bound_values = [3000]
 # "--file", "test_cases/casef_20240614_153258.json",
 parameter_combinations = list(product(BETA_values, dropout_good_valuation_values, default_good_valuation_values, price_default_good_values, lambda_frequency_values, price_upper_bound_values))
 main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
-file_list = ["test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap6_withReturn.json",
+# "test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap6_withReturn.json",
+file_list = [
              "test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap5_withReturn.json",
              "test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap4_withReturn.json"] 
 
