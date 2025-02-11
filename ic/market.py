@@ -27,7 +27,8 @@ logger = logging.getLogger("global_logger")
 
 
 
-def construct_market(flights, timing_info, sectors, vertiport_usage, output_folder, default_good_valuation=1, dropout_good_valuation=-1, BETA=1):
+def construct_market(flights, timing_info, sectors, vertiport_usage, output_folder, default_good_valuation=1, 
+                     dropout_good_valuation=-1, BETA=1, previous_capacity=None):
     """
     Constructs a market for the given flights, timing information, sectors, and vertiport usage.
     Parameters:
@@ -66,7 +67,7 @@ def construct_market(flights, timing_info, sectors, vertiport_usage, output_fold
 
         # print(f"Building graph for flight {flight_id}")
         logger.info(f"Building graph for flight {flight_id}")
-        builder = FisherGraphBuilder(vertiport_usage, timing_info)
+        builder = FisherGraphBuilder(vertiport_usage, timing_info,previous_capacity)
         agent_graph = builder.build_graph(flight)
         origin_vertiport = flight["origin_vertiport_id"]
         start_node_time = flight["appearance_time"]
@@ -643,7 +644,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         # if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
             break
-        if x_iter == 1000:
+        if x_iter == 10:
             break
 
         iter_start = time.time()

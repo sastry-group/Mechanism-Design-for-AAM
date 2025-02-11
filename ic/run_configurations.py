@@ -17,9 +17,9 @@ price_upper_bound_values = [3000]
 parameter_combinations = list(product(BETA_values, dropout_good_valuation_values, default_good_valuation_values, price_default_good_values, lambda_frequency_values, price_upper_bound_values))
 main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 # "test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap6_withReturn.json",
-file_list = [
-             "test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap5_withReturn.json",
-             "test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap4_withReturn.json"] 
+file_list = ["test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap6_withReturn.json",]
+            #  "test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap5_withReturn.json",
+            #  "test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap4_withReturn.json"] 
 
 
 for file in file_list:

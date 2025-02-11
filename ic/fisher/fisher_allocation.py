@@ -105,6 +105,8 @@ def track_desired_goods(flights, goods_list):
 
     return desired_goods
 
+
+
 def map_previous_prices(previous_price_data, new_goods_list):
     """
     Maps previous prices to new goods, ensuring only relevant prices are carried forward.
@@ -127,7 +129,8 @@ def map_previous_prices(previous_price_data, new_goods_list):
     return new_prices
 
 def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors_data, vertiports, 
-                                  output_folder=None, save_file=None, initial_allocation=True, design_parameters=None, previous_price_data=None):
+                                  output_folder=None, save_file=None, initial_allocation=True, design_parameters=None, 
+                                  previous_price_data=None, capacity_map=None):
 
     logger = logging.getLogger("global_logger")
     logger.info("Starting Fisher Allocation and Payment Process.")
@@ -175,7 +178,8 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     logger.info("Constructing market...")
     agent_information, market_information, bookkeeping = construct_market(flights, timing_info, sectors_data, vertiport_usage, output_folder,
                                                                           default_good_valuation=default_good_valuation, 
-                                                                          dropout_good_valuation=dropout_good_valuation, BETA=BETA)
+                                                                          dropout_good_valuation=dropout_good_valuation, BETA=BETA, 
+                                                                          previous_capacity=capacity_map)
     
     # Run market
     goods_list = bookkeeping
@@ -310,6 +314,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     sorted_agent_dict, ranked_list = rank_allocations(agents_data_dict, market_data_dict)
     agents_data_dict, market_data_dict= agent_allocation_selection(ranked_list, agents_data_dict, market_data_dict)
     valuations = {key: agents_data_dict[key]["valuation"] for key in agents_data_dict.keys()}
+    capacity_map = [good for good, cap in zip(market_data_dict["goods_list"], market_data_dict["capacity"]) if cap == 0]
 
     # Getting data for next auction
     allocation, rebased, dropped, = get_next_auction_data(agents_data_dict, market_data_dict)
@@ -327,7 +332,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     write_output(flights, edge_information, market_data_dict, 
                 agents_data_dict, market_auction_time, output_folder)
 
-    return allocation, rebased, dropped, valuations, price_map 
+    return allocation, rebased, dropped, valuations, price_map, capacity_map
     
 
 

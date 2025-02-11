@@ -11,11 +11,12 @@ sys.path.append(str(top_level_path))
 from VertiportStatus import VertiportStatus
 
 class FisherGraphBuilder:
-    def __init__(self, vertiport_status, timing_info):
+    def __init__(self, vertiport_status, timing_info, previous_capacity=None):
         self.vertiport_status = vertiport_status
         self.timing_info = timing_info
         self.graph = nx.DiGraph()
         self.additional_constraints = []
+        self.previous_capacity = previous_capacity
 
     def build_graph(self, flight_data):
 
@@ -189,7 +190,7 @@ class FisherGraphBuilder:
         #         self.graph.add_edge(current_node, next_node, **attributes)
     def _add_edge_if_not_exists(self, node1, node2, attributes=None):
         """Check if edge exists in VertiportStatus and add to the graph if it doesn't already exist."""
-        if not self.graph.has_edge(node1, node2):
+        if not self.graph.has_edge(node1, node2) and (node1, node2) not in self.previous_capacity:
             # print(f"Adding edge: {node1} -> {node2}")
             self.graph.add_edge(node1, node2, **attributes)
     
