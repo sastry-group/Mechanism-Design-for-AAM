@@ -123,6 +123,7 @@ class bundle:
         self.value =v
         self.delay = delay
         self.budget = budget
+        self.goods = []
     
     
     def findCost(self, current_time):
@@ -166,6 +167,7 @@ def process_request(id_, req_id, depart_port, arrive_port, sector_path, sector_t
         adjusted_arrive_time = arrive_time + delay
     
         b = bundle(id_, req_id, [], maxBid*this_decay, delay, budget)
+        # print(f"Iteration {delay}, b ID: {id(b)}")
         curtimesarray = [time_step(id_, i, 'NA') for i in range(start_time, end_time + 1, step)]
         # for i in range(start_time, depart_time, step): #start_time -1 so it starts at 0
             # curtimesarray[i].spot =  depart_port
@@ -187,6 +189,7 @@ def process_request(id_, req_id, depart_port, arrive_port, sector_path, sector_t
             b.goods.append(Good((sector_path[-1] + '_' + str(adjusted_arrive_time), arrive_port + '_' + str(adjusted_arrive_time) + '_arr')))
             b.goods.append(Good((arrive_port + '_' + str(adjusted_arrive_time) + '_arr', arrive_port + '_' + str(adjusted_arrive_time))))
             final_time = ((adjusted_arrive_time // auction_period) + 1) * auction_period
+            print(f"Final time: {final_time}")
             b.populate(adjusted_arrive_time, final_time, arrive_port)
         # for i in range(depart_time + 1, arrive_time, step):
         #     curtimesarray[i].spot = depart_port+arrive_port
