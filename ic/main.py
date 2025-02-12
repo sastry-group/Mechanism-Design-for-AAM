@@ -551,7 +551,7 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
     # Iterate through each time flights appear
     results = []
     prev_auction_prices = None 
-    capacity_map = None
+    capacity_map = []
     logger.info(f"Auction times: {auction_times}")
 
     for prev_auction_time, auction_time in zip(auction_times[:-1], auction_times[1:]):

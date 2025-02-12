@@ -11,7 +11,7 @@ sys.path.append(str(top_level_path))
 from VertiportStatus import VertiportStatus
 
 class FisherGraphBuilder:
-    def __init__(self, vertiport_status, timing_info, previous_capacity=None):
+    def __init__(self, vertiport_status, timing_info, previous_capacity=[]):
         self.vertiport_status = vertiport_status
         self.timing_info = timing_info
         self.graph = nx.DiGraph()
@@ -93,7 +93,9 @@ class FisherGraphBuilder:
         self._add_node_if_not_exists(f"{sector_path[0]}_{sector_times[0]}")
         dep_attributes = {"valuation": 0}
         self._create_dep_arr_edges(f"{origin_vertiport}_{departure_time}", dep_node, dep_attributes)
-        path_additional_constraints.append((f"{origin_vertiport}_{departure_time}", dep_node))
+        if (f"{origin_vertiport}_{departure_time}", dep_node) not in self.previous_capacity:
+            path_additional_constraints.append((f"{origin_vertiport}_{departure_time}", dep_node))
+
         self._add_edge_if_not_exists(f"{origin_vertiport}_{departure_time}_dep", f"{sector_path[0]}_{sector_times[0]}", attributes)
 
         # Traversing sectors
@@ -112,7 +114,8 @@ class FisherGraphBuilder:
             if i < len(sector_path) - 1:
                 next_sector = sector_path[i + 1]
                 self._add_edge_if_not_exists(f"{current_sector}_{next_time}", f"{next_sector}_{next_time}", sector_attributes)
-                path_additional_constraints.append((f"{current_sector}_{next_time}", f"{next_sector}_{next_time}"))
+                if (f"{current_sector}_{next_time}", f"{next_sector}_{next_time}") not in self.previous_capacity:
+                    path_additional_constraints.append((f"{current_sector}_{next_time}", f"{next_sector}_{next_time}"))
 
         # Arriving at vertiport
         if destination_vertiport is not None:
@@ -122,9 +125,11 @@ class FisherGraphBuilder:
             self._add_node_if_not_exists(f"{destination_vertiport}_{arrival_time}")
             self._add_edge_if_not_exists(f"{sector_path[-1]}_{sector_times[-1]}", arr_node, {"valuation": 0})
             self._add_edge_if_not_exists(arr_node, f"{destination_vertiport}_{arrival_time}", {"valuation": 0})
-            path_additional_constraints.append((arr_node, f"{destination_vertiport}_{arrival_time}"))
+            if (arr_node, f"{destination_vertiport}_{arrival_time}") not in self.previous_capacity:
+                path_additional_constraints.append((arr_node, f"{destination_vertiport}_{arrival_time}"))
         
-        self.additional_constraints.append(path_additional_constraints)
+        if path_additional_constraints:
+            self.additional_constraints.append(path_additional_constraints)
 
     def _create_sector_nodes(self, sector, start_time, end_time):
         """Create nodes for the given sector from start_time to end_time."""
@@ -190,9 +195,9 @@ class FisherGraphBuilder:
         #         self.graph.add_edge(current_node, next_node, **attributes)
     def _add_edge_if_not_exists(self, node1, node2, attributes=None):
         """Check if edge exists in VertiportStatus and add to the graph if it doesn't already exist."""
-        if not self.graph.has_edge(node1, node2) and (node1, node2) not in self.previous_capacity:
-            # print(f"Adding edge: {node1} -> {node2}")
-            self.graph.add_edge(node1, node2, **attributes)
+        if not self.graph.has_edge(node1, node2):
+            if not self.previous_capacity or (node1, node2) not in self.previous_capacity:
+                self.graph.add_edge(node1, node2, **(attributes or {}))
     
 if __name__ == "__main__":
     vertiports = {"A": {

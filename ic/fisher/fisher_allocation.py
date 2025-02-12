@@ -67,10 +67,17 @@ def track_desired_goods(flights, goods_list):
         desired_arrival_time = desired_request["request_arrival_time"]
         desired_transit_edges = []
         desired_dep_edge = (f"{origin_vertiport}_{desired_dep_time}", f"{origin_vertiport}_{desired_dep_time}_dep")
+        i = 0
+        while desired_dep_edge not in goods_list and i < 4:
+            desired_dep_time += 1
+            desired_dep_edge = (f"{origin_vertiport}_{desired_dep_time}", f"{origin_vertiport}_{desired_dep_time}_dep")
+            i += 1
+            
         flights_desired_goods = [desired_dep_edge]
         for i in range(appearance_time, desired_dep_time):
             flights_desired_goods.append((f"{origin_vertiport}_{i}", f"{origin_vertiport}_{i+1}"))
         flights_desired_goods.append((f"{origin_vertiport}_{desired_dep_time}_dep", f"{desired_request['sector_path'][0]}_{desired_request['sector_times'][0]}"))
+
         desired_transit_edges.append((f"{origin_vertiport}_{desired_dep_time}_dep", f"{desired_request['sector_path'][0]}_{desired_request['sector_times'][0]}"))
         for i in range(len(desired_request["sector_path"])):
             sector = desired_request["sector_path"][i]
@@ -96,7 +103,9 @@ def track_desired_goods(flights, goods_list):
         # print(f"Desired goods for flight {flight_id}: {flights_desired_goods}")
         index_list = []
         for good in flights_desired_goods:
-            index_list.append(goods_list.index(good))
+            if good in goods_list:
+                index_list.append(goods_list.index(good))
+
         desired_goods[flight_id] = {"good_indices": index_list, "desired_dep_edge_idx": goods_list.index(desired_dep_edge), 
                                     "desired_dep_edge": desired_dep_edge, "desired_paths": flights_desired_goods, 
                                     "desired_arr_edge": desired_arr_edge, "desired_transit_edges": desired_transit_edges, 
@@ -130,7 +139,7 @@ def map_previous_prices(previous_price_data, new_goods_list):
 
 def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors_data, vertiports, 
                                   output_folder=None, save_file=None, initial_allocation=True, design_parameters=None, 
-                                  previous_price_data=None, capacity_map=None):
+                                  previous_price_data=None, capacity_map=[]):
 
     logger = logging.getLogger("global_logger")
     logger.info("Starting Fisher Allocation and Payment Process.")
@@ -315,7 +324,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     agents_data_dict, market_data_dict= agent_allocation_selection(ranked_list, agents_data_dict, market_data_dict)
     valuations = {key: agents_data_dict[key]["valuation"] for key in agents_data_dict.keys()}
     capacity_map = [good for good, cap in zip(market_data_dict["goods_list"], market_data_dict["capacity"]) if cap == 0]
-
+    market_data_dict.setdefault("prev_contested_goods", []).append(capacity_map)
     # Getting data for next auction
     allocation, rebased, dropped, = get_next_auction_data(agents_data_dict, market_data_dict)
 

@@ -28,7 +28,7 @@ logger = logging.getLogger("global_logger")
 
 
 def construct_market(flights, timing_info, sectors, vertiport_usage, output_folder, default_good_valuation=1, 
-                     dropout_good_valuation=-1, BETA=1, previous_capacity=None):
+                     dropout_good_valuation=-1, BETA=1, previous_capacity=[]):
     """
     Constructs a market for the given flights, timing information, sectors, and vertiport usage.
     Parameters:
@@ -67,7 +67,7 @@ def construct_market(flights, timing_info, sectors, vertiport_usage, output_fold
 
         # print(f"Building graph for flight {flight_id}")
         logger.info(f"Building graph for flight {flight_id}")
-        builder = FisherGraphBuilder(vertiport_usage, timing_info,previous_capacity)
+        builder = FisherGraphBuilder(vertiport_usage, timing_info, previous_capacity)
         agent_graph = builder.build_graph(flight)
         origin_vertiport = flight["origin_vertiport_id"]
         start_node_time = flight["appearance_time"]
