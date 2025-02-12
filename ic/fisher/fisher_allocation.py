@@ -135,7 +135,6 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
 
     market_auction_time=timing_info["auction_start"]
     if market_auction_time > 5:
-    if market_auction_time > 5:
         price_default_good = 10
         default_good_valuation = 1
         dropout_good_valuation = 40
