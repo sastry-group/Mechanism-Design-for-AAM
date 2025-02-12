@@ -428,6 +428,62 @@ def create_output_folder(design_parameters, file_path, method, base_dir="ic/resu
 
     return main_output_folder
 
+def update_agent_flight(flight_id, flights, request_id, new_dep_time, new_arr_time, new_valuation, new_sector_times):
+    """
+    Update the flight information based on the new departure and arrival times and valuation.
+    """
+    flights[flight_id]["requests"][request_id]["request_departure_time"] = new_dep_time
+    flights[flight_id]["requests"][request_id]["request_arrival_time"] = new_arr_time
+    flights[flight_id]["requests"][request_id]["valuation"] = new_valuation
+    flights[flight_id]["requests"][request_id]["sector_times"] = new_sector_times
+    return flights
+
+
+def adjust_contested_goods(capacity_map, flights):
+    """
+    Adjusts flight requests if their departure, arrival, or sector times are in the capacity map.
+    """
+    for flight_id, flight_data in flights.items():
+        origin_id = flight_data["origin_vertiport_id"]
+
+        for request_id, request in flight_data["requests"].items():
+            dep_time = request.get("request_departure_time")
+            arr_time = request.get("request_arrival_time")
+            sector_path = request.get("sector_path", [])
+            sector_times = request.get("sector_times", [])
+
+            formatted_requests = set()
+            if dep_time is not None:
+                formatted_requests.add(f"{origin_id}_{dep_time}_dep")
+                formatted_requests.add(f"{origin_id}_{arr_time}_arr")
+
+            for i in range(len(sector_path)):
+                formatted_requests.add(f"{sector_path[i]}_{sector_times[i]}")
+
+
+            matches = {req for req in formatted_requests if req in capacity_map}
+
+
+            if matches:
+                i = 1
+                while any(f"{origin_id}_{dep_time + i}_dep" in capacity_map or
+                          f"{origin_id}_{arr_time + i}_arr" in capacity_map or
+                          any(f"{sector_path[j]}_{sector_times[j] + i}" in capacity_map for j in range(len(sector_times)))
+                          for i in range(1, 5)):
+                    
+                    new_dep_time = dep_time + i
+                    new_arr_time = arr_time + i
+                    new_valuation = request["valuation"] * 0.95  
+                    new_sector_times = [time + i for time in sector_times] 
+                    
+                    i += 1  
+
+                flights = update_agent_flight(flight_id, flights, request_id, new_dep_time, new_arr_time, new_valuation, new_sector_times)
+
+    return flights
+
+
+
 def run_scenario(data, scenario_path, scenario_name, output_folder, method, design_parameters=None, save_scenario = True, payment_calc = True):
     """
     Create and run a scenario based on the given data. Save it to the specified path.
@@ -549,14 +605,15 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
 
     # Iterate through each time flights appear
     results = []
+    capacity_map = []
     logger.info(f"Auction times: {auction_times}")
     # print("Auction times: ", auction_times)
     for prev_auction_time, auction_time in zip(auction_times[:-1], auction_times[1:]):
         # Get the current flights
         # current_flight_ids = ordered_flights[appearance_time]
         
-        if prev_auction_time > 10:
-            break
+        # if prev_auction_time > 10:
+        #     break
 
         # This is to ensure it doest not rebase the flights beyond simulation end time
         if rebased_flights and auction_time <= last_auction + 1:
@@ -623,6 +680,11 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
             "auction_frequency": timing_info["auction_frequency"],
             "time_step": timing_info["time_step"]
         }
+
+        if capacity_map:
+            current_flights = adjust_contested_goods(capacity_map, current_flights)
+
+
         if method == "vcg":
 
             allocated_flights, payments, sw = vcg_allocation_and_payment(
@@ -637,7 +699,7 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
                 vertiport_usage, vertiports, flights, allocated_flights, stack_commands
             )
         elif method == "fisher":
-            allocated_flights, rebased_flights, payments, valuations = fisher_allocation_and_payment(
+            allocated_flights, rebased_flights, payments, valuations, capacity_map = fisher_allocation_and_payment(
                 vertiport_usage, current_flights, current_timing_info, filtered_sectors, filtered_vertiports,
                 output_folder, save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
             )

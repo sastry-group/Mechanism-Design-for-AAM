@@ -113,7 +113,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     start_market_time = time.time()
 
     market_auction_time=timing_info["auction_start"]
-    if market_auction_time>5:
+    if market_auction_time > 5:
         price_default_good = 10
         default_good_valuation = 1
         dropout_good_valuation = 40
@@ -249,7 +249,8 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     sorted_agent_dict, ranked_list = rank_allocations(agents_data_dict, market_data_dict)
     agents_data_dict, market_data_dict= agent_allocation_selection(ranked_list, agents_data_dict, market_data_dict)
     valuations = {key: agents_data_dict[key]["valuation"] for key in agents_data_dict.keys()}
-
+    capacity_map = [good for good, cap in zip(market_data_dict["goods_list"], market_data_dict["capacity"]) if cap == 0]
+    market_data_dict.setdefault("prev_contested_goods", []).append(capacity_map)
     # Getting data for next auction
     allocation, rebased, dropped, = get_next_auction_data(agents_data_dict, market_data_dict)
 
@@ -267,7 +268,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     write_output(flights, edge_information, market_data_dict, 
                 agents_data_dict, market_auction_time, output_folder)
 
-    return allocation, rebased, dropped, valuations
+    return allocation, rebased, dropped, valuations, capacity_map
     
 
 
