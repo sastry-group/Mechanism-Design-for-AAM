@@ -13,6 +13,7 @@ from rich.table import Table
 import logging
 from rich.logging import RichHandler
 import time
+import traceback
 
 logger = logging.getLogger("global_logger")
 
@@ -104,9 +105,29 @@ def track_desired_goods(flights, goods_list):
 
     return desired_goods
 
+def map_previous_prices(previous_price_data, new_goods_list):
+    """
+    Maps previous prices to new goods, ensuring only relevant prices are carried forward.
+
+    Parameters:
+    - previous_price_data (dict): Dictionary with {old_good: old_price}.
+    - new_goods_list (list): List of goods in the new auction.
+
+    Returns:
+    - np.array: Updated price array for the new auction.
+    """
+
+    new_prices = np.zeros(len(new_goods_list)) 
+
+
+    for i, good in enumerate(new_goods_list):
+        if good in previous_price_data:
+            new_prices[i] = previous_price_data[good]
+
+    return new_prices
 
 def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors_data, vertiports, 
-                                  output_folder=None, save_file=None, initial_allocation=True, design_parameters=None):
+                                  output_folder=None, save_file=None, initial_allocation=True, design_parameters=None, previous_price_data=None):
 
     logger = logging.getLogger("global_logger")
     logger.info("Starting Fisher Allocation and Payment Process.")
@@ -114,11 +135,12 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
 
     market_auction_time=timing_info["auction_start"]
     if market_auction_time > 5:
+    if market_auction_time > 5:
         price_default_good = 10
         default_good_valuation = 1
         dropout_good_valuation = 40
-        BETA = 50
-        lambda_frequency = 50
+        BETA = design_parameters["beta"]*2
+        lambda_frequency = 30
         price_upper_bound = 3000
     else:
         price_default_good = design_parameters["price_default_good"]
@@ -160,8 +182,31 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     goods_list = bookkeeping
     num_goods, num_agents = len(goods_list), len(flights)
     u, agent_constraints, agent_goods_lists = agent_information
+    _ , capacity, _ = market_information
+    agent_indices = map_goodslist_to_agent_goods(goods_list, agent_goods_lists)
+    agent_information = (*agent_information, agent_indices)
+    # Sparse Representation
+    sparse_agent_x_inds = []
+    sparse_agent_y_inds = []
+    x_start = 0
+    y_start = 0
+    y_agent_indices = []
+    for inds in agent_indices:
+        x_end = len(inds) + x_start
+        y_end = len(inds) - 2 + y_start
+        sparse_agent_x_inds.append(list(np.arange(x_start, x_end)))
+        sparse_agent_y_inds.append(list(np.arange(y_start, y_end)))
+        y_agent_indices.append(inds[:-2])
+        x_start = x_end
+        y_start = y_end
+    y_sparse_array = np.concatenate(y_agent_indices)
+    x_sparse_array = np.concatenate(agent_indices)
+    y_sum_matrix = np.array([[1 if elem == i else 0 for elem in y_sparse_array] for i in range(num_goods - 2)])
+
     # y = np.random.rand(num_agents, num_goods-2)*10
     y = np.zeros((num_agents, num_goods - 2))
+    dense_y = np.zeros((num_agents, num_goods - 2))
+    # y = np.zeros((len(sparse_goods_representation), 1))
     desired_goods = track_desired_goods(flights, goods_list)
     for i, agent_id in enumerate(desired_goods):
         # dept_id = desired_goods[agent_ids]["desired_good_arr"]
@@ -172,6 +217,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
         # y[i][desired_goods[agent_id]["good_indices"][0]] = 1
         for good_idx in desired_goods[agent_id]["good_indices"]:
             y[i][good_idx] = 1
+            dense_y[i][good_idx] = 1
         # print(f"Initial allocation for agent {i}: {y[i]}")
         # print(f"Goods: {agent_goods_lists[i]}")
         # ybar = np.array([y[i, goods_list.index(good)] for good in agent_goods_lists[i][:-2]] + [0,0])
@@ -184,32 +230,44 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
         # print(f"A: {agent_constraints[i][0]}")
         # assert all(agent_constraints[i][0] @ ybar - agent_constraints[i][1] == 0), f"Initial allocation for agent {i} does not satisfy constraints for agent {i}"
     # y = np.random.rand(num_agents, num_goods)
-    p = np.zeros(num_goods)
+    # start the prices witht the preiovus prices 
+    # remove them overcapacity 
+    y = np.concatenate([[agent_y[ind] for ind in y_sparse_array[inds]] for agent_y, inds in zip(dense_y, sparse_agent_y_inds)])
+
+    if market_auction_time == 0 or previous_price_data is None:
+        p = np.zeros(num_goods)
+    else:
+        p =  map_previous_prices(previous_price_data, goods_list)
+
     p[-2] = price_default_good 
     p[-1] = 0 # dropout good
     # r = [np.zeros(len(agent_constraints[i][1])) for i in range(num_agents)]
     r = np.zeros(num_agents)
-    _ , capacity, _ = market_information
-    agent_indices = map_goodslist_to_agent_goods(goods_list, agent_goods_lists)
-    agent_information = (*agent_information, agent_indices)
     # x, p, r, overdemand = run_market((y,p,r), agent_information, market_information, bookkeeping, plotting=True, rational=False)
     logger.info("Running market...")
-    
-    x, prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot = run_market((y,p,r), agent_information, market_information, 
-                                                             bookkeeping, rational=False, price_default_good=price_default_good, 
-                                                             lambda_frequency=lambda_frequency, price_upper_bound=price_upper_bound)
+
+
+    try:
+        x, prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot = run_market((y,p,r), agent_information, market_information, 
+                                                                bookkeeping, (x_sparse_array, y_sparse_array, sparse_agent_x_inds, sparse_agent_y_inds, y_sum_matrix),
+                                                                rational=False, price_default_good=price_default_good, 
+                                                                lambda_frequency=lambda_frequency, price_upper_bound=price_upper_bound)
+    except Exception as e:
+        logger.error(f"Error in run_market at auction time {market_auction_time}:\n{traceback.format_exc()}")
+        return None, None, None, None, None  # Avoid crashing, return safe values
+
     logger.info("Market run complete.")
     end_fisher_time =  time.time() - start_market_time
     console = Console(force_terminal=True)
     console.print(f"[bold green]Fisher Algorithm runtime {end_fisher_time}...[/bold green]")
 
     # print("---FINAL ALLOCATION---")
-    logger.debug("---FINAL ALLOCATION---")
-    for agent_x, desired_good in zip(x, desired_goods):
-        # print(f"Agent allocation of goods: {[goods_list[i] for i in np.where(x[0] > 0.1)[0]]}")
-        # print(f"Partially allocated good values: {[x[0][i] for i in np.where(x[0] > 0.1)[0]]}")
-        logger.debug(f"Agent allocation of goods: {[goods_list[i] for i in np.where(x[0] > 0.1)[0]]}")
-        logger.debug(f"Partially allocated good values: {[x[0][i] for i in np.where(x[0]> 0.1)[0]]}")
+    # logger.debug("---FINAL ALLOCATION---")
+    # for agent_x, desired_good in zip(x, desired_goods):
+    #     # print(f"Agent allocation of goods: {[goods_list[i] for i in np.where(x[0] > 0.1)[0]]}")
+    #     # print(f"Partially allocated good values: {[x[0][i] for i in np.where(x[0] > 0.1)[0]]}")
+    #     logger.debug(f"Agent allocation of goods: {[goods_list[i] for i in np.where(x[0] > 0.1)[0]]}")
+    #     logger.debug(f"Partially allocated good values: {[x[0][i] for i in np.where(x[0]> 0.1)[0]]}")
     # print(f"Partial allocation for 0th agent: {[goods_list[i] for i in np.where(x[0] > 0.1)[0]]}")
     # print(f"Partial allocation for 1st agent: {[goods_list[i] for i in np.where(x[1] > 0.1)[0]]}")
     # print(f"Partially allocated good values: {[x[0][i] for i in np.where(x[0] > 0.1)[0]]}")
@@ -233,7 +291,10 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     'goods_list': goods_list,
     'capacity': capacity,
     'data_to_plot': data_to_plot,
-    'agent_goods_lists': agent_goods_lists}
+    'agent_goods_lists': agent_goods_lists,
+    'num_agents': num_agents,
+    'num_goods': num_goods,
+    }
     save_data(output_folder, "fisher_data", market_auction_time, **extra_data)
     plotting_market(data_to_plot, desired_goods, output_folder, market_auction_time)
     
@@ -244,6 +305,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
 
     agents_data_dict = store_agent_data(flights, x, agent_information, adjusted_budgets, desired_goods, agent_goods_lists, edge_information)
     market_data_dict = store_market_data(extra_data, design_parameters, market_auction_time)
+    price_map = {goods_list[i]: prices[i] for i in range(len(goods_list)) if prices[i] > 0.01}
     agents_data_dict = track_delayed_goods(agents_data_dict, market_data_dict)
     # Rank agents based on their allocation and settling any contested goods
     sorted_agent_dict, ranked_list = rank_allocations(agents_data_dict, market_data_dict)
@@ -254,7 +316,6 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     # Getting data for next auction
     allocation, rebased, dropped, = get_next_auction_data(agents_data_dict, market_data_dict)
 
-    logger.info("Time to run entire fisher")
     console.print(f"[bold green] Algorithm 1 & 2 runtime {time.time() - start_market_time}...[/bold green]")
 
     market_data_dict = plot_utility_functions(agents_data_dict, market_data_dict, output_folder)
@@ -268,7 +329,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     write_output(flights, edge_information, market_data_dict, 
                 agents_data_dict, market_auction_time, output_folder)
 
-    return allocation, rebased, dropped, valuations, capacity_map
+    return allocation, rebased, dropped, valuations, capacity_map, price_map 
     
 
 

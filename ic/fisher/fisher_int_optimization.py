@@ -73,6 +73,7 @@ def track_delayed_goods(agents_data_dict, market_data_dict):
                 delayed_goods.append(good_tuple)
         if good == "dropout_good":
             print(f"There is a droput of agent {agent_id}")
+            # logger.info(f"There is a droput of agent {agent_id}")
         elif delayed_goods:
             delayed_goods.pop(0)
             agent_data['delayed_goods'] = delayed_goods
@@ -218,9 +219,10 @@ def find_optimal_xi(n, utility, A, b, prices, budget):
     Returns:
     - numpy.ndarray: The optimal values of xi.
     """
+    b_reshape = b.reshape(-1, )
     x = cp.Variable(n, integer=True)
     objective = cp.Maximize(cp.sum(cp.multiply(utility, x)))
-    constraints = [A @ x == b, cp.sum(cp.matmul(prices, x)) <= budget, x >=0] 
+    constraints = [A @ x == b_reshape, cp.sum(cp.matmul(prices, x)) <= budget, x >=0] 
     problem = cp.Problem(objective, constraints)
     result = problem.solve()
     

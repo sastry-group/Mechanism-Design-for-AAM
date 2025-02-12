@@ -107,9 +107,13 @@ def store_market_data(extra_data, design_parameters, market_auction_time):
         'demand': np.sum(extra_data["x_prob"], axis=0),
         'market_auction_time': market_auction_time,
         'num_iterations': extra_data["data_to_plot"]["x_iter"],
-        'market_parameters': {key: value for key, value in design_parameters.items()}
-        
+        'market_parameters': {key: value for key, value in design_parameters.items()},
+        'fisher_run_time': extra_data["data_to_plot"]["fisher_run_time"],
+        'fisher_iterations': extra_data["data_to_plot"]["x_iter"],
+        'num_agents': extra_data["num_agents"],
+        'num_goods': extra_data["num_goods"],
     }
+    
     return market_data
 
 

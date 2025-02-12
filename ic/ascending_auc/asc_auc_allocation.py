@@ -94,6 +94,7 @@ class bundle:
     budget = 0
     flight = () #allocated_requests format for step_simulation
     times = []
+    goods = []
     value = 0
     dep_id = None
     arr_id = None
@@ -110,6 +111,8 @@ class bundle:
         #(self.flight_id, (dep_id, arr_id)) was ff output format for allocated_requests
         self.dep_id = depart_port + '_' + str(depart_time) + '_dep'
         self.arr_id = arrive_port + '_' + str(arrive_time) + '_arr'
+        if arrive_port is not None:
+            self.arr_id = arrive_port + '_' + str(arrive_time) + '_arr'
         self.flight = (self.flight_id, self.req_id, self.delay, self.value, depart_port, arrive_port)
         return self.flight
     
@@ -120,6 +123,7 @@ class bundle:
         self.value =v
         self.delay = delay
         self.budget = budget
+        self.goods = []
     
     
     def findCost(self, current_time):
@@ -151,7 +155,7 @@ def process_request(id_, req_id, depart_port, arrive_port, sector_path, sector_t
     reqs = []
     if(req_id == "000"):
         b = bundle(id_, req_id, [], maxBid, -1, budget)
-        b.populate(start_time,end_time + 1, depart_port)
+        b.populate(start_time,end_time, depart_port)
         b.update_flight_path(depart_time, depart_port, arrive_time, arrive_port)
         reqs += [b]
         return reqs
@@ -163,6 +167,7 @@ def process_request(id_, req_id, depart_port, arrive_port, sector_path, sector_t
         adjusted_arrive_time = arrive_time + delay
     
         b = bundle(id_, req_id, [], maxBid*this_decay, delay, budget)
+        # print(f"Iteration {delay}, b ID: {id(b)}")
         curtimesarray = [time_step(id_, i, 'NA') for i in range(start_time, end_time + 1, step)]
         # for i in range(start_time, depart_time, step): #start_time -1 so it starts at 0
             # curtimesarray[i].spot =  depart_port
@@ -184,6 +189,7 @@ def process_request(id_, req_id, depart_port, arrive_port, sector_path, sector_t
             b.goods.append(Good((sector_path[-1] + '_' + str(adjusted_arrive_time), arrive_port + '_' + str(adjusted_arrive_time) + '_arr')))
             b.goods.append(Good((arrive_port + '_' + str(adjusted_arrive_time) + '_arr', arrive_port + '_' + str(adjusted_arrive_time))))
             final_time = ((adjusted_arrive_time // auction_period) + 1) * auction_period
+            # print(f"Final time: {final_time}")
             b.populate(adjusted_arrive_time, final_time, arrive_port)
         # for i in range(depart_time + 1, arrive_time, step):
         #     curtimesarray[i].spot = depart_port+arrive_port
@@ -234,6 +240,7 @@ def run_auction(reqs, method, start_time, end_time, capacities, sector_data, ver
     pplcnt_log = []
     maxprice_log = []
     it = 0
+    all_prices = []
     while(not final):
         final = True
         it += 1
@@ -259,14 +266,14 @@ def run_auction(reqs, method, start_time, end_time, capacities, sector_data, ver
             favored_goods += favored_req.goods
         # print(f"Favored reqs: {favored_reqs}")
             #look through all requests at a time step
-            spots_reqs = []
+            # spots_reqs = []
         
-            for r in reqs:
+            # for r in reqs:
                 #print(type(r.times[t]))
                 #print(r.flight_id, r.req_id, r.delay, len(r.times))
-                spots_reqs += [[r.times[t].spot, r.flight_id]]
+                # spots_reqs += [[r.times[t].spot, r.flight_id]]
 
-            spots_reqs = [e[0] for e in list({tuple(i) for i in spots_reqs})] # ensuring same flights arent competing by creating set of used spots including flight ids
+            # spots_reqs = [e[0] for e in list({tuple(i) for i in spots_reqs})] # ensuring same flights arent competing by creating set of used spots including flight ids
             #print('A  -----------------')
             # print(spots_reqs)
         favored_good_names = [good.good for good in favored_goods]
@@ -433,20 +440,18 @@ def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, 
     #print(allocated_requests)
     
     
-    print('S - AR REQUESTS')
-    print(allocated_requests)                                       
-    print('E - AR REQUESTS')
+    # print('S - AR REQUESTS')
+    # print(allocated_requests)                                       
+    # print('E - AR REQUESTS')
 
-    allocation = []
-
-    allocation = [ar.flight for ar in allocated_requests]
-    rebased = None
+    allocation  = [(ar.flight_id, ('_'.join(ar.dep_id.split("_")[:-1]), ar.dep_id)) for ar in allocated_requests if ar.delay != -1]
+    rebased = { ar.flight_id: flights[ar.flight_id] for ar in allocated_requests if ar.delay == -1}
 
     #write_output(flights, agent_constraints, edge_information, prices, new_prices, capacity, end_capacity,
     #            agent_allocations, agent_indices, agent_edge_information, agent_goods_lists, 
     #            int_allocations, new_allocations_goods, u, adjusted_budgets, payment, end_agent_status_data, market_auction_time, output_folder)
     costs_ = [ar.value - ar.findCost(timing_info["auction_start"]) for ar in allocated_requests]
-    return allocation, costs_
+    return allocation, rebased, costs_
 
 
 

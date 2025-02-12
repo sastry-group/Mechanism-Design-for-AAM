@@ -15,6 +15,7 @@ import copy
 from datetime import datetime
 from logging_config import setup_logger
 import logging
+import traceback
 
 def initialize_logger(log_folder):
     logger = setup_logger(
@@ -606,8 +607,9 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
     # Iterate through each time flights appear
     results = []
     capacity_map = []
+    prev_auction_prices = None 
     logger.info(f"Auction times: {auction_times}")
-    # print("Auction times: ", auction_times)
+
     for prev_auction_time, auction_time in zip(auction_times[:-1], auction_times[1:]):
         # Get the current flights
         # current_flight_ids = ordered_flights[appearance_time]
@@ -650,7 +652,7 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
             for request in flight['requests'].values():
                 destination = request['destination_vertiport_id']
                 unique_vertiport_ids.add(destination)
-                if request["request_departure_time"] != 0:
+                if request["request_departure_time"] != 0 and request["request_departure_time"] != -1:
                     interval_sectors.update(request["sector_path"])
                 # interval_routes.add((origin, destination))
 
@@ -699,16 +701,17 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
                 vertiport_usage, vertiports, flights, allocated_flights, stack_commands
             )
         elif method == "fisher":
-            allocated_flights, rebased_flights, payments, valuations, capacity_map = fisher_allocation_and_payment(
+            allocated_flights, rebased_flights, payments, valuations, capacity_map, prices = fisher_allocation_and_payment(
                 vertiport_usage, current_flights, current_timing_info, filtered_sectors, filtered_vertiports,
-                output_folder, save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
-            )
+                output_folder, save_file=scenario_name, initial_allocation=initial_allocation, 
+                design_parameters=design_parameters, previous_price_data=prev_auction_prices)
             # print(f"Allocated flights: {allocated_flights}")
             # print(f"Rebased flights: {rebased_flights}")
             # print(f"Social welfare: {sum([val for val in valuations.values()])}")
+            prev_auction_prices = prices
             logger.debug(f"Allocated flights: {allocated_flights}")
             logger.debug(f"Rebased flights: {rebased_flights}")
-            logger.debug(f"Social welfare: {sum([val for val in valuations.values()])}")
+            # logger.debug(f"Social welfare: {sum([val for val in valuations.values()])}")
             allocated_requests = []
             for flight_id, allocated_dep in allocated_flights:
                 dep_time = int(allocated_dep[0].split("_")[1])
@@ -724,33 +727,51 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
                     allocated_request["valuation"] = allocated_request["valuation"]*flight["decay_factor"]**delay
                     allocated_requests.append((flight_id, allocated_request))
                     break
+            assert len(allocated_requests) == len(allocated_flights), "Not all flight requests were read."
             # print(f"Allocated requests: {allocated_requests}")
             logger.debug(f"Allocated requests: {allocated_requests}")
             vertiport_usage = step_simulation_delay_fisher(
                 vertiport_usage, vertiports, flights, allocated_requests, stack_commands, auction_freq
             )
         elif method == "ascending-auction-budgetbased":
-            allocated_flights, payments = ascending_auc_allocation_and_payment(
+            allocated_flights, rebased_flights, payments = ascending_auc_allocation_and_payment(
                     vertiport_usage, current_flights, current_timing_info, filtered_sectors, "budget",
                     save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
                 )
             #print(allocated_flights)
             #print(payments)
 
-            vertiport_usage = step_simulation_delay(
-                vertiport_usage, vertiports, flights, allocated_flights, stack_commands
+            allocated_requests = []
+            for flight_id, allocated_dep in allocated_flights:
+                dep_time = int(allocated_dep[0].split("_")[1])
+                flight = current_flights[flight_id]
+                allocated_request = None
+                for delay in range(5):
+                    if flight["requests"]["001"]["request_departure_time"] + delay != dep_time:
+                        continue
+                    allocated_request = flight["requests"]["001"]
+                    allocated_request["request_departure_time"] += delay
+                    allocated_request["request_arrival_time"] += delay
+                    allocated_request["sector_times"] = [sector_time + delay for sector_time in allocated_request["sector_times"]]
+                    allocated_request["valuation"] = allocated_request["valuation"]*flight["decay_factor"]**delay
+                    allocated_requests.append((flight_id, allocated_request))
+                    break
+            assert len(allocated_requests) == len(allocated_flights), "Not all flight requests were read."
+            print(f"Allocated requests: {allocated_requests}")
+            vertiport_usage = step_simulation_delay_fisher(
+                vertiport_usage, vertiports, flights, allocated_requests, stack_commands, auction_freq
             )
 
-            # print("ALLOCATED FLIGHTS")
-            logger.debug("ALLOCATED FLIGHTS")
-            for af in allocated_flights:
-                # print("flight id: ", af[0], "request id: ", af[1]," delay: ", af[2],"value: ", af[3], )
-                logger.debug(f"flight id: {af[0]}, request id: {af[1]}, delay: {af[2]}, value: {af[3]}")    
-            logger.debug("---------")
-            # print('---------')
-            # print(f"Social welfare: {[sum(af[3] for af in allocated_flights)]}")
-            logger.debug(f"Social welfare: {[sum(af[3] for af in allocated_flights)]}")
-            allocated_flights = [i[0:2] for i in allocated_flights]
+            # # print("ALLOCATED FLIGHTS")
+            # logger.debug("ALLOCATED FLIGHTS")
+            # for af in allocated_flights:
+            #     # print("flight id: ", af[0], "request id: ", af[1]," delay: ", af[2],"value: ", af[3], )
+            #     logger.debug(f"flight id: {af[0]}, request id: {af[1]}, delay: {af[2]}, value: {af[3]}")    
+            # logger.debug("---------")
+            # # print('---------')
+            # # print(f"Social welfare: {[sum(af[3] for af in allocated_flights)]}")
+            # logger.debug(f"Social welfare: {[sum(af[3] for af in allocated_flights)]}")
+            # allocated_flights = [i[0:2] for i in allocated_flights]
         
         elif method == "ascending-auction-profitbased":
             allocated_flights, payments = ascending_auc_allocation_and_payment(
@@ -955,7 +976,7 @@ if __name__ == "__main__":
         path_to_scn_file, results = run_scenario(test_case_data, SCN_FOLDER, SCN_NAME, output_folder, method, design_parameters)
         logger.info(f"Scenario file written to: {path_to_scn_file}")
     except Exception as e:
-        logger.error(f"Error while running the scenario: {e}")
+        logger.error(f"Error while running the scenario: {e}\n{traceback.format_exc()}")
         sys.exit()
 
     # BLUESKY SIM 
