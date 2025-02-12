@@ -11,11 +11,12 @@ sys.path.append(str(top_level_path))
 from VertiportStatus import VertiportStatus
 
 class FisherGraphBuilder:
-    def __init__(self, vertiport_status, timing_info):
+    def __init__(self, vertiport_status, timing_info, allowed_delays=list(range(5))):
         self.vertiport_status = vertiport_status
         self.timing_info = timing_info
         self.graph = nx.DiGraph()
         self.additional_constraints = []
+        self.allowed_delays = allowed_delays
 
     def build_graph(self, flight_data):
 
@@ -30,11 +31,12 @@ class FisherGraphBuilder:
             departure_time = flight_data["requests"]["001"]["request_departure_time"]
 
             if request_id == "000":
-                attributes = {"valuation": request["valuation"]}
-                # if staying at origin vertiport
-                # Create parking nodes and edges from appearance to end of auction
-                self._create_parking_nodes(origin_vertiport, appearance_time, end_auction_time)
-                self._create_edges(origin_vertiport, appearance_time, end_auction_time, attributes = {"valuation": 0})
+                if -1 not in self.allowed_delays:
+                    attributes = {"valuation": request["valuation"]}
+                    # if staying at origin vertiport
+                    # Create parking nodes and edges from appearance to end of auction
+                    self._create_parking_nodes(origin_vertiport, appearance_time, end_auction_time)
+                    self._create_edges(origin_vertiport, appearance_time, end_auction_time, attributes = {"valuation": 0, "request": [-1]})
             else:
                 destination_vertiport = flight_data["requests"]["001"]["destination_vertiport_id"]
                 # Create nodes for the time window (arrival to end of auction)
@@ -46,7 +48,7 @@ class FisherGraphBuilder:
                 sector_times = request["sector_times"]
                 
                 decay = flight_data["decay_factor"]
-                for ts_delay in range(5):
+                for ts_delay in [delay for delay in self.allowed_delays if delay != -1]:
                     new_arrival_time = arrival_time + ts_delay
                     new_departure_time = departure_time + ts_delay
                     decay_valuation = request["valuation"] * decay**ts_delay
@@ -54,10 +56,10 @@ class FisherGraphBuilder:
                     # self._create_dep_arr_elements(origin_vertiport, destination_vertiport, new_departure_time, new_arrival_time, attributes = {"valuation": decay_valuation})
                     # Create edges for the destination vertiport from arrival to end of auction
                     if destination_vertiport is not None:
-                        self._create_edges(destination_vertiport, new_arrival_time, new_end_auction_time, attributes = {"valuation": 0})
+                        self._create_edges(destination_vertiport, new_arrival_time, new_end_auction_time, attributes = {"valuation": 0, "request": [ts_delay]})
                     
                     # Add edges for the path
-                    attributes = {"valuation": decay_valuation}
+                    attributes = {"valuation": decay_valuation, "request": [ts_delay]}
                     new_sector_times = [ts + ts_delay for ts in sector_times]
                     self._create_path_elements(origin_vertiport, destination_vertiport, sector_path, new_sector_times,
                               new_departure_time, new_arrival_time, attributes=attributes)
@@ -90,7 +92,7 @@ class FisherGraphBuilder:
         dep_node = f"{origin_vertiport}_{departure_time}_dep"
         self._add_node_if_not_exists(dep_node)
         self._add_node_if_not_exists(f"{sector_path[0]}_{sector_times[0]}")
-        dep_attributes = {"valuation": 0}
+        dep_attributes = {"valuation": 0, "request": attributes["request"]}
         self._create_dep_arr_edges(f"{origin_vertiport}_{departure_time}", dep_node, dep_attributes)
         path_additional_constraints.append((f"{origin_vertiport}_{departure_time}", dep_node))
         self._add_edge_if_not_exists(f"{origin_vertiport}_{departure_time}_dep", f"{sector_path[0]}_{sector_times[0]}", attributes)
@@ -99,7 +101,7 @@ class FisherGraphBuilder:
         for i in range(len(sector_path)):
             current_sector, current_time = sector_path[i], sector_times[i]
             next_time = sector_times[i + 1]
-            sector_attributes = {"valuation": 0}
+            sector_attributes = {"valuation": 0, "request": attributes["request"]}
             for ts in range(current_time, next_time):
                 start_node = f"{current_sector}_{ts}"
                 end_node = f"{current_sector}_{ts+1}" 
@@ -119,8 +121,8 @@ class FisherGraphBuilder:
             # print(f"Adding {arr_node} and {destination_vertiport}_{arrival_time}")
             self._add_node_if_not_exists(arr_node)
             self._add_node_if_not_exists(f"{destination_vertiport}_{arrival_time}")
-            self._add_edge_if_not_exists(f"{sector_path[-1]}_{sector_times[-1]}", arr_node, {"valuation": 0})
-            self._add_edge_if_not_exists(arr_node, f"{destination_vertiport}_{arrival_time}", {"valuation": 0})
+            self._add_edge_if_not_exists(f"{sector_path[-1]}_{sector_times[-1]}", arr_node, {"valuation": 0, "request": attributes["request"]})
+            self._add_edge_if_not_exists(arr_node, f"{destination_vertiport}_{arrival_time}", {"valuation": 0, "request": attributes["request"]})
             path_additional_constraints.append((arr_node, f"{destination_vertiport}_{arrival_time}"))
         
         self.additional_constraints.append(path_additional_constraints)

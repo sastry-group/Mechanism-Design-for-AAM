@@ -126,7 +126,7 @@ def map_previous_prices(previous_price_data, new_goods_list):
 
     return new_prices
 
-def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors_data, vertiports, 
+def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors_data, vertiports, overcapacitated_goods,
                                   output_folder=None, save_file=None, initial_allocation=True, design_parameters=None, previous_price_data=None):
 
     logger = logging.getLogger("global_logger")
@@ -134,20 +134,20 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     start_market_time = time.time()
 
     market_auction_time=timing_info["auction_start"]
-    if market_auction_time > 5:
-        price_default_good = 10
-        default_good_valuation = 1
-        dropout_good_valuation = 40
-        BETA = design_parameters["beta"]*2
-        lambda_frequency = 30
-        price_upper_bound = 3000
-    else:
-        price_default_good = design_parameters["price_default_good"]
-        default_good_valuation = design_parameters["default_good_valuation"]
-        dropout_good_valuation = design_parameters["dropout_good_valuation"]
-        BETA = design_parameters["beta"]
-        lambda_frequency = design_parameters["lambda_frequency"]
-        price_upper_bound = design_parameters["price_upper_bound"]       
+    # if market_auction_time > 5:
+    #     price_default_good = 10
+    #     default_good_valuation = 1
+    #     dropout_good_valuation = 40
+    #     BETA = design_parameters["beta"]*2
+    #     lambda_frequency = 30
+    #     price_upper_bound = 3000
+    # else:
+    price_default_good = design_parameters["price_default_good"]
+    default_good_valuation = design_parameters["default_good_valuation"]
+    dropout_good_valuation = design_parameters["dropout_good_valuation"]
+    BETA = design_parameters["beta"] * (round(market_auction_time / 20) + 1)
+    lambda_frequency = design_parameters["lambda_frequency"]
+    price_upper_bound = design_parameters["price_upper_bound"]       
     # start_time_graph_build = time.time()
     # builder = FisherGraphBuilder(vertiport_usage, timing_info)
     # market_graph = builder.build_graph(flights)
@@ -173,13 +173,15 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
 
     # Construct market
     logger.info("Constructing market...")
-    agent_information, market_information, bookkeeping = construct_market(flights, timing_info, sectors_data, vertiport_usage, output_folder,
+    agent_information, market_information, bookkeeping, updated_flight_info = construct_market(flights, timing_info, sectors_data, vertiport_usage, output_folder,
+                                                                          overcapacitated_goods,
                                                                           default_good_valuation=default_good_valuation, 
                                                                           dropout_good_valuation=dropout_good_valuation, BETA=BETA)
     
     # Run market
+    updated_flights, flights_to_rebase = updated_flight_info
     goods_list = bookkeeping
-    num_goods, num_agents = len(goods_list), len(flights)
+    num_goods, num_agents = len(goods_list), len(updated_flights)
     u, agent_constraints, agent_goods_lists = agent_information
     _ , capacity, _ = market_information
     agent_indices = map_goodslist_to_agent_goods(goods_list, agent_goods_lists)
@@ -206,7 +208,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     y = np.zeros((num_agents, num_goods - 2))
     dense_y = np.zeros((num_agents, num_goods - 2))
     # y = np.zeros((len(sparse_goods_representation), 1))
-    desired_goods = track_desired_goods(flights, goods_list)
+    desired_goods = track_desired_goods(updated_flights, goods_list)
     for i, agent_id in enumerate(desired_goods):
         # dept_id = desired_goods[agent_ids]["desired_good_arr"]
         # arr_id = desired_goods[agent_ids]["desired_good_dep"] 
@@ -302,7 +304,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     edge_information = build_edge_information(goods_list)
 
 
-    agents_data_dict = store_agent_data(flights, x, agent_information, adjusted_budgets, desired_goods, agent_goods_lists, edge_information)
+    agents_data_dict = store_agent_data(updated_flights, x, agent_information, adjusted_budgets, desired_goods, agent_goods_lists, edge_information)
     market_data_dict = store_market_data(extra_data, design_parameters, market_auction_time)
     price_map = {goods_list[i]: prices[i] for i in range(len(goods_list)) if prices[i] > 0.01}
     agents_data_dict = track_delayed_goods(agents_data_dict, market_data_dict)
@@ -311,6 +313,8 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     agents_data_dict, market_data_dict= agent_allocation_selection(ranked_list, agents_data_dict, market_data_dict)
     valuations = {key: agents_data_dict[key]["valuation"] for key in agents_data_dict.keys()}
 
+    overcapacitated_goods = [good for good, cap in zip(market_data_dict["goods_list"], market_data_dict["capacity"]) if cap == 0]
+    market_data_dict.setdefault("overcapacitated_goods", []).append(overcapacitated_goods)
     # Getting data for next auction
     allocation, rebased, dropped, = get_next_auction_data(agents_data_dict, market_data_dict)
 
@@ -324,10 +328,10 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     save_data(output_folder, "fisher_data_after", market_auction_time, **output_data)
 
 
-    write_output(flights, edge_information, market_data_dict, 
+    write_output(updated_flights, edge_information, market_data_dict, 
                 agents_data_dict, market_auction_time, output_folder)
 
-    return allocation, rebased, dropped, valuations, price_map 
+    return allocation, rebased, dropped, valuations, price_map, overcapacitated_goods
     
 
 

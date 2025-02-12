@@ -27,7 +27,7 @@ logger = logging.getLogger("global_logger")
 
 
 
-def construct_market(flights, timing_info, sectors, vertiport_usage, output_folder, default_good_valuation=1, dropout_good_valuation=-1, BETA=1):
+def construct_market(flights, timing_info, sectors, vertiport_usage, output_folder, overcapacitated_goods, default_good_valuation=1, dropout_good_valuation=-1, BETA=1):
     """
     Constructs a market for the given flights, timing information, sectors, and vertiport usage.
     Parameters:
@@ -61,6 +61,7 @@ def construct_market(flights, timing_info, sectors, vertiport_usage, output_fold
     u = []
     agent_constraints = []
     agent_goods_lists = []
+    flight_ids_to_rebase = []
     
     for flight_id, flight in flights.items():
 
@@ -75,6 +76,19 @@ def construct_market(flights, timing_info, sectors, vertiport_usage, output_fold
         # Add constraints
         nodes = list(agent_graph.nodes)
         edges = list(agent_graph.edges)
+
+        agent_overcapacitated_goods = [edge for edge in edges if edge in overcapacitated_goods]
+        requests_to_remove = list(set([elem for edge in agent_overcapacitated_goods for elem in agent_graph[edge[0]][edge[1]].get("request", -2)]))
+        # print(f"Requests to remove: {requests_to_remove}")
+        if requests_to_remove:
+            allowed_delays = [delay for delay in list(range(5)) if delay not in requests_to_remove]
+            if allowed_delays:
+                builder = FisherGraphBuilder(vertiport_usage, timing_info, allowed_delays=allowed_delays)
+            else:
+                # Rebase flight because it cannot be accommodated
+                flight_ids_to_rebase.append(flight_id)
+                continue
+
         starting_node = origin_vertiport + "_" + str(start_node_time)
         nodes.remove(starting_node)
         nodes = [starting_node] + nodes
@@ -145,10 +159,11 @@ def construct_market(flights, timing_info, sectors, vertiport_usage, output_fold
     # print(f"Supply: {supply}")
     
   
-
+    for flight_id in flight_ids_to_rebase:
+        del flights[flight_id]
     # print(f"Time to construct market: {round(time.time() - start_time_market_construct)}")
     logger.info(f"Time to construct market: {round(time.time() - start_time_market_construct)}")
-    return (u, agent_constraints, agent_goods_lists), (w, supply, BETA), (goods_list)
+    return (u, agent_constraints, agent_goods_lists), (w, supply, BETA), (goods_list), (flights, flight_ids_to_rebase)
 
 
 
