@@ -386,16 +386,19 @@ def adjust_interval_flights(allocated_flights, flights):
 
     return adjusted_flights, flights
 
-def adjust_rebased_flights(rebased_flights, flights, auction_start, auction_end):
+def adjust_rebased_flights(rebased_flights, flights, arrival_time, depart_time):
     for i, flight_id in enumerate(rebased_flights):
-        flights[flight_id]["appearance_time"] = auction_start
+        flights[flight_id]["appearance_time"] = arrival_time
         # print(f"Flight {flight_id} appearance time: {auction_start}")
         valuation = flights[flight_id]["requests"]['001']["valuation"]
         decay = flights[flight_id]["decay_factor"]
         travel_time = flights[flight_id]["requests"]['001']['request_arrival_time'] - flights[flight_id]["requests"]['001']['request_departure_time']
-        new_requested_dep_time = auction_end + 1
+        new_requested_dep_time = depart_time
+        delay = depart_time - flights[flight_id]["requests"]['001']['request_departure_time']
+        new_sector_times = [sector_time + delay for sector_time in flights[flight_id]["requests"]['001']["sector_times"]]
         flights[flight_id]["requests"]['001']['request_departure_time'] = new_requested_dep_time
         flights[flight_id]["requests"]['001']['request_arrival_time'] = new_requested_dep_time + travel_time
+        flights[flight_id]["requests"]['001']["sector_times"] = new_sector_times
         flights[flight_id]['valuation']= valuation/2 #change decay
         flights[flight_id]['budget_constraint'] +=  flights[flight_id]['original_budget']
 
