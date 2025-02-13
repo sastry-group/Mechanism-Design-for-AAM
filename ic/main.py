@@ -446,40 +446,43 @@ def adjust_contested_goods(capacity_map, flights):
     """
     for flight_id, flight_data in flights.items():
         origin_id = flight_data["origin_vertiport_id"]
+        
 
         for request_id, request in flight_data["requests"].items():
             dep_time = request.get("request_departure_time")
             arr_time = request.get("request_arrival_time")
+            destination_id = request.get("destination_vertiport_id")
             sector_path = request.get("sector_path", [])
             sector_times = request.get("sector_times", [])
 
             formatted_requests = set()
             if dep_time is not None:
                 formatted_requests.add(f"{origin_id}_{dep_time}_dep")
-                formatted_requests.add(f"{origin_id}_{arr_time}_arr")
+                formatted_requests.add(f"{destination_id}_{arr_time}_arr")
 
             for i in range(len(sector_path)):
                 formatted_requests.add(f"{sector_path[i]}_{sector_times[i]}")
 
 
-            matches = {req for req in formatted_requests if req in capacity_map}
-
-
+            matches = {req for req in formatted_requests if req in np.array(capacity_map)}
             if matches:
-                i = 1
-                while any(f"{origin_id}_{dep_time + i}_dep" in capacity_map or
-                          f"{origin_id}_{arr_time + i}_arr" in capacity_map or
-                          any(f"{sector_path[j]}_{sector_times[j] + i}" in capacity_map for j in range(len(sector_times)))
-                          for i in range(1, 5)):
-                    
+                i  = 1 
+                while matches: 
+                    new_formatted_requests = set()  
                     new_dep_time = dep_time + i
                     new_arr_time = arr_time + i
                     new_valuation = request["valuation"] * 0.95  
                     new_sector_times = [time + i for time in sector_times] 
-                    
+                    new_formatted_requests.add(f"{origin_id}_{new_dep_time}_dep")
+                    new_formatted_requests.add(f"{destination_id}_{new_arr_time}_arr")
+                    for j in range(len(sector_path)):
+                        new_formatted_requests.add(f"{sector_path[j]}_{new_sector_times[j]}")
+                    matches = {req for req in new_formatted_requests if req in np.array(capacity_map)} 
                     i += 1  
-
+            
                 flights = update_agent_flight(flight_id, flights, request_id, new_dep_time, new_arr_time, new_valuation, new_sector_times)
+
+
 
     return flights
 

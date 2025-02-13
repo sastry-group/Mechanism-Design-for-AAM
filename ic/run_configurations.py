@@ -7,7 +7,7 @@ BETA_values = [50] #, 100, 1000, 10000]
 dropout_good_valuation_values = [40]
 default_good_valuation_values = [1]
 price_default_good_values = [1]
-lambda_frequency_values = [500, 30]
+lambda_frequency_values = [30]
 price_upper_bound_values = [3000]
 # num_CPUS = 1
 
