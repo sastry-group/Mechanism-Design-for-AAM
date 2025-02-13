@@ -138,7 +138,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
         price_default_good = 10
         default_good_valuation = 1
         dropout_good_valuation = 40
-        BETA = design_parameters["beta"]*2
+        BETA = design_parameters["beta"]
         lambda_frequency = 30
         price_upper_bound = 3000
     else:
