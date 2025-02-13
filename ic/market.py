@@ -84,6 +84,13 @@ def construct_market(flights, timing_info, sectors, vertiport_usage, output_fold
             allowed_delays = [delay for delay in list(range(5)) if delay not in requests_to_remove]
             if allowed_delays:
                 builder = FisherGraphBuilder(vertiport_usage, timing_info, allowed_delays=allowed_delays)
+                agent_graph = builder.build_graph(flight)
+                nodes = list(agent_graph.nodes)
+                edges = list(agent_graph.edges)
+                flights[flight_id]["requests"]["001"]["request_departure_time"] += allowed_delays[0]
+                flights[flight_id]["requests"]["001"]["request_arrival_time"] += allowed_delays[0]
+                old_sector_times = flights[flight_id]["requests"]["001"]["sector_times"]
+                flights[flight_id]["requests"]["001"]["sector_times"] = [old_time + allowed_delays[0] for old_time in old_sector_times]
             else:
                 # Rebase flight because it cannot be accommodated
                 flight_ids_to_rebase.append(flight_id)
