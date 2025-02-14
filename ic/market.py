@@ -528,7 +528,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_freque
 
 
 def run_market(initial_values, agent_settings, market_settings, bookkeeping, sparse_representation, 
-               rational=False, price_default_good=10, lambda_frequency=1, price_upper_bound=1000):    
+               rational=False, price_default_good=10, lambda_frequency=1, price_upper_bound=1000, auction=1):    
     
 
     logger.debug(f"Rebate frequency: {lambda_frequency}, Price upper bound: {price_upper_bound}")
@@ -552,7 +552,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     
     # Algorithm 1
     num_agents = len(agent_goods_lists)
-    tolerance = num_agents * np.sqrt(len(supply)-2) * TOL_ERROR  # -1 to ignore default goods
+    tolerance = num_agents * np.sqrt(len(supply)-2) * TOL_ERROR
+    # tolerance = num_agents * np.sqrt(len(supply)-2) * TOL_ERROR * auction  # -1 to ignore default goods
     market_clearing_error = float('inf')
     x_iter = 0
     start_time_algorithm = time.time()  

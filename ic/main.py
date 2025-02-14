@@ -386,7 +386,7 @@ def adjust_interval_flights(allocated_flights, flights):
 
     return adjusted_flights, flights
 
-def adjust_rebased_flights(rebased_flights, flights, arrival_time, depart_time):
+def adjust_rebased_flights(rebased_flights, flights, arrival_time, depart_time, max_time):
     for i, flight_id in enumerate(rebased_flights):
         flights[flight_id]["appearance_time"] = arrival_time
         # print(f"Flight {flight_id} appearance time: {auction_start}")
@@ -396,8 +396,11 @@ def adjust_rebased_flights(rebased_flights, flights, arrival_time, depart_time):
         new_requested_dep_time = depart_time
         delay = depart_time - flights[flight_id]["requests"]['001']['request_departure_time']
         new_sector_times = [sector_time + delay for sector_time in flights[flight_id]["requests"]['001']["sector_times"]]
-        flights[flight_id]["requests"]['001']['request_departure_time'] = new_requested_dep_time
+        if new_requested_dep_time + travel_time > max_time:
+            # Do not rebase if the flight will not arrive before the simulation ends
+            continue
         flights[flight_id]["requests"]['001']['request_arrival_time'] = new_requested_dep_time + travel_time
+        flights[flight_id]["requests"]['001']['request_departure_time'] = new_requested_dep_time
         flights[flight_id]["requests"]['001']["sector_times"] = new_sector_times
         flights[flight_id]['valuation']= valuation/2 #change decay
         flights[flight_id]['budget_constraint'] +=  flights[flight_id]['original_budget']
@@ -555,6 +558,7 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
     results = []
     prev_auction_prices = None 
     overcapacitated_goods = []
+    auction = 1
     logger.info(f"Auction times: {auction_times}")
 
     for prev_auction_time, auction_time in zip(auction_times[:-1], auction_times[1:]):
@@ -568,7 +572,7 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
         if rebased_flights and auction_time <= last_auction + 1:
         #    print("Rebasing flights")
             logger.info("Rebasing flights")
-            flights = adjust_rebased_flights(rebased_flights, flights, prev_auction_time, auction_time)
+            flights = adjust_rebased_flights(rebased_flights, flights, prev_auction_time, auction_time, end_time)
         
         # Sort arriving flights by appearance time
         ordered_flights = {}
@@ -646,7 +650,7 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
             allocated_flights, rebased_flights, payments, valuations, prices, overcapacitated_goods = fisher_allocation_and_payment(
                 vertiport_usage, current_flights, current_timing_info, filtered_sectors, filtered_vertiports, overcapacitated_goods,
                 output_folder, save_file=scenario_name, initial_allocation=initial_allocation, 
-                design_parameters=design_parameters, previous_price_data=prev_auction_prices)
+                design_parameters=design_parameters, previous_price_data=prev_auction_prices, auction=auction)
             # print(f"Allocated flights: {allocated_flights}")
             # print(f"Rebased flights: {rebased_flights}")
             # print(f"Social welfare: {sum([val for val in valuations.values()])}")
@@ -764,6 +768,7 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
                 assert sw - (valuation - congestion_costs) <= 0.01, "Social welfare calculation incorrect."
             # print(f"Social welfare: {valuation - congestion_costs}")
             results.append((allocated_flights, payments, valuation, congestion_costs))
+        auction += 1
 
     # Write the scenario to a file
     if save_scenario:
