@@ -109,7 +109,7 @@ def write_market_performance(market_performance_data, output_folder):
 
     market_results_data.append([market_performance_data["market_auction_time"], market_performance_data["num_iterations"], 
                                 market_performance_data["num_agents"], market_performance_data["num_goods"], 
-                                "0000", market_performance_data["fisher_run_time"]])
+                                market_performance_data["overcapacitated_goods"], market_performance_data["fisher_run_time"]])
     
     market_performance_df = pd.DataFrame(market_results_data, columns=[
         "Market_Auction_Start_Time", "Number_Interations", "Number_Agents", "Num_Goods","Number_Contested_Routes", "Run_Time"

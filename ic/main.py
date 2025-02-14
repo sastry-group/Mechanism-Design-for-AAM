@@ -91,6 +91,8 @@ parser.add_argument('--default_good_valuation', type=float, default=1)
 parser.add_argument('--price_default_good', type=float, default=10)
 parser.add_argument('--lambda_frequency', type=float, default=1)
 parser.add_argument('--price_upper_bound', type=float, default=50)
+parser.add_argument('--num_agents_to_run', type=int, default=None)
+parser.add_argument('--run_up_to_auction', type=float, default=10)
 args = parser.parse_args()
 
 
@@ -565,8 +567,8 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
         # Get the current flights
         # current_flight_ids = ordered_flights[appearance_time]
         
-        # if prev_auction_time > 10:
-        #     break
+        if prev_auction_time > design_parameters["run_up_to_auction"]:
+            break
 
         # This is to ensure it doest not rebase the flights beyond simulation end time
         if rebased_flights and auction_time <= last_auction + 1:
@@ -585,7 +587,12 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
         
         relevant_appearances = [key for key in ordered_flights.keys() if key >= prev_auction_time and key < auction_time]
         current_flight_ids = sum([ordered_flights[appearance_time] for appearance_time in relevant_appearances], [])
+        
+        if design_parameters["num_agents_to_run"] is not None:
+            num_agents = min(len(current_flight_ids), design_parameters["num_agents_to_run"])
+            current_flight_ids = current_flight_ids[:num_agents]
         # print("Current flight ids: ", current_flight_ids)
+        
         logger.debug(f"Current flight ids: {current_flight_ids}")
         if len(current_flight_ids) == 0:
             continue
@@ -868,19 +875,22 @@ if __name__ == "__main__":
 
     
     # Extract design parameters
-    BETA = args.BETA
-    dropout_good_valuation = args.dropout_good_valuation
-    default_good_valuation = args.default_good_valuation
-    price_default_good = args.price_default_good
-    lambda_frequency = args.lambda_frequency
-    price_upper_bound = args.price_upper_bound
+    # BETA = args.BETA
+    # dropout_good_valuation = args.dropout_good_valuation
+    # default_good_valuation = args.default_good_valuation
+    # price_default_good = args.price_default_good
+    # lambda_frequency = args.lambda_frequency
+    # price_upper_bound = args.price_upper_bound
     design_parameters = {
-        "beta": BETA,
-        "dropout_good_valuation": dropout_good_valuation,
-        "default_good_valuation": default_good_valuation,
-        "price_default_good": price_default_good,
-        "lambda_frequency": lambda_frequency,
-        "price_upper_bound": price_upper_bound
+        "beta": args.BETA,
+        "dropout_good_valuation": args.dropout_good_valuation,
+        "default_good_valuation": args.default_good_valuation,
+        "price_default_good": args.price_default_good,
+        "lambda_frequency": args.lambda_frequency,
+        "price_upper_bound": args.price_upper_bound,
+        "num_agents_to_run": args.num_agents_to_run,
+        "run_up_to_auction": args.run_up_to_auction
+
         }
     method = args.method    
     file_path = args.file 
