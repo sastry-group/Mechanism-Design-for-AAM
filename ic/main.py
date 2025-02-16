@@ -419,8 +419,12 @@ def create_output_folder(design_parameters, file_path, method, base_dir="ic/resu
     """
     file_name = file_path.split("/")[-1].split(".")[0]
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    n_agents = design_parameters["num_agents_to_run"]
+    if n_agents is None:
+        n_agents = "all"
     folder_name = (
         f"{file_name}_{method}_b-{design_parameters['beta']}_"
+        f"agents{n_agents}_"
         f"dval{design_parameters['dropout_good_valuation']}_"
         f"outval{design_parameters['default_good_valuation']}_"
         f"pout{design_parameters['price_default_good']}_"

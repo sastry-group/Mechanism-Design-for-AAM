@@ -9,7 +9,7 @@ default_good_valuation_values = [1]
 price_default_good_values = [1]
 lambda_frequency_values = [30]
 price_upper_bound_values = [3000]
-num_agents_to_run = [5,10,15,20,25]
+num_agents_to_run = [21,22,23]
 # num_CPUS = 1
 
 
@@ -19,8 +19,8 @@ parameter_combinations = list(product(BETA_values, dropout_good_valuation_values
                                       price_upper_bound_values, num_agents_to_run))
 main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 # "test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap6_withReturn.json",
-file_list = [
-             "test_cases/toulouse_case_cap4_updated.json",]
+file_list = [ "test_cases/toulouse_case_cap4_updated.json",]
+            #  "test_cases/toulouse_case_cap4_updated_40.json","test_cases/toulouse_case_cap4_updated_50.json"]
 
 
 for file in file_list:
@@ -44,7 +44,7 @@ for file in file_list:
             "--lambda_frequency", str(lambda_frequency),
             "--price_upper_bound", str(price_upper_bound),
             "--num_agents_to_run", str(num_agents_to_run),
-            "--run_up_to_auction", str(1000)
+            "--run_up_to_auction", str(70)
         ]
 
         print(f"Running configuration {idx + 1}/{len(parameter_combinations)}: "
