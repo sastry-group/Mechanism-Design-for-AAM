@@ -9,7 +9,8 @@ default_good_valuation_values = [1]
 price_default_good_values = [1]
 lambda_frequency_values = [30]
 price_upper_bound_values = [3000]
-num_agents_to_run = [21,22,23]
+num_agents_to_run = [10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,177]
+# num_agents_to_run = [170]
 # num_CPUS = 1
 
 

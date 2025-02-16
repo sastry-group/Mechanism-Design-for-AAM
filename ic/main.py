@@ -588,13 +588,27 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
                 ordered_flights[appearance_time] = [flight_id]
             else:
                 ordered_flights[appearance_time].append(flight_id)
-        
-        relevant_appearances = [key for key in ordered_flights.keys() if key >= prev_auction_time and key < auction_time]
-        current_flight_ids = sum([ordered_flights[appearance_time] for appearance_time in relevant_appearances], [])
-        
+
         if design_parameters["num_agents_to_run"] is not None:
-            num_agents = min(len(current_flight_ids), design_parameters["num_agents_to_run"])
+            num_agents = design_parameters["num_agents_to_run"]
+            current_flight_ids = []
+            relevant_appearances = []
+            
+            for appearance_time in sorted(ordered_flights.keys()):
+                relevant_appearances.append(appearance_time)
+                current_flight_ids.extend(ordered_flights[appearance_time])
+                
+                # Stop if we have enough agents
+                if len(current_flight_ids) >= num_agents:
+                    break
+
             current_flight_ids = current_flight_ids[:num_agents]
+        else:         
+            relevant_appearances = [key for key in ordered_flights.keys() if key >= prev_auction_time and key < auction_time]
+            current_flight_ids = sum([ordered_flights[appearance_time] for appearance_time in relevant_appearances], [])
+        
+
+
         # print("Current flight ids: ", current_flight_ids)
         
         logger.debug(f"Current flight ids: {current_flight_ids}")
