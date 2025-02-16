@@ -6,6 +6,9 @@ scenario/ic.scn
 bluesky/resources/grib
 bluesky/resources/netcdf
 
+# Temporarily
+requirements.txt
+
 # Potentially locally-copied BADA installation
 bluesky/resources/performance/BADA/*
 !bluesky/resources/performance/BADA/README.md
