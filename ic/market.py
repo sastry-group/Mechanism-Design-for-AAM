@@ -529,7 +529,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_freque
 
 def run_market(initial_values, agent_settings, market_settings, bookkeeping, sparse_representation, 
                rational=False, price_default_good=10, lambda_frequency=1, price_upper_bound=1000, auction=1):    
-    
+      
 
     logger.debug(f"Rebate frequency: {lambda_frequency}, Price upper bound: {price_upper_bound}")
     # print(f"Rebate frequency: {lambda_frequency}, Price upper bound: {price_upper_bound}")
@@ -664,7 +664,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         logger.info(f"Excess demand: {excess_demand.shape}")
         logger.info(f"Prices: {p}")        
         # if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
-        if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
+        if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.1) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
+            # logger.info(f"Iterations per tolerance: {iterations_per_tolerance}")
             break
         if x_iter == 1000:
             break
