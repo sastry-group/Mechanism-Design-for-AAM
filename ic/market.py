@@ -528,6 +528,8 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_freque
 
 
 def run_market(initial_values, agent_settings, market_settings, bookkeeping, sparse_representation, 
+               rational=False, price_default_good=10, lambda_frequency=1, price_upper_bound=1000, auction=1):    
+      
                rational=False, price_default_good=10, lambda_frequency=1, price_upper_bound=1000, auction=1, tol_error_to_check=None):    
     
 
