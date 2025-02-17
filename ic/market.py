@@ -528,7 +528,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_freque
 
 
 def run_market(initial_values, agent_settings, market_settings, bookkeeping, sparse_representation, 
-               rational=False, price_default_good=10, lambda_frequency=1, price_upper_bound=1000, auction=1):    
+               rational=False, price_default_good=10, lambda_frequency=1, price_upper_bound=1000, auction=1, tol_error_to_check=None):    
     
 
     logger.debug(f"Rebate frequency: {lambda_frequency}, Price upper bound: {price_upper_bound}")
@@ -539,6 +539,10 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     goods_list = bookkeeping
     x_sparse_array, y_sparse_array, sparse_agent_x_inds, sparse_agent_y_inds, _ = sparse_representation
 
+    if tol_error_to_check is not None:
+        valid_tol_error_to_check = [tolerance for tolerance in tol_error_to_check if tolerance >= TOL_ERROR]
+    else:
+        valid_tol_error_to_check = [TOL_ERROR]
     x_iter = 0
     prices = []
     rebates = []
@@ -552,6 +556,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     
     # Algorithm 1
     num_agents = len(agent_goods_lists)
+    tolerances_to_check = [num_agents * np.sqrt(len(supply)-2) * tolerance for tolerance in valid_tol_error_to_check]
+    current_tolerance_to_check_index = 0
     tolerance = num_agents * np.sqrt(len(supply)-2) * TOL_ERROR
     # tolerance = num_agents * np.sqrt(len(supply)-2) * TOL_ERROR * auction  # -1 to ignore default goods
     market_clearing_error = float('inf')
@@ -562,6 +568,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     console = Console(force_terminal=True)
     console.print("[bold green]Starting Market Simulation...[/bold green]")
 
+    iterations_per_tolerance = []
     iteration_data = []  
     iter_start = time.time()
 
@@ -664,7 +671,14 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         logger.info(f"Excess demand: {excess_demand.shape}")
         logger.info(f"Prices: {p}")        
         # if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
+        while (market_clearing_error <= tolerances_to_check[current_tolerance_to_check_index]) and (x_iter >= 10) and \
+            (iter_constraint_error <= 0.01) and (iter_constraint_x_y <= 0.1):
+            iterations_per_tolerance.append(x_iter)
+            if current_tolerance_to_check_index == len(valid_tol_error_to_check) - 1:
+                break
+            current_tolerance_to_check_index += 1
         if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
+            print(f"Iterations per tolerance: {iterations_per_tolerance}")
             break
         if x_iter == 1000:
             break
@@ -716,7 +730,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         "agent_constraints": agent_constraints,
         "yplot": yplot,
         "social_welfare_vector": social_welfare_vector,
-        "fisher_run_time": fisher_run_time
+        "fisher_run_time": fisher_run_time,
+        "iterations_vs_tolerance": (valid_tol_error_to_check, tolerances_to_check, iterations_per_tolerance)
     }
 
 

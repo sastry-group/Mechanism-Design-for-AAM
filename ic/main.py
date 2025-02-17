@@ -93,6 +93,7 @@ parser.add_argument('--lambda_frequency', type=float, default=1)
 parser.add_argument('--price_upper_bound', type=float, default=50)
 parser.add_argument('--num_agents_to_run', type=int, default=None)
 parser.add_argument('--run_up_to_auction', type=float, default=10)
+parser.add_argument("--tol_error_to_check", nargs="+", type=float, default=None, help="List of tolerances for experiments")
 args = parser.parse_args()
 
 
@@ -672,10 +673,12 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
                 vertiport_usage, vertiports, flights, allocated_flights, stack_commands
             )
         elif method == "fisher":
+            tol_error_to_check = design_parameters["tol_error_to_check"]
             allocated_flights, rebased_flights, payments, valuations, prices, overcapacitated_goods = fisher_allocation_and_payment(
                 vertiport_usage, current_flights, current_timing_info, filtered_sectors, filtered_vertiports, overcapacitated_goods,
                 output_folder, save_file=scenario_name, initial_allocation=initial_allocation, 
-                design_parameters=design_parameters, previous_price_data=prev_auction_prices, auction=auction)
+                design_parameters=design_parameters, previous_price_data=prev_auction_prices, auction=auction,
+                tol_error_to_check=tol_error_to_check)
             # print(f"Allocated flights: {allocated_flights}")
             # print(f"Rebased flights: {rebased_flights}")
             # print(f"Social welfare: {sum([val for val in valuations.values()])}")
@@ -907,8 +910,8 @@ if __name__ == "__main__":
         "lambda_frequency": args.lambda_frequency,
         "price_upper_bound": args.price_upper_bound,
         "num_agents_to_run": args.num_agents_to_run,
-        "run_up_to_auction": args.run_up_to_auction
-
+        "run_up_to_auction": args.run_up_to_auction,
+        "tol_error_to_check": args.tol_error_to_check
         }
     method = args.method    
     file_path = args.file 
