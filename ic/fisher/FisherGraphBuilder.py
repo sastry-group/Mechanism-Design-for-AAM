@@ -53,10 +53,11 @@ class FisherGraphBuilder:
                     new_departure_time = departure_time + ts_delay
                     decay_valuation = request["valuation"] * decay**ts_delay
                     new_end_auction_time = self._get_end_auction_time(new_arrival_time, auction_frequency)
+                    new_end_time = new_arrival_time + 4
                     # self._create_dep_arr_elements(origin_vertiport, destination_vertiport, new_departure_time, new_arrival_time, attributes = {"valuation": decay_valuation})
                     # Create edges for the destination vertiport from arrival to end of auction
                     if destination_vertiport is not None:
-                        self._create_edges(destination_vertiport, new_arrival_time, new_end_auction_time, attributes = {"valuation": 0, "request": [ts_delay]})
+                        self._create_edges(destination_vertiport, new_arrival_time, new_end_time, attributes = {"valuation": 0, "request": [ts_delay]})
                     
                     # Add edges for the path
                     attributes = {"valuation": decay_valuation, "request": [ts_delay]}

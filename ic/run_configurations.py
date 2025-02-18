@@ -22,7 +22,7 @@ parameter_combinations = list(product(BETA_values, dropout_good_valuation_values
                                       price_upper_bound_values, num_agents_to_run))
 main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 # "test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap6_withReturn.json",
-file_list = [ "test_cases/toulouse_case_cap4_updated.json",]
+file_list = [ "test_cases/toulouse_case_cap6_updated.json",]
             #  "test_cases/toulouse_case_cap4_updated_40.json","test_cases/toulouse_case_cap4_updated_50.json"]
 
 
