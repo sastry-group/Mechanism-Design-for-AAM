@@ -24,8 +24,11 @@ class FisherGraphBuilder:
 
         for request_id, request in flight_data["requests"].items():
             origin_vertiport = flight_data["origin_vertiport_id"]
-            appearance_time = flight_data["appearance_time"]
+            # appearance_time = flight_data["appearance_time"]
+
+            appearance_time = min(flight_data["requests"]["001"]["request_departure_time"] - 4,0)
             arrival_time = flight_data["requests"]["001"]["request_arrival_time"]
+
             auction_frequency = self.timing_info["auction_frequency"]
             end_auction_time = self._get_end_auction_time(arrival_time, auction_frequency)
             departure_time = flight_data["requests"]["001"]["request_departure_time"]
@@ -52,7 +55,7 @@ class FisherGraphBuilder:
                     new_arrival_time = arrival_time + ts_delay
                     new_departure_time = departure_time + ts_delay
                     decay_valuation = request["valuation"] * decay**ts_delay
-                    new_end_auction_time = self._get_end_auction_time(new_arrival_time, auction_frequency)
+                    # new_end_auction_time = self._get_end_auction_time(new_arrival_time, auction_frequency)
                     new_end_time = new_arrival_time + 4
                     # self._create_dep_arr_elements(origin_vertiport, destination_vertiport, new_departure_time, new_arrival_time, attributes = {"valuation": decay_valuation})
                     # Create edges for the destination vertiport from arrival to end of auction
