@@ -7,11 +7,12 @@ import pandas as pd
 import time
 
 
-def agent_allocation_selection(ranked_list, agent_data, market_data):
+def agent_allocation_selection(ranked_list, sorted_agent_dict, agent_data, market_data):
     temp_prices = market_data['prices'] 
     contested = []
     allocated = []
     contested_goods_id = []
+    adjust_prices = True
     for agent in ranked_list:
         agent_data[agent]["status"] = "contested"
         i = 0
@@ -27,6 +28,9 @@ def agent_allocation_selection(ranked_list, agent_data, market_data):
             utility = agent_data[agent]["utility"][:-2] + [agent_data[agent]["utility"][-1]] # do not remove dropout
             budget = agent_data[agent]["original_budget"]
             agent_indices = agent_data[agent]["agent_edge_indices"]
+            if adjust_prices:
+                temp_prices *= sorted_agent_dict[0][1]["fisher_desired_good_allocation"]
+                adjust_prices = False
             agent_prices = temp_prices[agent_indices] 
             agent_prices = np.append(agent_prices, temp_prices[-1]) # adding dropout good
             agent_values, valuation = find_optimal_xi(n_vals, utility, Aarray, barray, agent_prices, budget)

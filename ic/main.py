@@ -547,7 +547,7 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
             ordered_flights[appearance_time].append(flight_id)
 
     # Initialize number of rebases to 0
-    for flight_id, flight in flight.items():
+    for flight_id, flight in flights.items():
         flight["rebase_count"] = 0
 
     max_travel_time = 6
