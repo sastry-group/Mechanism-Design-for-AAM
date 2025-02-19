@@ -70,7 +70,7 @@ def construct_market(flights, timing_info, sectors, vertiport_usage, output_fold
         builder = FisherGraphBuilder(vertiport_usage, timing_info)
         agent_graph = builder.build_graph(flight)
         origin_vertiport = flight["origin_vertiport_id"]
-        start_node_time = flight["appearance_time"]
+        start_node_time = min(flight["requests"]["001"]["request_departure_time"] - 4,0)
     
 
         # Add constraints
