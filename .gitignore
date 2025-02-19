@@ -7,7 +7,7 @@ bluesky/resources/grib
 bluesky/resources/netcdf
 
 # Temporarily
-requirements.txt
+# requirements.txt
 
 # Potentially locally-copied BADA installation
 bluesky/resources/performance/BADA/*
