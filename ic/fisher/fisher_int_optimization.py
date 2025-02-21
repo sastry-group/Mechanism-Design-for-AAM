@@ -8,64 +8,70 @@ import time
 
 
 def agent_allocation_selection(ranked_list, sorted_agent_dict, agent_data, market_data):
-    temp_prices = market_data['prices'] 
+    temp_prices = market_data['prices']  # Original prices from the market data
     contested = []
     allocated = []
     contested_goods_id = []
-    adjust_prices = True
+
     for agent in ranked_list:
         agent_data[agent]["status"] = "contested"
-        i = 0
-        # adjust_prices = True
-        while agent_data[agent]["status"] == "contested":
 
+        while agent_data[agent]["status"] == "contested":
             Aarray = agent_data[agent]["constraints"][0]
             Aarray = np.hstack((Aarray[:, :-2], Aarray[:, -1].reshape(-1, 1)))
 
-            # Aarray = np.append(Aarray, Aarray[:, -1]) #keeping dropout good
-            # Aarray = Aarray[:,:-2] #removing default and dropout goods
             barray = agent_data[agent]["constraints"][1]
-            n_vals = len(agent_data[agent]["utility"]) - 1 # to remove default good
-            utility = agent_data[agent]["utility"][:-2] + [agent_data[agent]["utility"][-1]] # do not remove dropout
+            n_vals = len(agent_data[agent]["utility"]) - 1  # Remove default good
+            utility = agent_data[agent]["utility"][:-2] + [agent_data[agent]["utility"][-1]]  # Keep dropout good
             budget = agent_data[agent]["original_budget"]
-            # if adjust_prices:
-            #     price_adjustment = sorted_agent_dict[0][1]["fisher_desired_good_allocation"]
-            #     temp_prices *= min(price_adjustment,1.0)
-            #     adjust_prices = False
+
             agent_indices = agent_data[agent]["agent_edge_indices"]
-            if adjust_prices:
-                temp_prices *= sorted_agent_dict[0][1]["fisher_desired_good_allocation"]
-                adjust_prices = False
-            agent_prices = temp_prices[agent_indices] 
-            agent_prices = np.append(agent_prices, temp_prices[-1]) # adding dropout good
+            agent_prices = temp_prices[agent_indices]
+            agent_prices = np.append(agent_prices, temp_prices[-1])  # Adding dropout good price
+
+            # Perform the integer allocation optimization
             agent_values, valuation = find_optimal_xi(n_vals, utility, Aarray, barray, agent_prices, budget)
+
             if agent_values is None:
                 print("Warning: Could not find optimal xi value for agent", agent)
             else:
-                # we need to do this in vertiport status as well"
+                # Expand agent_values to full size (matching temp_prices length)
                 agent_values_to_full_size = np.zeros(len(temp_prices))
                 agent_values_to_full_size[agent_indices] = agent_values[:-1]
-                agent_values_to_full_size[-1] =  agent_values[-1]
+                agent_values_to_full_size[-1] = agent_values[-1]
+
+                # Check capacity constraints
                 check_capacity = market_data["capacity"] - agent_values_to_full_size
-                if np.all(check_capacity >= 0):
+
+                if np.all(check_capacity >= 0):  # Allocation is feasible
                     agent_data[agent]["final_allocation"] = agent_values
                     agent_data[agent]["status"] = "allocated"
                     allocated.append(agent)
-                    market_data['capacity'] = check_capacity
-                elif agent_values[-1] == 1:
+                    market_data['capacity'] = check_capacity  # Update market capacity
+                elif agent_values[-1] == 1:  # Agent is dropping out
                     agent_data[agent]["final_allocation"] = agent_values
                     agent_data[agent]["status"] = "dropped"
-                else:
+                else:  # Contesting goods
                     contested.append(agent)
                     idx_contested_edges = np.where(check_capacity < 0)[0]
-                    temp_prices[idx_contested_edges] += 10000
+                    temp_prices[idx_contested_edges] += 10000  # Increase price to deter congestion
                     contested_goods_id.append(idx_contested_edges)
-        # print(f"Agent values: {agent_values} with valuation {valuation}")
-        agent_data[agent]["valuation"] = valuation
-        p_fixed = market_data['prices']
-        p_prices = p_fixed[agent_indices] 
-        agent_data[agent]["payment"] = agent_values[:-2] @ p_prices[:-1]
 
+        # Store agent valuation
+        agent_data[agent]["valuation"] = valuation
+
+        # Adjust payment to reflect fractional allocation of integral goods
+        fisher_allocation = agent_data[agent]["fisher_allocation"]
+        # fisher_allocation = np.clip(fisher_allocation, 0, 1)  # Ensure values are between 0 and 1
+        # fisher_allocation[np.abs(fisher_allocation) < 1e6] = 0 
+        integral_indices = np.where(agent_values_to_full_size == 1)[0]  # Goods assigned integer 1
+
+        # Compute adjusted payment using fractional allocations
+        p_fixed = market_data['prices']
+        adjusted_payment = np.sum(fisher_allocation[integral_indices] * p_fixed[integral_indices])
+
+        # Store adjusted payment
+        agent_data[agent]["payment"] = adjusted_payment
 
     return agent_data, market_data
 
