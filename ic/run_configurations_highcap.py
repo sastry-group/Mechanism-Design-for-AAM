@@ -21,7 +21,7 @@ main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 for idx, (BETA, dropout_good_valuation, default_good_valuation, price_default_good, lambda_frequency, price_upper_bound) in enumerate(parameter_combinations):
     args = [
         "python", main_script_path,
-        "--file", "test_cases/toulouse_case_cap4_updated_10.json",
+        "--file", "test_cases/toulouse_case_cap4_updated_20.json",
         # "--file", "test_cases/modified_toulouse_case3_withC_cap4_withReturn.json",
         # "--file", "test_cases/3agent_small_toulouse_case_withC.json",
         # "--file", "test_cases/casef_20240917_081204.json",
@@ -34,7 +34,8 @@ for idx, (BETA, dropout_good_valuation, default_good_valuation, price_default_go
         "--default_good_valuation", str(default_good_valuation),
         "--price_default_good", str(price_default_good),
         "--lambda_frequency", str(lambda_frequency),
-        "--price_upper_bound", str(price_upper_bound)
+        "--price_upper_bound", str(price_upper_bound),
+        "--run_up_to_auction", str(400)
     ]
 
     print(f"Running configuration {idx + 1}/{len(parameter_combinations)}: "

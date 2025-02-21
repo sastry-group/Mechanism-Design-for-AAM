@@ -311,7 +311,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     price_map = {goods_list[i]: prices[i] for i in range(len(goods_list)) if prices[i] > 0.01}
     agents_data_dict = track_delayed_goods(agents_data_dict, market_data_dict)
     # Rank agents based on their allocation and settling any contested goods
-    sorted_agent_dict, ranked_list = rank_allocations(agents_data_dict, market_data_dict)
+    sorted_agent_dict, ranked_list, market_data_dict = rank_allocations(agents_data_dict, market_data_dict)
     agents_data_dict, market_data_dict= agent_allocation_selection(ranked_list, sorted_agent_dict, agents_data_dict, market_data_dict)
     valuations = {key: agents_data_dict[key]["valuation"] for key in agents_data_dict.keys()}
 

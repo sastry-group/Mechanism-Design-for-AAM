@@ -12,7 +12,7 @@ def agent_allocation_selection(ranked_list, sorted_agent_dict, agent_data, marke
     contested = []
     allocated = []
     contested_goods_id = []
-    
+    adjust_prices = True
     for agent in ranked_list:
         agent_data[agent]["status"] = "contested"
         i = 0
@@ -33,6 +33,9 @@ def agent_allocation_selection(ranked_list, sorted_agent_dict, agent_data, marke
             #     temp_prices *= min(price_adjustment,1.0)
             #     adjust_prices = False
             agent_indices = agent_data[agent]["agent_edge_indices"]
+            if adjust_prices:
+                temp_prices *= sorted_agent_dict[0][1]["fisher_desired_good_allocation"]
+                adjust_prices = False
             agent_prices = temp_prices[agent_indices] 
             agent_prices = np.append(agent_prices, temp_prices[-1]) # adding dropout good
             agent_values, valuation = find_optimal_xi(n_vals, utility, Aarray, barray, agent_prices, budget)

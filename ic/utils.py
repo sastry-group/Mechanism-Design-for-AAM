@@ -142,7 +142,7 @@ def rank_allocations(agents_data, market_data):
     ranked_agents_list = [agent[0] for agent in sorted_agent_dict]
     market_data["ranked_agents"] = ranked_agents_list
     
-    return market_data, ranked_agents_list
+    return sorted_agent_dict, ranked_agents_list, market_data
 
 def find_dep_and_arrival_nodes(edges):
     if edges is None:
