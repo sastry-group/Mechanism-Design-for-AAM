@@ -70,7 +70,8 @@ def construct_market(flights, timing_info, sectors, vertiport_usage, output_fold
         builder = FisherGraphBuilder(vertiport_usage, timing_info)
         agent_graph = builder.build_graph(flight)
         origin_vertiport = flight["origin_vertiport_id"]
-        start_node_time = min(flight["requests"]["001"]["request_departure_time"] - 4,0)
+        start_node_time = flight["appearance_time"]
+        # start_node_time = min(flight["requests"]["001"]["request_departure_time"] - 4,0)
     
 
         # Add constraints
@@ -400,7 +401,7 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
     args = [(w[i], agent_utilities[i], agent_prices[i], r[i], constraints[i], agent_ys[i], beta, x_iter, update_frequency, rational, integral) for i in agent_indices]
 
     # Update agents in parallel or not depending on parallel flag
-    parallel = True
+    parallel = False
     if not parallel:
         results = []
         adjusted_budgets = []
