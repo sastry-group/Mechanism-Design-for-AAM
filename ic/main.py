@@ -391,22 +391,26 @@ def adjust_interval_flights(allocated_flights, flights):
 
 def adjust_rebased_flights(rebased_flights, flights, arrival_time, depart_time, max_time):
     for i, flight_id in enumerate(rebased_flights):
-        flights[flight_id]["appearance_time"] = arrival_time
-        # print(f"Flight {flight_id} appearance time: {auction_start}")
-        valuation = flights[flight_id]["requests"]['001']["valuation"]
-        decay = flights[flight_id]["decay_factor"]
-        travel_time = flights[flight_id]["requests"]['001']['request_arrival_time'] - flights[flight_id]["requests"]['001']['request_departure_time']
-        new_requested_dep_time = depart_time
-        delay = depart_time - flights[flight_id]["requests"]['001']['request_departure_time']
-        new_sector_times = [sector_time + delay for sector_time in flights[flight_id]["requests"]['001']["sector_times"]]
-        if new_requested_dep_time + travel_time > max_time:
-            # Do not rebase if the flight will not arrive before the simulation ends
+        if flights[flight_id]["rebase_count"] >= 2:
             continue
-        flights[flight_id]["requests"]['001']['request_arrival_time'] = new_requested_dep_time + travel_time
-        flights[flight_id]["requests"]['001']['request_departure_time'] = new_requested_dep_time
-        flights[flight_id]["requests"]['001']["sector_times"] = new_sector_times
-        flights[flight_id]['valuation']= valuation/2 #change decay
-        flights[flight_id]['budget_constraint'] +=  flights[flight_id]['original_budget']
+        else:
+            flights[flight_id]["appearance_time"] = arrival_time
+            # print(f"Flight {flight_id} appearance time: {auction_start}")
+            valuation = flights[flight_id]["requests"]['001']["valuation"]
+            decay = flights[flight_id]["decay_factor"]
+            travel_time = flights[flight_id]["requests"]['001']['request_arrival_time'] - flights[flight_id]["requests"]['001']['request_departure_time']
+            new_requested_dep_time = depart_time
+            delay = depart_time - flights[flight_id]["requests"]['001']['request_departure_time']
+            new_sector_times = [sector_time + delay for sector_time in flights[flight_id]["requests"]['001']["sector_times"]]
+            if new_requested_dep_time + travel_time > max_time:
+                # Do not rebase if the flight will not arrive before the simulation ends
+                continue
+            flights[flight_id]["requests"]['001']['request_arrival_time'] = new_requested_dep_time + travel_time
+            flights[flight_id]["requests"]['001']['request_departure_time'] = new_requested_dep_time
+            flights[flight_id]["requests"]['001']["sector_times"] = new_sector_times
+            flights[flight_id]['valuation']= valuation/2 #change decay
+            flights[flight_id]['budget_constraint'] +=  flights[flight_id]['original_budget']
+            flights[flight_id]["rebase_count"] += 1
 
     return flights
 
@@ -542,6 +546,9 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
         else:
             ordered_flights[appearance_time].append(flight_id)
 
+    # Initialize number of rebases to 0
+    for flight_id, flight in flights.items():
+        flight["rebase_count"] = 0
 
     max_travel_time = 6
     last_auction =  end_time - max(max_travel_time,auction_freq)
