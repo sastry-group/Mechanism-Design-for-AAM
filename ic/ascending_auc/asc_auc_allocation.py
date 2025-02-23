@@ -445,17 +445,29 @@ def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, 
 
     # Save data to view market outcome
     market_file = f'{output_folder}/results/output_{timing_info["auction_start"]}.txt'
+    csv_file = f'{output_folder}/results/output_{timing_info["auction_start"]}.csv'
+    with open(csv_file, 'w') as f:
+        f.write("Flight ID,Request ID,Departure Port,Arrival Port,Delay,Value,Price,")
+        if auction_method == "profit":
+            f.write("Profit\n")
+        elif auction_method == "budget":
+            f.write("Remaining Budget\n")
     print('     ----')
     for r, price in zip(allocated_requests, prices):
         data_str = f"Flight ID: {r.flight_id} | Request ID: {r.req_id} | FROM: {r.dep_id} | TO: {r.arr_id} | Delay: {r.delay} | Value: {r.value} | Overall Price: {price} | "
+        csv_str = f"{r.flight_id},{r.req_id},{r.dep_id},{r.arr_id},{r.delay},{r.value},{price},"
         if auction_method == "profit":
             data_str += f"Profit: {r.value - price}"
+            csv_str += f"{r.value - price}"
         elif auction_method == "budget":
             data_str += f"Remaining Budget: {r.budget - price}"
+            csv_str += f"{r.budget - price}"
         # print(data_str)
         mode = 'w' if not os.path.isfile(market_file) else 'a'
         with open(market_file, mode) as f:
             f.write(data_str + '\n')
+        with open(csv_file, 'a') as f:
+            f.write(csv_str + '\n')
     print('     ----')
 
     save_data(output_folder, f"{auction_method}_data", timing_info["auction_start"], **{"allocation": allocated_requests})
