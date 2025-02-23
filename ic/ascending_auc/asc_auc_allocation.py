@@ -326,8 +326,12 @@ def run_auction(reqs, method, start_time, end_time, capacities, sector_data, ver
     maxprice_log = []
 
     print('     ----')
-    for r, price in zip(favored_reqs, prices):
-        print("Flight ID: ", r.flight_id, " | Request ID: ", r.req_id, " | FROM: ", r.dep_id, " | TO: ", r.arr_id, " | Delay: ",r.delay, " | Value: " ,r.value, " | Overall Price: ",price, " | Profit: " ,r.value - price)
+    if method == "profit":
+        for r, price in zip(favored_reqs, prices):
+            print("Flight ID: ", r.flight_id, " | Request ID: ", r.req_id, " | FROM: ", r.dep_id, " | TO: ", r.arr_id, " | Delay: ",r.delay, " | Value: " ,r.value, " | Overall Price: ",price, " | Profit: " ,r.value - price)
+    elif method == "budget":
+        for r, price in zip(favored_reqs, prices):
+            print("Flight ID: ", r.flight_id, " | Request ID: ", r.req_id, " | FROM: ", r.dep_id, " | TO: ", r.arr_id, " | Delay: ",r.delay, " | Value: " ,r.value, " | Overall Price: ",price, " | Remaining Budget: " ,r.budget - price)
     print('     ----')
 
 
