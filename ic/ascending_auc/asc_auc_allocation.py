@@ -10,6 +10,9 @@ import math
 from pathlib import Path
 from multiprocessing import Pool
 import logging
+import pickle as pkl
+from write_csv import save_data 
+import os
 
 
 logging.basicConfig(filename='solver_log.txt', level=logging.INFO, 
@@ -238,7 +241,7 @@ def multiplicitiesDict(vals): # can optimize
         # print(f"Count of {i.good}: {vals.count(i)}")
     return s
 
-def run_auction(reqs, method, start_time, end_time, capacities, sector_data, vertiport_data, dropout_value):
+def run_auction(reqs, method, start_time, end_time, capacities, sector_data, vertiport_data):
     # print(f"All agent reqs: {reqs}")
     numreq = len(reqs)
     price_per_req = [0] * numreq
@@ -339,7 +342,6 @@ def run_auction(reqs, method, start_time, end_time, capacities, sector_data, ver
             print("Flight ID: ", r.flight_id, " | Request ID: ", r.req_id, " | FROM: ", r.dep_id, " | TO: ", r.arr_id, " | Delay: ",r.delay, " | Value: " ,r.value, " | Overall Price: ",price, " | Remaining Budget: " ,r.budget - price)
     print('     ----')
 
-
     plot = False
     if(plot):
 
@@ -361,7 +363,7 @@ def run_auction(reqs, method, start_time, end_time, capacities, sector_data, ver
         plt.show()
 
     
-    return favored_reqs, price_per_req, pplcnt_log, maxprice_log
+    return favored_reqs, prices, price_per_req, pplcnt_log, maxprice_log
 
 
 def define_capacities(vertiport_data, sector_data):
@@ -393,11 +395,10 @@ def pickHighest(requests, start_time, method):
     return mxReq.values()
 
 
-def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, sector_data, auction_method,
+def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, sector_data, auction_method, output_folder=None,
                                   save_file=None, initial_allocation=True, design_parameters=None):
 
     beta = design_parameters["beta"]
-    market_auction_time=timing_info["start_time"]
     auction_period = timing_info["auction_frequency"]
 
     capacities = define_capacities(vertiport_usage.vertiports, sector_data)
@@ -440,11 +441,24 @@ def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, 
     print("--- RUNNING AUCTION ---")    
 
 
-    allocated_requests, final_prices_per_req, agents_left_time, price_change = run_auction(requests, auction_method, timing_info["auction_start"], timing_info["end_time"], capacities, sector_data, vertiport_usage, dropout_value)
+    allocated_requests, prices, prices_per_req, agents_left_time, price_change = run_auction(requests, auction_method, timing_info["auction_start"], timing_info["end_time"], capacities, sector_data, vertiport_usage)
 
+    # Save data to view market outcome
+    market_file = f'{output_folder}/results/output_{timing_info["auction_start"]}.txt'
+    print('     ----')
+    for r, price in zip(allocated_requests, prices):
+        data_str = f"Flight ID: {r.flight_id} | Request ID: {r.req_id} | FROM: {r.dep_id} | TO: {r.arr_id} | Delay: {r.delay} | Value: {r.value} | Overall Price: {price} | "
+        if auction_method == "profit":
+            data_str += f"Profit: {r.value - price}"
+        elif auction_method == "budget":
+            data_str += f"Remaining Budget: {r.budget - price}"
+        # print(data_str)
+        mode = 'w' if not os.path.isfile(market_file) else 'a'
+        with open(market_file, mode) as f:
+            f.write(data_str + '\n')
+    print('     ----')
 
-    
-
+    save_data(output_folder, f"{auction_method}_data", timing_info["auction_start"], **{"allocation": allocated_requests})
 
 
     # allocated_requests = pickHighest(allocated_requests, market_auction_time, auction_method)
