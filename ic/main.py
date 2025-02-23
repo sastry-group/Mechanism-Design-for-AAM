@@ -575,7 +575,9 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
     auction = 1
     logger.info(f"Auction times: {auction_times}")
 
-    for prev_auction_time, auction_time in zip(auction_times[:-1], auction_times[1:]):
+    auction_ends = auction_times[2:].copy()
+    auction_ends.append(end_time)
+    for prev_auction_time, auction_time, auction_end in zip(auction_times[:-1], auction_times[1:], auction_ends):
         # Get the current flights
         # current_flight_ids = ordered_flights[appearance_time]
         
@@ -661,8 +663,8 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
             "start_time" : timing_info["start_time"],
             "current_time" : appearance_time,
             "end_time": timing_info["end_time"],
-            "auction_start": prev_auction_time,
-            "auction_end": auction_time,
+            "auction_start": auction_time,
+            "auction_end": auction_end,
             "auction_frequency": timing_info["auction_frequency"],
             "time_step": timing_info["time_step"]
         }

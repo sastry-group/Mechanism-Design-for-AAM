@@ -152,11 +152,11 @@ def remove_requests(all, confirmed):
             else:
                 remaining += [c]
 
-def process_request(id_, req_id, depart_port, arrive_port, sector_path, sector_times, depart_time, arrive_time, maxBid, start_time, end_time, step, auction_period, decay, budget, beta):
+def process_request(id_, req_id, depart_port, arrive_port, sector_path, sector_times, appearance_time, depart_time, arrive_time, maxBid, start_time, end_time, step, auction_end, auction_period, decay, budget, beta):
     reqs = []
     if(req_id == "000"):
         b = bundle(id_, req_id, [], maxBid, -1, budget)
-        b.populate(start_time,end_time, depart_port, beta)
+        b.populate(appearance_time, auction_end, depart_port, beta)
         b.update_flight_path(depart_time, depart_port, arrive_time, arrive_port)
         reqs += [b]
         return reqs
@@ -172,7 +172,7 @@ def process_request(id_, req_id, depart_port, arrive_port, sector_path, sector_t
         curtimesarray = [time_step(id_, i, 'NA') for i in range(start_time, end_time + 1, step)]
         # for i in range(start_time, depart_time, step): #start_time -1 so it starts at 0
             # curtimesarray[i].spot =  depart_port
-        b.populate(start_time, adjusted_depart_time, depart_port, beta)
+        b.populate(appearance_time, adjusted_depart_time, depart_port, beta)
         # print(f"Goods: {b.goods}")
         b.goods.append(Good((depart_port + '_' + str(adjusted_depart_time), depart_port + '_' + str(adjusted_depart_time) + '_dep'), beta))
         b.goods.append(Good((depart_port + '_' + str(adjusted_depart_time) + '_dep', sector_path[0] + '_' + str(adjusted_depart_time)), beta))
@@ -401,6 +401,7 @@ def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, 
         flight_req = flight_data["requests"]
         decay = flight_data["decay_factor"]
         budget = flight_data["budget_constraint"]
+        appearance_time = flight_data["appearance_time"]
         for req_index in flight_req.keys(): #req_index = 000, 001, ...
             print(f, req_index)
             fr = flight_req[req_index]
@@ -411,13 +412,13 @@ def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, 
             arr_time = fr["request_arrival_time"]
             if req_index == "000":
                 val = fr["valuation"]
-                agent_requests += process_request(f, req_index, origin_vp, dest_vp, None, None, dep_time, arr_time, val, timing_info["start_time"], timing_info["end_time"], timing_info["time_step"], auction_period, decay, budget, beta)
+                agent_requests += process_request(f, req_index, origin_vp, dest_vp, None, None, appearance_time, dep_time, arr_time, val, timing_info["start_time"], timing_info["end_time"], timing_info["time_step"], timing_info["auction_end"], auction_period, decay, budget, beta)
                 continue
             sector_path = fr["sector_path"]
             sector_times = fr["sector_times"]
 
             val = fr["valuation"]
-            agent_requests += process_request(f, req_index, origin_vp, dest_vp, sector_path, sector_times, dep_time, arr_time, val, timing_info["start_time"], timing_info["end_time"], timing_info["time_step"], auction_period, decay, budget, beta)
+            agent_requests += process_request(f, req_index, origin_vp, dest_vp, sector_path, sector_times, appearance_time, dep_time, arr_time, val, timing_info["start_time"], timing_info["end_time"], timing_info["time_step"], timing_info["auction_end"], auction_period, decay, budget, beta)
         requests.append(agent_requests)
     print("PROCESSED REQUESTS")
     for agent_reqs in requests:
