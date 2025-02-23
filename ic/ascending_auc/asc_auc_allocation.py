@@ -74,11 +74,12 @@ class time_step:
         self.price += 1
 
 class Good:
-    def __init__(self, good):
+    def __init__(self, good, price_increment=1):
         self.good = good
         self.price = 0
+        self.price_increment = price_increment
     def raise_val(self):
-        self.price += 1
+        self.price += self.price_increment
     def __str__(self):
         return f"({self.good[0]}, {self.good[1]})"
     def __eq__(self, other):
@@ -99,9 +100,9 @@ class bundle:
     dep_id = None
     arr_id = None
     
-    def populate(self, start, end, spot):
+    def populate(self, start, end, spot, beta):
         for i in range(start, end):
-            self.goods.append(Good((f"{spot}_{i}", f"{spot}_{i+1}")))
+            self.goods.append(Good((f"{spot}_{i}", f"{spot}_{i+1}"), beta))
             # print(f"Populating: {spot}_{i} -> {spot}_{i+1}")
             # print(f"Intermediate goods: {self.goods}")
         # for i in range(start,end):
@@ -151,11 +152,11 @@ def remove_requests(all, confirmed):
             else:
                 remaining += [c]
 
-def process_request(id_, req_id, depart_port, arrive_port, sector_path, sector_times, depart_time, arrive_time, maxBid, start_time, end_time, step, auction_period, decay, budget):
+def process_request(id_, req_id, depart_port, arrive_port, sector_path, sector_times, depart_time, arrive_time, maxBid, start_time, end_time, step, auction_period, decay, budget, beta):
     reqs = []
     if(req_id == "000"):
         b = bundle(id_, req_id, [], maxBid, -1, budget)
-        b.populate(start_time,end_time, depart_port)
+        b.populate(start_time,end_time, depart_port, beta)
         b.update_flight_path(depart_time, depart_port, arrive_time, arrive_port)
         reqs += [b]
         return reqs
@@ -171,26 +172,26 @@ def process_request(id_, req_id, depart_port, arrive_port, sector_path, sector_t
         curtimesarray = [time_step(id_, i, 'NA') for i in range(start_time, end_time + 1, step)]
         # for i in range(start_time, depart_time, step): #start_time -1 so it starts at 0
             # curtimesarray[i].spot =  depart_port
-        b.populate(start_time, adjusted_depart_time, depart_port)
+        b.populate(start_time, adjusted_depart_time, depart_port, beta)
         # print(f"Goods: {b.goods}")
-        b.goods.append(Good((depart_port + '_' + str(adjusted_depart_time), depart_port + '_' + str(adjusted_depart_time) + '_dep')))
-        b.goods.append(Good((depart_port + '_' + str(adjusted_depart_time) + '_dep', sector_path[0] + '_' + str(adjusted_depart_time))))
+        b.goods.append(Good((depart_port + '_' + str(adjusted_depart_time), depart_port + '_' + str(adjusted_depart_time) + '_dep'), beta))
+        b.goods.append(Good((depart_port + '_' + str(adjusted_depart_time) + '_dep', sector_path[0] + '_' + str(adjusted_depart_time)), beta))
 
         # curtimesarray[depart_time].spot = depart_port+'_dep'
         for i in range(len(sector_path)):
             # for j in range(sector_times[i], sector_times[i+1]):
-            b.populate(adjusted_sector_times[i], adjusted_sector_times[i+1], sector_path[i])
+            b.populate(adjusted_sector_times[i], adjusted_sector_times[i+1], sector_path[i], beta)
                 # curtimesarray[j].spot = sector_path[i]
             if i != len(sector_path) - 1:
-                b.goods.append(Good((sector_path[i] + '_' + str(adjusted_sector_times[i+1]), sector_path[i+1] + '_' + str(adjusted_sector_times[i+1]))))
+                b.goods.append(Good((sector_path[i] + '_' + str(adjusted_sector_times[i+1]), sector_path[i+1] + '_' + str(adjusted_sector_times[i+1])), beta))
                 # curtimesarray[sector_times[i+1]].spot = sector_path[i] + sector_path
 
         if arrive_port is not None:
-            b.goods.append(Good((sector_path[-1] + '_' + str(adjusted_arrive_time), arrive_port + '_' + str(adjusted_arrive_time) + '_arr')))
-            b.goods.append(Good((arrive_port + '_' + str(adjusted_arrive_time) + '_arr', arrive_port + '_' + str(adjusted_arrive_time))))
+            b.goods.append(Good((sector_path[-1] + '_' + str(adjusted_arrive_time), arrive_port + '_' + str(adjusted_arrive_time) + '_arr'), beta))
+            b.goods.append(Good((arrive_port + '_' + str(adjusted_arrive_time) + '_arr', arrive_port + '_' + str(adjusted_arrive_time)), beta))
             final_time = ((adjusted_arrive_time // auction_period) + 1) * auction_period
             # print(f"Final time: {final_time}")
-            b.populate(adjusted_arrive_time, final_time, arrive_port)
+            b.populate(adjusted_arrive_time, final_time, arrive_port, beta)
         # for i in range(depart_time + 1, arrive_time, step):
         #     curtimesarray[i].spot = depart_port+arrive_port
 
@@ -383,9 +384,10 @@ def pickHighest(requests, start_time, method):
     return mxReq.values()
 
 
-def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, sector_data, auction_method,  
+def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, sector_data, auction_method,
                                   save_file=None, initial_allocation=True, design_parameters=None):
 
+    beta = design_parameters["beta"]
     market_auction_time=timing_info["start_time"]
     auction_period = timing_info["auction_frequency"]
 
@@ -409,13 +411,13 @@ def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, 
             arr_time = fr["request_arrival_time"]
             if req_index == "000":
                 val = fr["valuation"]
-                agent_requests += process_request(f, req_index, origin_vp, dest_vp, None, None, dep_time, arr_time, val, timing_info["start_time"], timing_info["end_time"], timing_info["time_step"], auction_period, decay, budget)
+                agent_requests += process_request(f, req_index, origin_vp, dest_vp, None, None, dep_time, arr_time, val, timing_info["start_time"], timing_info["end_time"], timing_info["time_step"], auction_period, decay, budget, beta)
                 continue
             sector_path = fr["sector_path"]
             sector_times = fr["sector_times"]
 
             val = fr["valuation"]
-            agent_requests += process_request(f, req_index, origin_vp, dest_vp, sector_path, sector_times, dep_time, arr_time, val, timing_info["start_time"], timing_info["end_time"], timing_info["time_step"], auction_period, decay, budget)
+            agent_requests += process_request(f, req_index, origin_vp, dest_vp, sector_path, sector_times, dep_time, arr_time, val, timing_info["start_time"], timing_info["end_time"], timing_info["time_step"], auction_period, decay, budget, beta)
         requests.append(agent_requests)
     print("PROCESSED REQUESTS")
     for agent_reqs in requests:
