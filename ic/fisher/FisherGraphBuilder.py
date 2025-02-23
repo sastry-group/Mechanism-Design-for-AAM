@@ -175,7 +175,7 @@ class FisherGraphBuilder:
 
     def _get_end_auction_time(self, arrival_time, auction_frequency):
         """Calculate the end of the auction window based on arrival time and auction frequency."""
-        return ((arrival_time // auction_frequency) + 1) * auction_frequency
+        return (((arrival_time - 1) // auction_frequency) + 1) * auction_frequency
 
     def _add_node_if_not_exists(self, node):
         """Check if node exists in VertiportStatus and add to the graph if it doesn't already exist."""

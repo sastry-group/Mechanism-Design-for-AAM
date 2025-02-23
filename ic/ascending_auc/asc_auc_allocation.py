@@ -161,6 +161,11 @@ def process_request(id_, req_id, depart_port, arrive_port, sector_path, sector_t
         reqs += [b]
         return reqs
     
+    if (req_id == "drop"):
+        b = bundle(id_, req_id, [], maxBid, -2, budget)
+        reqs += [b]
+        return reqs
+    
     for delay in range(5):
         this_decay = decay**delay
         adjusted_depart_time = depart_time + delay
@@ -175,7 +180,7 @@ def process_request(id_, req_id, depart_port, arrive_port, sector_path, sector_t
         b.populate(appearance_time, adjusted_depart_time, depart_port, beta)
         # print(f"Goods: {b.goods}")
         b.goods.append(Good((depart_port + '_' + str(adjusted_depart_time), depart_port + '_' + str(adjusted_depart_time) + '_dep'), beta))
-        b.goods.append(Good((depart_port + '_' + str(adjusted_depart_time) + '_dep', sector_path[0] + '_' + str(adjusted_depart_time)), beta))
+        b.goods.append(Good((depart_port + '_' + str(adjusted_depart_time) + '_dep', sector_path[0] + '_' + str(adjusted_depart_time)), 0))
 
         # curtimesarray[depart_time].spot = depart_port+'_dep'
         for i in range(len(sector_path)):
@@ -187,9 +192,9 @@ def process_request(id_, req_id, depart_port, arrive_port, sector_path, sector_t
                 # curtimesarray[sector_times[i+1]].spot = sector_path[i] + sector_path
 
         if arrive_port is not None:
-            b.goods.append(Good((sector_path[-1] + '_' + str(adjusted_arrive_time), arrive_port + '_' + str(adjusted_arrive_time) + '_arr'), beta))
+            b.goods.append(Good((sector_path[-1] + '_' + str(adjusted_arrive_time), arrive_port + '_' + str(adjusted_arrive_time) + '_arr'), 0))
             b.goods.append(Good((arrive_port + '_' + str(adjusted_arrive_time) + '_arr', arrive_port + '_' + str(adjusted_arrive_time)), beta))
-            final_time = ((adjusted_arrive_time // auction_period) + 1) * auction_period
+            final_time = (((adjusted_arrive_time - 1) // auction_period) + 1) * auction_period
             # print(f"Final time: {final_time}")
             b.populate(adjusted_arrive_time, final_time, arrive_port, beta)
         # for i in range(depart_time + 1, arrive_time, step):
@@ -233,7 +238,7 @@ def multiplicitiesDict(vals): # can optimize
         # print(f"Count of {i.good}: {vals.count(i)}")
     return s
 
-def run_auction(reqs, method, start_time, end_time, capacities, sector_data, vertiport_data):
+def run_auction(reqs, method, start_time, end_time, capacities, sector_data, vertiport_data, dropout_value):
     # print(f"All agent reqs: {reqs}")
     numreq = len(reqs)
     price_per_req = [0] * numreq
@@ -262,9 +267,9 @@ def run_auction(reqs, method, start_time, end_time, capacities, sector_data, ver
                 filtered_reqs = [agent_reqs[i] for i in filtered_inds]
                 _, ind, favored_req = max([(r.value, i, r) for i, r in zip(filtered_inds, filtered_reqs)], key = lambda x: x[0])
             prices.append(price_per_req[ind])
+            favored_goods += favored_req.goods
             favored_reqs.append(favored_req)
             favored_req_inds.append(ind)
-            favored_goods += favored_req.goods
         # print(f"Favored reqs: {favored_reqs}")
             #look through all requests at a time step
             # spots_reqs = []
@@ -406,6 +411,7 @@ def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, 
         decay = flight_data["decay_factor"]
         budget = flight_data["budget_constraint"]
         appearance_time = flight_data["appearance_time"]
+        dropout_value = design_parameters["dropout_good_valuation"]
         for req_index in flight_req.keys(): #req_index = 000, 001, ...
             print(f, req_index)
             fr = flight_req[req_index]
@@ -423,6 +429,7 @@ def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, 
 
             val = fr["valuation"]
             agent_requests += process_request(f, req_index, origin_vp, dest_vp, sector_path, sector_times, appearance_time, dep_time, arr_time, val, timing_info["start_time"], timing_info["end_time"], timing_info["time_step"], timing_info["auction_end"], auction_period, decay, budget, beta)
+            agent_requests += process_request(f, "drop", origin_vp, None, None, None, appearance_time, dep_time, arr_time, dropout_value, timing_info["start_time"], timing_info["end_time"], timing_info["time_step"], timing_info["auction_end"], auction_period, decay, budget, beta)    
         requests.append(agent_requests)
     print("PROCESSED REQUESTS")
     for agent_reqs in requests:
@@ -433,7 +440,7 @@ def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, 
     print("--- RUNNING AUCTION ---")    
 
 
-    allocated_requests, final_prices_per_req, agents_left_time, price_change = run_auction(requests, auction_method, timing_info["auction_start"], timing_info["end_time"], capacities, sector_data, vertiport_usage)
+    allocated_requests, final_prices_per_req, agents_left_time, price_change = run_auction(requests, auction_method, timing_info["auction_start"], timing_info["end_time"], capacities, sector_data, vertiport_usage, dropout_value)
 
 
     
@@ -451,8 +458,8 @@ def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, 
     # print(allocated_requests)                                       
     # print('E - AR REQUESTS')
 
-    allocation  = [(ar.flight_id, ('_'.join(ar.dep_id.split("_")[:-1]), ar.dep_id)) for ar in allocated_requests if ar.delay != -1]
-    rebased = { ar.flight_id: flights[ar.flight_id] for ar in allocated_requests if ar.delay == -1}
+    allocation  = [(ar.flight_id, ('_'.join(ar.dep_id.split("_")[:-1]), ar.dep_id)) for ar in allocated_requests if ar.delay >= 0]
+    rebased = { ar.flight_id: flights[ar.flight_id] for ar in allocated_requests if ar.delay == -1 or ar.delay == -2}
 
     #write_output(flights, agent_constraints, edge_information, prices, new_prices, capacity, end_capacity,
     #            agent_allocations, agent_indices, agent_edge_information, agent_goods_lists, 
