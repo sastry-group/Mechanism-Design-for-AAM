@@ -9,11 +9,11 @@ default_good_valuation_values = [1]
 price_default_good_values = [1]
 lambda_frequency_values = [30]
 price_upper_bound_values = [3000]
-num_agents_to_run = [80]
-# num_agents_to_run = [10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,177]
+# num_agents_to_run = [80]
+num_agents_to_run = [170,160]
 tol_error_to_check = [0.1, 0.01, 0.001]
 # num_agents_to_run = [170]
-num_CPUS = 10
+# num_CPUS = 10
 
 
 # Generate all combinations of the parameter values
@@ -22,9 +22,7 @@ parameter_combinations = list(product(BETA_values, dropout_good_valuation_values
                                       price_upper_bound_values, num_agents_to_run))
 main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 # "test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap6_withReturn.json",
-file_list = ["test_cases/toulouse_case_cap15_updated.json",] #"test_cases/toulouse_case_cap8_updated.json",
-            #  "test_cases/toulouse_case_cap4_updated.json"]
-            #  "test_cases/toulouse_case_cap4_updated_40.json","test_cases/toulouse_case_cap4_updated_50.json"]
+file_list = ["test_cases/toulouse_case_cap10_updated.json"]
 
 
 for file in file_list:

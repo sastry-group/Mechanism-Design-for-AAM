@@ -178,8 +178,8 @@ def write_output(flights, edge_information, market_data_dict,
     output_file = os.path.join(f"{output_folder}/results/", f"results_table_{market_auction_time}.csv")
     write_results_table(flights, agents_data, output_folder)
     write_market_performance(market_data_dict, output_folder)
-    write_market_data(edge_information, prices, new_prices, capacity, end_capacity, market_auction_time, output_folder)
-    write_to_csv(df, output_file)
+    # write_market_data(edge_information, prices, new_prices, capacity, end_capacity, market_auction_time, output_folder)
+    # write_to_csv(df, output_file)
 
     print(f"Results table written to {output_file}")
 

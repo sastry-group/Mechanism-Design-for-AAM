@@ -682,14 +682,14 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         logger.info(f"Excess demand: {excess_demand.shape}")
         logger.info(f"Prices: {p}")        
         # if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
-        while (market_clearing_error <= tolerances_to_check[current_tolerance_to_check_index]) and (x_iter >= 10) and \
-            (iter_constraint_error <= 0.1) and (iter_constraint_x_y <= 0.1):
+        while (market_clearing_error <= tolerances_to_check[current_tolerance_to_check_index]) and (x_iter >= 5) and \
+            (iter_constraint_error <= 0.01) and (iter_constraint_x_y <= 0.05):
             iterations_per_tolerance.append(x_iter)
             if current_tolerance_to_check_index == len(valid_tol_error_to_check) - 1:
                 break
             current_tolerance_to_check_index += 1
-        if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.1) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
-            print(f"Iterations per tolerance: {iterations_per_tolerance}")
+        if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=5) and (iter_constraint_x_y <= 0.05):
+            # print(f"Iterations per tolerance: {iterations_per_tolerance}")
             break
         if x_iter == 1000:
             break

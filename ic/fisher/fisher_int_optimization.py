@@ -15,7 +15,7 @@ def agent_allocation_selection(ranked_list, sorted_agent_dict, agent_data, marke
 
     for agent in ranked_list:
         agent_data[agent]["status"] = "contested"
-
+        i = 0
         while agent_data[agent]["status"] == "contested":
             Aarray = agent_data[agent]["constraints"][0]
             Aarray = np.hstack((Aarray[:, :-2], Aarray[:, -1].reshape(-1, 1)))
@@ -39,39 +39,26 @@ def agent_allocation_selection(ranked_list, sorted_agent_dict, agent_data, marke
                 agent_values_to_full_size = np.zeros(len(temp_prices))
                 agent_values_to_full_size[agent_indices] = agent_values[:-1]
                 agent_values_to_full_size[-1] = agent_values[-1]
-
-                # Check capacity constraints
                 check_capacity = market_data["capacity"] - agent_values_to_full_size
-
                 if np.all(check_capacity >= 0):  # Allocation is feasible
                     agent_data[agent]["final_allocation"] = agent_values
                     agent_data[agent]["status"] = "allocated"
                     allocated.append(agent)
-                    market_data['capacity'] = check_capacity  # Update market capacity
-                elif agent_values[-1] == 1:  # Agent is dropping out
+                    market_data['capacity'] = check_capacity 
+                elif agent_values[-1] == 1:  
                     agent_data[agent]["final_allocation"] = agent_values
                     agent_data[agent]["status"] = "dropped"
-                else:  # Contesting goods
+                else:  
                     contested.append(agent)
                     idx_contested_edges = np.where(check_capacity < 0)[0]
-                    temp_prices[idx_contested_edges] += 10000  # Increase price to deter congestion
+                    temp_prices[idx_contested_edges] += 10000  
                     contested_goods_id.append(idx_contested_edges)
 
         # Store agent valuation
         agent_data[agent]["valuation"] = valuation
-
-        # Adjust payment to reflect fractional allocation of integral goods
-        fisher_allocation = agent_data[agent]["fisher_allocation"]
-        # fisher_allocation = np.clip(fisher_allocation, 0, 1)  # Ensure values are between 0 and 1
-        # fisher_allocation[np.abs(fisher_allocation) < 1e6] = 0 
-        integral_indices = np.where(agent_values_to_full_size == 1)[0]  # Goods assigned integer 1
-
-        # Compute adjusted payment using fractional allocations
         p_fixed = market_data['prices']
-        adjusted_payment = np.sum(fisher_allocation[integral_indices] * p_fixed[integral_indices])
-
-        # Store adjusted payment
-        agent_data[agent]["payment"] = adjusted_payment
+        p_prices = p_fixed[agent_indices] 
+        agent_data[agent]["payment"] = agent_values[:-2] @ p_prices[:-1]
 
     return agent_data, market_data
 
