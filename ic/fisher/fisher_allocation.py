@@ -311,13 +311,16 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     price_map = {goods_list[i]: prices[i] for i in range(len(goods_list)) if prices[i] > 0.01}
     agents_data_dict = track_delayed_goods(agents_data_dict, market_data_dict)
     # Rank agents based on their allocation and settling any contested goods
+    logger.info("Ranking allocations")
     sorted_agent_dict, ranked_list, market_data_dict = rank_allocations(agents_data_dict, market_data_dict)
+    logger.info("Processing allocations")
     agents_data_dict, market_data_dict= agent_allocation_selection(ranked_list, sorted_agent_dict, agents_data_dict, market_data_dict)
     valuations = {key: agents_data_dict[key]["valuation"] for key in agents_data_dict.keys()}
 
     overcapacitated_goods = [good for good, cap in zip(market_data_dict["goods_list"], market_data_dict["capacity"]) if cap == 0]
     market_data_dict.setdefault("overcapacitated_goods", []).append(overcapacitated_goods)
     # Getting data for next auction
+    logger.info("Getting next auction data")
     allocation, rebased, dropped, = get_next_auction_data(agents_data_dict, market_data_dict)
 
     console.print(f"[bold green] Algorithm 1 & 2 runtime {time.time() - start_market_time}...[/bold green]")

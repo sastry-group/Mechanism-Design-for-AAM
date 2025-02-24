@@ -15,7 +15,6 @@ def agent_allocation_selection(ranked_list, sorted_agent_dict, agent_data, marke
 
     for agent in ranked_list:
         agent_data[agent]["status"] = "contested"
-        i = 0
         while agent_data[agent]["status"] == "contested":
             Aarray = agent_data[agent]["constraints"][0]
             Aarray = np.hstack((Aarray[:, :-2], Aarray[:, -1].reshape(-1, 1)))
