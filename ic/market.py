@@ -20,7 +20,7 @@ from fisher.FisherGraphBuilder import FisherGraphBuilder
 
 INTEGRAL_APPROACH = False
 UPDATED_APPROACH = True
-TOL_ERROR = 1e-2
+TOL_ERROR = 1e-3
 MAX_NUM_ITERATIONS = 10000
 
 logger = logging.getLogger("global_logger")
@@ -70,7 +70,8 @@ def construct_market(flights, timing_info, sectors, vertiport_usage, output_fold
         builder = FisherGraphBuilder(vertiport_usage, timing_info)
         agent_graph = builder.build_graph(flight)
         origin_vertiport = flight["origin_vertiport_id"]
-        start_node_time = min(flight["requests"]["001"]["request_departure_time"] - 4,0)
+        start_node_time = flight["appearance_time"]
+        # start_node_time = min(flight["requests"]["001"]["request_departure_time"] - 4,0)
     
 
         # Add constraints
@@ -400,7 +401,7 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
     args = [(w[i], agent_utilities[i], agent_prices[i], r[i], constraints[i], agent_ys[i], beta, x_iter, update_frequency, rational, integral) for i in agent_indices]
 
     # Update agents in parallel or not depending on parallel flag
-    # parallel = True
+    parallel = False
     if not parallel:
         results = []
         adjusted_budgets = []
@@ -415,7 +416,7 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
         # results = [update_agent(*arg) for arg in args]
         # print(f"Average build time: {np.mean(build_times)} - Average solve time: {np.mean(solve_times)}")
     else:
-        num_processes = 4 # increase based on available resources
+        num_processes = 8 # increase based on available resources
         with Pool(num_processes) as pool:
             pooled_results = pool.starmap(update_agent, args)
             results = [result[0] for result in pooled_results]
@@ -602,18 +603,27 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
             agent_x = np.concatenate([x[sparse_agent_x_inds[agent_index]]])
             agent_y = np.concatenate([y[sparse_agent_y_inds[agent_index]]])
             constraint_error = agent_constraints[agent_index][0] @ agent_x - agent_constraints[agent_index][1]
-            abs_constraint_error = np.sqrt(np.sum(np.square(constraint_error)))
-            iter_constraint_error += abs_constraint_error 
-            agent_error = np.sqrt(np.sum(np.square(np.array(agent_x[:-2]).reshape(agent_y.shape) - agent_y)))
-            iter_constraint_x_y += agent_error
+            # abs_constraint_error = np.sum(np.square(constraint_error))
+            abs_constraint_error = np.linalg.norm(constraint_error, ord=np.inf)
+            # iter_constraint_error += abs_constraint_error 
+            iter_constraint_error = max(abs_constraint_error, iter_constraint_error)
+            # agent_error = np.sum(np.square(np.array(agent_x[:-2]).reshape(agent_y.shape) - agent_y))
+            agent_error = np.linalg.norm(np.array(agent_x[:-2]).reshape(agent_y.shape) - agent_y, ord=np.inf)
+            # iter_constraint_x_y += agent_error 
+            iter_constraint_x_y = max(agent_error, iter_constraint_x_y)
             if x_iter == 0:
                 error.append([abs_constraint_error])
                 abs_error.append([agent_error])
             else:
                 error[agent_index].append(abs_constraint_error)
                 abs_error[agent_index].append(agent_error)
-    
-        
+        # iter_constraint_error = np.sqrt(iter_constraint_error)
+        # iter_constraint_x_y = np.sqrt(iter_constraint_x_y)
+        iter_constraint_error = np.max(iter_constraint_error)
+        iter_constraint_x_y = np.max(iter_constraint_x_y)
+
+
+
         # if x_iter % rebate_frequency == 0:
         if True:
             update_rebates = True
@@ -672,14 +682,14 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         logger.info(f"Excess demand: {excess_demand.shape}")
         logger.info(f"Prices: {p}")        
         # if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
-        while (market_clearing_error <= tolerances_to_check[current_tolerance_to_check_index]) and (x_iter >= 10) and \
-            (iter_constraint_error <= 0.01) and (iter_constraint_x_y <= 0.1):
+        while (market_clearing_error <= tolerances_to_check[current_tolerance_to_check_index]) and (x_iter >= 5) and \
+            (iter_constraint_error <= 0.01) and (iter_constraint_x_y <= 0.05):
             iterations_per_tolerance.append(x_iter)
             if current_tolerance_to_check_index == len(valid_tol_error_to_check) - 1:
                 break
             current_tolerance_to_check_index += 1
-        if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
-            print(f"Iterations per tolerance: {iterations_per_tolerance}")
+        if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=5) and (iter_constraint_x_y <= 0.05):
+            # print(f"Iterations per tolerance: {iterations_per_tolerance}")
             break
         if x_iter == 1000:
             break
@@ -694,7 +704,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     console.print("[bold green]Simulation Complete! Optimization results in file: /results/log[/bold green]")
  
 
-    save_iteration_data(iteration_data, "iteration_data", output_dir="results")
+    #save_iteration_data(iteration_data, "iteration_data", output_dir="results")
 
         # if market_clearing_error <= tolerance:
         #     break

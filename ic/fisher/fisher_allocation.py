@@ -298,7 +298,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     'num_agents': num_agents,
     'num_goods': num_goods,
     }
-    save_data(output_folder, "fisher_data", market_auction_time, **extra_data)
+    # save_data(output_folder, "fisher_data", market_auction_time, **extra_data)
     plotting_market(data_to_plot, desired_goods, output_folder, market_auction_time)
     
     # Building edge information for mapping - move this to separate function
@@ -311,13 +311,16 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     price_map = {goods_list[i]: prices[i] for i in range(len(goods_list)) if prices[i] > 0.01}
     agents_data_dict = track_delayed_goods(agents_data_dict, market_data_dict)
     # Rank agents based on their allocation and settling any contested goods
+    logger.info("Ranking allocations")
     sorted_agent_dict, ranked_list, market_data_dict = rank_allocations(agents_data_dict, market_data_dict)
+    logger.info("Processing allocations")
     agents_data_dict, market_data_dict= agent_allocation_selection(ranked_list, sorted_agent_dict, agents_data_dict, market_data_dict)
     valuations = {key: agents_data_dict[key]["valuation"] for key in agents_data_dict.keys()}
 
     overcapacitated_goods = [good for good, cap in zip(market_data_dict["goods_list"], market_data_dict["capacity"]) if cap == 0]
     market_data_dict.setdefault("overcapacitated_goods", []).append(overcapacitated_goods)
     # Getting data for next auction
+    logger.info("Getting next auction data")
     allocation, rebased, dropped, = get_next_auction_data(agents_data_dict, market_data_dict)
 
     console.print(f"[bold green] Algorithm 1 & 2 runtime {time.time() - start_market_time}...[/bold green]")
@@ -327,7 +330,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     # print(f"Allocation: {allocation}")
 
     output_data = {"market_data":market_data_dict, "agents_data":agents_data_dict, "ranked_list":ranked_list, "valuations":valuations}
-    save_data(output_folder, "fisher_data_after", market_auction_time, **output_data)
+    # save_data(output_folder, "fisher_data_after", market_auction_time, **output_data)
 
 
     write_output(updated_flights, edge_information, market_data_dict, 
