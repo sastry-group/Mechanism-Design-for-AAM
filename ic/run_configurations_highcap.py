@@ -4,7 +4,7 @@ from itertools import product
 
 # Define the parameter values to vary
 BETA_values = [50] #, 100, 1000, 10000]
-dropout_good_valuation_values = [10]
+dropout_good_valuation_values = [40]
 default_good_valuation_values = [1]
 price_default_good_values = [1]
 lambda_frequency_values = [500] #

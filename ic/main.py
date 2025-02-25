@@ -586,7 +586,7 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
 
         # This is to ensure it doest not rebase the flights beyond simulation end time
         if rebased_flights and auction_time <= last_auction + 1:
-        #    print("Rebasing flights")
+            print("Rebasing flights")
             logger.info("Rebasing flights")
             flights = adjust_rebased_flights(rebased_flights, flights, prev_auction_time, auction_time, end_time)
         
