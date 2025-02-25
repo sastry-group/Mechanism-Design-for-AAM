@@ -4,7 +4,7 @@ from itertools import product
 
 # Define the parameter values to vary
 BETA_values = [50] #, 100, 1000, 10000]
-dropout_good_valuation_values = [40]
+dropout_good_valuation_values = [10]
 default_good_valuation_values = [1]
 price_default_good_values = [1]
 lambda_frequency_values = [500] #
@@ -26,8 +26,8 @@ for idx, (BETA, dropout_good_valuation, default_good_valuation, price_default_go
         # "--file", "test_cases/3agent_small_toulouse_case_withC.json",
         # "--file", "test_cases/casef_20240917_081204.json",
         # "--method", "fisher",
-        "--method", "ascending-auction-budgetbased", 
-        # "--method", "ascending-auction-profitbased",
+        # "--method", "ascending-auction-budgetbased", 
+        "--method", "ascending-auction-profitbased",
         "--force_overwrite",
         "--BETA", str(BETA),
         "--dropout_good_valuation", str(dropout_good_valuation),

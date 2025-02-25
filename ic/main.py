@@ -757,23 +757,44 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
             # allocated_flights = [i[0:2] for i in allocated_flights]
         
         elif method == "ascending-auction-profitbased":
-            allocated_flights, payments = ascending_auc_allocation_and_payment(
-                    vertiport_usage, current_flights, current_timing_info, filtered_sectors, "profit",
+            allocated_flights, rebased_flights, payments = ascending_auc_allocation_and_payment(
+                    vertiport_usage, current_flights, current_timing_info, filtered_sectors, "profit", output_folder=output_folder,
                     save_file=scenario_name, initial_allocation=initial_allocation, design_parameters=design_parameters
                 )
             #print(allocated_flights)
             #print(payments)
 
-            vertiport_usage = step_simulation_delay(
-                vertiport_usage, vertiports, flights, allocated_flights, stack_commands
+            allocated_requests = []
+            for flight_id, allocated_dep in allocated_flights:
+                dep_time = int(allocated_dep[0].split("_")[1])
+                flight = current_flights[flight_id]
+                allocated_request = None
+                for delay in range(5):
+                    if flight["requests"]["001"]["request_departure_time"] + delay != dep_time:
+                        continue
+                    allocated_request = flight["requests"]["001"]
+                    allocated_request["request_departure_time"] += delay
+                    allocated_request["request_arrival_time"] += delay
+                    allocated_request["sector_times"] = [sector_time + delay for sector_time in allocated_request["sector_times"]]
+                    allocated_request["valuation"] = allocated_request["valuation"]*flight["decay_factor"]**delay
+                    allocated_requests.append((flight_id, allocated_request))
+                    break
+            assert len(allocated_requests) == len(allocated_flights), "Not all flight requests were read."
+            print(f"Allocated requests: {allocated_requests}")
+            vertiport_usage = step_simulation_delay_fisher(
+                vertiport_usage, vertiports, flights, allocated_requests, stack_commands, auction_freq
             )
 
-            # print("ALLOCATED FLIGHTS")
-            for af in allocated_flights:
-                print("flight id: ", af[0], "request id: ", af[1]," delay: ", af[2],"value: ", af[3], )
-            # print('---------')
-            # print(f"Social welfare: {[sum(af[3] for af in allocated_flights)]}")
-            allocated_flights = [i[0:2] for i in allocated_flights]
+            # vertiport_usage = step_simulation_delay(
+            #     vertiport_usage, vertiports, flights, allocated_flights, stack_commands
+            # )
+
+            # # print("ALLOCATED FLIGHTS")
+            # for af in allocated_flights:
+            #     print("flight id: ", af[0], "request id: ", af[1]," delay: ", af[2],"value: ", af[3], )
+            # # print('---------')
+            # # print(f"Social welfare: {[sum(af[3] for af in allocated_flights)]}")
+            # allocated_flights = [i[0:2] for i in allocated_flights]
         elif method == "ff":
             allocated_flights, payments = ff_allocation_and_payment(
                 vertiport_usage, current_flights, current_timing_info, save_file=scenario_name, initial_allocation=initial_allocation
