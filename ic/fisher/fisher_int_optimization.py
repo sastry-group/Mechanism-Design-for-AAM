@@ -5,7 +5,11 @@ import matplotlib.pyplot as plt
 import math
 import pandas as pd
 import time
+from rich.console import Console
+from rich.table import Table
+import logging
 
+logger = logging.getLogger("global_logger")
 
 def agent_allocation_selection(ranked_list, sorted_agent_dict, agent_data, market_data):
     temp_prices = market_data['prices']  # Original prices from the market data
@@ -32,7 +36,7 @@ def agent_allocation_selection(ranked_list, sorted_agent_dict, agent_data, marke
             agent_values, valuation = find_optimal_xi(n_vals, utility, Aarray, barray, agent_prices, budget)
 
             if agent_values is None:
-                print("Warning: Could not find optimal xi value for agent", agent)
+                logger.error("Warning: Could not find optimal xi value for agent", agent)
             else:
                 # Expand agent_values to full size (matching temp_prices length)
                 agent_values_to_full_size = np.zeros(len(temp_prices))
@@ -72,10 +76,10 @@ def track_delayed_goods(agents_data_dict, market_data_dict):
             if "dep" in good[0] and "arr" in good[1]:
                 good_tuple = (good[0], good[1])
                 delayed_goods.append(good_tuple)
-        if good == "dropout_good":
-            print(f"There is a droput of agent {agent_id}")
+        # if good == "dropout_good":
+        #     print(f"There is a droput of agent {agent_id}")
             # logger.info(f"There is a droput of agent {agent_id}")
-        elif delayed_goods:
+        if delayed_goods:
             delayed_goods.pop(0)
             agent_data['delayed_goods'] = delayed_goods
             delayed_goods_indices = [goods_list.index(good) for good in delayed_goods]
@@ -111,12 +115,12 @@ def int_optimization(full_allocations, capacity, budget, prices, utility, agents
     
     # Checking contested allocations
     start_time = time.time()
-    print("Checking contested allocations")
+    logger.info("Checking contested allocations")
     contested_edges, agents_with_contested_allocations, contested_agent_allocations = contested_allocations(full_allocations, capacity)
-    print(f"Time taken to check contested allocations: {time.time() - start_time}")
+    logger.info(f"Time taken to check contested allocations: {time.time() - start_time}")
 
     if len(contested_edges) > 0:
-        print("Contested allocations found, running integer optimization algorithm")
+        logger.info("Contested allocations found, running integer optimization algorithm")
         start_time_int = time.time()
         ALPHA = 0.1
 
@@ -232,7 +236,7 @@ def find_optimal_xi(n, utility, A, b, prices, budget):
     
     if problem.status not in ["optimal", "optimal_inaccurate"]:
         message = f"Warning: The problem status is: {problem.status}"
-        print(message)
+        logger.error(message)
         return None
     
     return x.value, result

@@ -142,39 +142,39 @@ def plotting_market(data_to_plot, desired_goods, output_folder, market_auction_t
     plt.savefig(get_filename("market_clearing_error"))
     plt.close()
 
-    # y
-    plt.figure(figsize=(10, 5))
-    for agent_index in range(len(yplot[0])):
-        plt.plot(range(1, x_iter + 1), [yplot[i][agent_index][:-2] for i in range(len(yplot))])
-        # plt.plot(range(1, x_iter + 1), [yplot[i][agent_index][-2] for i in range(len(yplot))], 'b--', label="Default Good")
-        # plt.plot(range(1, x_iter + 1), [yplot[i][agent_index][-1] for i in range(len(yplot))], 'r-.', label="Dropout Good")
-    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
-    plt.xlabel('x_iter')
-    plt.title("Y-values")
-    plt.savefig(get_filename("y-values"), bbox_inches='tight')
-    plt.close()
+    # # y
+    # plt.figure(figsize=(10, 5))
+    # for agent_index in range(len(yplot[0])):
+    #     plt.plot(range(1, x_iter + 1), [yplot[i][agent_index][:-2] for i in range(len(yplot))])
+    #     # plt.plot(range(1, x_iter + 1), [yplot[i][agent_index][-2] for i in range(len(yplot))], 'b--', label="Default Good")
+    #     # plt.plot(range(1, x_iter + 1), [yplot[i][agent_index][-1] for i in range(len(yplot))], 'r-.', label="Dropout Good")
+    # plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    # plt.xlabel('x_iter')
+    # plt.title("Y-values")
+    # plt.savefig(get_filename("y-values"), bbox_inches='tight')
+    # plt.close()
 
 
-    # Social Welfare
-    plt.figure(figsize=(10, 5))
-    plt.plot(range(1, x_iter + 1), social_welfare)
-    plt.xlabel('x_iter')
-    plt.ylabel('Social Welfare')
-    plt.title("Social Welfare")
-    plt.savefig(get_filename("social_welfare"))
-    plt.close()
+    # # Social Welfare
+    # plt.figure(figsize=(10, 5))
+    # plt.plot(range(1, x_iter + 1), social_welfare)
+    # plt.xlabel('x_iter')
+    # plt.ylabel('Social Welfare')
+    # plt.title("Social Welfare")
+    # plt.savefig(get_filename("social_welfare"))
+    # plt.close()
 
-    # Rebate error
-    plt.figure(figsize=(10, 5))
-    # print(rebates)
-    # print(f"Rebate frequency: {lambda_frequency}")
-    rebate_error = [[rebates[i][j][0] - rebates[i - i % int(lambda_frequency)][j][0] for j in range(len(rebates[0]))] for i in range(len(rebates))]
-    plt.plot(range(1, x_iter + 1), rebate_error)
-    plt.xlabel('x_iter')
-    plt.ylabel('Rebate error')
-    plt.title("Rebate error")
-    plt.savefig(get_filename("rebate_error"))
-    plt.close()
+    # # Rebate error
+    # plt.figure(figsize=(10, 5))
+    # # print(rebates)
+    # # print(f"Rebate frequency: {lambda_frequency}")
+    # rebate_error = [[rebates[i][j][0] - rebates[i - i % int(lambda_frequency)][j][0] for j in range(len(rebates[0]))] for i in range(len(rebates))]
+    # plt.plot(range(1, x_iter + 1), rebate_error)
+    # plt.xlabel('x_iter')
+    # plt.ylabel('Rebate error')
+    # plt.title("Rebate error")
+    # plt.savefig(get_filename("rebate_error"))
+    # plt.close()
 
 def plot_utility_functions(agents_data_dict, market_data_dict, output_folder):
     agent_names = []

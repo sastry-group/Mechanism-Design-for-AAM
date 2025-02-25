@@ -145,7 +145,7 @@ def rank_allocations(agents_data, market_data):
     return sorted_agent_dict, ranked_agents_list, market_data
 
 def find_dep_and_arrival_nodes(edges):
-    if edges is None:
+    if edges is None or len(edges) == 0:
         return None
     dep_edge = False
     arr_edge = False
@@ -158,7 +158,6 @@ def find_dep_and_arrival_nodes(edges):
             assert not arr_edge, f"Multiple arrival nodes found: {arr_edge} and {edge}"
             arr_edge = edge
     # assert "arr" in arrival_node_found, f"Arrival node not found: {arrival_node_found}"
-    
     return dep_edge[1], arr_edge[0]
 
 

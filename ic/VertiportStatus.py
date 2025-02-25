@@ -158,7 +158,7 @@ class VertiportStatus(nx.DiGraph):
                 self[time_extended_origin_start][time_extended_origin_end]["hold_usage"] += 1
                 assert self[time_extended_origin_start][time_extended_origin_end]["hold_usage"] >= 0 and \
                     self[time_extended_origin_start][time_extended_origin_end]["hold_usage"] <= self[time_extended_origin_start][time_extended_origin_end]["hold_capacity"], \
-                    f"Vertiport {origin_vertiport} at time {start_time} to {next_time} has incorrect hold usage."
+                    f"Vertiport {origin_vertiport} at time {start_time} to {next_time} has incorrect hold usage. One reason if this is the starting node for an agent is that the holding capacity is lower than the number of agents set to start at that location."
                 # print(f"Adding {time_extended_origin_start} to {time_extended_origin_end} with current hold_usage {self[time_extended_origin_start][time_extended_origin_end]['hold_usage']} and capacity {self[time_extended_origin_start][time_extended_origin_end]['hold_capacity']}")
                 
             

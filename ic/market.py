@@ -71,7 +71,6 @@ def construct_market(flights, timing_info, sectors, vertiport_usage, output_fold
         agent_graph = builder.build_graph(flight)
         origin_vertiport = flight["origin_vertiport_id"]
         start_node_time = flight["appearance_time"]
-        # start_node_time = min(flight["requests"]["001"]["request_departure_time"] - 4,0)
     
 
         # Add constraints
@@ -175,7 +174,8 @@ def construct_market(flights, timing_info, sectors, vertiport_usage, output_fold
 
 
 
-def find_capacity(goods_list, route_data, vertiport_data):
+
+def find_capacity(goods_list, sectors, vertiport_data):
     # Create a dictionary for route capacities, for now just connectin between diff vertiports
     # sector_dict = {sid: sector["hold_capacity"] for sid, sector in sectors_data.items()}
     # route_dict = {(route["origin_vertiport_id"], route["destination_vertiport_id"]): route["capacity"] for route in route_data}
@@ -193,7 +193,8 @@ def find_capacity(goods_list, route_data, vertiport_data):
                 capacity = edge['hold_capacity'] - edge['hold_usage']
             else:
                 # Traveling between sectors
-                capacity = 10
+                capacity = 100
+                # capacity = sectors[destination_base]['hold_capacity']
             # capacity = sector_dict.get(origin_base, None)
         # if origin_base != destination_base:
         #     # Traveling between vertiport
@@ -683,12 +684,12 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         logger.info(f"Prices: {p}")        
         # if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
         while (market_clearing_error <= tolerances_to_check[current_tolerance_to_check_index]) and (x_iter >= 5) and \
-            (iter_constraint_error <= 0.01) and (iter_constraint_x_y <= 0.05):
+            (iter_constraint_error <= 0.01) and (iter_constraint_x_y <= 0.1):
             iterations_per_tolerance.append(x_iter)
             if current_tolerance_to_check_index == len(valid_tol_error_to_check) - 1:
                 break
             current_tolerance_to_check_index += 1
-        if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=5) and (iter_constraint_x_y <= 0.05):
+        if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=5) and (iter_constraint_x_y <= 0.1):
             # print(f"Iterations per tolerance: {iterations_per_tolerance}")
             break
         if x_iter == 1000:
