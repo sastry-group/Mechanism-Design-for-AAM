@@ -135,45 +135,15 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     start_market_time = time.time()
 
     market_auction_time=timing_info["auction_start"]
-    # if market_auction_time > 5:
-    #     price_default_good = 10
-    #     default_good_valuation = 1
-    #     dropout_good_valuation = 40
-    #     BETA = design_parameters["beta"]*2
-    #     lambda_frequency = 30
-    #     price_upper_bound = 3000
-    # else:
     price_default_good = design_parameters["price_default_good"]
     default_good_valuation = design_parameters["default_good_valuation"]
     dropout_good_valuation = design_parameters["dropout_good_valuation"]
     BETA = design_parameters["beta"]
     # BETA = design_parameters["beta"] * (round(market_auction_time / 20) + 1)
     lambda_frequency = design_parameters["lambda_frequency"]
-    price_upper_bound = design_parameters["price_upper_bound"]       
-    # start_time_graph_build = time.time()
-    # builder = FisherGraphBuilder(vertiport_usage, timing_info)
-    # market_graph = builder.build_graph(flights)
-    # print(f"Time to build graph: {time.time() - start_time_graph_build}")
-
-    #Extracting design parameters
-    # we should create a config file for this
-    # if design_parameters:
-    #     price_default_good = design_parameters["price_default_good"]
-    #     default_good_valuation = design_parameters["default_good_valuation"]
-    #     dropout_good_valuation = design_parameters["dropout_good_valuation"]
-    #     BETA = design_parameters["beta"]
-    #     lambda_frequency = design_parameters["lambda_frequency"]
-    #     price_upper_bound = design_parameters["price_upper_bound"]
-
-    # else:
-    #     BETA = 1 # chante to 1/T
-    #     dropout_good_valuation = -1
-    #     default_good_valuation = 1
-    #     price_default_good = 10
-    #     lambda_frequency = 1
-    #     price_upper_bound = 1000
-
-    # Construct market
+    price_upper_bound = design_parameters["price_upper_bound"]
+    save_pkl_files = design_parameters["save_pkl_files"]       
+    
     logger.info("Constructing market...")
     agent_information, market_information, bookkeeping, updated_flight_info = construct_market(flights, timing_info, sectors_data, vertiport_usage, output_folder,
                                                                           overcapacitated_goods,
@@ -298,6 +268,9 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     'num_agents': num_agents,
     'num_goods': num_goods,
     }
+
+    if save_pkl_files:
+        save_data(output_folder, "fisher_data", market_auction_time, **extra_data)
     # save_data(output_folder, "fisher_data", market_auction_time, **extra_data)
     plotting_market(data_to_plot, desired_goods, output_folder, market_auction_time)
     
@@ -330,7 +303,9 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     # print(f"Allocation: {allocation}")
 
     output_data = {"market_data":market_data_dict, "agents_data":agents_data_dict, "ranked_list":ranked_list, "valuations":valuations}
-    # save_data(output_folder, "fisher_data_after", market_auction_time, **output_data)
+    
+    if save_pkl_files:
+        save_data(output_folder, "fisher_data_after", market_auction_time, **output_data)
 
 
     write_output(updated_flights, edge_information, market_data_dict, 

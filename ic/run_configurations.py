@@ -10,7 +10,7 @@ price_default_good_values = [1]
 lambda_frequency_values = [30]
 price_upper_bound_values = [3000]
 # num_agents_to_run = [80]
-num_agents_to_run = [160]
+num_agents_to_run = [10]
 tol_error_to_check = [0.1, 0.01, 0.001]
 # num_agents_to_run = [170]
 # num_CPUS = 10
@@ -26,7 +26,7 @@ main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 # capacity percentage: 100%, 75%, 50%, 25%
 # "test_cases/toulouse_case_cap13_updated.json", 
             #  "test_cases/toulouse_case_cap10_updated.json",
-file_list = ["test_cases/toulouse_case_cap4_updated.json"]
+file_list = ["test_cases/toulouse_case_cap10_updated.json"]
 
 
 for file in file_list:
@@ -51,8 +51,10 @@ for file in file_list:
             "--price_upper_bound", str(price_upper_bound),
             "--num_agents_to_run", str(num_agents_to_run),
             "--run_up_to_auction", str(10),
+            "--save_pkl_files", "False",
             "--tol_error_to_check"
         ] + [str(tol) for tol in tol_error_to_check]
+            
         
 
         print(f"Running configuration {idx + 1}/{len(parameter_combinations)}: "

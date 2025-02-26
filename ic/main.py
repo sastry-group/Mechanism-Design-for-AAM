@@ -79,6 +79,7 @@ parser.add_argument(
 parser.add_argument(
     "--method", type=str, help="The method for allocation and payment (vcg or ff or ascending auction).."
 )
+
 ##### Running from configurations
 
 # parser = argparse.ArgumentParser()
@@ -93,6 +94,7 @@ parser.add_argument('--lambda_frequency', type=float, default=1)
 parser.add_argument('--price_upper_bound', type=float, default=50)
 parser.add_argument('--num_agents_to_run', type=int, default=None)
 parser.add_argument('--run_up_to_auction', type=float, default=10)
+parser.add_argument('--save_pkl_files', type=str2bool, nargs="?", const=True, default=True)
 parser.add_argument("--tol_error_to_check", nargs="+", type=float, default=None, help="List of tolerances for experiments")
 args = parser.parse_args()
 
@@ -918,6 +920,7 @@ if __name__ == "__main__":
         "price_upper_bound": args.price_upper_bound,
         "num_agents_to_run": args.num_agents_to_run,
         "run_up_to_auction": args.run_up_to_auction,
+        "save_pkl_files": args.save_pkl_files,
         "tol_error_to_check": args.tol_error_to_check
         }
     method = args.method    
