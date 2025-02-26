@@ -487,6 +487,7 @@ def ascending_auc_allocation_and_payment(vertiport_usage, flights, timing_info, 
     allocation  = [(ar.flight_id, ('_'.join(ar.dep_id.split("_")[:-1]), ar.dep_id)) for ar in allocated_requests if ar.delay >= 0]
     rebased = { ar.flight_id: flights[ar.flight_id] for ar in allocated_requests if ar.delay == -1 or ar.delay == -2}
 
+    save_data(output_folder, f"{auction_method}_data", timing_info["auction_start"], **{"allocation": allocation, "rebased": rebased})
     #write_output(flights, agent_constraints, edge_information, prices, new_prices, capacity, end_capacity,
     #            agent_allocations, agent_indices, agent_edge_information, agent_goods_lists, 
     #            int_allocations, new_allocations_goods, u, adjusted_budgets, payment, end_agent_status_data, market_auction_time, output_folder)
