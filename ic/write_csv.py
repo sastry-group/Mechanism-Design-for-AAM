@@ -80,14 +80,18 @@ def write_results_table(flights, agents_data, output_folder):
     """
     market_results_data = []
     for key, value in agents_data.items():
+        status = value["status"]
         request_dep_time = flights[key]['requests']["001"]["request_departure_time"]
         original_budget = value["original_budget"]
         valuation = flights[key]['requests']["001"]["valuation"]
         modified_budget = value["adjusted_budget"]
-        allocated_flight = value["good_allocated"]
+        if status == "dropped":
+            allocated_flight = ("Dropped", "Dropped")
+        else:
+            allocated_flight = value["good_allocated"]
         agent_payment = value["payment"]  
         origin_destination_tuple = (flights[key]["origin_vertiport_id"], flights[key]["requests"]["001"]["destination_vertiport_id"])
-        status = value["status"]
+        
           
         market_results_data.append([
             key, status, modified_budget, original_budget, valuation, origin_destination_tuple, 

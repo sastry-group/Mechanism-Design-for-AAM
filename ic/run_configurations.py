@@ -10,7 +10,7 @@ price_default_good_values = [1]
 lambda_frequency_values = [30]
 price_upper_bound_values = [3000]
 # num_agents_to_run = [80]
-num_agents_to_run = [150]
+num_agents_to_run = [160]
 tol_error_to_check = [0.1, 0.01, 0.001]
 # num_agents_to_run = [170]
 # num_CPUS = 10
@@ -23,8 +23,10 @@ parameter_combinations = list(product(BETA_values, dropout_good_valuation_values
 main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 
 # "test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap6_withReturn.json",
-
-file_list = ["test_cases/toulouse_case_cap8_updated.json"]
+# capacity percentage: 100%, 75%, 50%, 25%
+# "test_cases/toulouse_case_cap13_updated.json", 
+            #  "test_cases/toulouse_case_cap10_updated.json",
+file_list = ["test_cases/toulouse_case_cap4_updated.json"]
 
 
 for file in file_list:

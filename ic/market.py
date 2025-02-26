@@ -193,7 +193,7 @@ def find_capacity(goods_list, sectors, vertiport_data):
                 capacity = edge['hold_capacity'] - edge['hold_usage']
             else:
                 # Traveling between sectors
-                capacity = 100
+                capacity = 20
                 # capacity = sectors[destination_base]['hold_capacity']
             # capacity = sector_dict.get(origin_base, None)
         # if origin_base != destination_base:

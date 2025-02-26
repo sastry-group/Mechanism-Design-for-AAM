@@ -148,7 +148,8 @@ class FisherGraphBuilder:
         
     def _create_edges(self, vertiport, start_time, end_time, attributes=None):
         """Create edges between time window nodes for the given vertiport."""
-        for ts in range(start_time, end_time - 1):  # Avoid out of range for next time step
+
+        for ts in range(start_time, end_time):  # Avoid out of range for next time step
             current_node = f"{vertiport}_{ts}"
             next_node = f"{vertiport}_{ts + 1}"
             # edge = (current_node, next_node)
