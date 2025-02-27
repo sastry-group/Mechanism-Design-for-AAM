@@ -26,7 +26,10 @@ main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 # capacity percentage: 100%, 75%, 50%, 25%
 # "test_cases/toulouse_case_cap13_updated.json", 
             #  "test_cases/toulouse_case_cap10_updated.json",
-file_list = ["test_cases/toulouse_case_cap10_updated.json"]
+file_list = ["test_cases/toulouse_case_cap7_updated_10stepauction_30sectau.json",
+             "test_cases/toulouse_case_cap7_updated_20stepauction_15sectau.json",
+             "test_cases/toulouse_case_cap7_updated_30stepauction_10sectau.json",
+             "test_cases/toulouse_case_cap7_updated_60stepauction_5sectau.json",]
 
 
 for file in file_list:
@@ -49,8 +52,8 @@ for file in file_list:
             "--price_default_good", str(price_default_good),
             "--lambda_frequency", str(lambda_frequency),
             "--price_upper_bound", str(price_upper_bound),
-            "--num_agents_to_run", str(num_agents_to_run),
-            "--run_up_to_auction", str(10),
+            # "--num_agents_to_run", str(num_agents_to_run),
+            "--run_up_to_auction", str(1000),
             "--save_pkl_files", "False",
             "--tol_error_to_check"
         ] + [str(tol) for tol in tol_error_to_check]

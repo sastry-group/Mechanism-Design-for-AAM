@@ -107,17 +107,36 @@ def write_results_table(flights, agents_data, output_folder):
     mode = 'w' if not os.path.isfile(market_results_file) else 'a'
     write_to_csv(market_results_df, market_results_file, mode, header=(mode == 'w'))
 
+
+def write_contested_goods(market_performance_data, output_folder):
+    """
+    Writes the market auction time, high-priced goods, and agents requesting high-priced goods to a CSV file.
+    """
+    market_results_data = [
+        ["Market Auction Time", market_performance_data["market_auction_time"]],
+        ["High-Priced Good", market_performance_data["high_priced_goods"]],
+        ["Agents Requesting High Priced Goods", market_performance_data["agents_requesting_high_priced_goods"]]
+    ]
+
+    market_results_df = pd.DataFrame(market_results_data, columns=["Description", "Information"])
+    market_results_file = os.path.join(f"{output_folder}/results/", "contested_goods.csv")
+    mode = 'w' if not os.path.isfile(market_results_file) else 'a'
+    write_to_csv(market_results_df, market_results_file, mode, header=(mode == 'w'))
+
+
 def write_market_performance(market_performance_data, output_folder):
 
     market_results_data = []
 
     market_results_data.append([market_performance_data["market_auction_time"], market_performance_data["num_iterations"], 
-                                market_performance_data["num_agents"], market_performance_data["num_goods"], 
-                                len(market_performance_data["overcapacitated_goods"][0]), market_performance_data["fisher_run_time"]])
+                                market_performance_data["num_agents"], market_performance_data["num_goods"], len(market_performance_data["zero_cap_goods"][0]),
+                                market_performance_data["num_contested_paths"], market_performance_data['num_contested_goods'], market_performance_data["fisher_run_time"]])
     
+
     market_performance_df = pd.DataFrame(market_results_data, columns=[
-        "Market_Auction_Start_Time", "Number_Interations", "Number_Agents", "Num_Goods","Number_Contested_Routes", "Run_Time"
+        "Market_Auction_Start_Time", "Number_Interations", "Number_Agents", "Num_Goods","Num_ZeroCap_Goods","Number_Contested_Path", "Number_Contested_DesGood","Run_Time"
     ])
+
 
     market_results_file = os.path.join(f"{output_folder}/results/", "market_performance_table.csv")
     mode = 'w' if not os.path.isfile(market_results_file) else 'a'
@@ -183,6 +202,7 @@ def write_output(flights, edge_information, market_data_dict,
     write_results_table(flights, agents_data, output_folder)
     write_market_performance(market_data_dict, output_folder)
     write_market_data(edge_information, prices, new_prices, capacity, end_capacity, market_auction_time, output_folder)
+    write_contested_goods(market_data_dict, output_folder)
     write_to_csv(df, output_file)
 
     print(f"Results table written to {output_file}")

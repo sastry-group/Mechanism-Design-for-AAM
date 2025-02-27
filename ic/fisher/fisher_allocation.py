@@ -191,6 +191,7 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
         for good_idx in desired_goods[agent_id]["good_indices"]:
             y[i][good_idx] = 1
             dense_y[i][good_idx] = 1
+    
         # print(f"Initial allocation for agent {i}: {y[i]}")
         # print(f"Goods: {agent_goods_lists[i]}")
         # ybar = np.array([y[i, goods_list.index(good)] for good in agent_goods_lists[i][:-2]] + [0,0])
@@ -205,7 +206,23 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     # y = np.random.rand(num_agents, num_goods)
     # start the prices witht the preiovus prices 
     # remove them overcapacity 
+    contested_path_idxs = np.zeros((num_agents, num_goods))
+
+
+
+    for i, agent_idx in enumerate(agent_indices):
+        contested_path_idxs[i, agent_idx] = 1
+
+
+    contested_desired_path = capacity[:-2] - np.sum(contested_path_idxs, axis=0)[:-2]
+    contested_desired_goods = capacity[:-2] - np.sum(y, axis=0)
+
+    num_contested_goods = np.sum(contested_desired_goods <= 0)
+    num_contested_paths = np.sum(contested_desired_path <= 0)
+
+     
     y = np.concatenate([[agent_y[ind] for ind in y_sparse_array[inds]] for agent_y, inds in zip(dense_y, sparse_agent_y_inds)])
+
 
     if market_auction_time == 0 or previous_price_data is None:
         p = np.zeros(num_goods)
@@ -267,6 +284,10 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     'agent_goods_lists': agent_goods_lists,
     'num_agents': num_agents,
     'num_goods': num_goods,
+    'contested_desired_goods': contested_desired_goods,
+    'contested_desired_path': contested_desired_path,
+    'num_contested_goods': num_contested_goods,
+    'num_contested_paths': num_contested_paths,
     }
 
     if save_pkl_files:
@@ -281,7 +302,17 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
 
     agents_data_dict = store_agent_data(updated_flights, x, agent_information, adjusted_budgets, desired_goods, agent_goods_lists, edge_information)
     market_data_dict = store_market_data(extra_data, design_parameters, market_auction_time)
-    price_map = {goods_list[i]: prices[i] for i in range(len(goods_list)) if prices[i] > 0.01}
+    
+    
+    price_map = {goods: price for goods, price in zip(goods_list, prices) if price > 0.01}
+
+    
+    agents_requesting_high_priced_goods = [
+        agent for agent, data in agents_data_dict.items()
+        if any(goods in price_map for goods in data["agent_goods_list"] if isinstance(goods, tuple))]
+
+    market_data_dict.setdefault("high_priced_goods", []).append(price_map)
+    market_data_dict.setdefault("agents_requesting_high_priced_goods", []).append(agents_requesting_high_priced_goods)
     agents_data_dict = track_delayed_goods(agents_data_dict, market_data_dict)
     # Rank agents based on their allocation and settling any contested goods
     logger.info("Ranking allocations")
@@ -290,8 +321,9 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     agents_data_dict, market_data_dict= agent_allocation_selection(ranked_list, sorted_agent_dict, agents_data_dict, market_data_dict)
     valuations = {key: agents_data_dict[key]["valuation"] for key in agents_data_dict.keys()}
 
-    overcapacitated_goods = [good for good, cap in zip(market_data_dict["goods_list"], market_data_dict["capacity"]) if cap == 0]
-    market_data_dict.setdefault("overcapacitated_goods", []).append(overcapacitated_goods)
+    zero_cap_goods = [good for good, cap in zip(market_data_dict["goods_list"], market_data_dict["capacity"]) if cap == 0]
+    market_data_dict.setdefault("zero_cap_goods", []).append(zero_cap_goods)
+
     # Getting data for next auction
     logger.info("Getting next auction data")
     allocation, rebased, dropped, = get_next_auction_data(agents_data_dict, market_data_dict)
