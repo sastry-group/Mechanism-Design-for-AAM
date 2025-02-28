@@ -1,7 +1,7 @@
 import json
 import re
 
-filename = "test_cases/toulouse_case_cap7_updated_60.json"
+filename = "test_cases/toulouse_case_cap7_updated_20.json"
 
 # Load your original JSON file
 with open(filename, 'r') as infile:
@@ -13,12 +13,12 @@ new_ts_length = length_tau
 
 factor = original_ts_length / new_ts_length 
 
-auction_val = re.search(r'updated_(\d+)', filename)
-if auction_val:
-    value = int(auction_val.group(1))
-else:
-    value = None
-auction_ts_length = value #or set manually here
+# auction_val = re.search(r'updated_(\d+)', filename)
+# if auction_val:
+#     value = int(auction_val.group(1))
+# else:
+#     value = None
+auction_ts_length = 60 #or set manually here
 
 
 # 15 is the number of seconds that 1 time step in the original case represents

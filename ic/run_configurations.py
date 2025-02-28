@@ -3,11 +3,11 @@ import os
 from itertools import product
 
 # Define the parameter values to vary
-BETA_values = [50] #, 100, 1000, 10000]
+BETA_values = [50, 100] #, 100, 1000, 10000]
 dropout_good_valuation_values = [40]
 default_good_valuation_values = [1]
 price_default_good_values = [1]
-lambda_frequency_values = [30]
+lambda_frequency_values = [100000]
 price_upper_bound_values = [3000]
 # num_agents_to_run = [80]
 num_agents_to_run = [10]
@@ -27,9 +27,9 @@ main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 # "test_cases/toulouse_case_cap13_updated.json", 
             #  "test_cases/toulouse_case_cap10_updated.json",
 file_list = ["test_cases/toulouse_case_cap7_updated_10stepauction_30sectau.json",
-             "test_cases/toulouse_case_cap7_updated_20stepauction_15sectau.json",
-             "test_cases/toulouse_case_cap7_updated_30stepauction_10sectau.json",
-             "test_cases/toulouse_case_cap7_updated_60stepauction_5sectau.json",]
+             "test_cases/toulouse_case_cap7_updated_20stepauction_15sectau.json"]
+            #  "test_cases/toulouse_case_cap7_updated_30stepauction_10sectau.json",
+            #  "test_cases/toulouse_case_cap7_updated_60stepauction_5sectau.json",]
 
 
 for file in file_list:

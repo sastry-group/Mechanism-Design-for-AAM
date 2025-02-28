@@ -7073,9 +7073,9 @@
     ],
     "timing_info": {
         "start_time": 0,
-        "end_time": 480,
+        "end_time": 600,
         "time_step": 1,
-        "auction_frequency": 45
+        "auction_frequency": 30
     },
     "congestion_params": {
         "lambda": 0.1,
