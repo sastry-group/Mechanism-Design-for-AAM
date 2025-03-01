@@ -142,7 +142,8 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
     # BETA = design_parameters["beta"] * (round(market_auction_time / 20) + 1)
     lambda_frequency = design_parameters["lambda_frequency"]
     price_upper_bound = design_parameters["price_upper_bound"]
-    save_pkl_files = design_parameters["save_pkl_files"]       
+    save_pkl_files = design_parameters["save_pkl_files"]   
+    beta_adjustment_method = design_parameters["beta_adjustment_method"]    
     
     logger.info("Constructing market...")
     agent_information, market_information, bookkeeping, updated_flight_info = construct_market(flights, timing_info, sectors_data, vertiport_usage, output_folder,
@@ -241,7 +242,8 @@ def fisher_allocation_and_payment(vertiport_usage, flights, timing_info, sectors
         x, prices, r, overdemand, agent_constraints, adjusted_budgets, data_to_plot = run_market((y,p,r), agent_information, market_information, 
                                                                 bookkeeping, (x_sparse_array, y_sparse_array, sparse_agent_x_inds, sparse_agent_y_inds, y_sum_matrix),
                                                                 rational=False, price_default_good=price_default_good, 
-                                                                lambda_frequency=lambda_frequency, price_upper_bound=price_upper_bound, auction=auction, tol_error_to_check=tol_error_to_check)
+                                                                lambda_frequency=lambda_frequency, price_upper_bound=price_upper_bound, auction=auction, tol_error_to_check=tol_error_to_check,
+                                                                beta_adjustment_method=beta_adjustment_method)
     except Exception as e:
         logger.error(f"Error in run_market at auction time {market_auction_time}:\n{traceback.format_exc()}")
         return None, None, None, None, None  # Avoid crashing, return safe values

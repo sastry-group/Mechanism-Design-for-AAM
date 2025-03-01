@@ -87,6 +87,8 @@ def write_results_table(flights, agents_data, output_folder):
         modified_budget = value["adjusted_budget"]
         if status == "dropped":
             allocated_flight = ("Dropped", "Dropped")
+        elif status == "parked":
+            allocated_flight = ("Parked", "Parked")
         else:
             allocated_flight = value["good_allocated"]
         agent_payment = value["payment"]  

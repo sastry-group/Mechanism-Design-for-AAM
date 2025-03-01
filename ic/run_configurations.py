@@ -3,12 +3,13 @@ import os
 from itertools import product
 
 # Define the parameter values to vary
-BETA_values = [50, 100] #, 100, 1000, 10000]
+BETA_values = [50] #, 100, 1000, 10000]
 dropout_good_valuation_values = [40]
 default_good_valuation_values = [1]
 price_default_good_values = [1]
-lambda_frequency_values = [100000]
+lambda_frequency_values = [1000]
 price_upper_bound_values = [3000]
+beta_adjustment_methods = ["adjustedlearning"]
 # num_agents_to_run = [80]
 num_agents_to_run = [10]
 tol_error_to_check = [0.1, 0.01, 0.001]
@@ -19,7 +20,7 @@ tol_error_to_check = [0.1, 0.01, 0.001]
 # Generate all combinations of the parameter values
 # "--file", "test_cases/casef_20240614_153258.json",
 parameter_combinations = list(product(BETA_values, dropout_good_valuation_values, default_good_valuation_values, price_default_good_values, lambda_frequency_values, 
-                                      price_upper_bound_values, num_agents_to_run))
+                                      price_upper_bound_values, num_agents_to_run, beta_adjustment_methods))
 main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 
 # "test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap6_withReturn.json",
@@ -34,7 +35,7 @@ file_list = ["test_cases/toulouse_case_cap7_updated_10stepauction_30sectau.json"
 
 for file in file_list:
     for idx, (BETA, dropout_good_valuation, default_good_valuation, price_default_good, 
-              lambda_frequency, price_upper_bound, num_agents_to_run) in enumerate(parameter_combinations):
+              lambda_frequency, price_upper_bound, num_agents_to_run, beta_adjustment_method) in enumerate(parameter_combinations):
         args = [
             "python", main_script_path,
             "--file", file,
@@ -53,8 +54,9 @@ for file in file_list:
             "--lambda_frequency", str(lambda_frequency),
             "--price_upper_bound", str(price_upper_bound),
             # "--num_agents_to_run", str(num_agents_to_run),
-            "--run_up_to_auction", str(1000),
+            "--run_up_to_auction", str(80),
             "--save_pkl_files", "False",
+            "--beta_adjustment_method", beta_adjustment_method,
             "--tol_error_to_check"
         ] + [str(tol) for tol in tol_error_to_check]
             
@@ -63,7 +65,7 @@ for file in file_list:
         print(f"Running configuration {idx + 1}/{len(parameter_combinations)}: "
             f"BETA={BETA}, dropout_good_valuation={dropout_good_valuation}, "
             f"default_good_valuation={default_good_valuation}, price_default_good={price_default_good}, "
-            f"lambda_frequency={lambda_frequency}, price_upper_bound={price_upper_bound}")
+            f"lambda_frequency={lambda_frequency}, price_upper_bound={price_upper_bound}, beta_adjustment_method={beta_adjustment_method}")
         try:
             subprocess.run(args, check=True)
         except subprocess.CalledProcessError as e:
