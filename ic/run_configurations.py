@@ -7,14 +7,14 @@ BETA_values = [50] #, 100, 1000, 10000]
 dropout_good_valuation_values = [40]
 default_good_valuation_values = [1]
 price_default_good_values = [1]
-lambda_frequency_values = [2,5,15,25]
+lambda_frequency_values = [30]
 price_upper_bound_values = [3000]
 beta_adjustment_methods = ["none"]
 # num_agents_to_run = [2,5,10,15,20,30]
-num_agents_to_run = [10]
+num_agents_to_run = [80]
 tol_error_to_check = [0.1, 0.01, 0.001]
-alpha_values = [1]
-# alpha_values = [0.9, 0.95, 1, 1.05, 1.1]
+# alpha_values = [1]
+alpha_values = [1.0, 0.5, 0.1, 5.0, 10.0]
 # num_agents_to_run = [170]
 # num_CPUS = 10
 
@@ -57,12 +57,12 @@ for file in file_list:
             "--lambda_frequency", str(lambda_frequency),
             "--price_upper_bound", str(price_upper_bound),
             # "--num_agents_to_run", str(num_agents_to_run),
-            # "--run_up_to_auction", str(1000),
-            "--save_pkl_files", "False",
+            "--run_up_to_auction", str(1000),
+            "--save_pkl_files", "True",
             "--beta_adjustment_method", beta_adjustment_method,
-            "--alpha", str(alpha),
-            "--tol_error_to_check"
-        ] + [str(tol) for tol in tol_error_to_check]
+            "--alpha", str(alpha),]
+        #     "--tol_error_to_check"
+        # ] + [str(tol) for tol in tol_error_to_check]
             
         
 
