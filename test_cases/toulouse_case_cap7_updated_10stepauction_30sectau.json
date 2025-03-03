@@ -3,32 +3,32 @@
         "V001": {
             "latitude": 43.5898,
             "longitude": 1.4968000540000541,
-            "landing_capacity": 2,
-            "takeoff_capacity": 2,
+            "landing_capacity": 6,
+            "takeoff_capacity": 6,
             "hold_capacity": 7,
             "name": "Warehouse-1"
         },
         "V002": {
             "latitude": 43.5898,
             "longitude": 1.388799945999946,
-            "landing_capacity": 2,
-            "takeoff_capacity": 2,
+            "landing_capacity": 6,
+            "takeoff_capacity": 6,
             "hold_capacity": 7,
             "name": "Warehouse-2"
         },
         "V003": {
             "latitude": 43.53579994599994,
             "longitude": 1.4428,
-            "landing_capacity": 2,
-            "takeoff_capacity": 2,
+            "landing_capacity": 6,
+            "takeoff_capacity": 6,
             "hold_capacity": 7,
             "name": "Warehouse-3"
         },
         "V004": {
             "latitude": 43.64380005400005,
             "longitude": 1.4428,
-            "landing_capacity": 2,
-            "takeoff_capacity": 2,
+            "landing_capacity": 6,
+            "takeoff_capacity": 6,
             "hold_capacity": 7,
             "name": "Warehouse-4"
         }

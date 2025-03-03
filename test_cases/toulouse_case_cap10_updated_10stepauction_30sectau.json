@@ -3,33 +3,33 @@
         "V001": {
             "latitude": 43.5898,
             "longitude": 1.4968000540000541,
-            "landing_capacity": 1,
-            "takeoff_capacity": 1,
-            "hold_capacity": 7,
+            "landing_capacity": 6,
+            "takeoff_capacity": 6,
+            "hold_capacity": 10,
             "name": "Warehouse-1"
         },
         "V002": {
             "latitude": 43.5898,
             "longitude": 1.388799945999946,
-            "landing_capacity": 1,
-            "takeoff_capacity": 1,
-            "hold_capacity": 7,
+            "landing_capacity": 6,
+            "takeoff_capacity": 6,
+            "hold_capacity": 10,
             "name": "Warehouse-2"
         },
         "V003": {
             "latitude": 43.53579994599994,
             "longitude": 1.4428,
-            "landing_capacity": 1,
-            "takeoff_capacity": 1,
-            "hold_capacity": 7,
+            "landing_capacity": 6,
+            "takeoff_capacity": 6,
+            "hold_capacity": 10,
             "name": "Warehouse-3"
         },
         "V004": {
             "latitude": 43.64380005400005,
             "longitude": 1.4428,
-            "landing_capacity": 1,
-            "takeoff_capacity": 1,
-            "hold_capacity": 7,
+            "landing_capacity": 6,
+            "takeoff_capacity": 6,
+            "hold_capacity": 10,
             "name": "Warehouse-4"
         }
     },
@@ -39,7 +39,7 @@
             "longitude": 1.460800018000018,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Center-right-bot"
         },
         "S002": {
@@ -47,7 +47,7 @@
             "longitude": 1.460800018000018,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Center-right-top"
         },
         "S003": {
@@ -55,7 +55,7 @@
             "longitude": 1.4247999819999821,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Center-left-top"
         },
         "S004": {
@@ -63,7 +63,7 @@
             "longitude": 1.4247999819999821,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Center-left-bot"
         },
         "S005": {
@@ -71,7 +71,7 @@
             "longitude": 1.4989400246109248,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Cruise-1-bot"
         },
         "S006": {
@@ -79,7 +79,7 @@
             "longitude": 1.4989400246109248,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Cruise-1-top"
         },
         "S007": {
@@ -87,7 +87,7 @@
             "longitude": 1.3866599753890754,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Cruise-2-bot"
         },
         "S008": {
@@ -95,7 +95,7 @@
             "longitude": 1.3866599753890754,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Cruise-2-top"
         },
         "S009": {
@@ -103,7 +103,7 @@
             "longitude": 1.4724923561472805,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Cruise-3-right"
         },
         "S0010": {
@@ -111,7 +111,7 @@
             "longitude": 1.4131076438527197,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Cruise-3-left"
         },
         "S0011": {
@@ -119,7 +119,7 @@
             "longitude": 1.4724923561472805,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Cruise-4-right"
         },
         "S0012": {
@@ -127,13 +127,13 @@
             "longitude": 1.4131076438527197,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Cruise-4-left"
         }
     },
     "flights": {
         "AC000": {
-            "appearance_time": 117,
+            "appearance_time": 20,
             "origin_vertiport_id": "V003",
             "budget_constraint": 238,
             "decay_factor": 0.95,
@@ -156,22 +156,22 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        129,
-                        141,
-                        150,
-                        240,
-                        249,
-                        261
+                        22,
+                        24,
+                        25,
+                        40,
+                        42,
+                        44
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 129,
-                    "request_arrival_time": 261
+                    "request_departure_time": 22,
+                    "request_arrival_time": 44
                 }
             },
             "original_budget": 238
         },
         "AC001": {
-            "appearance_time": 705,
+            "appearance_time": 118,
             "origin_vertiport_id": "V002",
             "budget_constraint": 181,
             "decay_factor": 0.95,
@@ -192,20 +192,20 @@
                         "S007"
                     ],
                     "sector_times": [
-                        774,
-                        786,
-                        864,
-                        876
+                        129,
+                        131,
+                        144,
+                        146
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 774,
-                    "request_arrival_time": 876
+                    "request_departure_time": 129,
+                    "request_arrival_time": 146
                 }
             },
             "original_budget": 181
         },
         "AC002": {
-            "appearance_time": 498,
+            "appearance_time": 83,
             "origin_vertiport_id": "V001",
             "budget_constraint": 220,
             "decay_factor": 0.95,
@@ -228,22 +228,22 @@
                         "S006"
                     ],
                     "sector_times": [
-                        540,
-                        549,
-                        561,
-                        645,
-                        657,
-                        666
+                        90,
+                        92,
+                        94,
+                        108,
+                        110,
+                        111
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 540,
-                    "request_arrival_time": 666
+                    "request_departure_time": 90,
+                    "request_arrival_time": 111
                 }
             },
             "original_budget": 220
         },
         "AC003": {
-            "appearance_time": 561,
+            "appearance_time": 94,
             "origin_vertiport_id": "V001",
             "budget_constraint": 247,
             "decay_factor": 0.95,
@@ -262,18 +262,18 @@
                         "S005"
                     ],
                     "sector_times": [
-                        606,
-                        630
+                        101,
+                        105
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 606,
-                    "request_arrival_time": 630
+                    "request_departure_time": 101,
+                    "request_arrival_time": 105
                 }
             },
             "original_budget": 247
         },
         "AC004": {
-            "appearance_time": 639,
+            "appearance_time": 106,
             "origin_vertiport_id": "V002",
             "budget_constraint": 187,
             "decay_factor": 0.95,
@@ -296,22 +296,22 @@
                         "S007"
                     ],
                     "sector_times": [
-                        678,
-                        690,
-                        702,
-                        792,
-                        804,
-                        816
+                        113,
+                        115,
+                        117,
+                        132,
+                        134,
+                        136
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 678,
-                    "request_arrival_time": 816
+                    "request_departure_time": 113,
+                    "request_arrival_time": 136
                 }
             },
             "original_budget": 187
         },
         "AC005": {
-            "appearance_time": 93,
+            "appearance_time": 16,
             "origin_vertiport_id": "V003",
             "budget_constraint": 179,
             "decay_factor": 0.95,
@@ -336,24 +336,24 @@
                         "S009"
                     ],
                     "sector_times": [
-                        135,
-                        147,
-                        159,
-                        201,
-                        291,
-                        333,
-                        345,
-                        357
+                        22,
+                        24,
+                        26,
+                        34,
+                        48,
+                        56,
+                        58,
+                        60
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 135,
-                    "request_arrival_time": 357
+                    "request_departure_time": 22,
+                    "request_arrival_time": 60
                 }
             },
             "original_budget": 179
         },
         "AC006": {
-            "appearance_time": 357,
+            "appearance_time": 60,
             "origin_vertiport_id": "V001",
             "budget_constraint": 184,
             "decay_factor": 0.95,
@@ -374,20 +374,20 @@
                         "S005"
                     ],
                     "sector_times": [
-                        414,
-                        426,
-                        450,
-                        462
+                        69,
+                        71,
+                        75,
+                        77
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 414,
-                    "request_arrival_time": 462
+                    "request_departure_time": 69,
+                    "request_arrival_time": 77
                 }
             },
             "original_budget": 184
         },
         "AC007": {
-            "appearance_time": 636,
+            "appearance_time": 106,
             "origin_vertiport_id": "V004",
             "budget_constraint": 235,
             "decay_factor": 0.95,
@@ -412,24 +412,24 @@
                         "S0011"
                     ],
                     "sector_times": [
-                        717,
-                        729,
-                        741,
-                        789,
-                        795,
-                        843,
-                        855,
-                        867
+                        120,
+                        122,
+                        124,
+                        132,
+                        132,
+                        140,
+                        142,
+                        144
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 717,
-                    "request_arrival_time": 867
+                    "request_departure_time": 120,
+                    "request_arrival_time": 144
                 }
             },
             "original_budget": 235
         },
         "AC008": {
-            "appearance_time": 609,
+            "appearance_time": 102,
             "origin_vertiport_id": "V004",
             "budget_constraint": 237,
             "decay_factor": 0.95,
@@ -448,18 +448,18 @@
                         "S0012"
                     ],
                     "sector_times": [
-                        666,
-                        696
+                        111,
+                        116
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 666,
-                    "request_arrival_time": 696
+                    "request_departure_time": 111,
+                    "request_arrival_time": 116
                 }
             },
             "original_budget": 237
         },
         "AC009": {
-            "appearance_time": 399,
+            "appearance_time": 66,
             "origin_vertiport_id": "V004",
             "budget_constraint": 210,
             "decay_factor": 0.95,
@@ -482,22 +482,22 @@
                         "S0011"
                     ],
                     "sector_times": [
-                        456,
-                        468,
-                        477,
-                        561,
-                        570,
-                        582
+                        76,
+                        78,
+                        80,
+                        94,
+                        95,
+                        97
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 456,
-                    "request_arrival_time": 582
+                    "request_departure_time": 76,
+                    "request_arrival_time": 97
                 }
             },
             "original_budget": 210
         },
         "AC010": {
-            "appearance_time": 234,
+            "appearance_time": 39,
             "origin_vertiport_id": "V002",
             "budget_constraint": 244,
             "decay_factor": 0.95,
@@ -518,20 +518,20 @@
                         "S008"
                     ],
                     "sector_times": [
-                        267,
-                        279,
-                        309,
-                        321
+                        44,
+                        46,
+                        52,
+                        54
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 267,
-                    "request_arrival_time": 321
+                    "request_departure_time": 44,
+                    "request_arrival_time": 54
                 }
             },
             "original_budget": 244
         },
         "AC011": {
-            "appearance_time": 105,
+            "appearance_time": 18,
             "origin_vertiport_id": "V003",
             "budget_constraint": 218,
             "decay_factor": 0.95,
@@ -552,20 +552,20 @@
                         "S009"
                     ],
                     "sector_times": [
-                        162,
-                        174,
-                        198,
-                        210
+                        27,
+                        29,
+                        33,
+                        35
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 162,
-                    "request_arrival_time": 210
+                    "request_departure_time": 27,
+                    "request_arrival_time": 35
                 }
             },
             "original_budget": 218
         },
         "AC012": {
-            "appearance_time": 303,
+            "appearance_time": 50,
             "origin_vertiport_id": "V003",
             "budget_constraint": 230,
             "decay_factor": 0.95,
@@ -586,20 +586,20 @@
                         "S009"
                     ],
                     "sector_times": [
-                        408,
-                        420,
-                        444,
-                        456
+                        68,
+                        70,
+                        74,
+                        76
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 408,
-                    "request_arrival_time": 456
+                    "request_departure_time": 68,
+                    "request_arrival_time": 76
                 }
             },
             "original_budget": 230
         },
         "AC013": {
-            "appearance_time": 174,
+            "appearance_time": 29,
             "origin_vertiport_id": "V002",
             "budget_constraint": 172,
             "decay_factor": 0.95,
@@ -620,20 +620,20 @@
                         "S007"
                     ],
                     "sector_times": [
-                        189,
-                        201,
-                        231,
-                        243
+                        32,
+                        34,
+                        38,
+                        40
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 189,
-                    "request_arrival_time": 243
+                    "request_departure_time": 32,
+                    "request_arrival_time": 40
                 }
             },
             "original_budget": 172
         },
         "AC014": {
-            "appearance_time": 99,
+            "appearance_time": 16,
             "origin_vertiport_id": "V004",
             "budget_constraint": 219,
             "decay_factor": 0.95,
@@ -654,20 +654,20 @@
                         "S0012"
                     ],
                     "sector_times": [
-                        120,
-                        132,
-                        162,
-                        174
+                        20,
+                        22,
+                        27,
+                        29
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 120,
-                    "request_arrival_time": 174
+                    "request_departure_time": 20,
+                    "request_arrival_time": 29
                 }
             },
             "original_budget": 219
         },
         "AC015": {
-            "appearance_time": 75,
+            "appearance_time": 12,
             "origin_vertiport_id": "V001",
             "budget_constraint": 248,
             "decay_factor": 0.95,
@@ -688,20 +688,20 @@
                         "S006"
                     ],
                     "sector_times": [
-                        132,
-                        141,
-                        171,
-                        180
+                        22,
+                        24,
+                        28,
+                        30
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 132,
-                    "request_arrival_time": 180
+                    "request_departure_time": 22,
+                    "request_arrival_time": 30
                 }
             },
             "original_budget": 248
         },
         "AC016": {
-            "appearance_time": 195,
+            "appearance_time": 32,
             "origin_vertiport_id": "V004",
             "budget_constraint": 244,
             "decay_factor": 0.95,
@@ -722,20 +722,20 @@
                         "S0012"
                     ],
                     "sector_times": [
-                        273,
-                        282,
-                        318,
-                        327
+                        46,
+                        47,
+                        53,
+                        54
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 273,
-                    "request_arrival_time": 327
+                    "request_departure_time": 46,
+                    "request_arrival_time": 54
                 }
             },
             "original_budget": 244
         },
         "AC017": {
-            "appearance_time": 351,
+            "appearance_time": 58,
             "origin_vertiport_id": "V002",
             "budget_constraint": 227,
             "decay_factor": 0.95,
@@ -758,22 +758,22 @@
                         "S008"
                     ],
                     "sector_times": [
-                        414,
-                        426,
-                        435,
-                        525,
-                        534,
-                        546
+                        69,
+                        71,
+                        72,
+                        88,
+                        89,
+                        91
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 414,
-                    "request_arrival_time": 546
+                    "request_departure_time": 69,
+                    "request_arrival_time": 91
                 }
             },
             "original_budget": 227
         },
         "AC018": {
-            "appearance_time": 720,
+            "appearance_time": 120,
             "origin_vertiport_id": "V002",
             "budget_constraint": 172,
             "decay_factor": 0.95,
@@ -794,20 +794,20 @@
                         "S007"
                     ],
                     "sector_times": [
-                        780,
-                        792,
-                        828,
-                        840
+                        130,
+                        132,
+                        138,
+                        140
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 780,
-                    "request_arrival_time": 840
+                    "request_departure_time": 130,
+                    "request_arrival_time": 140
                 }
             },
             "original_budget": 172
         },
         "AC019": {
-            "appearance_time": 150,
+            "appearance_time": 25,
             "origin_vertiport_id": "V003",
             "budget_constraint": 196,
             "decay_factor": 0.95,
@@ -832,24 +832,24 @@
                         "S009"
                     ],
                     "sector_times": [
-                        228,
-                        237,
-                        249,
-                        288,
-                        384,
-                        423,
-                        435,
-                        444
+                        38,
+                        40,
+                        42,
+                        48,
+                        64,
+                        70,
+                        72,
+                        74
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 228,
-                    "request_arrival_time": 444
+                    "request_departure_time": 38,
+                    "request_arrival_time": 74
                 }
             },
             "original_budget": 196
         },
         "AC020": {
-            "appearance_time": 555,
+            "appearance_time": 92,
             "origin_vertiport_id": "V004",
             "budget_constraint": 212,
             "decay_factor": 0.95,
@@ -872,22 +872,22 @@
                         "S0011"
                     ],
                     "sector_times": [
-                        639,
-                        651,
-                        660,
-                        750,
-                        759,
-                        771
+                        106,
+                        108,
+                        110,
+                        125,
+                        126,
+                        128
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 639,
-                    "request_arrival_time": 771
+                    "request_departure_time": 106,
+                    "request_arrival_time": 128
                 }
             },
             "original_budget": 212
         },
         "AC021": {
-            "appearance_time": 459,
+            "appearance_time": 76,
             "origin_vertiport_id": "V003",
             "budget_constraint": 228,
             "decay_factor": 0.95,
@@ -906,18 +906,18 @@
                         "S009"
                     ],
                     "sector_times": [
-                        516,
-                        546
+                        86,
+                        91
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 516,
-                    "request_arrival_time": 546
+                    "request_departure_time": 86,
+                    "request_arrival_time": 91
                 }
             },
             "original_budget": 228
         },
         "AC022": {
-            "appearance_time": 654,
+            "appearance_time": 109,
             "origin_vertiport_id": "V003",
             "budget_constraint": 202,
             "decay_factor": 0.95,
@@ -936,18 +936,18 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        672,
-                        702
+                        112,
+                        117
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 672,
-                    "request_arrival_time": 702
+                    "request_departure_time": 112,
+                    "request_arrival_time": 117
                 }
             },
             "original_budget": 202
         },
         "AC023": {
-            "appearance_time": 639,
+            "appearance_time": 106,
             "origin_vertiport_id": "V004",
             "budget_constraint": 216,
             "decay_factor": 0.95,
@@ -970,22 +970,22 @@
                         "S0012"
                     ],
                     "sector_times": [
-                        675,
-                        687,
-                        699,
-                        789,
-                        801,
-                        813
+                        112,
+                        114,
+                        116,
+                        132,
+                        134,
+                        136
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 675,
-                    "request_arrival_time": 813
+                    "request_departure_time": 112,
+                    "request_arrival_time": 136
                 }
             },
             "original_budget": 216
         },
         "AC024": {
-            "appearance_time": 663,
+            "appearance_time": 110,
             "origin_vertiport_id": "V003",
             "budget_constraint": 218,
             "decay_factor": 0.95,
@@ -1008,22 +1008,22 @@
                         "S009"
                     ],
                     "sector_times": [
-                        759,
-                        771,
-                        783,
-                        867,
-                        879,
-                        891
+                        126,
+                        128,
+                        130,
+                        144,
+                        146,
+                        148
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 759,
-                    "request_arrival_time": 891
+                    "request_departure_time": 126,
+                    "request_arrival_time": 148
                 }
             },
             "original_budget": 218
         },
         "AC025": {
-            "appearance_time": 747,
+            "appearance_time": 124,
             "origin_vertiport_id": "V002",
             "budget_constraint": 157,
             "decay_factor": 0.95,
@@ -1042,18 +1042,18 @@
                         "S008"
                     ],
                     "sector_times": [
-                        819,
-                        849
+                        136,
+                        142
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 819,
-                    "request_arrival_time": 849
+                    "request_departure_time": 136,
+                    "request_arrival_time": 142
                 }
             },
             "original_budget": 157
         },
         "AC026": {
-            "appearance_time": 186,
+            "appearance_time": 31,
             "origin_vertiport_id": "V001",
             "budget_constraint": 234,
             "decay_factor": 0.95,
@@ -1074,20 +1074,20 @@
                         "S006"
                     ],
                     "sector_times": [
-                        273,
-                        285,
-                        315,
-                        327
+                        46,
+                        48,
+                        52,
+                        54
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 273,
-                    "request_arrival_time": 327
+                    "request_departure_time": 46,
+                    "request_arrival_time": 54
                 }
             },
             "original_budget": 234
         },
         "AC027": {
-            "appearance_time": 216,
+            "appearance_time": 36,
             "origin_vertiport_id": "V002",
             "budget_constraint": 245,
             "decay_factor": 0.95,
@@ -1112,24 +1112,24 @@
                         "S007"
                     ],
                     "sector_times": [
-                        279,
-                        288,
-                        303,
-                        348,
-                        372,
-                        417,
-                        432,
-                        441
+                        46,
+                        48,
+                        50,
+                        58,
+                        62,
+                        70,
+                        72,
+                        74
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 279,
-                    "request_arrival_time": 441
+                    "request_departure_time": 46,
+                    "request_arrival_time": 74
                 }
             },
             "original_budget": 245
         },
         "AC028": {
-            "appearance_time": 672,
+            "appearance_time": 112,
             "origin_vertiport_id": "V002",
             "budget_constraint": 224,
             "decay_factor": 0.95,
@@ -1150,20 +1150,20 @@
                         "S007"
                     ],
                     "sector_times": [
-                        726,
-                        735,
-                        765,
-                        774
+                        121,
+                        122,
+                        128,
+                        129
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 726,
-                    "request_arrival_time": 774
+                    "request_departure_time": 121,
+                    "request_arrival_time": 129
                 }
             },
             "original_budget": 224
         },
         "AC029": {
-            "appearance_time": 756,
+            "appearance_time": 126,
             "origin_vertiport_id": "V001",
             "budget_constraint": 157,
             "decay_factor": 0.95,
@@ -1186,22 +1186,22 @@
                         "S005"
                     ],
                     "sector_times": [
-                        783,
-                        795,
-                        807,
-                        891,
-                        903,
-                        915
+                        130,
+                        132,
+                        134,
+                        148,
+                        150,
+                        152
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 783,
-                    "request_arrival_time": 915
+                    "request_departure_time": 130,
+                    "request_arrival_time": 152
                 }
             },
             "original_budget": 157
         },
         "AC030": {
-            "appearance_time": 537,
+            "appearance_time": 90,
             "origin_vertiport_id": "V001",
             "budget_constraint": 164,
             "decay_factor": 0.95,
@@ -1226,24 +1226,24 @@
                         "S005"
                     ],
                     "sector_times": [
-                        576,
-                        588,
-                        600,
-                        639,
-                        723,
-                        762,
-                        774,
-                        786
+                        96,
+                        98,
+                        100,
+                        106,
+                        120,
+                        127,
+                        129,
+                        131
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 576,
-                    "request_arrival_time": 786
+                    "request_departure_time": 96,
+                    "request_arrival_time": 131
                 }
             },
             "original_budget": 164
         },
         "AC031": {
-            "appearance_time": 420,
+            "appearance_time": 70,
             "origin_vertiport_id": "V002",
             "budget_constraint": 223,
             "decay_factor": 0.95,
@@ -1266,22 +1266,22 @@
                         "S008"
                     ],
                     "sector_times": [
-                        483,
-                        495,
-                        504,
-                        588,
-                        597,
-                        609
+                        80,
+                        82,
+                        84,
+                        98,
+                        100,
+                        102
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 483,
-                    "request_arrival_time": 609
+                    "request_departure_time": 80,
+                    "request_arrival_time": 102
                 }
             },
             "original_budget": 223
         },
         "AC032": {
-            "appearance_time": 597,
+            "appearance_time": 100,
             "origin_vertiport_id": "V002",
             "budget_constraint": 191,
             "decay_factor": 0.95,
@@ -1304,22 +1304,22 @@
                         "S008"
                     ],
                     "sector_times": [
-                        645,
-                        657,
-                        666,
-                        756,
-                        765,
-                        777
+                        108,
+                        110,
+                        111,
+                        126,
+                        128,
+                        130
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 645,
-                    "request_arrival_time": 777
+                    "request_departure_time": 108,
+                    "request_arrival_time": 130
                 }
             },
             "original_budget": 191
         },
         "AC033": {
-            "appearance_time": 615,
+            "appearance_time": 102,
             "origin_vertiport_id": "V002",
             "budget_constraint": 157,
             "decay_factor": 0.95,
@@ -1342,22 +1342,22 @@
                         "S007"
                     ],
                     "sector_times": [
-                        660,
-                        672,
-                        681,
-                        771,
-                        780,
-                        792
+                        110,
+                        112,
+                        114,
+                        128,
+                        130,
+                        132
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 660,
-                    "request_arrival_time": 792
+                    "request_departure_time": 110,
+                    "request_arrival_time": 132
                 }
             },
             "original_budget": 157
         },
         "AC034": {
-            "appearance_time": 576,
+            "appearance_time": 96,
             "origin_vertiport_id": "V003",
             "budget_constraint": 157,
             "decay_factor": 0.95,
@@ -1382,24 +1382,24 @@
                         "S009"
                     ],
                     "sector_times": [
-                        651,
-                        663,
-                        675,
-                        720,
-                        774,
-                        819,
-                        831,
-                        843
+                        108,
+                        110,
+                        112,
+                        120,
+                        129,
+                        136,
+                        138,
+                        140
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 651,
-                    "request_arrival_time": 843
+                    "request_departure_time": 108,
+                    "request_arrival_time": 140
                 }
             },
             "original_budget": 157
         },
         "AC035": {
-            "appearance_time": 66,
+            "appearance_time": 11,
             "origin_vertiport_id": "V004",
             "budget_constraint": 229,
             "decay_factor": 0.95,
@@ -1422,22 +1422,22 @@
                         "S0011"
                     ],
                     "sector_times": [
-                        165,
-                        177,
-                        189,
-                        279,
-                        291,
-                        303
+                        28,
+                        30,
+                        32,
+                        46,
+                        48,
+                        50
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 165,
-                    "request_arrival_time": 303
+                    "request_departure_time": 28,
+                    "request_arrival_time": 50
                 }
             },
             "original_budget": 229
         },
         "AC036": {
-            "appearance_time": 657,
+            "appearance_time": 110,
             "origin_vertiport_id": "V002",
             "budget_constraint": 209,
             "decay_factor": 0.95,
@@ -1462,24 +1462,24 @@
                         "S007"
                     ],
                     "sector_times": [
-                        663,
-                        672,
-                        684,
-                        723,
-                        813,
-                        852,
-                        864,
-                        873
+                        110,
+                        112,
+                        114,
+                        120,
+                        136,
+                        142,
+                        144,
+                        146
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 663,
-                    "request_arrival_time": 873
+                    "request_departure_time": 110,
+                    "request_arrival_time": 146
                 }
             },
             "original_budget": 209
         },
         "AC037": {
-            "appearance_time": 171,
+            "appearance_time": 28,
             "origin_vertiport_id": "V002",
             "budget_constraint": 162,
             "decay_factor": 0.95,
@@ -1502,22 +1502,22 @@
                         "S008"
                     ],
                     "sector_times": [
-                        228,
-                        240,
-                        249,
-                        339,
-                        348,
-                        360
+                        38,
+                        40,
+                        42,
+                        56,
+                        58,
+                        60
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 228,
-                    "request_arrival_time": 360
+                    "request_departure_time": 38,
+                    "request_arrival_time": 60
                 }
             },
             "original_budget": 162
         },
         "AC038": {
-            "appearance_time": 624,
+            "appearance_time": 104,
             "origin_vertiport_id": "V004",
             "budget_constraint": 168,
             "decay_factor": 0.95,
@@ -1538,20 +1538,20 @@
                         "S0012"
                     ],
                     "sector_times": [
-                        714,
-                        723,
-                        753,
-                        762
+                        119,
+                        120,
+                        126,
+                        127
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 714,
-                    "request_arrival_time": 762
+                    "request_departure_time": 119,
+                    "request_arrival_time": 127
                 }
             },
             "original_budget": 168
         },
         "AC039": {
-            "appearance_time": 348,
+            "appearance_time": 58,
             "origin_vertiport_id": "V003",
             "budget_constraint": 158,
             "decay_factor": 0.95,
@@ -1570,18 +1570,18 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        369,
-                        393
+                        62,
+                        66
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 369,
-                    "request_arrival_time": 393
+                    "request_departure_time": 62,
+                    "request_arrival_time": 66
                 }
             },
             "original_budget": 158
         },
         "AC040": {
-            "appearance_time": 153,
+            "appearance_time": 26,
             "origin_vertiport_id": "V004",
             "budget_constraint": 175,
             "decay_factor": 0.95,
@@ -1604,22 +1604,22 @@
                         "S0012"
                     ],
                     "sector_times": [
-                        234,
-                        243,
-                        255,
-                        345,
-                        357,
-                        366
+                        39,
+                        40,
+                        42,
+                        58,
+                        60,
+                        61
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 234,
-                    "request_arrival_time": 366
+                    "request_departure_time": 39,
+                    "request_arrival_time": 61
                 }
             },
             "original_budget": 175
         },
         "AC041": {
-            "appearance_time": 45,
+            "appearance_time": 8,
             "origin_vertiport_id": "V001",
             "budget_constraint": 155,
             "decay_factor": 0.95,
@@ -1642,22 +1642,22 @@
                         "S005"
                     ],
                     "sector_times": [
-                        66,
-                        78,
-                        87,
-                        177,
-                        186,
-                        198
+                        11,
+                        13,
+                        14,
+                        30,
+                        31,
+                        33
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 66,
-                    "request_arrival_time": 198
+                    "request_departure_time": 11,
+                    "request_arrival_time": 33
                 }
             },
             "original_budget": 155
         },
         "AC042": {
-            "appearance_time": 246,
+            "appearance_time": 41,
             "origin_vertiport_id": "V002",
             "budget_constraint": 215,
             "decay_factor": 0.95,
@@ -1680,22 +1680,22 @@
                         "S007"
                     ],
                     "sector_times": [
-                        300,
-                        312,
-                        324,
-                        414,
-                        426,
-                        438
+                        50,
+                        52,
+                        54,
+                        69,
+                        71,
+                        73
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 300,
-                    "request_arrival_time": 438
+                    "request_departure_time": 50,
+                    "request_arrival_time": 73
                 }
             },
             "original_budget": 215
         },
         "AC043": {
-            "appearance_time": 372,
+            "appearance_time": 62,
             "origin_vertiport_id": "V004",
             "budget_constraint": 179,
             "decay_factor": 0.95,
@@ -1718,22 +1718,22 @@
                         "S0011"
                     ],
                     "sector_times": [
-                        471,
-                        483,
-                        492,
-                        588,
-                        597,
-                        609
+                        78,
+                        80,
+                        82,
+                        98,
+                        100,
+                        102
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 471,
-                    "request_arrival_time": 609
+                    "request_departure_time": 78,
+                    "request_arrival_time": 102
                 }
             },
             "original_budget": 179
         },
         "AC044": {
-            "appearance_time": 495,
+            "appearance_time": 82,
             "origin_vertiport_id": "V002",
             "budget_constraint": 175,
             "decay_factor": 0.95,
@@ -1758,24 +1758,24 @@
                         "S007"
                     ],
                     "sector_times": [
-                        585,
-                        597,
-                        606,
-                        648,
-                        738,
-                        780,
-                        789,
-                        801
+                        98,
+                        100,
+                        101,
+                        108,
+                        123,
+                        130,
+                        132,
+                        134
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 585,
-                    "request_arrival_time": 801
+                    "request_departure_time": 98,
+                    "request_arrival_time": 134
                 }
             },
             "original_budget": 175
         },
         "AC045": {
-            "appearance_time": 420,
+            "appearance_time": 70,
             "origin_vertiport_id": "V001",
             "budget_constraint": 219,
             "decay_factor": 0.95,
@@ -1796,20 +1796,20 @@
                         "S006"
                     ],
                     "sector_times": [
-                        528,
-                        540,
-                        570,
-                        582
+                        88,
+                        90,
+                        95,
+                        97
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 528,
-                    "request_arrival_time": 582
+                    "request_departure_time": 88,
+                    "request_arrival_time": 97
                 }
             },
             "original_budget": 219
         },
         "AC046": {
-            "appearance_time": 768,
+            "appearance_time": 128,
             "origin_vertiport_id": "V002",
             "budget_constraint": 248,
             "decay_factor": 0.95,
@@ -1828,18 +1828,18 @@
                         "S008"
                     ],
                     "sector_times": [
-                        807,
-                        837
+                        134,
+                        140
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 807,
-                    "request_arrival_time": 837
+                    "request_departure_time": 134,
+                    "request_arrival_time": 140
                 }
             },
             "original_budget": 248
         },
         "AC047": {
-            "appearance_time": 180,
+            "appearance_time": 30,
             "origin_vertiport_id": "V003",
             "budget_constraint": 156,
             "decay_factor": 0.95,
@@ -1862,22 +1862,22 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        246,
-                        258,
-                        285,
-                        309,
-                        336,
-                        348
+                        41,
+                        43,
+                        48,
+                        52,
+                        56,
+                        58
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 246,
-                    "request_arrival_time": 348
+                    "request_departure_time": 41,
+                    "request_arrival_time": 58
                 }
             },
             "original_budget": 156
         },
         "AC048": {
-            "appearance_time": 186,
+            "appearance_time": 31,
             "origin_vertiport_id": "V004",
             "budget_constraint": 240,
             "decay_factor": 0.95,
@@ -1900,22 +1900,22 @@
                         "S0012"
                     ],
                     "sector_times": [
-                        297,
-                        309,
-                        318,
-                        408,
-                        417,
-                        429
+                        50,
+                        52,
+                        53,
+                        68,
+                        70,
+                        72
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 297,
-                    "request_arrival_time": 429
+                    "request_departure_time": 50,
+                    "request_arrival_time": 72
                 }
             },
             "original_budget": 240
         },
         "AC049": {
-            "appearance_time": 246,
+            "appearance_time": 41,
             "origin_vertiport_id": "V001",
             "budget_constraint": 211,
             "decay_factor": 0.95,
@@ -1936,20 +1936,20 @@
                         "S005"
                     ],
                     "sector_times": [
-                        348,
-                        360,
-                        390,
-                        402
+                        58,
+                        60,
+                        65,
+                        67
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 348,
-                    "request_arrival_time": 402
+                    "request_departure_time": 58,
+                    "request_arrival_time": 67
                 }
             },
             "original_budget": 211
         },
         "AC050": {
-            "appearance_time": 399,
+            "appearance_time": 66,
             "origin_vertiport_id": "V004",
             "budget_constraint": 238,
             "decay_factor": 0.95,
@@ -1970,20 +1970,20 @@
                         "S008"
                     ],
                     "sector_times": [
-                        438,
-                        450,
-                        468,
-                        492
+                        73,
+                        75,
+                        78,
+                        82
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 438,
-                    "request_arrival_time": 492
+                    "request_departure_time": 73,
+                    "request_arrival_time": 82
                 }
             },
             "original_budget": 238
         },
         "AC051": {
-            "appearance_time": 51,
+            "appearance_time": 8,
             "origin_vertiport_id": "V002",
             "budget_constraint": 174,
             "decay_factor": 0.95,
@@ -2008,24 +2008,24 @@
                         "S008"
                     ],
                     "sector_times": [
-                        99,
-                        108,
-                        123,
-                        171,
-                        177,
-                        225,
-                        240,
-                        249
+                        16,
+                        18,
+                        20,
+                        28,
+                        30,
+                        38,
+                        40,
+                        42
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 99,
-                    "request_arrival_time": 249
+                    "request_departure_time": 16,
+                    "request_arrival_time": 42
                 }
             },
             "original_budget": 174
         },
         "AC052": {
-            "appearance_time": 525,
+            "appearance_time": 88,
             "origin_vertiport_id": "V003",
             "budget_constraint": 172,
             "decay_factor": 0.95,
@@ -2044,18 +2044,18 @@
                         "S009"
                     ],
                     "sector_times": [
-                        591,
-                        621
+                        98,
+                        104
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 591,
-                    "request_arrival_time": 621
+                    "request_departure_time": 98,
+                    "request_arrival_time": 104
                 }
             },
             "original_budget": 172
         },
         "AC053": {
-            "appearance_time": 762,
+            "appearance_time": 127,
             "origin_vertiport_id": "V001",
             "budget_constraint": 233,
             "decay_factor": 0.95,
@@ -2078,22 +2078,22 @@
                         "S006"
                     ],
                     "sector_times": [
-                        783,
-                        795,
-                        816,
-                        858,
-                        879,
-                        891
+                        130,
+                        132,
+                        136,
+                        143,
+                        146,
+                        148
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 783,
-                    "request_arrival_time": 891
+                    "request_departure_time": 130,
+                    "request_arrival_time": 148
                 }
             },
             "original_budget": 233
         },
         "AC054": {
-            "appearance_time": 645,
+            "appearance_time": 108,
             "origin_vertiport_id": "V001",
             "budget_constraint": 232,
             "decay_factor": 0.95,
@@ -2114,20 +2114,20 @@
                         "S006"
                     ],
                     "sector_times": [
-                        660,
-                        672,
-                        702,
-                        714
+                        110,
+                        112,
+                        117,
+                        119
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 660,
-                    "request_arrival_time": 714
+                    "request_departure_time": 110,
+                    "request_arrival_time": 119
                 }
             },
             "original_budget": 232
         },
         "AC055": {
-            "appearance_time": 423,
+            "appearance_time": 70,
             "origin_vertiport_id": "V004",
             "budget_constraint": 175,
             "decay_factor": 0.95,
@@ -2146,18 +2146,18 @@
                         "S0011"
                     ],
                     "sector_times": [
-                        489,
-                        513
+                        82,
+                        86
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 489,
-                    "request_arrival_time": 513
+                    "request_departure_time": 82,
+                    "request_arrival_time": 86
                 }
             },
             "original_budget": 175
         },
         "AC056": {
-            "appearance_time": 696,
+            "appearance_time": 116,
             "origin_vertiport_id": "V002",
             "budget_constraint": 211,
             "decay_factor": 0.95,
@@ -2182,24 +2182,24 @@
                         "S007"
                     ],
                     "sector_times": [
-                        723,
-                        735,
-                        750,
-                        798,
-                        804,
-                        852,
-                        867,
-                        879
+                        120,
+                        122,
+                        125,
+                        133,
+                        134,
+                        142,
+                        144,
+                        146
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 723,
-                    "request_arrival_time": 879
+                    "request_departure_time": 120,
+                    "request_arrival_time": 146
                 }
             },
             "original_budget": 211
         },
         "AC057": {
-            "appearance_time": 540,
+            "appearance_time": 90,
             "origin_vertiport_id": "V003",
             "budget_constraint": 205,
             "decay_factor": 0.95,
@@ -2222,22 +2222,22 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        621,
-                        633,
-                        642,
-                        738,
-                        747,
-                        759
+                        104,
+                        106,
+                        107,
+                        123,
+                        124,
+                        126
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 621,
-                    "request_arrival_time": 759
+                    "request_departure_time": 104,
+                    "request_arrival_time": 126
                 }
             },
             "original_budget": 205
         },
         "AC058": {
-            "appearance_time": 606,
+            "appearance_time": 101,
             "origin_vertiport_id": "V001",
             "budget_constraint": 167,
             "decay_factor": 0.95,
@@ -2258,20 +2258,20 @@
                         "S005"
                     ],
                     "sector_times": [
-                        717,
-                        729,
-                        753,
-                        765
+                        120,
+                        122,
+                        126,
+                        128
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 717,
-                    "request_arrival_time": 765
+                    "request_departure_time": 120,
+                    "request_arrival_time": 128
                 }
             },
             "original_budget": 167
         },
         "AC059": {
-            "appearance_time": 753,
+            "appearance_time": 126,
             "origin_vertiport_id": "V001",
             "budget_constraint": 195,
             "decay_factor": 0.95,
@@ -2292,20 +2292,20 @@
                         "S006"
                     ],
                     "sector_times": [
-                        831,
-                        843,
-                        867,
-                        879
+                        138,
+                        140,
+                        144,
+                        146
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 831,
-                    "request_arrival_time": 879
+                    "request_departure_time": 138,
+                    "request_arrival_time": 146
                 }
             },
             "original_budget": 195
         },
         "AC060": {
-            "appearance_time": 210,
+            "appearance_time": 35,
             "origin_vertiport_id": "V004",
             "budget_constraint": 183,
             "decay_factor": 0.95,
@@ -2328,22 +2328,22 @@
                         "S0012"
                     ],
                     "sector_times": [
-                        267,
-                        279,
-                        303,
-                        339,
-                        363,
-                        375
+                        44,
+                        46,
+                        50,
+                        56,
+                        60,
+                        62
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 267,
-                    "request_arrival_time": 375
+                    "request_departure_time": 44,
+                    "request_arrival_time": 62
                 }
             },
             "original_budget": 183
         },
         "AC061": {
-            "appearance_time": 723,
+            "appearance_time": 120,
             "origin_vertiport_id": "V004",
             "budget_constraint": 239,
             "decay_factor": 0.95,
@@ -2364,14 +2364,14 @@
                         "S0012"
                     ],
                     "sector_times": [
-                        807,
-                        819,
-                        849,
-                        861
+                        134,
+                        136,
+                        142,
+                        144
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 807,
-                    "request_arrival_time": 861
+                    "request_departure_time": 134,
+                    "request_arrival_time": 144
                 }
             },
             "original_budget": 239
@@ -2396,18 +2396,18 @@
                         "S005"
                     ],
                     "sector_times": [
-                        69,
-                        99
+                        12,
+                        16
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 69,
-                    "request_arrival_time": 99
+                    "request_departure_time": 12,
+                    "request_arrival_time": 16
                 }
             },
             "original_budget": 182
         },
         "AC063": {
-            "appearance_time": 252,
+            "appearance_time": 42,
             "origin_vertiport_id": "V003",
             "budget_constraint": 187,
             "decay_factor": 0.95,
@@ -2430,22 +2430,22 @@
                         "S009"
                     ],
                     "sector_times": [
-                        312,
-                        324,
-                        333,
-                        423,
-                        432,
-                        444
+                        52,
+                        54,
+                        56,
+                        70,
+                        72,
+                        74
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 312,
-                    "request_arrival_time": 444
+                    "request_departure_time": 52,
+                    "request_arrival_time": 74
                 }
             },
             "original_budget": 187
         },
         "AC064": {
-            "appearance_time": 732,
+            "appearance_time": 122,
             "origin_vertiport_id": "V002",
             "budget_constraint": 211,
             "decay_factor": 0.95,
@@ -2466,20 +2466,20 @@
                         "S007"
                     ],
                     "sector_times": [
-                        798,
-                        810,
-                        846,
-                        858
+                        133,
+                        135,
+                        141,
+                        143
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 798,
-                    "request_arrival_time": 858
+                    "request_departure_time": 133,
+                    "request_arrival_time": 143
                 }
             },
             "original_budget": 211
         },
         "AC065": {
-            "appearance_time": 462,
+            "appearance_time": 77,
             "origin_vertiport_id": "V003",
             "budget_constraint": 221,
             "decay_factor": 0.95,
@@ -2502,22 +2502,22 @@
                         "S009"
                     ],
                     "sector_times": [
-                        507,
-                        519,
-                        528,
-                        618,
-                        627,
-                        639
+                        84,
+                        86,
+                        88,
+                        103,
+                        104,
+                        106
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 507,
-                    "request_arrival_time": 639
+                    "request_departure_time": 84,
+                    "request_arrival_time": 106
                 }
             },
             "original_budget": 221
         },
         "AC066": {
-            "appearance_time": 96,
+            "appearance_time": 16,
             "origin_vertiport_id": "V001",
             "budget_constraint": 215,
             "decay_factor": 0.95,
@@ -2538,20 +2538,20 @@
                         "S005"
                     ],
                     "sector_times": [
-                        147,
-                        159,
-                        219,
-                        231
+                        24,
+                        26,
+                        36,
+                        38
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 147,
-                    "request_arrival_time": 231
+                    "request_departure_time": 24,
+                    "request_arrival_time": 38
                 }
             },
             "original_budget": 215
         },
         "AC067": {
-            "appearance_time": 195,
+            "appearance_time": 32,
             "origin_vertiport_id": "V003",
             "budget_constraint": 159,
             "decay_factor": 0.95,
@@ -2570,18 +2570,18 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        279,
-                        309
+                        46,
+                        52
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 279,
-                    "request_arrival_time": 309
+                    "request_departure_time": 46,
+                    "request_arrival_time": 52
                 }
             },
             "original_budget": 159
         },
         "AC068": {
-            "appearance_time": 252,
+            "appearance_time": 42,
             "origin_vertiport_id": "V003",
             "budget_constraint": 202,
             "decay_factor": 0.95,
@@ -2604,22 +2604,22 @@
                         "S009"
                     ],
                     "sector_times": [
-                        354,
-                        363,
-                        396,
-                        408,
-                        441,
-                        450
+                        59,
+                        60,
+                        66,
+                        68,
+                        74,
+                        75
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 354,
-                    "request_arrival_time": 450
+                    "request_departure_time": 59,
+                    "request_arrival_time": 75
                 }
             },
             "original_budget": 202
         },
         "AC069": {
-            "appearance_time": 420,
+            "appearance_time": 70,
             "origin_vertiport_id": "V003",
             "budget_constraint": 204,
             "decay_factor": 0.95,
@@ -2640,20 +2640,20 @@
                         "S009"
                     ],
                     "sector_times": [
-                        525,
-                        537,
-                        615,
-                        627
+                        88,
+                        90,
+                        102,
+                        104
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 525,
-                    "request_arrival_time": 627
+                    "request_departure_time": 88,
+                    "request_arrival_time": 104
                 }
             },
             "original_budget": 204
         },
         "AC070": {
-            "appearance_time": 183,
+            "appearance_time": 30,
             "origin_vertiport_id": "V003",
             "budget_constraint": 226,
             "decay_factor": 0.95,
@@ -2672,18 +2672,18 @@
                         "S009"
                     ],
                     "sector_times": [
-                        249,
-                        279
+                        42,
+                        46
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 249,
-                    "request_arrival_time": 279
+                    "request_departure_time": 42,
+                    "request_arrival_time": 46
                 }
             },
             "original_budget": 226
         },
         "AC071": {
-            "appearance_time": 756,
+            "appearance_time": 126,
             "origin_vertiport_id": "V001",
             "budget_constraint": 226,
             "decay_factor": 0.95,
@@ -2702,18 +2702,18 @@
                         "S006"
                     ],
                     "sector_times": [
-                        807,
-                        837
+                        134,
+                        140
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 807,
-                    "request_arrival_time": 837
+                    "request_departure_time": 134,
+                    "request_arrival_time": 140
                 }
             },
             "original_budget": 226
         },
         "AC072": {
-            "appearance_time": 15,
+            "appearance_time": 2,
             "origin_vertiport_id": "V002",
             "budget_constraint": 239,
             "decay_factor": 0.95,
@@ -2734,20 +2734,20 @@
                         "S008"
                     ],
                     "sector_times": [
-                        63,
-                        72,
-                        102,
-                        111
+                        10,
+                        12,
+                        17,
+                        18
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 63,
-                    "request_arrival_time": 111
+                    "request_departure_time": 10,
+                    "request_arrival_time": 18
                 }
             },
             "original_budget": 239
         },
         "AC073": {
-            "appearance_time": 237,
+            "appearance_time": 40,
             "origin_vertiport_id": "V001",
             "budget_constraint": 189,
             "decay_factor": 0.95,
@@ -2769,21 +2769,21 @@
                         "S007"
                     ],
                     "sector_times": [
-                        255,
-                        267,
-                        276,
-                        318,
-                        357
+                        42,
+                        44,
+                        46,
+                        53,
+                        60
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 255,
-                    "request_arrival_time": 357
+                    "request_departure_time": 42,
+                    "request_arrival_time": 60
                 }
             },
             "original_budget": 189
         },
         "AC074": {
-            "appearance_time": 51,
+            "appearance_time": 8,
             "origin_vertiport_id": "V001",
             "budget_constraint": 232,
             "decay_factor": 0.95,
@@ -2806,22 +2806,22 @@
                         "S006"
                     ],
                     "sector_times": [
-                        105,
-                        117,
-                        126,
-                        216,
-                        225,
-                        237
+                        18,
+                        20,
+                        21,
+                        36,
+                        38,
+                        40
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 105,
-                    "request_arrival_time": 237
+                    "request_departure_time": 18,
+                    "request_arrival_time": 40
                 }
             },
             "original_budget": 232
         },
         "AC075": {
-            "appearance_time": 126,
+            "appearance_time": 21,
             "origin_vertiport_id": "V004",
             "budget_constraint": 238,
             "decay_factor": 0.95,
@@ -2842,20 +2842,20 @@
                         "S0012"
                     ],
                     "sector_times": [
-                        222,
-                        234,
-                        258,
-                        270
+                        37,
+                        39,
+                        43,
+                        45
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 222,
-                    "request_arrival_time": 270
+                    "request_departure_time": 37,
+                    "request_arrival_time": 45
                 }
             },
             "original_budget": 238
         },
         "AC076": {
-            "appearance_time": 672,
+            "appearance_time": 112,
             "origin_vertiport_id": "V003",
             "budget_constraint": 239,
             "decay_factor": 0.95,
@@ -2876,20 +2876,20 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        744,
-                        753,
-                        783,
-                        792
+                        124,
+                        126,
+                        130,
+                        132
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 744,
-                    "request_arrival_time": 792
+                    "request_departure_time": 124,
+                    "request_arrival_time": 132
                 }
             },
             "original_budget": 239
         },
         "AC077": {
-            "appearance_time": 249,
+            "appearance_time": 42,
             "origin_vertiport_id": "V002",
             "budget_constraint": 166,
             "decay_factor": 0.95,
@@ -2910,20 +2910,20 @@
                         "S007"
                     ],
                     "sector_times": [
-                        336,
-                        348,
-                        378,
-                        390
+                        56,
+                        58,
+                        63,
+                        65
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 336,
-                    "request_arrival_time": 390
+                    "request_departure_time": 56,
+                    "request_arrival_time": 65
                 }
             },
             "original_budget": 166
         },
         "AC078": {
-            "appearance_time": 549,
+            "appearance_time": 92,
             "origin_vertiport_id": "V002",
             "budget_constraint": 233,
             "decay_factor": 0.95,
@@ -2942,18 +2942,18 @@
                         "S007"
                     ],
                     "sector_times": [
-                        609,
-                        633
+                        102,
+                        106
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 609,
-                    "request_arrival_time": 633
+                    "request_departure_time": 102,
+                    "request_arrival_time": 106
                 }
             },
             "original_budget": 233
         },
         "AC079": {
-            "appearance_time": 726,
+            "appearance_time": 121,
             "origin_vertiport_id": "V004",
             "budget_constraint": 200,
             "decay_factor": 0.95,
@@ -2974,20 +2974,20 @@
                         "S0012"
                     ],
                     "sector_times": [
-                        819,
-                        831,
-                        861,
-                        873
+                        136,
+                        138,
+                        144,
+                        146
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 819,
-                    "request_arrival_time": 873
+                    "request_departure_time": 136,
+                    "request_arrival_time": 146
                 }
             },
             "original_budget": 200
         },
         "AC080": {
-            "appearance_time": 81,
+            "appearance_time": 14,
             "origin_vertiport_id": "V001",
             "budget_constraint": 163,
             "decay_factor": 0.95,
@@ -3008,20 +3008,20 @@
                         "S006"
                     ],
                     "sector_times": [
-                        123,
-                        135,
-                        177,
-                        189
+                        20,
+                        22,
+                        30,
+                        32
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 123,
-                    "request_arrival_time": 189
+                    "request_departure_time": 20,
+                    "request_arrival_time": 32
                 }
             },
             "original_budget": 163
         },
         "AC081": {
-            "appearance_time": 228,
+            "appearance_time": 38,
             "origin_vertiport_id": "V002",
             "budget_constraint": 226,
             "decay_factor": 0.95,
@@ -3044,22 +3044,22 @@
                         "S007"
                     ],
                     "sector_times": [
-                        243,
-                        255,
-                        267,
-                        357,
-                        369,
-                        381
+                        40,
+                        42,
+                        44,
+                        60,
+                        62,
+                        64
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 243,
-                    "request_arrival_time": 381
+                    "request_departure_time": 40,
+                    "request_arrival_time": 64
                 }
             },
             "original_budget": 226
         },
         "AC082": {
-            "appearance_time": 765,
+            "appearance_time": 128,
             "origin_vertiport_id": "V004",
             "budget_constraint": 174,
             "decay_factor": 0.95,
@@ -3080,20 +3080,20 @@
                         "S0011"
                     ],
                     "sector_times": [
-                        795,
-                        807,
-                        843,
-                        855
+                        132,
+                        134,
+                        140,
+                        142
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 795,
-                    "request_arrival_time": 855
+                    "request_departure_time": 132,
+                    "request_arrival_time": 142
                 }
             },
             "original_budget": 174
         },
         "AC083": {
-            "appearance_time": 309,
+            "appearance_time": 52,
             "origin_vertiport_id": "V002",
             "budget_constraint": 162,
             "decay_factor": 0.95,
@@ -3116,22 +3116,22 @@
                         "S008"
                     ],
                     "sector_times": [
-                        390,
-                        402,
-                        414,
-                        504,
-                        516,
-                        528
+                        65,
+                        67,
+                        69,
+                        84,
+                        86,
+                        88
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 390,
-                    "request_arrival_time": 528
+                    "request_departure_time": 65,
+                    "request_arrival_time": 88
                 }
             },
             "original_budget": 162
         },
         "AC084": {
-            "appearance_time": 87,
+            "appearance_time": 14,
             "origin_vertiport_id": "V001",
             "budget_constraint": 170,
             "decay_factor": 0.95,
@@ -3156,24 +3156,24 @@
                         "S005"
                     ],
                     "sector_times": [
-                        162,
-                        174,
-                        186,
-                        225,
-                        315,
-                        354,
-                        366,
-                        378
+                        27,
+                        29,
+                        31,
+                        38,
+                        52,
+                        59,
+                        61,
+                        63
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 162,
-                    "request_arrival_time": 378
+                    "request_departure_time": 27,
+                    "request_arrival_time": 63
                 }
             },
             "original_budget": 170
         },
         "AC085": {
-            "appearance_time": 39,
+            "appearance_time": 6,
             "origin_vertiport_id": "V003",
             "budget_constraint": 177,
             "decay_factor": 0.95,
@@ -3196,22 +3196,22 @@
                         "S009"
                     ],
                     "sector_times": [
-                        69,
-                        81,
-                        93,
-                        177,
-                        189,
-                        201
+                        12,
+                        14,
+                        16,
+                        30,
+                        32,
+                        34
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 69,
-                    "request_arrival_time": 201
+                    "request_departure_time": 12,
+                    "request_arrival_time": 34
                 }
             },
             "original_budget": 177
         },
         "AC086": {
-            "appearance_time": 579,
+            "appearance_time": 96,
             "origin_vertiport_id": "V002",
             "budget_constraint": 184,
             "decay_factor": 0.95,
@@ -3230,18 +3230,18 @@
                         "S007"
                     ],
                     "sector_times": [
-                        618,
-                        648
+                        103,
+                        108
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 618,
-                    "request_arrival_time": 648
+                    "request_departure_time": 103,
+                    "request_arrival_time": 108
                 }
             },
             "original_budget": 184
         },
         "AC087": {
-            "appearance_time": 738,
+            "appearance_time": 123,
             "origin_vertiport_id": "V003",
             "budget_constraint": 247,
             "decay_factor": 0.95,
@@ -3262,20 +3262,20 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        825,
-                        834,
-                        870,
-                        879
+                        138,
+                        139,
+                        145,
+                        146
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 825,
-                    "request_arrival_time": 879
+                    "request_departure_time": 138,
+                    "request_arrival_time": 146
                 }
             },
             "original_budget": 247
         },
         "AC088": {
-            "appearance_time": 576,
+            "appearance_time": 96,
             "origin_vertiport_id": "V001",
             "budget_constraint": 201,
             "decay_factor": 0.95,
@@ -3296,20 +3296,20 @@
                         "S006"
                     ],
                     "sector_times": [
-                        600,
-                        609,
-                        645,
-                        654
+                        100,
+                        102,
+                        108,
+                        109
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 600,
-                    "request_arrival_time": 654
+                    "request_departure_time": 100,
+                    "request_arrival_time": 109
                 }
             },
             "original_budget": 201
         },
         "AC089": {
-            "appearance_time": 387,
+            "appearance_time": 64,
             "origin_vertiport_id": "V003",
             "budget_constraint": 234,
             "decay_factor": 0.95,
@@ -3330,20 +3330,20 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        477,
-                        486,
-                        516,
-                        525
+                        80,
+                        81,
+                        86,
+                        88
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 477,
-                    "request_arrival_time": 525
+                    "request_departure_time": 80,
+                    "request_arrival_time": 88
                 }
             },
             "original_budget": 234
         },
         "AC091": {
-            "appearance_time": 684,
+            "appearance_time": 114,
             "origin_vertiport_id": "V003",
             "budget_constraint": 173,
             "decay_factor": 0.95,
@@ -3364,20 +3364,20 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        723,
-                        735,
-                        759,
-                        771
+                        120,
+                        122,
+                        126,
+                        128
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 723,
-                    "request_arrival_time": 771
+                    "request_departure_time": 120,
+                    "request_arrival_time": 128
                 }
             },
             "original_budget": 173
         },
         "AC092": {
-            "appearance_time": 48,
+            "appearance_time": 8,
             "origin_vertiport_id": "V002",
             "budget_constraint": 239,
             "decay_factor": 0.95,
@@ -3400,22 +3400,22 @@
                         "S008"
                     ],
                     "sector_times": [
-                        114,
-                        126,
-                        135,
-                        225,
-                        234,
-                        246
+                        19,
+                        21,
+                        22,
+                        38,
+                        39,
+                        41
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 114,
-                    "request_arrival_time": 246
+                    "request_departure_time": 19,
+                    "request_arrival_time": 41
                 }
             },
             "original_budget": 239
         },
         "AC093": {
-            "appearance_time": 180,
+            "appearance_time": 30,
             "origin_vertiport_id": "V004",
             "budget_constraint": 162,
             "decay_factor": 0.95,
@@ -3438,22 +3438,22 @@
                         "S0012"
                     ],
                     "sector_times": [
-                        294,
-                        306,
-                        318,
-                        402,
-                        414,
-                        426
+                        49,
+                        51,
+                        53,
+                        67,
+                        69,
+                        71
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 294,
-                    "request_arrival_time": 426
+                    "request_departure_time": 49,
+                    "request_arrival_time": 71
                 }
             },
             "original_budget": 162
         },
         "AC094": {
-            "appearance_time": 519,
+            "appearance_time": 86,
             "origin_vertiport_id": "V001",
             "budget_constraint": 234,
             "decay_factor": 0.95,
@@ -3474,20 +3474,20 @@
                         "S006"
                     ],
                     "sector_times": [
-                        588,
-                        600,
-                        636,
-                        648
+                        98,
+                        100,
+                        106,
+                        108
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 588,
-                    "request_arrival_time": 648
+                    "request_departure_time": 98,
+                    "request_arrival_time": 108
                 }
             },
             "original_budget": 234
         },
         "AC095": {
-            "appearance_time": 744,
+            "appearance_time": 124,
             "origin_vertiport_id": "V003",
             "budget_constraint": 219,
             "decay_factor": 0.95,
@@ -3508,20 +3508,20 @@
                         "S009"
                     ],
                     "sector_times": [
-                        783,
-                        792,
-                        822,
-                        831
+                        130,
+                        132,
+                        137,
+                        138
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 783,
-                    "request_arrival_time": 831
+                    "request_departure_time": 130,
+                    "request_arrival_time": 138
                 }
             },
             "original_budget": 219
         },
         "AC096": {
-            "appearance_time": 216,
+            "appearance_time": 36,
             "origin_vertiport_id": "V002",
             "budget_constraint": 201,
             "decay_factor": 0.95,
@@ -3542,20 +3542,20 @@
                         "S008"
                     ],
                     "sector_times": [
-                        243,
-                        255,
-                        279,
-                        291
+                        40,
+                        42,
+                        46,
+                        48
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 243,
-                    "request_arrival_time": 291
+                    "request_departure_time": 40,
+                    "request_arrival_time": 48
                 }
             },
             "original_budget": 201
         },
         "AC097": {
-            "appearance_time": 435,
+            "appearance_time": 72,
             "origin_vertiport_id": "V004",
             "budget_constraint": 229,
             "decay_factor": 0.95,
@@ -3578,22 +3578,22 @@
                         "S0011"
                     ],
                     "sector_times": [
-                        516,
-                        525,
-                        537,
-                        627,
-                        639,
-                        648
+                        86,
+                        88,
+                        90,
+                        104,
+                        106,
+                        108
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 516,
-                    "request_arrival_time": 648
+                    "request_departure_time": 86,
+                    "request_arrival_time": 108
                 }
             },
             "original_budget": 229
         },
         "AC098": {
-            "appearance_time": 144,
+            "appearance_time": 24,
             "origin_vertiport_id": "V004",
             "budget_constraint": 193,
             "decay_factor": 0.95,
@@ -3614,20 +3614,20 @@
                         "S006"
                     ],
                     "sector_times": [
-                        198,
-                        210,
-                        228,
-                        258
+                        33,
+                        35,
+                        38,
+                        43
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 198,
-                    "request_arrival_time": 258
+                    "request_departure_time": 33,
+                    "request_arrival_time": 43
                 }
             },
             "original_budget": 193
         },
         "AC099": {
-            "appearance_time": 18,
+            "appearance_time": 3,
             "origin_vertiport_id": "V004",
             "budget_constraint": 189,
             "decay_factor": 0.95,
@@ -3650,22 +3650,22 @@
                         "S0011"
                     ],
                     "sector_times": [
-                        108,
-                        117,
-                        129,
-                        219,
-                        231,
-                        240
+                        18,
+                        20,
+                        22,
+                        36,
+                        38,
+                        40
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 108,
-                    "request_arrival_time": 240
+                    "request_departure_time": 18,
+                    "request_arrival_time": 40
                 }
             },
             "original_budget": 189
         },
         "AC100": {
-            "appearance_time": 414,
+            "appearance_time": 69,
             "origin_vertiport_id": "V002",
             "budget_constraint": 198,
             "decay_factor": 0.95,
@@ -3688,22 +3688,22 @@
                         "S007"
                     ],
                     "sector_times": [
-                        456,
-                        468,
-                        480,
-                        570,
-                        582,
-                        594
+                        76,
+                        78,
+                        80,
+                        95,
+                        97,
+                        99
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 456,
-                    "request_arrival_time": 594
+                    "request_departure_time": 76,
+                    "request_arrival_time": 99
                 }
             },
             "original_budget": 198
         },
         "AC101": {
-            "appearance_time": 651,
+            "appearance_time": 108,
             "origin_vertiport_id": "V001",
             "budget_constraint": 151,
             "decay_factor": 0.95,
@@ -3722,18 +3722,18 @@
                         "S006"
                     ],
                     "sector_times": [
-                        711,
-                        747
+                        118,
+                        124
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 711,
-                    "request_arrival_time": 747
+                    "request_departure_time": 118,
+                    "request_arrival_time": 124
                 }
             },
             "original_budget": 151
         },
         "AC102": {
-            "appearance_time": 531,
+            "appearance_time": 88,
             "origin_vertiport_id": "V002",
             "budget_constraint": 158,
             "decay_factor": 0.95,
@@ -3756,22 +3756,22 @@
                         "S007"
                     ],
                     "sector_times": [
-                        594,
-                        606,
-                        627,
-                        681,
-                        702,
-                        714
+                        99,
+                        101,
+                        104,
+                        114,
+                        117,
+                        119
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 594,
-                    "request_arrival_time": 714
+                    "request_departure_time": 99,
+                    "request_arrival_time": 119
                 }
             },
             "original_budget": 158
         },
         "AC103": {
-            "appearance_time": 747,
+            "appearance_time": 124,
             "origin_vertiport_id": "V001",
             "budget_constraint": 231,
             "decay_factor": 0.95,
@@ -3794,22 +3794,22 @@
                         "S005"
                     ],
                     "sector_times": [
-                        786,
-                        795,
-                        807,
-                        903,
-                        915,
-                        924
+                        131,
+                        132,
+                        134,
+                        150,
+                        152,
+                        154
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 786,
-                    "request_arrival_time": 924
+                    "request_departure_time": 131,
+                    "request_arrival_time": 154
                 }
             },
             "original_budget": 231
         },
         "AC104": {
-            "appearance_time": 714,
+            "appearance_time": 119,
             "origin_vertiport_id": "V001",
             "budget_constraint": 197,
             "decay_factor": 0.95,
@@ -3832,22 +3832,22 @@
                         "S006"
                     ],
                     "sector_times": [
-                        756,
-                        765,
-                        777,
-                        867,
-                        879,
-                        888
+                        126,
+                        128,
+                        130,
+                        144,
+                        146,
+                        148
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 756,
-                    "request_arrival_time": 888
+                    "request_departure_time": 126,
+                    "request_arrival_time": 148
                 }
             },
             "original_budget": 197
         },
         "AC105": {
-            "appearance_time": 594,
+            "appearance_time": 99,
             "origin_vertiport_id": "V002",
             "budget_constraint": 197,
             "decay_factor": 0.95,
@@ -3868,20 +3868,20 @@
                         "S008"
                     ],
                     "sector_times": [
-                        645,
-                        657,
-                        681,
-                        693
+                        108,
+                        110,
+                        114,
+                        116
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 645,
-                    "request_arrival_time": 693
+                    "request_departure_time": 108,
+                    "request_arrival_time": 116
                 }
             },
             "original_budget": 197
         },
         "AC106": {
-            "appearance_time": 144,
+            "appearance_time": 24,
             "origin_vertiport_id": "V003",
             "budget_constraint": 174,
             "decay_factor": 0.95,
@@ -3904,22 +3904,22 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        228,
-                        240,
-                        249,
-                        339,
-                        348,
-                        360
+                        38,
+                        40,
+                        42,
+                        56,
+                        58,
+                        60
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 228,
-                    "request_arrival_time": 360
+                    "request_departure_time": 38,
+                    "request_arrival_time": 60
                 }
             },
             "original_budget": 174
         },
         "AC107": {
-            "appearance_time": 93,
+            "appearance_time": 16,
             "origin_vertiport_id": "V004",
             "budget_constraint": 238,
             "decay_factor": 0.95,
@@ -3940,20 +3940,20 @@
                         "S0012"
                     ],
                     "sector_times": [
-                        171,
-                        183,
-                        213,
-                        225
+                        28,
+                        30,
+                        36,
+                        38
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 171,
-                    "request_arrival_time": 225
+                    "request_departure_time": 28,
+                    "request_arrival_time": 38
                 }
             },
             "original_budget": 238
         },
         "AC108": {
-            "appearance_time": 771,
+            "appearance_time": 128,
             "origin_vertiport_id": "V001",
             "budget_constraint": 247,
             "decay_factor": 0.95,
@@ -3974,20 +3974,20 @@
                         "S005"
                     ],
                     "sector_times": [
-                        783,
-                        792,
-                        822,
-                        831
+                        130,
+                        132,
+                        137,
+                        138
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 783,
-                    "request_arrival_time": 831
+                    "request_departure_time": 130,
+                    "request_arrival_time": 138
                 }
             },
             "original_budget": 247
         },
         "AC109": {
-            "appearance_time": 294,
+            "appearance_time": 49,
             "origin_vertiport_id": "V001",
             "budget_constraint": 162,
             "decay_factor": 0.95,
@@ -4010,22 +4010,22 @@
                         "S005"
                     ],
                     "sector_times": [
-                        312,
-                        324,
-                        333,
-                        423,
-                        432,
-                        444
+                        52,
+                        54,
+                        56,
+                        70,
+                        72,
+                        74
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 312,
-                    "request_arrival_time": 444
+                    "request_departure_time": 52,
+                    "request_arrival_time": 74
                 }
             },
             "original_budget": 162
         },
         "AC110": {
-            "appearance_time": 321,
+            "appearance_time": 54,
             "origin_vertiport_id": "V002",
             "budget_constraint": 214,
             "decay_factor": 0.95,
@@ -4044,18 +4044,18 @@
                         "S008"
                     ],
                     "sector_times": [
-                        390,
-                        420
+                        65,
+                        70
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 390,
-                    "request_arrival_time": 420
+                    "request_departure_time": 65,
+                    "request_arrival_time": 70
                 }
             },
             "original_budget": 214
         },
         "AC111": {
-            "appearance_time": 312,
+            "appearance_time": 52,
             "origin_vertiport_id": "V001",
             "budget_constraint": 223,
             "decay_factor": 0.95,
@@ -4076,20 +4076,20 @@
                         "S006"
                     ],
                     "sector_times": [
-                        417,
-                        426,
-                        462,
-                        471
+                        70,
+                        71,
+                        77,
+                        78
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 417,
-                    "request_arrival_time": 471
+                    "request_departure_time": 70,
+                    "request_arrival_time": 78
                 }
             },
             "original_budget": 223
         },
         "AC112": {
-            "appearance_time": 294,
+            "appearance_time": 49,
             "origin_vertiport_id": "V004",
             "budget_constraint": 173,
             "decay_factor": 0.95,
@@ -4110,20 +4110,20 @@
                         "S0011"
                     ],
                     "sector_times": [
-                        357,
-                        369,
-                        399,
-                        411
+                        60,
+                        62,
+                        66,
+                        68
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 357,
-                    "request_arrival_time": 411
+                    "request_departure_time": 60,
+                    "request_arrival_time": 68
                 }
             },
             "original_budget": 173
         },
         "AC113": {
-            "appearance_time": 96,
+            "appearance_time": 16,
             "origin_vertiport_id": "V003",
             "budget_constraint": 212,
             "decay_factor": 0.95,
@@ -4144,20 +4144,20 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        147,
-                        159,
-                        189,
-                        201
+                        24,
+                        26,
+                        32,
+                        34
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 147,
-                    "request_arrival_time": 201
+                    "request_departure_time": 24,
+                    "request_arrival_time": 34
                 }
             },
             "original_budget": 212
         },
         "AC114": {
-            "appearance_time": 750,
+            "appearance_time": 125,
             "origin_vertiport_id": "V002",
             "budget_constraint": 231,
             "decay_factor": 0.95,
@@ -4178,20 +4178,20 @@
                         "S008"
                     ],
                     "sector_times": [
-                        783,
-                        792,
-                        822,
-                        831
+                        130,
+                        132,
+                        137,
+                        138
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 783,
-                    "request_arrival_time": 831
+                    "request_departure_time": 130,
+                    "request_arrival_time": 138
                 }
             },
             "original_budget": 231
         },
         "AC115": {
-            "appearance_time": 582,
+            "appearance_time": 97,
             "origin_vertiport_id": "V004",
             "budget_constraint": 228,
             "decay_factor": 0.95,
@@ -4216,24 +4216,24 @@
                         "S0012"
                     ],
                     "sector_times": [
-                        654,
-                        663,
-                        678,
-                        723,
-                        765,
-                        810,
-                        825,
-                        834
+                        109,
+                        110,
+                        113,
+                        120,
+                        128,
+                        135,
+                        138,
+                        139
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 654,
-                    "request_arrival_time": 834
+                    "request_departure_time": 109,
+                    "request_arrival_time": 139
                 }
             },
             "original_budget": 228
         },
         "AC116": {
-            "appearance_time": 450,
+            "appearance_time": 75,
             "origin_vertiport_id": "V004",
             "budget_constraint": 221,
             "decay_factor": 0.95,
@@ -4254,20 +4254,20 @@
                         "S006"
                     ],
                     "sector_times": [
-                        507,
-                        516,
-                        534,
-                        564
+                        84,
+                        86,
+                        89,
+                        94
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 507,
-                    "request_arrival_time": 564
+                    "request_departure_time": 84,
+                    "request_arrival_time": 94
                 }
             },
             "original_budget": 221
         },
         "AC117": {
-            "appearance_time": 678,
+            "appearance_time": 113,
             "origin_vertiport_id": "V002",
             "budget_constraint": 156,
             "decay_factor": 0.95,
@@ -4288,20 +4288,20 @@
                         "S008"
                     ],
                     "sector_times": [
-                        720,
-                        732,
-                        762,
-                        774
+                        120,
+                        122,
+                        127,
+                        129
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 720,
-                    "request_arrival_time": 774
+                    "request_departure_time": 120,
+                    "request_arrival_time": 129
                 }
             },
             "original_budget": 156
         },
         "AC118": {
-            "appearance_time": 396,
+            "appearance_time": 66,
             "origin_vertiport_id": "V001",
             "budget_constraint": 208,
             "decay_factor": 0.95,
@@ -4322,20 +4322,20 @@
                         "S006"
                     ],
                     "sector_times": [
-                        420,
-                        432,
-                        462,
-                        474
+                        70,
+                        72,
+                        77,
+                        79
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 420,
-                    "request_arrival_time": 474
+                    "request_departure_time": 70,
+                    "request_arrival_time": 79
                 }
             },
             "original_budget": 208
         },
         "AC119": {
-            "appearance_time": 666,
+            "appearance_time": 111,
             "origin_vertiport_id": "V002",
             "budget_constraint": 216,
             "decay_factor": 0.95,
@@ -4354,18 +4354,18 @@
                         "S008"
                     ],
                     "sector_times": [
-                        774,
-                        798
+                        129,
+                        133
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 774,
-                    "request_arrival_time": 798
+                    "request_departure_time": 129,
+                    "request_arrival_time": 133
                 }
             },
             "original_budget": 216
         },
         "AC120": {
-            "appearance_time": 96,
+            "appearance_time": 16,
             "origin_vertiport_id": "V003",
             "budget_constraint": 183,
             "decay_factor": 0.95,
@@ -4386,20 +4386,20 @@
                         "S009"
                     ],
                     "sector_times": [
-                        171,
-                        183,
-                        207,
-                        219
+                        28,
+                        30,
+                        34,
+                        36
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 171,
-                    "request_arrival_time": 219
+                    "request_departure_time": 28,
+                    "request_arrival_time": 36
                 }
             },
             "original_budget": 183
         },
         "AC121": {
-            "appearance_time": 174,
+            "appearance_time": 29,
             "origin_vertiport_id": "V001",
             "budget_constraint": 200,
             "decay_factor": 0.95,
@@ -4420,20 +4420,20 @@
                         "S006"
                     ],
                     "sector_times": [
-                        192,
-                        204,
-                        234,
-                        246
+                        32,
+                        34,
+                        39,
+                        41
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 192,
-                    "request_arrival_time": 246
+                    "request_departure_time": 32,
+                    "request_arrival_time": 41
                 }
             },
             "original_budget": 200
         },
         "AC122": {
-            "appearance_time": 15,
+            "appearance_time": 2,
             "origin_vertiport_id": "V004",
             "budget_constraint": 245,
             "decay_factor": 0.95,
@@ -4456,22 +4456,22 @@
                         "S0012"
                     ],
                     "sector_times": [
-                        66,
-                        75,
-                        87,
-                        177,
-                        189,
-                        198
+                        11,
+                        12,
+                        14,
+                        30,
+                        32,
+                        33
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 66,
-                    "request_arrival_time": 198
+                    "request_departure_time": 11,
+                    "request_arrival_time": 33
                 }
             },
             "original_budget": 245
         },
         "AC123": {
-            "appearance_time": 753,
+            "appearance_time": 126,
             "origin_vertiport_id": "V002",
             "budget_constraint": 238,
             "decay_factor": 0.95,
@@ -4492,20 +4492,20 @@
                         "S007"
                     ],
                     "sector_times": [
-                        807,
-                        816,
-                        846,
-                        855
+                        134,
+                        136,
+                        141,
+                        142
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 807,
-                    "request_arrival_time": 855
+                    "request_departure_time": 134,
+                    "request_arrival_time": 142
                 }
             },
             "original_budget": 238
         },
         "AC124": {
-            "appearance_time": 477,
+            "appearance_time": 80,
             "origin_vertiport_id": "V004",
             "budget_constraint": 188,
             "decay_factor": 0.95,
@@ -4528,22 +4528,22 @@
                         "S0011"
                     ],
                     "sector_times": [
-                        501,
-                        513,
-                        525,
-                        609,
-                        621,
-                        633
+                        84,
+                        86,
+                        88,
+                        102,
+                        104,
+                        106
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 501,
-                    "request_arrival_time": 633
+                    "request_departure_time": 84,
+                    "request_arrival_time": 106
                 }
             },
             "original_budget": 188
         },
         "AC125": {
-            "appearance_time": 654,
+            "appearance_time": 109,
             "origin_vertiport_id": "V002",
             "budget_constraint": 242,
             "decay_factor": 0.95,
@@ -4566,22 +4566,22 @@
                         "S008"
                     ],
                     "sector_times": [
-                        663,
-                        675,
-                        699,
-                        735,
-                        759,
-                        771
+                        110,
+                        112,
+                        116,
+                        122,
+                        126,
+                        128
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 663,
-                    "request_arrival_time": 771
+                    "request_departure_time": 110,
+                    "request_arrival_time": 128
                 }
             },
             "original_budget": 242
         },
         "AC126": {
-            "appearance_time": 726,
+            "appearance_time": 121,
             "origin_vertiport_id": "V003",
             "budget_constraint": 172,
             "decay_factor": 0.95,
@@ -4602,20 +4602,20 @@
                         "S009"
                     ],
                     "sector_times": [
-                        789,
-                        801,
-                        831,
-                        843
+                        132,
+                        134,
+                        138,
+                        140
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 789,
-                    "request_arrival_time": 843
+                    "request_departure_time": 132,
+                    "request_arrival_time": 140
                 }
             },
             "original_budget": 172
         },
         "AC127": {
-            "appearance_time": 387,
+            "appearance_time": 64,
             "origin_vertiport_id": "V001",
             "budget_constraint": 250,
             "decay_factor": 0.95,
@@ -4638,22 +4638,22 @@
                         "S006"
                     ],
                     "sector_times": [
-                        471,
-                        483,
-                        492,
-                        588,
-                        597,
-                        609
+                        78,
+                        80,
+                        82,
+                        98,
+                        100,
+                        102
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 471,
-                    "request_arrival_time": 609
+                    "request_departure_time": 78,
+                    "request_arrival_time": 102
                 }
             },
             "original_budget": 250
         },
         "AC128": {
-            "appearance_time": 624,
+            "appearance_time": 104,
             "origin_vertiport_id": "V001",
             "budget_constraint": 201,
             "decay_factor": 0.95,
@@ -4672,18 +4672,18 @@
                         "S006"
                     ],
                     "sector_times": [
-                        687,
-                        717
+                        114,
+                        120
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 687,
-                    "request_arrival_time": 717
+                    "request_departure_time": 114,
+                    "request_arrival_time": 120
                 }
             },
             "original_budget": 201
         },
         "AC129": {
-            "appearance_time": 627,
+            "appearance_time": 104,
             "origin_vertiport_id": "V003",
             "budget_constraint": 245,
             "decay_factor": 0.95,
@@ -4706,22 +4706,22 @@
                         "S009"
                     ],
                     "sector_times": [
-                        693,
-                        705,
-                        717,
-                        807,
-                        819,
-                        831
+                        116,
+                        118,
+                        120,
+                        134,
+                        136,
+                        138
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 693,
-                    "request_arrival_time": 831
+                    "request_departure_time": 116,
+                    "request_arrival_time": 138
                 }
             },
             "original_budget": 245
         },
         "AC130": {
-            "appearance_time": 525,
+            "appearance_time": 88,
             "origin_vertiport_id": "V004",
             "budget_constraint": 196,
             "decay_factor": 0.95,
@@ -4742,20 +4742,20 @@
                         "S0012"
                     ],
                     "sector_times": [
-                        540,
-                        552,
-                        588,
-                        600
+                        90,
+                        92,
+                        98,
+                        100
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 540,
-                    "request_arrival_time": 600
+                    "request_departure_time": 90,
+                    "request_arrival_time": 100
                 }
             },
             "original_budget": 196
         },
         "AC131": {
-            "appearance_time": 339,
+            "appearance_time": 56,
             "origin_vertiport_id": "V001",
             "budget_constraint": 236,
             "decay_factor": 0.95,
@@ -4778,22 +4778,22 @@
                         "S005"
                     ],
                     "sector_times": [
-                        381,
-                        393,
-                        405,
-                        507,
-                        519,
-                        531
+                        64,
+                        66,
+                        68,
+                        84,
+                        86,
+                        88
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 381,
-                    "request_arrival_time": 531
+                    "request_departure_time": 64,
+                    "request_arrival_time": 88
                 }
             },
             "original_budget": 236
         },
         "AC132": {
-            "appearance_time": 516,
+            "appearance_time": 86,
             "origin_vertiport_id": "V001",
             "budget_constraint": 170,
             "decay_factor": 0.95,
@@ -4816,22 +4816,22 @@
                         "S005"
                     ],
                     "sector_times": [
-                        540,
-                        549,
-                        561,
-                        651,
-                        663,
-                        672
+                        90,
+                        92,
+                        94,
+                        108,
+                        110,
+                        112
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 540,
-                    "request_arrival_time": 672
+                    "request_departure_time": 90,
+                    "request_arrival_time": 112
                 }
             },
             "original_budget": 170
         },
         "AC133": {
-            "appearance_time": 510,
+            "appearance_time": 85,
             "origin_vertiport_id": "V001",
             "budget_constraint": 201,
             "decay_factor": 0.95,
@@ -4854,22 +4854,22 @@
                         "S005"
                     ],
                     "sector_times": [
-                        582,
-                        591,
-                        603,
-                        687,
-                        699,
-                        708
+                        97,
+                        98,
+                        100,
+                        114,
+                        116,
+                        118
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 582,
-                    "request_arrival_time": 708
+                    "request_departure_time": 97,
+                    "request_arrival_time": 118
                 }
             },
             "original_budget": 201
         },
         "AC134": {
-            "appearance_time": 528,
+            "appearance_time": 88,
             "origin_vertiport_id": "V003",
             "budget_constraint": 180,
             "decay_factor": 0.95,
@@ -4892,22 +4892,22 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        543,
-                        555,
-                        564,
-                        654,
-                        663,
-                        675
+                        90,
+                        92,
+                        94,
+                        109,
+                        110,
+                        112
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 543,
-                    "request_arrival_time": 675
+                    "request_departure_time": 90,
+                    "request_arrival_time": 112
                 }
             },
             "original_budget": 180
         },
         "AC135": {
-            "appearance_time": 354,
+            "appearance_time": 59,
             "origin_vertiport_id": "V002",
             "budget_constraint": 166,
             "decay_factor": 0.95,
@@ -4932,24 +4932,24 @@
                         "S008"
                     ],
                     "sector_times": [
-                        393,
-                        405,
-                        420,
-                        462,
-                        486,
-                        528,
-                        543,
-                        555
+                        66,
+                        68,
+                        70,
+                        77,
+                        81,
+                        88,
+                        90,
+                        92
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 393,
-                    "request_arrival_time": 555
+                    "request_departure_time": 66,
+                    "request_arrival_time": 92
                 }
             },
             "original_budget": 166
         },
         "AC136": {
-            "appearance_time": 405,
+            "appearance_time": 68,
             "origin_vertiport_id": "V003",
             "budget_constraint": 155,
             "decay_factor": 0.95,
@@ -4972,22 +4972,22 @@
                         "S009"
                     ],
                     "sector_times": [
-                        465,
-                        477,
-                        486,
-                        576,
-                        585,
-                        597
+                        78,
+                        80,
+                        81,
+                        96,
+                        98,
+                        100
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 465,
-                    "request_arrival_time": 597
+                    "request_departure_time": 78,
+                    "request_arrival_time": 100
                 }
             },
             "original_budget": 155
         },
         "AC137": {
-            "appearance_time": 699,
+            "appearance_time": 116,
             "origin_vertiport_id": "V004",
             "budget_constraint": 152,
             "decay_factor": 0.95,
@@ -5008,20 +5008,20 @@
                         "S0011"
                     ],
                     "sector_times": [
-                        771,
-                        783,
-                        861,
-                        873
+                        128,
+                        130,
+                        144,
+                        146
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 771,
-                    "request_arrival_time": 873
+                    "request_departure_time": 128,
+                    "request_arrival_time": 146
                 }
             },
             "original_budget": 152
         },
         "AC138": {
-            "appearance_time": 708,
+            "appearance_time": 118,
             "origin_vertiport_id": "V001",
             "budget_constraint": 238,
             "decay_factor": 0.95,
@@ -5042,20 +5042,20 @@
                         "S005"
                     ],
                     "sector_times": [
-                        720,
-                        732,
-                        822,
-                        834
+                        120,
+                        122,
+                        137,
+                        139
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 720,
-                    "request_arrival_time": 834
+                    "request_departure_time": 120,
+                    "request_arrival_time": 139
                 }
             },
             "original_budget": 238
         },
         "AC139": {
-            "appearance_time": 147,
+            "appearance_time": 24,
             "origin_vertiport_id": "V001",
             "budget_constraint": 182,
             "decay_factor": 0.95,
@@ -5078,22 +5078,22 @@
                         "S006"
                     ],
                     "sector_times": [
-                        237,
-                        249,
-                        267,
-                        333,
-                        351,
-                        363
+                        40,
+                        42,
+                        44,
+                        56,
+                        58,
+                        60
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 237,
-                    "request_arrival_time": 363
+                    "request_departure_time": 40,
+                    "request_arrival_time": 60
                 }
             },
             "original_budget": 182
         },
         "AC140": {
-            "appearance_time": 513,
+            "appearance_time": 86,
             "origin_vertiport_id": "V002",
             "budget_constraint": 167,
             "decay_factor": 0.95,
@@ -5114,20 +5114,20 @@
                         "S007"
                     ],
                     "sector_times": [
-                        564,
-                        576,
-                        606,
-                        618
+                        94,
+                        96,
+                        101,
+                        103
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 564,
-                    "request_arrival_time": 618
+                    "request_departure_time": 94,
+                    "request_arrival_time": 103
                 }
             },
             "original_budget": 167
         },
         "AC141": {
-            "appearance_time": 189,
+            "appearance_time": 32,
             "origin_vertiport_id": "V002",
             "budget_constraint": 164,
             "decay_factor": 0.95,
@@ -5150,22 +5150,22 @@
                         "S008"
                     ],
                     "sector_times": [
-                        279,
-                        291,
-                        303,
-                        399,
-                        411,
-                        423
+                        46,
+                        48,
+                        50,
+                        66,
+                        68,
+                        70
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 279,
-                    "request_arrival_time": 423
+                    "request_departure_time": 46,
+                    "request_arrival_time": 70
                 }
             },
             "original_budget": 164
         },
         "AC142": {
-            "appearance_time": 492,
+            "appearance_time": 82,
             "origin_vertiport_id": "V003",
             "budget_constraint": 247,
             "decay_factor": 0.95,
@@ -5188,22 +5188,22 @@
                         "S009"
                     ],
                     "sector_times": [
-                        588,
-                        600,
-                        612,
-                        708,
-                        720,
-                        732
+                        98,
+                        100,
+                        102,
+                        118,
+                        120,
+                        122
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 588,
-                    "request_arrival_time": 732
+                    "request_departure_time": 98,
+                    "request_arrival_time": 122
                 }
             },
             "original_budget": 247
         },
         "AC143": {
-            "appearance_time": 375,
+            "appearance_time": 62,
             "origin_vertiport_id": "V002",
             "budget_constraint": 247,
             "decay_factor": 0.95,
@@ -5226,22 +5226,22 @@
                         "S007"
                     ],
                     "sector_times": [
-                        426,
-                        438,
-                        450,
-                        534,
-                        546,
-                        558
+                        71,
+                        73,
+                        75,
+                        89,
+                        91,
+                        93
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 426,
-                    "request_arrival_time": 558
+                    "request_departure_time": 71,
+                    "request_arrival_time": 93
                 }
             },
             "original_budget": 247
         },
         "AC144": {
-            "appearance_time": 90,
+            "appearance_time": 15,
             "origin_vertiport_id": "V001",
             "budget_constraint": 249,
             "decay_factor": 0.95,
@@ -5264,22 +5264,22 @@
                         "S005"
                     ],
                     "sector_times": [
-                        165,
-                        177,
-                        189,
-                        273,
-                        285,
-                        297
+                        28,
+                        30,
+                        32,
+                        46,
+                        48,
+                        50
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 165,
-                    "request_arrival_time": 297
+                    "request_departure_time": 28,
+                    "request_arrival_time": 50
                 }
             },
             "original_budget": 249
         },
         "AC145": {
-            "appearance_time": 537,
+            "appearance_time": 90,
             "origin_vertiport_id": "V002",
             "budget_constraint": 196,
             "decay_factor": 0.95,
@@ -5300,20 +5300,20 @@
                         "S008"
                     ],
                     "sector_times": [
-                        579,
-                        591,
-                        621,
-                        633
+                        96,
+                        98,
+                        104,
+                        106
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 579,
-                    "request_arrival_time": 633
+                    "request_departure_time": 96,
+                    "request_arrival_time": 106
                 }
             },
             "original_budget": 196
         },
         "AC146": {
-            "appearance_time": 228,
+            "appearance_time": 38,
             "origin_vertiport_id": "V004",
             "budget_constraint": 168,
             "decay_factor": 0.95,
@@ -5332,18 +5332,18 @@
                         "S0011"
                     ],
                     "sector_times": [
-                        294,
-                        324
+                        49,
+                        54
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 294,
-                    "request_arrival_time": 324
+                    "request_departure_time": 49,
+                    "request_arrival_time": 54
                 }
             },
             "original_budget": 168
         },
         "AC147": {
-            "appearance_time": 177,
+            "appearance_time": 30,
             "origin_vertiport_id": "V003",
             "budget_constraint": 241,
             "decay_factor": 0.95,
@@ -5366,22 +5366,22 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        231,
-                        243,
-                        252,
-                        342,
-                        351,
-                        363
+                        38,
+                        40,
+                        42,
+                        57,
+                        58,
+                        60
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 231,
-                    "request_arrival_time": 363
+                    "request_departure_time": 38,
+                    "request_arrival_time": 60
                 }
             },
             "original_budget": 241
         },
         "AC148": {
-            "appearance_time": 657,
+            "appearance_time": 110,
             "origin_vertiport_id": "V003",
             "budget_constraint": 186,
             "decay_factor": 0.95,
@@ -5402,20 +5402,20 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        708,
-                        720,
-                        750,
-                        762
+                        118,
+                        120,
+                        125,
+                        127
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 708,
-                    "request_arrival_time": 762
+                    "request_departure_time": 118,
+                    "request_arrival_time": 127
                 }
             },
             "original_budget": 186
         },
         "AC149": {
-            "appearance_time": 426,
+            "appearance_time": 71,
             "origin_vertiport_id": "V002",
             "budget_constraint": 186,
             "decay_factor": 0.95,
@@ -5434,18 +5434,18 @@
                         "S007"
                     ],
                     "sector_times": [
-                        534,
-                        564
+                        89,
+                        94
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 534,
-                    "request_arrival_time": 564
+                    "request_departure_time": 89,
+                    "request_arrival_time": 94
                 }
             },
             "original_budget": 186
         },
         "AC150": {
-            "appearance_time": 570,
+            "appearance_time": 95,
             "origin_vertiport_id": "V001",
             "budget_constraint": 215,
             "decay_factor": 0.95,
@@ -5468,22 +5468,22 @@
                         "S005"
                     ],
                     "sector_times": [
-                        633,
-                        645,
-                        654,
-                        744,
-                        753,
-                        765
+                        106,
+                        108,
+                        109,
+                        124,
+                        126,
+                        128
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 633,
-                    "request_arrival_time": 765
+                    "request_departure_time": 106,
+                    "request_arrival_time": 128
                 }
             },
             "original_budget": 215
         },
         "AC151": {
-            "appearance_time": 543,
+            "appearance_time": 90,
             "origin_vertiport_id": "V004",
             "budget_constraint": 223,
             "decay_factor": 0.95,
@@ -5504,20 +5504,20 @@
                         "S0011"
                     ],
                     "sector_times": [
-                        618,
-                        630,
-                        678,
-                        690
+                        103,
+                        105,
+                        113,
+                        115
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 618,
-                    "request_arrival_time": 690
+                    "request_departure_time": 103,
+                    "request_arrival_time": 115
                 }
             },
             "original_budget": 223
         },
         "AC152": {
-            "appearance_time": 42,
+            "appearance_time": 7,
             "origin_vertiport_id": "V002",
             "budget_constraint": 177,
             "decay_factor": 0.95,
@@ -5536,18 +5536,18 @@
                         "S008"
                     ],
                     "sector_times": [
-                        96,
-                        126
+                        16,
+                        21
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 96,
-                    "request_arrival_time": 126
+                    "request_departure_time": 16,
+                    "request_arrival_time": 21
                 }
             },
             "original_budget": 177
         },
         "AC153": {
-            "appearance_time": 153,
+            "appearance_time": 26,
             "origin_vertiport_id": "V002",
             "budget_constraint": 212,
             "decay_factor": 0.95,
@@ -5568,20 +5568,20 @@
                         "S007"
                     ],
                     "sector_times": [
-                        189,
-                        201,
-                        231,
-                        243
+                        32,
+                        34,
+                        38,
+                        40
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 189,
-                    "request_arrival_time": 243
+                    "request_departure_time": 32,
+                    "request_arrival_time": 40
                 }
             },
             "original_budget": 212
         },
         "AC154": {
-            "appearance_time": 660,
+            "appearance_time": 110,
             "origin_vertiport_id": "V002",
             "budget_constraint": 231,
             "decay_factor": 0.95,
@@ -5600,18 +5600,18 @@
                         "S007"
                     ],
                     "sector_times": [
-                        777,
-                        807
+                        130,
+                        134
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 777,
-                    "request_arrival_time": 807
+                    "request_departure_time": 130,
+                    "request_arrival_time": 134
                 }
             },
             "original_budget": 231
         },
         "AC155": {
-            "appearance_time": 615,
+            "appearance_time": 102,
             "origin_vertiport_id": "V002",
             "budget_constraint": 167,
             "decay_factor": 0.95,
@@ -5632,20 +5632,20 @@
                         "S008"
                     ],
                     "sector_times": [
-                        702,
-                        714,
-                        738,
-                        750
+                        117,
+                        119,
+                        123,
+                        125
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 702,
-                    "request_arrival_time": 750
+                    "request_departure_time": 117,
+                    "request_arrival_time": 125
                 }
             },
             "original_budget": 167
         },
         "AC156": {
-            "appearance_time": 276,
+            "appearance_time": 46,
             "origin_vertiport_id": "V004",
             "budget_constraint": 206,
             "decay_factor": 0.95,
@@ -5666,20 +5666,20 @@
                         "S0011"
                     ],
                     "sector_times": [
-                        351,
-                        363,
-                        393,
-                        405
+                        58,
+                        60,
+                        66,
+                        68
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 351,
-                    "request_arrival_time": 405
+                    "request_departure_time": 58,
+                    "request_arrival_time": 68
                 }
             },
             "original_budget": 206
         },
         "AC157": {
-            "appearance_time": 327,
+            "appearance_time": 54,
             "origin_vertiport_id": "V003",
             "budget_constraint": 180,
             "decay_factor": 0.95,
@@ -5700,20 +5700,20 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        417,
-                        429,
-                        453,
-                        465
+                        70,
+                        72,
+                        76,
+                        78
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 417,
-                    "request_arrival_time": 465
+                    "request_departure_time": 70,
+                    "request_arrival_time": 78
                 }
             },
             "original_budget": 180
         },
         "AC158": {
-            "appearance_time": 747,
+            "appearance_time": 124,
             "origin_vertiport_id": "V003",
             "budget_constraint": 155,
             "decay_factor": 0.95,
@@ -5734,20 +5734,20 @@
                         "S007"
                     ],
                     "sector_times": [
-                        780,
-                        789,
-                        810,
-                        834
+                        130,
+                        132,
+                        135,
+                        139
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 780,
-                    "request_arrival_time": 834
+                    "request_departure_time": 130,
+                    "request_arrival_time": 139
                 }
             },
             "original_budget": 155
         },
         "AC159": {
-            "appearance_time": 180,
+            "appearance_time": 30,
             "origin_vertiport_id": "V001",
             "budget_constraint": 153,
             "decay_factor": 0.95,
@@ -5770,22 +5770,22 @@
                         "S006"
                     ],
                     "sector_times": [
-                        291,
-                        303,
-                        315,
-                        399,
-                        411,
-                        423
+                        48,
+                        50,
+                        52,
+                        66,
+                        68,
+                        70
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 291,
-                    "request_arrival_time": 423
+                    "request_departure_time": 48,
+                    "request_arrival_time": 70
                 }
             },
             "original_budget": 153
         },
         "AC160": {
-            "appearance_time": 234,
+            "appearance_time": 39,
             "origin_vertiport_id": "V003",
             "budget_constraint": 200,
             "decay_factor": 0.95,
@@ -5806,20 +5806,20 @@
                         "S009"
                     ],
                     "sector_times": [
-                        291,
-                        300,
-                        330,
-                        339
+                        48,
+                        50,
+                        55,
+                        56
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 291,
-                    "request_arrival_time": 339
+                    "request_departure_time": 48,
+                    "request_arrival_time": 56
                 }
             },
             "original_budget": 200
         },
         "AC161": {
-            "appearance_time": 291,
+            "appearance_time": 48,
             "origin_vertiport_id": "V002",
             "budget_constraint": 202,
             "decay_factor": 0.95,
@@ -5842,22 +5842,22 @@
                         "S008"
                     ],
                     "sector_times": [
-                        318,
-                        330,
-                        339,
-                        429,
-                        438,
-                        450
+                        53,
+                        55,
+                        56,
+                        72,
+                        73,
+                        75
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 318,
-                    "request_arrival_time": 450
+                    "request_departure_time": 53,
+                    "request_arrival_time": 75
                 }
             },
             "original_budget": 202
         },
         "AC162": {
-            "appearance_time": 483,
+            "appearance_time": 80,
             "origin_vertiport_id": "V003",
             "budget_constraint": 190,
             "decay_factor": 0.95,
@@ -5880,22 +5880,22 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        549,
-                        558,
-                        570,
-                        654,
-                        666,
-                        675
+                        92,
+                        93,
+                        95,
+                        109,
+                        111,
+                        112
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 549,
-                    "request_arrival_time": 675
+                    "request_departure_time": 92,
+                    "request_arrival_time": 112
                 }
             },
             "original_budget": 190
         },
         "AC163": {
-            "appearance_time": 405,
+            "appearance_time": 68,
             "origin_vertiport_id": "V003",
             "budget_constraint": 176,
             "decay_factor": 0.95,
@@ -5920,24 +5920,24 @@
                         "S009"
                     ],
                     "sector_times": [
-                        477,
-                        489,
-                        498,
-                        540,
-                        624,
-                        666,
-                        675,
-                        687
+                        80,
+                        82,
+                        83,
+                        90,
+                        104,
+                        111,
+                        112,
+                        114
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 477,
-                    "request_arrival_time": 687
+                    "request_departure_time": 80,
+                    "request_arrival_time": 114
                 }
             },
             "original_budget": 176
         },
         "AC164": {
-            "appearance_time": 312,
+            "appearance_time": 52,
             "origin_vertiport_id": "V001",
             "budget_constraint": 232,
             "decay_factor": 0.95,
@@ -5960,22 +5960,22 @@
                         "S006"
                     ],
                     "sector_times": [
-                        363,
-                        375,
-                        384,
-                        474,
-                        483,
-                        495
+                        60,
+                        62,
+                        64,
+                        79,
+                        80,
+                        82
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 363,
-                    "request_arrival_time": 495
+                    "request_departure_time": 60,
+                    "request_arrival_time": 82
                 }
             },
             "original_budget": 232
         },
         "AC165": {
-            "appearance_time": 318,
+            "appearance_time": 53,
             "origin_vertiport_id": "V003",
             "budget_constraint": 184,
             "decay_factor": 0.95,
@@ -5998,22 +5998,22 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        381,
-                        393,
-                        402,
-                        492,
-                        501,
-                        513
+                        64,
+                        66,
+                        67,
+                        82,
+                        84,
+                        86
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 381,
-                    "request_arrival_time": 513
+                    "request_departure_time": 64,
+                    "request_arrival_time": 86
                 }
             },
             "original_budget": 184
         },
         "AC166": {
-            "appearance_time": 69,
+            "appearance_time": 12,
             "origin_vertiport_id": "V003",
             "budget_constraint": 200,
             "decay_factor": 0.95,
@@ -6034,20 +6034,20 @@
                         "S009"
                     ],
                     "sector_times": [
-                        153,
-                        165,
-                        189,
-                        201
+                        26,
+                        28,
+                        32,
+                        34
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 153,
-                    "request_arrival_time": 201
+                    "request_departure_time": 26,
+                    "request_arrival_time": 34
                 }
             },
             "original_budget": 200
         },
         "AC167": {
-            "appearance_time": 324,
+            "appearance_time": 54,
             "origin_vertiport_id": "V001",
             "budget_constraint": 193,
             "decay_factor": 0.95,
@@ -6066,18 +6066,18 @@
                         "S006"
                     ],
                     "sector_times": [
-                        408,
-                        438
+                        68,
+                        73
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 408,
-                    "request_arrival_time": 438
+                    "request_departure_time": 68,
+                    "request_arrival_time": 73
                 }
             },
             "original_budget": 193
         },
         "AC168": {
-            "appearance_time": 129,
+            "appearance_time": 22,
             "origin_vertiport_id": "V004",
             "budget_constraint": 153,
             "decay_factor": 0.95,
@@ -6098,20 +6098,20 @@
                         "S0011"
                     ],
                     "sector_times": [
-                        204,
-                        216,
-                        240,
-                        252
+                        34,
+                        36,
+                        40,
+                        42
                     ],
                     "destination_vertiport_id": "V004",
-                    "request_departure_time": 204,
-                    "request_arrival_time": 252
+                    "request_departure_time": 34,
+                    "request_arrival_time": 42
                 }
             },
             "original_budget": 153
         },
         "AC169": {
-            "appearance_time": 597,
+            "appearance_time": 100,
             "origin_vertiport_id": "V003",
             "budget_constraint": 173,
             "decay_factor": 0.95,
@@ -6132,20 +6132,20 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        648,
-                        660,
-                        696,
-                        708
+                        108,
+                        110,
+                        116,
+                        118
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 648,
-                    "request_arrival_time": 708
+                    "request_departure_time": 108,
+                    "request_arrival_time": 118
                 }
             },
             "original_budget": 173
         },
         "AC170": {
-            "appearance_time": 453,
+            "appearance_time": 76,
             "origin_vertiport_id": "V003",
             "budget_constraint": 153,
             "decay_factor": 0.95,
@@ -6170,24 +6170,24 @@
                         "S009"
                     ],
                     "sector_times": [
-                        528,
-                        540,
-                        555,
-                        597,
-                        621,
-                        663,
-                        678,
-                        690
+                        88,
+                        90,
+                        92,
+                        100,
+                        104,
+                        110,
+                        113,
+                        115
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 528,
-                    "request_arrival_time": 690
+                    "request_departure_time": 88,
+                    "request_arrival_time": 115
                 }
             },
             "original_budget": 153
         },
         "AC171": {
-            "appearance_time": 735,
+            "appearance_time": 122,
             "origin_vertiport_id": "V002",
             "budget_constraint": 161,
             "decay_factor": 0.95,
@@ -6208,20 +6208,20 @@
                         "S008"
                     ],
                     "sector_times": [
-                        819,
-                        831,
-                        855,
-                        867
+                        136,
+                        138,
+                        142,
+                        144
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 819,
-                    "request_arrival_time": 867
+                    "request_departure_time": 136,
+                    "request_arrival_time": 144
                 }
             },
             "original_budget": 161
         },
         "AC172": {
-            "appearance_time": 450,
+            "appearance_time": 75,
             "origin_vertiport_id": "V003",
             "budget_constraint": 198,
             "decay_factor": 0.95,
@@ -6244,22 +6244,22 @@
                         "S0010"
                     ],
                     "sector_times": [
-                        522,
-                        531,
-                        543,
-                        627,
-                        639,
-                        648
+                        87,
+                        88,
+                        90,
+                        104,
+                        106,
+                        108
                     ],
                     "destination_vertiport_id": "V003",
-                    "request_departure_time": 522,
-                    "request_arrival_time": 648
+                    "request_departure_time": 87,
+                    "request_arrival_time": 108
                 }
             },
             "original_budget": 198
         },
         "AC173": {
-            "appearance_time": 492,
+            "appearance_time": 82,
             "origin_vertiport_id": "V001",
             "budget_constraint": 201,
             "decay_factor": 0.95,
@@ -6282,22 +6282,22 @@
                         "S005"
                     ],
                     "sector_times": [
-                        585,
-                        594,
-                        606,
-                        690,
-                        702,
-                        711
+                        98,
+                        99,
+                        101,
+                        115,
+                        117,
+                        118
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 585,
-                    "request_arrival_time": 711
+                    "request_departure_time": 98,
+                    "request_arrival_time": 118
                 }
             },
             "original_budget": 201
         },
         "AC174": {
-            "appearance_time": 318,
+            "appearance_time": 53,
             "origin_vertiport_id": "V002",
             "budget_constraint": 184,
             "decay_factor": 0.95,
@@ -6318,20 +6318,20 @@
                         "S008"
                     ],
                     "sector_times": [
-                        384,
-                        396,
-                        426,
-                        438
+                        64,
+                        66,
+                        71,
+                        73
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 384,
-                    "request_arrival_time": 438
+                    "request_departure_time": 64,
+                    "request_arrival_time": 73
                 }
             },
             "original_budget": 184
         },
         "AC175": {
-            "appearance_time": 582,
+            "appearance_time": 97,
             "origin_vertiport_id": "V001",
             "budget_constraint": 209,
             "decay_factor": 0.95,
@@ -6354,22 +6354,22 @@
                         "S006"
                     ],
                     "sector_times": [
-                        633,
-                        645,
-                        654,
-                        744,
-                        753,
-                        765
+                        106,
+                        108,
+                        109,
+                        124,
+                        126,
+                        128
                     ],
                     "destination_vertiport_id": "V001",
-                    "request_departure_time": 633,
-                    "request_arrival_time": 765
+                    "request_departure_time": 106,
+                    "request_arrival_time": 128
                 }
             },
             "original_budget": 209
         },
         "AC176": {
-            "appearance_time": 636,
+            "appearance_time": 106,
             "origin_vertiport_id": "V002",
             "budget_constraint": 224,
             "decay_factor": 0.95,
@@ -6396,20 +6396,20 @@
                         "S008"
                     ],
                     "sector_times": [
-                        696,
-                        705,
-                        717,
-                        762,
-                        804,
-                        810,
-                        852,
-                        897,
-                        909,
-                        918
+                        116,
+                        118,
+                        120,
+                        127,
+                        134,
+                        135,
+                        142,
+                        150,
+                        152,
+                        153
                     ],
                     "destination_vertiport_id": "V002",
-                    "request_departure_time": 696,
-                    "request_arrival_time": 918
+                    "request_departure_time": 116,
+                    "request_arrival_time": 153
                 }
             },
             "original_budget": 224
@@ -7073,9 +7073,9 @@
     ],
     "timing_info": {
         "start_time": 0,
-        "end_time": 1200,
+        "end_time": 300,
         "time_step": 1,
-        "auction_frequency": 60
+        "auction_frequency": 10
     },
     "congestion_params": {
         "lambda": 0.1,

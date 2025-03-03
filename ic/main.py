@@ -103,6 +103,7 @@ parser.add_argument(
     default="none",
     help="Method to adjust beta dynamically. Options: none, errorbased, excessdemand, normalizedexcessdemand, pidcontrol, adjustedlearning."
 )
+parser.add_argument("--alpha", type=float, default=1, help="Alpha value for tolerance.")
 args = parser.parse_args()
 
 
@@ -445,6 +446,7 @@ def create_output_folder(design_parameters, file_path, method, base_dir="ic/resu
         f"freq{design_parameters['lambda_frequency']}_"
         f"pbound{design_parameters['price_upper_bound']}_"
         f"beta-method-{design_parameters['beta_adjustment_method']}_"
+        f"alpha-{design_parameters['alpha']}_"
         f"receding_{timestamp}"
     )
     main_output_folder = os.path.join(base_dir, folder_name)
@@ -930,7 +932,8 @@ if __name__ == "__main__":
         "run_up_to_auction": args.run_up_to_auction,
         "save_pkl_files": args.save_pkl_files,
         "tol_error_to_check": args.tol_error_to_check,
-        "beta_adjustment_method": args.beta_adjustment_method
+        "beta_adjustment_method": args.beta_adjustment_method,
+        "alpha": args.alpha
         }
     method = args.method    
     file_path = args.file 

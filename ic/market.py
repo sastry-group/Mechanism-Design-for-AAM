@@ -531,7 +531,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_freque
 
 def run_market(initial_values, agent_settings, market_settings, bookkeeping, sparse_representation, 
                rational=False, price_default_good=10, lambda_frequency=1, price_upper_bound=1000, auction=1, tol_error_to_check=None,
-               beta_adjustment_method='none'):
+               beta_adjustment_method='none', alpha=1.0):
      
         
     
@@ -564,7 +564,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     num_agents = len(agent_goods_lists)
     tolerances_to_check = [num_agents * np.sqrt(len(supply)-2) * tolerance for tolerance in valid_tol_error_to_check]
     current_tolerance_to_check_index = 0
-    tolerance = num_agents * np.sqrt(len(supply)-2) * TOL_ERROR
+    tolerance = alpha * num_agents * np.sqrt(len(supply)-2) * TOL_ERROR 
     # tolerance = num_agents * np.sqrt(len(supply)-2) * TOL_ERROR * auction  # -1 to ignore default goods
     market_clearing_error = float('inf')
     x_iter = 0
@@ -755,12 +755,12 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         logger.info(f"Prices: {p}")        
         # if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
         while (market_clearing_error <= tolerances_to_check[current_tolerance_to_check_index]) and (x_iter >= 5) and \
-            (iter_constraint_error <= 0.01) and (iter_constraint_x_y <= 0.1):
+            (iter_constraint_error <= alpha * 0.01) and (iter_constraint_x_y <= alpha* 0.1):
             iterations_per_tolerance.append(x_iter)
             if current_tolerance_to_check_index == len(valid_tol_error_to_check) - 1:
                 break
             current_tolerance_to_check_index += 1
-        if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=5) and (iter_constraint_x_y <= 0.1):
+        if (market_clearing_error <= tolerance) and (iter_constraint_error <= alpha * 0.01) and (x_iter>=5) and (iter_constraint_x_y <= alpha *0.1):
             # print(f"Iterations per tolerance: {iterations_per_tolerance}")
             break
         if x_iter == 1000:
@@ -776,7 +776,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     console.print("[bold green]Simulation Complete! Optimization results in file: /results/log[/bold green]")
  
 
-    #save_iteration_data(iteration_data, "iteration_data", output_dir="results")
+    save_iteration_data(iteration_data, "iteration_data", output_dir="results")
 
         # if market_clearing_error <= tolerance:
         #     break
