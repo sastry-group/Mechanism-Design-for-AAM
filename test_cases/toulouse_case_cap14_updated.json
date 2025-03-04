@@ -3,33 +3,33 @@
         "V001": {
             "latitude": 43.5898,
             "longitude": 1.4968000540000541,
-            "landing_capacity": 3,
-            "takeoff_capacity": 3,
-            "hold_capacity": 10,
+            "landing_capacity": 4,
+            "takeoff_capacity": 4,
+            "hold_capacity": 14,
             "name": "Warehouse-1"
         },
         "V002": {
             "latitude": 43.5898,
             "longitude": 1.388799945999946,
-            "landing_capacity": 3,
-            "takeoff_capacity": 3,
-            "hold_capacity": 10,
+            "landing_capacity": 4,
+            "takeoff_capacity": 4,
+            "hold_capacity": 14,
             "name": "Warehouse-2"
         },
         "V003": {
             "latitude": 43.53579994599994,
             "longitude": 1.4428,
-            "landing_capacity": 3,
-            "takeoff_capacity": 3,
-            "hold_capacity": 10,
+            "landing_capacity": 4,
+            "takeoff_capacity": 4,
+            "hold_capacity": 14,
             "name": "Warehouse-3"
         },
         "V004": {
             "latitude": 43.64380005400005,
             "longitude": 1.4428,
-            "landing_capacity": 3,
-            "takeoff_capacity": 3,
-            "hold_capacity": 10,
+            "landing_capacity": 4,
+            "takeoff_capacity": 4,
+            "hold_capacity": 14,
             "name": "Warehouse-4"
         }
     },
@@ -39,7 +39,7 @@
             "longitude": 1.460800018000018,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 10,
+            "hold_capacity": 14,
             "name": "Center-right-bot"
         },
         "S002": {
@@ -47,7 +47,7 @@
             "longitude": 1.460800018000018,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 10,
+            "hold_capacity": 14,
             "name": "Center-right-top"
         },
         "S003": {
@@ -55,7 +55,7 @@
             "longitude": 1.4247999819999821,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 10,
+            "hold_capacity": 14,
             "name": "Center-left-top"
         },
         "S004": {
@@ -63,7 +63,7 @@
             "longitude": 1.4247999819999821,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 10,
+            "hold_capacity": 14,
             "name": "Center-left-bot"
         },
         "S005": {
@@ -71,15 +71,15 @@
             "longitude": 1.4989400246109248,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 10,
+            "hold_capacity": 14,
             "name": "Cruise-1-bot"
         },
         "S006": {
-            "latitude": 43.619492356147276,
+            "latitude": 43.619492356137276,
             "longitude": 1.4989400246109248,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 10,
+            "hold_capacity": 14,
             "name": "Cruise-1-top"
         },
         "S007": {
@@ -87,7 +87,7 @@
             "longitude": 1.3866599753890754,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 10,
+            "hold_capacity": 14,
             "name": "Cruise-2-bot"
         },
         "S008": {
@@ -95,7 +95,7 @@
             "longitude": 1.3866599753890754,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 10,
+            "hold_capacity": 14,
             "name": "Cruise-2-top"
         },
         "S009": {
@@ -103,7 +103,7 @@
             "longitude": 1.4724923561472805,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 10,
+            "hold_capacity": 14,
             "name": "Cruise-3-right"
         },
         "S0010": {
@@ -111,7 +111,7 @@
             "longitude": 1.4131076438527197,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity":10,
+            "hold_capacity":14,
             "name": "Cruise-3-left"
         },
         "S0011": {
@@ -119,7 +119,7 @@
             "longitude": 1.4724923561472805,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 10,
+            "hold_capacity": 14,
             "name": "Cruise-4-right"
         },
         "S0012": {
@@ -127,7 +127,7 @@
             "longitude": 1.4131076438527197,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 10,
+            "hold_capacity": 14,
             "name": "Cruise-4-left"
         }
     },

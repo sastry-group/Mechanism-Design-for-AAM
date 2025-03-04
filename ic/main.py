@@ -402,6 +402,7 @@ def adjust_interval_flights(allocated_flights, flights):
 def adjust_rebased_flights(rebased_flights, flights, arrival_time, depart_time, max_time):
     for i, flight_id in enumerate(rebased_flights):
         if flights[flight_id]["rebase_count"] >= 2:
+            flights[flight_id]["rebase_count"] += 1
             continue
         else:
             flights[flight_id]["appearance_time"] = arrival_time

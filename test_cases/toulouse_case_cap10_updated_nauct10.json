@@ -7075,7 +7075,7 @@
         "start_time": 0,
         "end_time": 320,
         "time_step": 1,
-        "auction_frequency": 20
+        "auction_frequency": 10
     },
     "congestion_params": {
         "lambda": 0.1,
