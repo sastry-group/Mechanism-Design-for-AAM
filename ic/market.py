@@ -247,8 +247,8 @@ def find_capacity(goods_list, sectors, vertiport_data):
         logger.debug(f"Capacity on edge {origin} to {destination}: {capacity}")
         capacities[i] = capacity
     
-    capacities[-2] = 100 # default/outside good
-    capacities[-1] = 100 # dropout good
+    capacities[-2] = 1000 # default/outside good # this needs to be as high as the number of agents
+    capacities[-1] = 1000 # dropout good
 
     return capacities
 
