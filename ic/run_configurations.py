@@ -33,24 +33,26 @@ main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 #              "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau.json",
 #              "test_cases/toulouse_case_cap10_updated_30stepauction_10sectau.json",
 #              "test_cases/toulouse_case_cap10_updated_60stepauction_5sectau.json"]
-file_list = [ "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random4.json",
-             "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random5.json"
-             "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random6.json",
-             "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random7.json",
-             "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random8.json",
-             "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random9.json",
-             "test_cases/toulouse_case_cap10_updated_10stepauction_30sectau.json",
-             "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau.json",
-             "test_cases/toulouse_case_cap10_updated_30stepauction_10sectau.json",
-             "test_cases/toulouse_case_cap10_updated_60stepauction_5sectau.json",
-             "test_cases/toulouse_case_cap7_updated_20_nauct5.json",
-             "test_cases/toulouse_case_cap7_updated_20_nauct10.json",
-             "test_cases/toulouse_case_cap7_updated_20_nauct20.json",
-             "test_cases/toulouse_case_cap7_updated_20_nauct40.json",
-             "test_cases/toulouse_case_cap10_updated_20_nauct5.json",
-             "test_cases/toulouse_case_cap10_updated_20_nauct10.json",
-             "test_cases/toulouse_case_cap10_updated_20_nauct20.json",
-             "test_cases/toulouse_case_cap10_updated_20_nauct40.json",]
+# file_list = [ 
+#              "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random4.json",
+#              "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random5.json",
+#              "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random6.json",
+#              "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random7.json",
+#              "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random8.json",
+#              "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random9.json"]
+#              "test_cases/toulouse_case_cap10_updated_10stepauction_30sectau.json",
+#              "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau.json",
+#              "test_cases/toulouse_case_cap10_updated_30stepauction_10sectau.json",
+#              "test_cases/toulouse_case_cap10_updated_60stepauction_5sectau.json",
+#              "test_cases/toulouse_case_cap7_updated_20_nauct5.json",
+#              "test_cases/toulouse_case_cap7_updated_20_nauct10.json",
+#              "test_cases/toulouse_case_cap7_updated_20_nauct20.json",
+#              "test_cases/toulouse_case_cap7_updated_20_nauct40.json",
+#              "test_cases/toulouse_case_cap10_updated_20_nauct5.json",
+#              "test_cases/toulouse_case_cap10_updated_20_nauct10.json",
+#              "test_cases/toulouse_case_cap10_updated_20_nauct20.json",
+#              "test_cases/toulouse_case_cap10_updated_20_nauct40.json"]
+file_list = ["test_cases/toulouse_case_cap7_updated_20_nauct40.json"]
 
 for file in file_list:
     for idx, (BETA, dropout_good_valuation, default_good_valuation, price_default_good, 
@@ -72,13 +74,13 @@ for file in file_list:
             "--price_default_good", str(price_default_good),
             "--lambda_frequency", str(lambda_frequency),
             "--price_upper_bound", str(price_upper_bound),
-            "--num_agents_to_run", str(num_agents_to_run),
+            # "--num_agents_to_run", str(num_agents_to_run),
             "--run_up_to_auction", str(1000),
             "--save_pkl_files", "True",
             "--beta_adjustment_method", beta_adjustment_method,
-            "--alpha", str(alpha),]
-        #     "--tol_error_to_check"
-        # ] + [str(tol) for tol in tol_error_to_check]
+            "--alpha", str(alpha),
+            "--tol_error_to_check"
+        ] + [str(tol) for tol in tol_error_to_check]
             
         
 
