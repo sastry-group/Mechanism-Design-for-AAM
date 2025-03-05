@@ -3,6 +3,7 @@ import time
 import sys
 from pathlib import Path
 
+
 # Add the bluesky package to the path
 top_level_path = Path(__file__).resolve().parent.parent
 print(str(top_level_path))
@@ -24,11 +25,8 @@ class FisherGraphBuilder:
 
         for request_id, request in flight_data["requests"].items():
             origin_vertiport = flight_data["origin_vertiport_id"]
-            # appearance_time = flight_data["appearance_time"]
-
-            appearance_time = min(flight_data["requests"]["001"]["request_departure_time"] - 4,0)
+            appearance_time = flight_data["appearance_time"]
             arrival_time = flight_data["requests"]["001"]["request_arrival_time"]
-
             auction_frequency = self.timing_info["auction_frequency"]
             end_auction_time = self._get_end_auction_time(arrival_time, auction_frequency)
             departure_time = flight_data["requests"]["001"]["request_departure_time"]
@@ -55,12 +53,11 @@ class FisherGraphBuilder:
                     new_arrival_time = arrival_time + ts_delay
                     new_departure_time = departure_time + ts_delay
                     decay_valuation = request["valuation"] * decay**ts_delay
-                    # new_end_auction_time = self._get_end_auction_time(new_arrival_time, auction_frequency)
-                    new_end_time = new_arrival_time + 4
+                    new_end_auction_time = self._get_end_auction_time(new_arrival_time, auction_frequency)
                     # self._create_dep_arr_elements(origin_vertiport, destination_vertiport, new_departure_time, new_arrival_time, attributes = {"valuation": decay_valuation})
                     # Create edges for the destination vertiport from arrival to end of auction
                     if destination_vertiport is not None:
-                        self._create_edges(destination_vertiport, new_arrival_time, new_end_time, attributes = {"valuation": 0, "request": [ts_delay]})
+                        self._create_edges(destination_vertiport, new_arrival_time, new_end_auction_time, attributes = {"valuation": 0, "request": [ts_delay]})
                     
                     # Add edges for the path
                     attributes = {"valuation": decay_valuation, "request": [ts_delay]}
@@ -151,7 +148,8 @@ class FisherGraphBuilder:
         
     def _create_edges(self, vertiport, start_time, end_time, attributes=None):
         """Create edges between time window nodes for the given vertiport."""
-        for ts in range(start_time, end_time - 1):  # Avoid out of range for next time step
+
+        for ts in range(start_time, end_time):  # Avoid out of range for next time step
             current_node = f"{vertiport}_{ts}"
             next_node = f"{vertiport}_{ts + 1}"
             # edge = (current_node, next_node)
@@ -175,7 +173,7 @@ class FisherGraphBuilder:
 
     def _get_end_auction_time(self, arrival_time, auction_frequency):
         """Calculate the end of the auction window based on arrival time and auction frequency."""
-        return (((arrival_time - 1) // auction_frequency) + 1) * auction_frequency
+        return (((arrival_time) // auction_frequency) + 1) * auction_frequency
 
     def _add_node_if_not_exists(self, node):
         """Check if node exists in VertiportStatus and add to the graph if it doesn't already exist."""
@@ -198,6 +196,7 @@ class FisherGraphBuilder:
         if not self.graph.has_edge(node1, node2):
             # print(f"Adding edge: {node1} -> {node2}")
             self.graph.add_edge(node1, node2, **attributes)
+    
     
 if __name__ == "__main__":
     vertiports = {"A": {

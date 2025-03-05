@@ -31,14 +31,7 @@ class VertiportStatus(nx.DiGraph):
                 attributes = {"hold_usage": 0, "time": start_step,
                               "hold_capacity": vertiport[1]["hold_capacity"], "vertiport_id": vertiport[0]}
                 self.add_edge(time_extended_vertiport_id_start, time_extended_vertiport_id_end, **attributes)
-                # self.nodes[time_extended_vertiport_id]["landing_usage"] = 0
-                # self.nodes[time_extended_vertiport_id]["takeoff_usage"] = 0
-                # self.nodes[time_extended_vertiport_id]["hold_usage"] = 0
-                # self.nodes[time_extended_vertiport_id]["time"] = step
-                # self.nodes[time_extended_vertiport_id]["landing_capacity"] = vertiport[1]["landing_capacity"]
-                # self.nodes[time_extended_vertiport_id]["takeoff_capacity"] = vertiport[1]["takeoff_capacity"]
-                # self.nodes[time_extended_vertiport_id]["hold_capacity"] = vertiport[1]["hold_capacity"]
-                # self.nodes[time_extended_vertiport_id]["vertiport_id"] = vertiport[0]
+
         
         for step in self.time_steps:
             for vertiport in vertiports.items():
@@ -158,7 +151,7 @@ class VertiportStatus(nx.DiGraph):
                 self[time_extended_origin_start][time_extended_origin_end]["hold_usage"] += 1
                 assert self[time_extended_origin_start][time_extended_origin_end]["hold_usage"] >= 0 and \
                     self[time_extended_origin_start][time_extended_origin_end]["hold_usage"] <= self[time_extended_origin_start][time_extended_origin_end]["hold_capacity"], \
-                    f"Vertiport {origin_vertiport} at time {start_time} to {next_time} has incorrect hold usage."
+                    f"Vertiport {origin_vertiport} at time {start_time} to {next_time} has incorrect hold usage. One reason if this is the starting node for an agent is that the holding capacity is lower than the number of agents set to start at that location."
                 # print(f"Adding {time_extended_origin_start} to {time_extended_origin_end} with current hold_usage {self[time_extended_origin_start][time_extended_origin_end]['hold_usage']} and capacity {self[time_extended_origin_start][time_extended_origin_end]['hold_capacity']}")
                 
             

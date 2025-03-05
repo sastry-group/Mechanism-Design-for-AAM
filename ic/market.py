@@ -20,7 +20,7 @@ from fisher.FisherGraphBuilder import FisherGraphBuilder
 
 INTEGRAL_APPROACH = False
 UPDATED_APPROACH = True
-TOL_ERROR = 1e-2
+TOL_ERROR = 1e-3
 MAX_NUM_ITERATIONS = 10000
 
 logger = logging.getLogger("global_logger")
@@ -70,7 +70,7 @@ def construct_market(flights, timing_info, sectors, vertiport_usage, output_fold
         builder = FisherGraphBuilder(vertiport_usage, timing_info)
         agent_graph = builder.build_graph(flight)
         origin_vertiport = flight["origin_vertiport_id"]
-        start_node_time = min(flight["requests"]["001"]["request_departure_time"] - 4,0)
+        start_node_time = flight["appearance_time"]
     
 
         # Add constraints
@@ -174,7 +174,8 @@ def construct_market(flights, timing_info, sectors, vertiport_usage, output_fold
 
 
 
-def find_capacity(goods_list, route_data, vertiport_data):
+
+def find_capacity(goods_list, sectors, vertiport_data):
     # Create a dictionary for route capacities, for now just connectin between diff vertiports
     # sector_dict = {sid: sector["hold_capacity"] for sid, sector in sectors_data.items()}
     # route_dict = {(route["origin_vertiport_id"], route["destination_vertiport_id"]): route["capacity"] for route in route_data}
@@ -192,7 +193,8 @@ def find_capacity(goods_list, route_data, vertiport_data):
                 capacity = edge['hold_capacity'] - edge['hold_usage']
             else:
                 # Traveling between sectors
-                capacity = 10
+                capacity = 20
+                # capacity = sectors[destination_base]['hold_capacity']
             # capacity = sector_dict.get(origin_base, None)
         # if origin_base != destination_base:
         #     # Traveling between vertiport
@@ -245,8 +247,8 @@ def find_capacity(goods_list, route_data, vertiport_data):
         logger.debug(f"Capacity on edge {origin} to {destination}: {capacity}")
         capacities[i] = capacity
     
-    capacities[-2] = 100 # default/outside good
-    capacities[-1] = 100 # dropout good
+    capacities[-2] = 1000 # default/outside good # this needs to be as high as the number of agents
+    capacities[-1] = 1000 # dropout good
 
     return capacities
 
@@ -400,7 +402,7 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
     args = [(w[i], agent_utilities[i], agent_prices[i], r[i], constraints[i], agent_ys[i], beta, x_iter, update_frequency, rational, integral) for i in agent_indices]
 
     # Update agents in parallel or not depending on parallel flag
-    # parallel = True
+    parallel = False
     if not parallel:
         results = []
         adjusted_budgets = []
@@ -415,7 +417,7 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
         # results = [update_agent(*arg) for arg in args]
         # print(f"Average build time: {np.mean(build_times)} - Average solve time: {np.mean(solve_times)}")
     else:
-        num_processes = 4 # increase based on available resources
+        num_processes = 8 # increase based on available resources
         with Pool(num_processes) as pool:
             pooled_results = pool.starmap(update_agent, args)
             results = [result[0] for result in pooled_results]
@@ -528,7 +530,9 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_freque
 
 
 def run_market(initial_values, agent_settings, market_settings, bookkeeping, sparse_representation, 
-               rational=False, price_default_good=10, lambda_frequency=1, price_upper_bound=1000, auction=1,tol_error_to_check=None):    
+               rational=False, price_default_good=10, lambda_frequency=1, price_upper_bound=1000, auction=1, tol_error_to_check=None,
+               beta_adjustment_method='none', alpha=1.0):
+     
         
     
 
@@ -554,12 +558,13 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     error = [] * len(agent_constraints)
     abs_error = [] * len(agent_constraints)
     social_welfare_vector = []
-    
+    beta_values = []
+
     # Algorithm 1
     num_agents = len(agent_goods_lists)
     tolerances_to_check = [num_agents * np.sqrt(len(supply)-2) * tolerance for tolerance in valid_tol_error_to_check]
     current_tolerance_to_check_index = 0
-    tolerance = num_agents * np.sqrt(len(supply)-2) * TOL_ERROR
+    tolerance = alpha * num_agents * np.sqrt(len(supply)-2) * TOL_ERROR 
     # tolerance = num_agents * np.sqrt(len(supply)-2) * TOL_ERROR * auction  # -1 to ignore default goods
     market_clearing_error = float('inf')
     x_iter = 0
@@ -573,26 +578,15 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     iteration_data = []  
     iter_start = time.time()
 
-    while x_iter <= MAX_NUM_ITERATIONS:  # max(abs(np.sum(opt_xi, axis=0) - C)) > epsilon:
-        # if x_iter == 0: 
-        #     beta_init = beta
-        # else:
-        #     beta = beta_init/np.sqrt(x_iter)
-            # beta = beta_init / (x_iter + 1)
-        
-        # if x_iter == 0:
-        #     x = np.zeros((len(x_sparse_array), 1))
-        #     # x[:-2] = y # Maybe change back later
-        #     adjusted_budgets = w
-        # else:
+    while x_iter <= MAX_NUM_ITERATIONS:  
+        beta_values.append(beta)
+
         x, adjusted_budgets, agent_solve_t = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, 
                                                            beta, x_iter, lambda_frequency, sparse_representation, rational=rational, integral=INTEGRAL_APPROACH)
         x_allocations.append(x) # 
         # x_sum = np.hstack([np.sum(x[sparse_agent_x_inds[i][:-2]]) for i in range(len(agent_goods_lists))])
         x_sum = np.array([np.sum(x[x_sparse_array == i]) for i in range(len(goods_list))])[:-2]
         overdemand.append(x_sum - supply[:-2].flatten())
-        # print(f"Overdemand: {x_sum - supply[:-2].flatten()}")
-        # overdemand.append(np.sum(x[:,:-2], axis=0) - supply[:-2].flatten())
 
         iter_constraint_error = 0
         iter_constraint_x_y = 0
@@ -602,18 +596,27 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
             agent_x = np.concatenate([x[sparse_agent_x_inds[agent_index]]])
             agent_y = np.concatenate([y[sparse_agent_y_inds[agent_index]]])
             constraint_error = agent_constraints[agent_index][0] @ agent_x - agent_constraints[agent_index][1]
-            abs_constraint_error = np.sqrt(np.sum(np.square(constraint_error)))
-            iter_constraint_error += abs_constraint_error 
-            agent_error = np.sqrt(np.sum(np.square(np.array(agent_x[:-2]).reshape(agent_y.shape) - agent_y)))
-            iter_constraint_x_y += agent_error
+            # abs_constraint_error = np.sum(np.square(constraint_error))
+            abs_constraint_error = np.linalg.norm(constraint_error, ord=np.inf)
+            # iter_constraint_error += abs_constraint_error 
+            iter_constraint_error = max(abs_constraint_error, iter_constraint_error)
+            # agent_error = np.sum(np.square(np.array(agent_x[:-2]).reshape(agent_y.shape) - agent_y))
+            agent_error = np.linalg.norm(np.array(agent_x[:-2]).reshape(agent_y.shape) - agent_y, ord=np.inf)
+            # iter_constraint_x_y += agent_error 
+            iter_constraint_x_y = max(agent_error, iter_constraint_x_y)
             if x_iter == 0:
                 error.append([abs_constraint_error])
                 abs_error.append([agent_error])
             else:
                 error[agent_index].append(abs_constraint_error)
                 abs_error[agent_index].append(agent_error)
-    
-        
+        # iter_constraint_error = np.sqrt(iter_constraint_error)
+        # iter_constraint_x_y = np.sqrt(iter_constraint_x_y)
+        iter_constraint_error = np.max(iter_constraint_error)
+        iter_constraint_x_y = np.max(iter_constraint_x_y)
+
+
+
         # if x_iter % rebate_frequency == 0:
         if True:
             update_rebates = True
@@ -638,6 +641,84 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         market_clearing_error = np.linalg.norm(excess_demand.T * p[:-2], ord=2)
         market_clearing.append(market_clearing_error)
 
+        if beta_adjustment_method == 'errorbased' and len(market_clearing) >= 20:
+            # here I am checking if the market is decreasing by 5% for the last 10 iterations
+            last_10_errors = market_clearing[-20:]  
+            reduction_rates = [(last_10_errors[i] - last_10_errors[i + 1]) / last_10_errors[i]
+                            for i in range(len(last_10_errors) - 1) if last_10_errors[i] != 0]  # Compute reduction rates
+
+            if all(rate < 0.05 for rate in reduction_rates):  
+                beta *= 1.2 # Increase beta
+            
+        elif beta_adjustment_method == 'excessdemand' and len(overdemand) >= 21:
+            # here is am checking if the excess demand is moving towards zero
+            last_10_demand = overdemand[-10:]  # Use signed excess demand
+            moving_towards_zero = np.all(abs(last_10_demand[i + 1]) < abs(last_10_demand[i]) for i in range(len(last_10_demand) - 1))
+
+            if not moving_towards_zero:
+                beta *= 1.2
+
+        
+        elif beta_adjustment_method == 'normalizedexcessdemand' and len(overdemand) > 0:
+            recent_demand = np.array(overdemand[-10:])  # Last 10 iterations
+            demand_reduction = (recent_demand[:-1] - recent_demand[1:]) / (recent_demand[:-1] + 1e-6)  # Avoid division by zero
+            if np.mean(demand_reduction) < 0.05:  # If excess demand is not reducing by at least 5%
+                excess_demand_norm = np.linalg.norm(overdemand[-1]) / np.linalg.norm(supply)
+                beta *= 1 + 0.05 * excess_demand_norm  # Increase beta based on normalized excess demand
+        
+        elif beta_adjustment_method == 'pidcontrol' and len(market_clearing) >= 2:
+            recent_errors = np.array(market_clearing[-10:])  # Last 10 iterations
+            error_reduction = (recent_errors[:-1] - recent_errors[1:]) / (recent_errors[:-1] + 1e-6)  # Avoid division by zero
+            
+            # Only adjust beta if error is not reducing significantly
+            if np.mean(error_reduction) < 0.05:  
+                target_error = tolerance 
+                error_current = market_clearing[-1]
+                error_previous = market_clearing[-2]  
+                error_ratio = error_current / target_error  
+                
+                # Clamped Integral Term (Avoid Accumulating Large Values)
+                error_integral = sum(market_clearing[-20:]) if len(market_clearing) >= 20 else sum(market_clearing)
+                error_integral = max(min(error_integral, 10 * target_error), -10 * target_error)  # Limit integral growth
+
+                error_derivative = error_current - error_previous
+
+                # Adaptive Scaling to Prevent Large Jumps
+                Kp = 0.1 / (1 + error_ratio)  
+                Ki = 0.01 / (1 + abs(error_integral))  # Reduce effect when integral is large
+                Kd = 0.05 / (1 + abs(error_derivative))  # Prevent aggressive derivative jumps
+
+                beta_adjustment = Kp * error_current + Ki * error_integral + Kd * error_derivative
+
+                # **Clamp the beta adjustment to avoid large jumps**
+                beta_adjustment = max(min(beta_adjustment, 0.2), -0.2)  # Change limited to ±20%
+                beta *= 1 + beta_adjustment  # Adjust beta based on PID control
+
+
+        elif beta_adjustment_method == 'adjustedlearning' and x_iter > 1 and len(market_clearing) >= 20:
+            last_20_errors = np.array(market_clearing[-20:])  # Last 20 iterations
+
+            reduction_rates = [(last_20_errors[i] - last_20_errors[i + 1]) / (last_20_errors[i] + 1e-6)
+                            for i in range(len(last_20_errors) - 1) if last_20_errors[i] != 0]
+
+            if all(rate < 0.05 for rate in reduction_rates):  
+                gamma = 0.1  
+                target_error = tolerance
+                error_current = market_clearing[-1]
+
+                error_ratio = max(1, error_current / target_error)  
+
+                # **Logarithmic Scaling for Controlled Adjustment**
+                beta_adjustment = gamma * np.log(1 + error_ratio)
+
+                # **Clamp beta adjustment to prevent extreme changes**
+                beta_adjustment = max(min(beta_adjustment, 0.2), -0.2)
+
+                beta *= 1 + beta_adjustment  # Apply adjustment
+
+
+        beta = min(beta, 500)  # Cap beta to prevent overflow
+        # logger.info(f"Beta: {beta}")
 
         iteration_snapshot = {
             "iteration": x_iter,
@@ -666,20 +747,21 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         table.add_row("Time to solve market", f"{market_solve_t:.7f}")
         table.add_row("Time to run algorithm", f"{agent_solve_t:.7f}")
         table.add_row("Iter time: ", f"{iter_end - iter_start:.7f}")
+        table.add_row("Beta", f"{beta:.7f}")
 
         console.clear()
         console.print(table)
         logger.info(f"Excess demand: {excess_demand.shape}")
         logger.info(f"Prices: {p}")        
         # if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.0001) and (x_iter>=10) and (iter_constraint_x_y <= 0.01):
-        while (market_clearing_error <= tolerances_to_check[current_tolerance_to_check_index]) and (x_iter >= 10) and \
-            (iter_constraint_error <= 0.01) and (iter_constraint_x_y <= 0.1):
+        while (market_clearing_error <= tolerances_to_check[current_tolerance_to_check_index]) and (x_iter >= 5) and \
+            (iter_constraint_error <= alpha * 0.01) and (iter_constraint_x_y <= alpha* 0.1):
             iterations_per_tolerance.append(x_iter)
             if current_tolerance_to_check_index == len(valid_tol_error_to_check) - 1:
                 break
             current_tolerance_to_check_index += 1
-        if (market_clearing_error <= tolerance) and (iter_constraint_error <= 0.01) and (x_iter>=10) and (iter_constraint_x_y <= 0.1):
-            print(f"Iterations per tolerance: {iterations_per_tolerance}")
+        if (market_clearing_error <= tolerance) and (iter_constraint_error <= alpha * 0.01) and (x_iter>=5) and (iter_constraint_x_y <= alpha *0.1):
+            # print(f"Iterations per tolerance: {iterations_per_tolerance}")
             break
         if x_iter == 1000:
             break
@@ -732,7 +814,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         "yplot": yplot,
         "social_welfare_vector": social_welfare_vector,
         "fisher_run_time": fisher_run_time,
-        "iterations_vs_tolerance": (valid_tol_error_to_check, tolerances_to_check, iterations_per_tolerance)
+        "iterations_vs_tolerance": (valid_tol_error_to_check, tolerances_to_check, iterations_per_tolerance),
+        "beta_values": beta_values
     }
 
 

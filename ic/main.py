@@ -79,6 +79,7 @@ parser.add_argument(
 parser.add_argument(
     "--method", type=str, help="The method for allocation and payment (vcg or ff or ascending auction).."
 )
+
 ##### Running from configurations
 
 # parser = argparse.ArgumentParser()
@@ -93,7 +94,16 @@ parser.add_argument('--lambda_frequency', type=float, default=1)
 parser.add_argument('--price_upper_bound', type=float, default=50)
 parser.add_argument('--num_agents_to_run', type=int, default=None)
 parser.add_argument('--run_up_to_auction', type=float, default=10)
+parser.add_argument('--save_pkl_files', type=str2bool, nargs="?", const=True, default=True)
 parser.add_argument("--tol_error_to_check", nargs="+", type=float, default=None, help="List of tolerances for experiments")
+parser.add_argument(
+    "--beta_adjustment_method",
+    type=str,
+    choices=["none", "errorbased", "excessdemand", "normalizedexcessdemand", "pidcontrol", "adjustedlearning"],
+    default="none",
+    help="Method to adjust beta dynamically. Options: none, errorbased, excessdemand, normalizedexcessdemand, pidcontrol, adjustedlearning."
+)
+parser.add_argument("--alpha", type=float, default=1, help="Alpha value for tolerance.")
 args = parser.parse_args()
 
 
@@ -392,6 +402,7 @@ def adjust_interval_flights(allocated_flights, flights):
 def adjust_rebased_flights(rebased_flights, flights, arrival_time, depart_time, max_time):
     for i, flight_id in enumerate(rebased_flights):
         if flights[flight_id]["rebase_count"] >= 2:
+            flights[flight_id]["rebase_count"] += 1
             continue
         else:
             flights[flight_id]["appearance_time"] = arrival_time
@@ -435,6 +446,8 @@ def create_output_folder(design_parameters, file_path, method, base_dir="ic/resu
         f"pout{design_parameters['price_default_good']}_"
         f"freq{design_parameters['lambda_frequency']}_"
         f"pbound{design_parameters['price_upper_bound']}_"
+        f"beta-method-{design_parameters['beta_adjustment_method']}_"
+        f"alpha-{design_parameters['alpha']}_"
         f"receding_{timestamp}"
     )
     main_output_folder = os.path.join(base_dir, folder_name)
@@ -941,7 +954,10 @@ if __name__ == "__main__":
         "price_upper_bound": args.price_upper_bound,
         "num_agents_to_run": args.num_agents_to_run,
         "run_up_to_auction": args.run_up_to_auction,
-        "tol_error_to_check": args.tol_error_to_check
+        "save_pkl_files": args.save_pkl_files,
+        "tol_error_to_check": args.tol_error_to_check,
+        "beta_adjustment_method": args.beta_adjustment_method,
+        "alpha": args.alpha
         }
     method = args.method    
     file_path = args.file 

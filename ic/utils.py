@@ -112,6 +112,8 @@ def store_market_data(extra_data, design_parameters, market_auction_time):
         'fisher_iterations': extra_data["data_to_plot"]["x_iter"],
         'num_agents': extra_data["num_agents"],
         'num_goods': extra_data["num_goods"],
+        'num_contested_goods': extra_data["num_contested_goods"],
+        'num_contested_paths': extra_data["num_contested_paths"],
     }
     
     return market_data
@@ -145,7 +147,7 @@ def rank_allocations(agents_data, market_data):
     return sorted_agent_dict, ranked_agents_list, market_data
 
 def find_dep_and_arrival_nodes(edges):
-    if edges is None:
+    if edges is None or len(edges) == 0:
         return None
     dep_edge = False
     arr_edge = False
@@ -158,7 +160,6 @@ def find_dep_and_arrival_nodes(edges):
             assert not arr_edge, f"Multiple arrival nodes found: {arr_edge} and {edge}"
             arr_edge = edge
     # assert "arr" in arrival_node_found, f"Arrival node not found: {arrival_node_found}"
-    
     return dep_edge[1], arr_edge[0]
 
 
