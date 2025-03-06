@@ -52,7 +52,7 @@ main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 #              "test_cases/toulouse_case_cap10_updated_20_nauct10.json",
 #              "test_cases/toulouse_case_cap10_updated_20_nauct20.json",
 #              "test_cases/toulouse_case_cap10_updated_20_nauct40.json"]
-file_list = ["test_cases/toulouse_case_cap7_updated_20_nauct40.json"]
+file_list = ["test_cases/toulouse_case_cap7_updated_20stepauction_15sectau_random6.json"]
 
 for file in file_list:
     for idx, (BETA, dropout_good_valuation, default_good_valuation, price_default_good, 
