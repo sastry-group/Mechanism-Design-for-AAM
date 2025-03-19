@@ -71,7 +71,7 @@
             "longitude": 1.4989400246109248,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 4,
+            "hold_capacity": 10,
             "name": "Cruise-1-bot"
         },
         "S006": {
@@ -87,7 +87,7 @@
             "longitude": 1.3866599753890754,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 4,
+            "hold_capacity": 10,
             "name": "Cruise-2-bot"
         },
         "S008": {
@@ -111,7 +111,7 @@
             "longitude": 1.4131076438527197,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 4,
+            "hold_capacity": 10,
             "name": "Cruise-3-left"
         },
         "S0011": {

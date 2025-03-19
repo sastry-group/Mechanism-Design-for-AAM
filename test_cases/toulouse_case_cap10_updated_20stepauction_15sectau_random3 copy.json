@@ -3,33 +3,33 @@
         "V001": {
             "latitude": 43.5898,
             "longitude": 1.4968000540000541,
-            "landing_capacity": 2,
-            "takeoff_capacity": 2,
-            "hold_capacity": 7,
+            "landing_capacity": 3,
+            "takeoff_capacity": 3,
+            "hold_capacity": 10,
             "name": "Warehouse-1"
         },
         "V002": {
             "latitude": 43.5898,
             "longitude": 1.388799945999946,
-            "landing_capacity": 2,
-            "takeoff_capacity": 2,
-            "hold_capacity": 7,
+            "landing_capacity": 3,
+            "takeoff_capacity": 3,
+            "hold_capacity": 10,
             "name": "Warehouse-2"
         },
         "V003": {
             "latitude": 43.53579994599994,
             "longitude": 1.4428,
-            "landing_capacity": 2,
-            "takeoff_capacity": 2,
-            "hold_capacity": 7,
+            "landing_capacity": 3,
+            "takeoff_capacity": 3,
+            "hold_capacity": 10,
             "name": "Warehouse-3"
         },
         "V004": {
             "latitude": 43.64380005400005,
             "longitude": 1.4428,
-            "landing_capacity": 2,
-            "takeoff_capacity": 2,
-            "hold_capacity": 7,
+            "landing_capacity": 3,
+            "takeoff_capacity": 3,
+            "hold_capacity": 10,
             "name": "Warehouse-4"
         }
     },
@@ -39,7 +39,7 @@
             "longitude": 1.460800018000018,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Center-right-bot"
         },
         "S002": {
@@ -47,7 +47,7 @@
             "longitude": 1.460800018000018,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Center-right-top"
         },
         "S003": {
@@ -55,7 +55,7 @@
             "longitude": 1.4247999819999821,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Center-left-top"
         },
         "S004": {
@@ -63,7 +63,7 @@
             "longitude": 1.4247999819999821,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Center-left-bot"
         },
         "S005": {
@@ -71,7 +71,7 @@
             "longitude": 1.4989400246109248,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Cruise-1-bot"
         },
         "S006": {
@@ -79,7 +79,7 @@
             "longitude": 1.4989400246109248,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Cruise-1-top"
         },
         "S007": {
@@ -87,7 +87,7 @@
             "longitude": 1.3866599753890754,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Cruise-2-bot"
         },
         "S008": {
@@ -95,7 +95,7 @@
             "longitude": 1.3866599753890754,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Cruise-2-top"
         },
         "S009": {
@@ -103,7 +103,7 @@
             "longitude": 1.4724923561472805,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Cruise-3-right"
         },
         "S0010": {
@@ -111,7 +111,7 @@
             "longitude": 1.4131076438527197,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Cruise-3-left"
         },
         "S0011": {
@@ -119,7 +119,7 @@
             "longitude": 1.4724923561472805,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Cruise-4-right"
         },
         "S0012": {
@@ -127,15 +127,15 @@
             "longitude": 1.4131076438527197,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 10,
             "name": "Cruise-4-left"
         }
     },
     "flights": {
         "AC000": {
-            "appearance_time": 39,
+            "appearance_time": 31,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 238,
+            "budget_constraint": 246,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -147,7 +147,7 @@
                 },
                 "001": {
                     "bid": 162,
-                    "valuation": 162,
+                    "valuation": 150,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -168,12 +168,12 @@
                     "request_arrival_time": 87
                 }
             },
-            "original_budget": 238
+            "original_budget": 246
         },
         "AC001": {
-            "appearance_time": 235,
+            "appearance_time": 225,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 181,
+            "budget_constraint": 234,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -185,7 +185,7 @@
                 },
                 "001": {
                     "bid": 167,
-                    "valuation": 167,
+                    "valuation": 242,
                     "sector_path": [
                         "S007",
                         "S0010",
@@ -202,12 +202,12 @@
                     "request_arrival_time": 292
                 }
             },
-            "original_budget": 181
+            "original_budget": 234
         },
         "AC002": {
-            "appearance_time": 166,
+            "appearance_time": 163,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 220,
+            "budget_constraint": 151,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -219,7 +219,7 @@
                 },
                 "001": {
                     "bid": 247,
-                    "valuation": 247,
+                    "valuation": 151,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -240,12 +240,12 @@
                     "request_arrival_time": 222
                 }
             },
-            "original_budget": 220
+            "original_budget": 151
         },
         "AC003": {
-            "appearance_time": 187,
+            "appearance_time": 195,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 247,
+            "budget_constraint": 198,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -257,7 +257,7 @@
                 },
                 "001": {
                     "bid": 243,
-                    "valuation": 243,
+                    "valuation": 233,
                     "sector_path": [
                         "S005"
                     ],
@@ -270,12 +270,12 @@
                     "request_arrival_time": 210
                 }
             },
-            "original_budget": 247
+            "original_budget": 198
         },
         "AC004": {
-            "appearance_time": 213,
+            "appearance_time": 206,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 187,
+            "budget_constraint": 172,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -287,7 +287,7 @@
                 },
                 "001": {
                     "bid": 242,
-                    "valuation": 242,
+                    "valuation": 168,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -308,12 +308,12 @@
                     "request_arrival_time": 272
                 }
             },
-            "original_budget": 187
+            "original_budget": 172
         },
         "AC005": {
-            "appearance_time": 31,
+            "appearance_time": 26,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 179,
+            "budget_constraint": 185,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -325,7 +325,7 @@
                 },
                 "001": {
                     "bid": 224,
-                    "valuation": 224,
+                    "valuation": 151,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -350,12 +350,12 @@
                     "request_arrival_time": 119
                 }
             },
-            "original_budget": 179
+            "original_budget": 185
         },
         "AC006": {
-            "appearance_time": 119,
+            "appearance_time": 113,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 184,
+            "budget_constraint": 167,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -367,7 +367,7 @@
                 },
                 "001": {
                     "bid": 170,
-                    "valuation": 170,
+                    "valuation": 203,
                     "sector_path": [
                         "S005",
                         "S001",
@@ -384,12 +384,12 @@
                     "request_arrival_time": 154
                 }
             },
-            "original_budget": 184
+            "original_budget": 167
         },
         "AC007": {
-            "appearance_time": 212,
+            "appearance_time": 217,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 235,
+            "budget_constraint": 164,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -401,7 +401,7 @@
                 },
                 "001": {
                     "bid": 179,
-                    "valuation": 179,
+                    "valuation": 158,
                     "sector_path": [
                         "S0011",
                         "S002",
@@ -426,12 +426,12 @@
                     "request_arrival_time": 289
                 }
             },
-            "original_budget": 235
+            "original_budget": 164
         },
         "AC008": {
-            "appearance_time": 203,
+            "appearance_time": 204,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 237,
+            "budget_constraint": 151,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -443,7 +443,7 @@
                 },
                 "001": {
                     "bid": 154,
-                    "valuation": 154,
+                    "valuation": 249,
                     "sector_path": [
                         "S0012"
                     ],
@@ -456,12 +456,12 @@
                     "request_arrival_time": 232
                 }
             },
-            "original_budget": 237
+            "original_budget": 151
         },
         "AC009": {
-            "appearance_time": 133,
+            "appearance_time": 121,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 210,
+            "budget_constraint": 225,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -473,7 +473,7 @@
                 },
                 "001": {
                     "bid": 165,
-                    "valuation": 165,
+                    "valuation": 223,
                     "sector_path": [
                         "S0011",
                         "S002",
@@ -494,12 +494,12 @@
                     "request_arrival_time": 194
                 }
             },
-            "original_budget": 210
+            "original_budget": 225
         },
         "AC010": {
-            "appearance_time": 78,
+            "appearance_time": 77,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 244,
+            "budget_constraint": 169,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -511,7 +511,7 @@
                 },
                 "001": {
                     "bid": 230,
-                    "valuation": 230,
+                    "valuation": 228,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -528,12 +528,12 @@
                     "request_arrival_time": 107
                 }
             },
-            "original_budget": 244
+            "original_budget": 169
         },
         "AC011": {
-            "appearance_time": 35,
+            "appearance_time": 25,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 218,
+            "budget_constraint": 208,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -545,7 +545,7 @@
                 },
                 "001": {
                     "bid": 248,
-                    "valuation": 248,
+                    "valuation": 169,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -562,12 +562,12 @@
                     "request_arrival_time": 70
                 }
             },
-            "original_budget": 218
+            "original_budget": 208
         },
         "AC012": {
-            "appearance_time": 101,
+            "appearance_time": 112,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 230,
+            "budget_constraint": 208,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -579,7 +579,7 @@
                 },
                 "001": {
                     "bid": 203,
-                    "valuation": 203,
+                    "valuation": 169,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -596,12 +596,12 @@
                     "request_arrival_time": 152
                 }
             },
-            "original_budget": 230
+            "original_budget": 208
         },
         "AC013": {
-            "appearance_time": 58,
+            "appearance_time": 40,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 172,
+            "budget_constraint": 239,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -613,7 +613,7 @@
                 },
                 "001": {
                     "bid": 171,
-                    "valuation": 171,
+                    "valuation": 233,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -630,12 +630,12 @@
                     "request_arrival_time": 81
                 }
             },
-            "original_budget": 172
+            "original_budget": 239
         },
         "AC014": {
-            "appearance_time": 33,
+            "appearance_time": 34,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 219,
+            "budget_constraint": 195,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -647,7 +647,7 @@
                 },
                 "001": {
                     "bid": 210,
-                    "valuation": 210,
+                    "valuation": 238,
                     "sector_path": [
                         "S0012",
                         "S003",
@@ -664,12 +664,12 @@
                     "request_arrival_time": 58
                 }
             },
-            "original_budget": 219
+            "original_budget": 195
         },
         "AC015": {
             "appearance_time": 25,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 248,
+            "budget_constraint": 217,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -681,7 +681,7 @@
                 },
                 "001": {
                     "bid": 219,
-                    "valuation": 219,
+                    "valuation": 227,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -698,12 +698,12 @@
                     "request_arrival_time": 60
                 }
             },
-            "original_budget": 248
+            "original_budget": 217
         },
         "AC016": {
-            "appearance_time": 65,
+            "appearance_time": 67,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 244,
+            "budget_constraint": 159,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -715,7 +715,7 @@
                 },
                 "001": {
                     "bid": 245,
-                    "valuation": 245,
+                    "valuation": 151,
                     "sector_path": [
                         "S0012",
                         "S003",
@@ -732,12 +732,12 @@
                     "request_arrival_time": 109
                 }
             },
-            "original_budget": 244
+            "original_budget": 159
         },
         "AC017": {
-            "appearance_time": 117,
+            "appearance_time": 108,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 227,
+            "budget_constraint": 232,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -749,7 +749,7 @@
                 },
                 "001": {
                     "bid": 170,
-                    "valuation": 170,
+                    "valuation": 178,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -770,12 +770,12 @@
                     "request_arrival_time": 182
                 }
             },
-            "original_budget": 227
+            "original_budget": 232
         },
         "AC018": {
-            "appearance_time": 240,
+            "appearance_time": 244,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 172,
+            "budget_constraint": 158,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -787,7 +787,7 @@
                 },
                 "001": {
                     "bid": 170,
-                    "valuation": 170,
+                    "valuation": 235,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -804,12 +804,12 @@
                     "request_arrival_time": 280
                 }
             },
-            "original_budget": 172
+            "original_budget": 158
         },
         "AC019": {
-            "appearance_time": 50,
+            "appearance_time": 44,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 196,
+            "budget_constraint": 194,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -821,7 +821,7 @@
                 },
                 "001": {
                     "bid": 167,
-                    "valuation": 167,
+                    "valuation": 224,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -846,12 +846,12 @@
                     "request_arrival_time": 148
                 }
             },
-            "original_budget": 196
+            "original_budget": 194
         },
         "AC020": {
             "appearance_time": 185,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 212,
+            "budget_constraint": 159,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -863,7 +863,7 @@
                 },
                 "001": {
                     "bid": 155,
-                    "valuation": 155,
+                    "valuation": 214,
                     "sector_path": [
                         "S0011",
                         "S002",
@@ -884,12 +884,12 @@
                     "request_arrival_time": 257
                 }
             },
-            "original_budget": 212
+            "original_budget": 159
         },
         "AC021": {
-            "appearance_time": 153,
+            "appearance_time": 156,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 228,
+            "budget_constraint": 223,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -901,7 +901,7 @@
                 },
                 "001": {
                     "bid": 158,
-                    "valuation": 158,
+                    "valuation": 231,
                     "sector_path": [
                         "S009"
                     ],
@@ -914,12 +914,12 @@
                     "request_arrival_time": 182
                 }
             },
-            "original_budget": 228
+            "original_budget": 223
         },
         "AC022": {
-            "appearance_time": 218,
+            "appearance_time": 201,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 202,
+            "budget_constraint": 192,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -931,7 +931,7 @@
                 },
                 "001": {
                     "bid": 239,
-                    "valuation": 239,
+                    "valuation": 249,
                     "sector_path": [
                         "S0010"
                     ],
@@ -944,12 +944,12 @@
                     "request_arrival_time": 234
                 }
             },
-            "original_budget": 202
+            "original_budget": 192
         },
         "AC023": {
-            "appearance_time": 213,
+            "appearance_time": 202,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 216,
+            "budget_constraint": 180,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -961,7 +961,7 @@
                 },
                 "001": {
                     "bid": 231,
-                    "valuation": 231,
+                    "valuation": 191,
                     "sector_path": [
                         "S0012",
                         "S003",
@@ -982,12 +982,12 @@
                     "request_arrival_time": 271
                 }
             },
-            "original_budget": 216
+            "original_budget": 180
         },
         "AC024": {
-            "appearance_time": 221,
+            "appearance_time": 224,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 218,
+            "budget_constraint": 237,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -999,7 +999,7 @@
                 },
                 "001": {
                     "bid": 217,
-                    "valuation": 217,
+                    "valuation": 231,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -1020,12 +1020,12 @@
                     "request_arrival_time": 297
                 }
             },
-            "original_budget": 218
+            "original_budget": 237
         },
         "AC025": {
-            "appearance_time": 249,
+            "appearance_time": 245,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 157,
+            "budget_constraint": 245,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1037,7 +1037,7 @@
                 },
                 "001": {
                     "bid": 169,
-                    "valuation": 169,
+                    "valuation": 155,
                     "sector_path": [
                         "S008"
                     ],
@@ -1050,12 +1050,12 @@
                     "request_arrival_time": 283
                 }
             },
-            "original_budget": 157
+            "original_budget": 245
         },
         "AC026": {
-            "appearance_time": 62,
+            "appearance_time": 61,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 234,
+            "budget_constraint": 204,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1067,7 +1067,7 @@
                 },
                 "001": {
                     "bid": 189,
-                    "valuation": 189,
+                    "valuation": 234,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -1084,12 +1084,12 @@
                     "request_arrival_time": 109
                 }
             },
-            "original_budget": 234
+            "original_budget": 204
         },
         "AC027": {
-            "appearance_time": 72,
+            "appearance_time": 79,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 245,
+            "budget_constraint": 153,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1101,7 +1101,7 @@
                 },
                 "001": {
                     "bid": 166,
-                    "valuation": 166,
+                    "valuation": 172,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -1126,12 +1126,12 @@
                     "request_arrival_time": 147
                 }
             },
-            "original_budget": 245
+            "original_budget": 153
         },
         "AC028": {
-            "appearance_time": 224,
+            "appearance_time": 232,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 224,
+            "budget_constraint": 247,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1143,7 +1143,7 @@
                 },
                 "001": {
                     "bid": 208,
-                    "valuation": 208,
+                    "valuation": 163,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -1160,12 +1160,12 @@
                     "request_arrival_time": 258
                 }
             },
-            "original_budget": 224
+            "original_budget": 247
         },
         "AC029": {
-            "appearance_time": 252,
+            "appearance_time": 245,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 157,
+            "budget_constraint": 233,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1177,7 +1177,7 @@
                 },
                 "001": {
                     "bid": 217,
-                    "valuation": 217,
+                    "valuation": 209,
                     "sector_path": [
                         "S005",
                         "S001",
@@ -1198,12 +1198,12 @@
                     "request_arrival_time": 305
                 }
             },
-            "original_budget": 157
+            "original_budget": 233
         },
         "AC030": {
-            "appearance_time": 179,
+            "appearance_time": 169,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 164,
+            "budget_constraint": 206,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1215,7 +1215,7 @@
                 },
                 "001": {
                     "bid": 211,
-                    "valuation": 211,
+                    "valuation": 221,
                     "sector_path": [
                         "S005",
                         "S001",
@@ -1240,12 +1240,12 @@
                     "request_arrival_time": 262
                 }
             },
-            "original_budget": 164
+            "original_budget": 206
         },
         "AC031": {
-            "appearance_time": 140,
+            "appearance_time": 157,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 223,
+            "budget_constraint": 246,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1257,7 +1257,7 @@
                 },
                 "001": {
                     "bid": 153,
-                    "valuation": 153,
+                    "valuation": 210,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -1278,12 +1278,12 @@
                     "request_arrival_time": 203
                 }
             },
-            "original_budget": 223
+            "original_budget": 246
         },
         "AC032": {
             "appearance_time": 199,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 191,
+            "budget_constraint": 177,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1295,7 +1295,7 @@
                 },
                 "001": {
                     "bid": 188,
-                    "valuation": 188,
+                    "valuation": 205,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -1316,12 +1316,12 @@
                     "request_arrival_time": 259
                 }
             },
-            "original_budget": 191
+            "original_budget": 177
         },
         "AC033": {
-            "appearance_time": 205,
+            "appearance_time": 215,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 157,
+            "budget_constraint": 158,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1333,7 +1333,7 @@
                 },
                 "001": {
                     "bid": 218,
-                    "valuation": 218,
+                    "valuation": 170,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -1354,12 +1354,12 @@
                     "request_arrival_time": 264
                 }
             },
-            "original_budget": 157
+            "original_budget": 158
         },
         "AC034": {
-            "appearance_time": 192,
+            "appearance_time": 184,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 157,
+            "budget_constraint": 154,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1371,7 +1371,7 @@
                 },
                 "001": {
                     "bid": 229,
-                    "valuation": 229,
+                    "valuation": 218,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -1396,12 +1396,12 @@
                     "request_arrival_time": 281
                 }
             },
-            "original_budget": 157
+            "original_budget": 154
         },
         "AC035": {
-            "appearance_time": 22,
+            "appearance_time": 39,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 229,
+            "budget_constraint": 230,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1413,7 +1413,7 @@
                 },
                 "001": {
                     "bid": 200,
-                    "valuation": 200,
+                    "valuation": 221,
                     "sector_path": [
                         "S0011",
                         "S002",
@@ -1434,12 +1434,12 @@
                     "request_arrival_time": 101
                 }
             },
-            "original_budget": 229
+            "original_budget": 230
         },
         "AC036": {
-            "appearance_time": 219,
+            "appearance_time": 208,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 209,
+            "budget_constraint": 199,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1451,7 +1451,7 @@
                 },
                 "001": {
                     "bid": 163,
-                    "valuation": 163,
+                    "valuation": 202,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -1476,12 +1476,12 @@
                     "request_arrival_time": 291
                 }
             },
-            "original_budget": 209
+            "original_budget": 199
         },
         "AC037": {
-            "appearance_time": 57,
+            "appearance_time": 49,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 162,
+            "budget_constraint": 208,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1493,7 +1493,7 @@
                 },
                 "001": {
                     "bid": 192,
-                    "valuation": 192,
+                    "valuation": 235,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -1514,12 +1514,12 @@
                     "request_arrival_time": 120
                 }
             },
-            "original_budget": 162
+            "original_budget": 208
         },
         "AC038": {
-            "appearance_time": 208,
+            "appearance_time": 209,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 168,
+            "budget_constraint": 156,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1531,7 +1531,7 @@
                 },
                 "001": {
                     "bid": 167,
-                    "valuation": 167,
+                    "valuation": 153,
                     "sector_path": [
                         "S0012",
                         "S003",
@@ -1548,12 +1548,12 @@
                     "request_arrival_time": 254
                 }
             },
-            "original_budget": 168
+            "original_budget": 156
         },
         "AC039": {
-            "appearance_time": 116,
+            "appearance_time": 106,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 158,
+            "budget_constraint": 167,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1565,7 +1565,7 @@
                 },
                 "001": {
                     "bid": 237,
-                    "valuation": 237,
+                    "valuation": 239,
                     "sector_path": [
                         "S0010"
                     ],
@@ -1578,12 +1578,12 @@
                     "request_arrival_time": 131
                 }
             },
-            "original_budget": 158
+            "original_budget": 167
         },
         "AC040": {
-            "appearance_time": 51,
+            "appearance_time": 50,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 175,
+            "budget_constraint": 195,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1595,7 +1595,7 @@
                 },
                 "001": {
                     "bid": 213,
-                    "valuation": 213,
+                    "valuation": 178,
                     "sector_path": [
                         "S0012",
                         "S003",
@@ -1616,12 +1616,12 @@
                     "request_arrival_time": 122
                 }
             },
-            "original_budget": 175
+            "original_budget": 195
         },
         "AC041": {
-            "appearance_time": 15,
+            "appearance_time": 6,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 155,
+            "budget_constraint": 187,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1633,7 +1633,7 @@
                 },
                 "001": {
                     "bid": 158,
-                    "valuation": 158,
+                    "valuation": 180,
                     "sector_path": [
                         "S005",
                         "S001",
@@ -1654,12 +1654,12 @@
                     "request_arrival_time": 66
                 }
             },
-            "original_budget": 155
+            "original_budget": 187
         },
         "AC042": {
-            "appearance_time": 82,
+            "appearance_time": 94,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 215,
+            "budget_constraint": 200,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1671,7 +1671,7 @@
                 },
                 "001": {
                     "bid": 217,
-                    "valuation": 217,
+                    "valuation": 178,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -1692,12 +1692,12 @@
                     "request_arrival_time": 146
                 }
             },
-            "original_budget": 215
+            "original_budget": 200
         },
         "AC043": {
             "appearance_time": 124,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 179,
+            "budget_constraint": 222,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1709,7 +1709,7 @@
                 },
                 "001": {
                     "bid": 236,
-                    "valuation": 236,
+                    "valuation": 178,
                     "sector_path": [
                         "S0011",
                         "S002",
@@ -1730,12 +1730,12 @@
                     "request_arrival_time": 203
                 }
             },
-            "original_budget": 179
+            "original_budget": 222
         },
         "AC044": {
-            "appearance_time": 165,
+            "appearance_time": 179,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 175,
+            "budget_constraint": 181,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1747,7 +1747,7 @@
                 },
                 "001": {
                     "bid": 174,
-                    "valuation": 174,
+                    "valuation": 155,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -1772,12 +1772,12 @@
                     "request_arrival_time": 267
                 }
             },
-            "original_budget": 175
+            "original_budget": 181
         },
         "AC045": {
-            "appearance_time": 140,
+            "appearance_time": 150,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 219,
+            "budget_constraint": 150,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1806,12 +1806,12 @@
                     "request_arrival_time": 194
                 }
             },
-            "original_budget": 219
+            "original_budget": 150
         },
         "AC046": {
             "appearance_time": 256,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 248,
+            "budget_constraint": 237,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1823,7 +1823,7 @@
                 },
                 "001": {
                     "bid": 213,
-                    "valuation": 213,
+                    "valuation": 244,
                     "sector_path": [
                         "S008"
                     ],
@@ -1836,12 +1836,12 @@
                     "request_arrival_time": 279
                 }
             },
-            "original_budget": 248
+            "original_budget": 237
         },
         "AC047": {
-            "appearance_time": 60,
+            "appearance_time": 64,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 156,
+            "budget_constraint": 183,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1853,7 +1853,7 @@
                 },
                 "001": {
                     "bid": 224,
-                    "valuation": 224,
+                    "valuation": 196,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -1874,12 +1874,12 @@
                     "request_arrival_time": 116
                 }
             },
-            "original_budget": 156
+            "original_budget": 183
         },
         "AC048": {
-            "appearance_time": 62,
+            "appearance_time": 74,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 240,
+            "budget_constraint": 204,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1891,7 +1891,7 @@
                 },
                 "001": {
                     "bid": 219,
-                    "valuation": 219,
+                    "valuation": 237,
                     "sector_path": [
                         "S0012",
                         "S003",
@@ -1912,12 +1912,12 @@
                     "request_arrival_time": 143
                 }
             },
-            "original_budget": 240
+            "original_budget": 204
         },
         "AC049": {
-            "appearance_time": 82,
+            "appearance_time": 95,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 211,
+            "budget_constraint": 214,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1929,7 +1929,7 @@
                 },
                 "001": {
                     "bid": 211,
-                    "valuation": 211,
+                    "valuation": 226,
                     "sector_path": [
                         "S005",
                         "S001",
@@ -1946,12 +1946,12 @@
                     "request_arrival_time": 134
                 }
             },
-            "original_budget": 211
+            "original_budget": 214
         },
         "AC050": {
-            "appearance_time": 133,
+            "appearance_time": 125,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 238,
+            "budget_constraint": 241,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1963,7 +1963,7 @@
                 },
                 "001": {
                     "bid": 198,
-                    "valuation": 198,
+                    "valuation": 179,
                     "sector_path": [
                         "S0012",
                         "S003",
@@ -1980,12 +1980,12 @@
                     "request_arrival_time": 164
                 }
             },
-            "original_budget": 238
+            "original_budget": 241
         },
         "AC051": {
-            "appearance_time": 17,
+            "appearance_time": 0,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 174,
+            "budget_constraint": 193,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -1997,7 +1997,7 @@
                 },
                 "001": {
                     "bid": 151,
-                    "valuation": 151,
+                    "valuation": 178,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -2022,12 +2022,12 @@
                     "request_arrival_time": 83
                 }
             },
-            "original_budget": 174
+            "original_budget": 193
         },
         "AC052": {
-            "appearance_time": 175,
+            "appearance_time": 161,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 172,
+            "budget_constraint": 183,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2039,7 +2039,7 @@
                 },
                 "001": {
                     "bid": 236,
-                    "valuation": 236,
+                    "valuation": 150,
                     "sector_path": [
                         "S009"
                     ],
@@ -2052,12 +2052,12 @@
                     "request_arrival_time": 207
                 }
             },
-            "original_budget": 172
+            "original_budget": 183
         },
         "AC053": {
-            "appearance_time": 254,
+            "appearance_time": 247,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 233,
+            "budget_constraint": 211,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2069,7 +2069,7 @@
                 },
                 "001": {
                     "bid": 245,
-                    "valuation": 245,
+                    "valuation": 250,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -2090,12 +2090,12 @@
                     "request_arrival_time": 297
                 }
             },
-            "original_budget": 233
+            "original_budget": 211
         },
         "AC054": {
-            "appearance_time": 215,
+            "appearance_time": 204,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 232,
+            "budget_constraint": 186,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2107,7 +2107,7 @@
                 },
                 "001": {
                     "bid": 207,
-                    "valuation": 207,
+                    "valuation": 189,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -2124,12 +2124,12 @@
                     "request_arrival_time": 238
                 }
             },
-            "original_budget": 232
+            "original_budget": 186
         },
         "AC055": {
-            "appearance_time": 141,
+            "appearance_time": 148,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 175,
+            "budget_constraint": 203,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2141,7 +2141,7 @@
                 },
                 "001": {
                     "bid": 241,
-                    "valuation": 241,
+                    "valuation": 163,
                     "sector_path": [
                         "S0011"
                     ],
@@ -2154,12 +2154,12 @@
                     "request_arrival_time": 171
                 }
             },
-            "original_budget": 175
+            "original_budget": 203
         },
         "AC056": {
-            "appearance_time": 232,
+            "appearance_time": 228,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 211,
+            "budget_constraint": 191,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2171,7 +2171,7 @@
                 },
                 "001": {
                     "bid": 198,
-                    "valuation": 198,
+                    "valuation": 228,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -2196,12 +2196,12 @@
                     "request_arrival_time": 293
                 }
             },
-            "original_budget": 211
+            "original_budget": 191
         },
         "AC057": {
-            "appearance_time": 180,
+            "appearance_time": 188,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 205,
+            "budget_constraint": 209,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2213,7 +2213,7 @@
                 },
                 "001": {
                     "bid": 199,
-                    "valuation": 199,
+                    "valuation": 166,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -2234,12 +2234,12 @@
                     "request_arrival_time": 253
                 }
             },
-            "original_budget": 205
+            "original_budget": 209
         },
         "AC058": {
-            "appearance_time": 202,
+            "appearance_time": 212,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 167,
+            "budget_constraint": 211,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2251,7 +2251,7 @@
                 },
                 "001": {
                     "bid": 190,
-                    "valuation": 190,
+                    "valuation": 161,
                     "sector_path": [
                         "S005",
                         "S001",
@@ -2268,12 +2268,12 @@
                     "request_arrival_time": 255
                 }
             },
-            "original_budget": 167
+            "original_budget": 211
         },
         "AC059": {
-            "appearance_time": 251,
+            "appearance_time": 246,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 195,
+            "budget_constraint": 222,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2285,7 +2285,7 @@
                 },
                 "001": {
                     "bid": 179,
-                    "valuation": 179,
+                    "valuation": 250,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -2302,12 +2302,12 @@
                     "request_arrival_time": 293
                 }
             },
-            "original_budget": 195
+            "original_budget": 222
         },
         "AC060": {
-            "appearance_time": 70,
+            "appearance_time": 68,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 183,
+            "budget_constraint": 225,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2319,7 +2319,7 @@
                 },
                 "001": {
                     "bid": 181,
-                    "valuation": 181,
+                    "valuation": 167,
                     "sector_path": [
                         "S0012",
                         "S003",
@@ -2340,12 +2340,12 @@
                     "request_arrival_time": 125
                 }
             },
-            "original_budget": 183
+            "original_budget": 225
         },
         "AC061": {
-            "appearance_time": 241,
+            "appearance_time": 257,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 239,
+            "budget_constraint": 209,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2357,7 +2357,7 @@
                 },
                 "001": {
                     "bid": 238,
-                    "valuation": 238,
+                    "valuation": 200,
                     "sector_path": [
                         "S0012",
                         "S003",
@@ -2374,12 +2374,12 @@
                     "request_arrival_time": 287
                 }
             },
-            "original_budget": 239
+            "original_budget": 209
         },
         "AC062": {
-            "appearance_time": 0,
+            "appearance_time": 18,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 182,
+            "budget_constraint": 216,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2391,7 +2391,7 @@
                 },
                 "001": {
                     "bid": 202,
-                    "valuation": 202,
+                    "valuation": 235,
                     "sector_path": [
                         "S005"
                     ],
@@ -2404,12 +2404,12 @@
                     "request_arrival_time": 33
                 }
             },
-            "original_budget": 182
+            "original_budget": 216
         },
         "AC063": {
-            "appearance_time": 84,
+            "appearance_time": 80,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 187,
+            "budget_constraint": 210,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2421,7 +2421,7 @@
                 },
                 "001": {
                     "bid": 210,
-                    "valuation": 210,
+                    "valuation": 170,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -2442,12 +2442,12 @@
                     "request_arrival_time": 148
                 }
             },
-            "original_budget": 187
+            "original_budget": 210
         },
         "AC064": {
-            "appearance_time": 244,
+            "appearance_time": 252,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 211,
+            "budget_constraint": 151,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2459,7 +2459,7 @@
                 },
                 "001": {
                     "bid": 250,
-                    "valuation": 250,
+                    "valuation": 201,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -2476,12 +2476,12 @@
                     "request_arrival_time": 286
                 }
             },
-            "original_budget": 211
+            "original_budget": 151
         },
         "AC065": {
-            "appearance_time": 154,
+            "appearance_time": 142,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 221,
+            "budget_constraint": 151,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2493,7 +2493,7 @@
                 },
                 "001": {
                     "bid": 226,
-                    "valuation": 226,
+                    "valuation": 225,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -2514,12 +2514,12 @@
                     "request_arrival_time": 213
                 }
             },
-            "original_budget": 221
+            "original_budget": 151
         },
         "AC066": {
-            "appearance_time": 32,
+            "appearance_time": 22,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 215,
+            "budget_constraint": 184,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2531,7 +2531,7 @@
                 },
                 "001": {
                     "bid": 250,
-                    "valuation": 250,
+                    "valuation": 241,
                     "sector_path": [
                         "S005",
                         "S001",
@@ -2548,12 +2548,12 @@
                     "request_arrival_time": 77
                 }
             },
-            "original_budget": 215
+            "original_budget": 184
         },
         "AC067": {
-            "appearance_time": 65,
+            "appearance_time": 72,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 159,
+            "budget_constraint": 232,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2565,7 +2565,7 @@
                 },
                 "001": {
                     "bid": 170,
-                    "valuation": 170,
+                    "valuation": 236,
                     "sector_path": [
                         "S0010"
                     ],
@@ -2578,12 +2578,12 @@
                     "request_arrival_time": 103
                 }
             },
-            "original_budget": 159
+            "original_budget": 232
         },
         "AC068": {
-            "appearance_time": 84,
+            "appearance_time": 95,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 202,
+            "budget_constraint": 176,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2595,7 +2595,7 @@
                 },
                 "001": {
                     "bid": 172,
-                    "valuation": 172,
+                    "valuation": 223,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -2616,12 +2616,12 @@
                     "request_arrival_time": 150
                 }
             },
-            "original_budget": 202
+            "original_budget": 176
         },
         "AC069": {
-            "appearance_time": 140,
+            "appearance_time": 155,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 204,
+            "budget_constraint": 245,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2633,7 +2633,7 @@
                 },
                 "001": {
                     "bid": 197,
-                    "valuation": 197,
+                    "valuation": 238,
                     "sector_path": [
                         "S009",
                         "S005",
@@ -2650,12 +2650,12 @@
                     "request_arrival_time": 209
                 }
             },
-            "original_budget": 204
+            "original_budget": 245
         },
         "AC070": {
-            "appearance_time": 61,
+            "appearance_time": 75,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 226,
+            "budget_constraint": 192,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2667,7 +2667,7 @@
                 },
                 "001": {
                     "bid": 245,
-                    "valuation": 245,
+                    "valuation": 187,
                     "sector_path": [
                         "S009"
                     ],
@@ -2680,12 +2680,12 @@
                     "request_arrival_time": 93
                 }
             },
-            "original_budget": 226
+            "original_budget": 192
         },
         "AC071": {
-            "appearance_time": 252,
+            "appearance_time": 259,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 226,
+            "budget_constraint": 225,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2697,7 +2697,7 @@
                 },
                 "001": {
                     "bid": 187,
-                    "valuation": 187,
+                    "valuation": 178,
                     "sector_path": [
                         "S006"
                     ],
@@ -2710,12 +2710,12 @@
                     "request_arrival_time": 279
                 }
             },
-            "original_budget": 226
+            "original_budget": 225
         },
         "AC072": {
-            "appearance_time": 5,
+            "appearance_time": 8,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 239,
+            "budget_constraint": 184,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2727,7 +2727,7 @@
                 },
                 "001": {
                     "bid": 231,
-                    "valuation": 231,
+                    "valuation": 202,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -2744,12 +2744,12 @@
                     "request_arrival_time": 37
                 }
             },
-            "original_budget": 239
+            "original_budget": 184
         },
         "AC073": {
-            "appearance_time": 79,
+            "appearance_time": 75,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 189,
+            "budget_constraint": 232,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2761,7 +2761,7 @@
                 },
                 "001": {
                     "bid": 210,
-                    "valuation": 210,
+                    "valuation": 241,
                     "sector_path": [
                         "S005",
                         "S001",
@@ -2780,12 +2780,12 @@
                     "request_arrival_time": 119
                 }
             },
-            "original_budget": 189
+            "original_budget": 232
         },
         "AC074": {
-            "appearance_time": 17,
+            "appearance_time": 15,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 232,
+            "budget_constraint": 218,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2797,7 +2797,7 @@
                 },
                 "001": {
                     "bid": 178,
-                    "valuation": 178,
+                    "valuation": 202,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -2818,12 +2818,12 @@
                     "request_arrival_time": 79
                 }
             },
-            "original_budget": 232
+            "original_budget": 218
         },
         "AC075": {
-            "appearance_time": 42,
+            "appearance_time": 51,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 238,
+            "budget_constraint": 224,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2835,7 +2835,7 @@
                 },
                 "001": {
                     "bid": 245,
-                    "valuation": 245,
+                    "valuation": 221,
                     "sector_path": [
                         "S0012",
                         "S003",
@@ -2852,12 +2852,12 @@
                     "request_arrival_time": 90
                 }
             },
-            "original_budget": 238
+            "original_budget": 224
         },
         "AC076": {
-            "appearance_time": 224,
+            "appearance_time": 223,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 239,
+            "budget_constraint": 184,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2869,7 +2869,7 @@
                 },
                 "001": {
                     "bid": 193,
-                    "valuation": 193,
+                    "valuation": 179,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -2886,12 +2886,12 @@
                     "request_arrival_time": 264
                 }
             },
-            "original_budget": 239
+            "original_budget": 184
         },
         "AC077": {
-            "appearance_time": 83,
+            "appearance_time": 92,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 166,
+            "budget_constraint": 206,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2903,7 +2903,7 @@
                 },
                 "001": {
                     "bid": 247,
-                    "valuation": 247,
+                    "valuation": 210,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -2920,12 +2920,12 @@
                     "request_arrival_time": 130
                 }
             },
-            "original_budget": 166
+            "original_budget": 206
         },
         "AC078": {
-            "appearance_time": 183,
+            "appearance_time": 188,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 233,
+            "budget_constraint": 214,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2937,7 +2937,7 @@
                 },
                 "001": {
                     "bid": 205,
-                    "valuation": 205,
+                    "valuation": 234,
                     "sector_path": [
                         "S007"
                     ],
@@ -2950,12 +2950,12 @@
                     "request_arrival_time": 211
                 }
             },
-            "original_budget": 233
+            "original_budget": 214
         },
         "AC079": {
-            "appearance_time": 242,
+            "appearance_time": 249,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 200,
+            "budget_constraint": 178,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -2967,7 +2967,7 @@
                 },
                 "001": {
                     "bid": 174,
-                    "valuation": 174,
+                    "valuation": 220,
                     "sector_path": [
                         "S0012",
                         "S003",
@@ -2984,12 +2984,12 @@
                     "request_arrival_time": 291
                 }
             },
-            "original_budget": 200
+            "original_budget": 178
         },
         "AC080": {
-            "appearance_time": 27,
+            "appearance_time": 22,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 163,
+            "budget_constraint": 220,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3001,7 +3001,7 @@
                 },
                 "001": {
                     "bid": 171,
-                    "valuation": 171,
+                    "valuation": 203,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -3018,12 +3018,12 @@
                     "request_arrival_time": 63
                 }
             },
-            "original_budget": 163
+            "original_budget": 220
         },
         "AC081": {
-            "appearance_time": 76,
+            "appearance_time": 78,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 226,
+            "budget_constraint": 156,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3035,7 +3035,7 @@
                 },
                 "001": {
                     "bid": 223,
-                    "valuation": 223,
+                    "valuation": 189,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -3056,12 +3056,12 @@
                     "request_arrival_time": 127
                 }
             },
-            "original_budget": 226
+            "original_budget": 156
         },
         "AC082": {
-            "appearance_time": 255,
+            "appearance_time": 258,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 174,
+            "budget_constraint": 221,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3073,7 +3073,7 @@
                 },
                 "001": {
                     "bid": 166,
-                    "valuation": 166,
+                    "valuation": 156,
                     "sector_path": [
                         "S0011",
                         "S002",
@@ -3090,12 +3090,12 @@
                     "request_arrival_time": 285
                 }
             },
-            "original_budget": 174
+            "original_budget": 221
         },
         "AC083": {
-            "appearance_time": 103,
+            "appearance_time": 108,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 162,
+            "budget_constraint": 177,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3107,7 +3107,7 @@
                 },
                 "001": {
                     "bid": 197,
-                    "valuation": 197,
+                    "valuation": 153,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -3128,12 +3128,12 @@
                     "request_arrival_time": 176
                 }
             },
-            "original_budget": 162
+            "original_budget": 177
         },
         "AC084": {
-            "appearance_time": 29,
+            "appearance_time": 37,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 170,
+            "budget_constraint": 197,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3145,7 +3145,7 @@
                 },
                 "001": {
                     "bid": 188,
-                    "valuation": 188,
+                    "valuation": 249,
                     "sector_path": [
                         "S005",
                         "S001",
@@ -3170,12 +3170,12 @@
                     "request_arrival_time": 126
                 }
             },
-            "original_budget": 170
+            "original_budget": 197
         },
         "AC085": {
-            "appearance_time": 13,
+            "appearance_time": 10,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 177,
+            "budget_constraint": 227,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3187,7 +3187,7 @@
                 },
                 "001": {
                     "bid": 204,
-                    "valuation": 204,
+                    "valuation": 246,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -3208,12 +3208,12 @@
                     "request_arrival_time": 67
                 }
             },
-            "original_budget": 177
+            "original_budget": 227
         },
         "AC086": {
-            "appearance_time": 193,
+            "appearance_time": 189,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 184,
+            "budget_constraint": 206,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3225,7 +3225,7 @@
                 },
                 "001": {
                     "bid": 155,
-                    "valuation": 155,
+                    "valuation": 180,
                     "sector_path": [
                         "S007"
                     ],
@@ -3238,12 +3238,12 @@
                     "request_arrival_time": 216
                 }
             },
-            "original_budget": 184
+            "original_budget": 206
         },
         "AC087": {
-            "appearance_time": 246,
+            "appearance_time": 249,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 247,
+            "budget_constraint": 192,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3255,7 +3255,7 @@
                 },
                 "001": {
                     "bid": 239,
-                    "valuation": 239,
+                    "valuation": 229,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -3272,10 +3272,10 @@
                     "request_arrival_time": 293
                 }
             },
-            "original_budget": 247
+            "original_budget": 192
         },
         "AC088": {
-            "appearance_time": 192,
+            "appearance_time": 180,
             "origin_vertiport_id": "V001",
             "budget_constraint": 201,
             "decay_factor": 0.95,
@@ -3289,7 +3289,7 @@
                 },
                 "001": {
                     "bid": 166,
-                    "valuation": 166,
+                    "valuation": 242,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -3311,7 +3311,7 @@
         "AC089": {
             "appearance_time": 129,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 234,
+            "budget_constraint": 196,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3323,7 +3323,7 @@
                 },
                 "001": {
                     "bid": 225,
-                    "valuation": 225,
+                    "valuation": 195,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -3340,12 +3340,12 @@
                     "request_arrival_time": 175
                 }
             },
-            "original_budget": 234
+            "original_budget": 196
         },
         "AC091": {
-            "appearance_time": 228,
+            "appearance_time": 229,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 173,
+            "budget_constraint": 158,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3357,7 +3357,7 @@
                 },
                 "001": {
                     "bid": 221,
-                    "valuation": 221,
+                    "valuation": 158,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -3374,12 +3374,12 @@
                     "request_arrival_time": 257
                 }
             },
-            "original_budget": 173
+            "original_budget": 158
         },
         "AC092": {
             "appearance_time": 16,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 239,
+            "budget_constraint": 250,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3391,7 +3391,7 @@
                 },
                 "001": {
                     "bid": 152,
-                    "valuation": 152,
+                    "valuation": 236,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -3412,12 +3412,12 @@
                     "request_arrival_time": 82
                 }
             },
-            "original_budget": 239
+            "original_budget": 250
         },
         "AC093": {
-            "appearance_time": 60,
+            "appearance_time": 61,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 162,
+            "budget_constraint": 222,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3429,7 +3429,7 @@
                 },
                 "001": {
                     "bid": 167,
-                    "valuation": 167,
+                    "valuation": 227,
                     "sector_path": [
                         "S0012",
                         "S003",
@@ -3450,12 +3450,12 @@
                     "request_arrival_time": 142
                 }
             },
-            "original_budget": 162
+            "original_budget": 222
         },
         "AC094": {
             "appearance_time": 173,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 234,
+            "budget_constraint": 176,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3467,7 +3467,7 @@
                 },
                 "001": {
                     "bid": 172,
-                    "valuation": 172,
+                    "valuation": 186,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -3484,12 +3484,12 @@
                     "request_arrival_time": 216
                 }
             },
-            "original_budget": 234
+            "original_budget": 176
         },
         "AC095": {
-            "appearance_time": 248,
+            "appearance_time": 259,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 219,
+            "budget_constraint": 224,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3501,7 +3501,7 @@
                 },
                 "001": {
                     "bid": 158,
-                    "valuation": 158,
+                    "valuation": 207,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -3518,12 +3518,12 @@
                     "request_arrival_time": 277
                 }
             },
-            "original_budget": 219
+            "original_budget": 224
         },
         "AC096": {
-            "appearance_time": 72,
+            "appearance_time": 67,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 201,
+            "budget_constraint": 171,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3535,7 +3535,7 @@
                 },
                 "001": {
                     "bid": 197,
-                    "valuation": 197,
+                    "valuation": 234,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -3552,12 +3552,12 @@
                     "request_arrival_time": 97
                 }
             },
-            "original_budget": 201
+            "original_budget": 171
         },
         "AC097": {
-            "appearance_time": 145,
+            "appearance_time": 154,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 229,
+            "budget_constraint": 227,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3569,7 +3569,7 @@
                 },
                 "001": {
                     "bid": 245,
-                    "valuation": 245,
+                    "valuation": 184,
                     "sector_path": [
                         "S0011",
                         "S002",
@@ -3590,12 +3590,12 @@
                     "request_arrival_time": 216
                 }
             },
-            "original_budget": 229
+            "original_budget": 227
         },
         "AC098": {
-            "appearance_time": 48,
+            "appearance_time": 43,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 193,
+            "budget_constraint": 225,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3607,7 +3607,7 @@
                 },
                 "001": {
                     "bid": 236,
-                    "valuation": 236,
+                    "valuation": 222,
                     "sector_path": [
                         "S0011",
                         "S002",
@@ -3624,12 +3624,12 @@
                     "request_arrival_time": 86
                 }
             },
-            "original_budget": 193
+            "original_budget": 225
         },
         "AC099": {
-            "appearance_time": 6,
+            "appearance_time": 19,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 189,
+            "budget_constraint": 198,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3641,7 +3641,7 @@
                 },
                 "001": {
                     "bid": 161,
-                    "valuation": 161,
+                    "valuation": 157,
                     "sector_path": [
                         "S0011",
                         "S002",
@@ -3662,12 +3662,12 @@
                     "request_arrival_time": 80
                 }
             },
-            "original_budget": 189
+            "original_budget": 198
         },
         "AC100": {
-            "appearance_time": 138,
+            "appearance_time": 129,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 198,
+            "budget_constraint": 220,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3679,7 +3679,7 @@
                 },
                 "001": {
                     "bid": 213,
-                    "valuation": 213,
+                    "valuation": 163,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -3700,12 +3700,12 @@
                     "request_arrival_time": 198
                 }
             },
-            "original_budget": 198
+            "original_budget": 220
         },
         "AC101": {
-            "appearance_time": 217,
+            "appearance_time": 206,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 151,
+            "budget_constraint": 183,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3717,7 +3717,7 @@
                 },
                 "001": {
                     "bid": 186,
-                    "valuation": 186,
+                    "valuation": 174,
                     "sector_path": [
                         "S006"
                     ],
@@ -3730,12 +3730,12 @@
                     "request_arrival_time": 249
                 }
             },
-            "original_budget": 151
+            "original_budget": 183
         },
         "AC102": {
-            "appearance_time": 177,
+            "appearance_time": 175,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 158,
+            "budget_constraint": 241,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3747,7 +3747,7 @@
                 },
                 "001": {
                     "bid": 219,
-                    "valuation": 219,
+                    "valuation": 187,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -3768,12 +3768,12 @@
                     "request_arrival_time": 238
                 }
             },
-            "original_budget": 158
+            "original_budget": 241
         },
         "AC103": {
-            "appearance_time": 249,
+            "appearance_time": 247,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 231,
+            "budget_constraint": 221,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3785,7 +3785,7 @@
                 },
                 "001": {
                     "bid": 219,
-                    "valuation": 219,
+                    "valuation": 165,
                     "sector_path": [
                         "S005",
                         "S001",
@@ -3806,12 +3806,12 @@
                     "request_arrival_time": 308
                 }
             },
-            "original_budget": 231
+            "original_budget": 221
         },
         "AC104": {
-            "appearance_time": 238,
+            "appearance_time": 220,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 197,
+            "budget_constraint": 202,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3823,7 +3823,7 @@
                 },
                 "001": {
                     "bid": 202,
-                    "valuation": 202,
+                    "valuation": 165,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -3844,12 +3844,12 @@
                     "request_arrival_time": 296
                 }
             },
-            "original_budget": 197
+            "original_budget": 202
         },
         "AC105": {
-            "appearance_time": 198,
+            "appearance_time": 197,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 197,
+            "budget_constraint": 242,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3861,7 +3861,7 @@
                 },
                 "001": {
                     "bid": 250,
-                    "valuation": 250,
+                    "valuation": 187,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -3878,12 +3878,12 @@
                     "request_arrival_time": 231
                 }
             },
-            "original_budget": 197
+            "original_budget": 242
         },
         "AC106": {
-            "appearance_time": 48,
+            "appearance_time": 40,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 174,
+            "budget_constraint": 164,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3895,7 +3895,7 @@
                 },
                 "001": {
                     "bid": 208,
-                    "valuation": 208,
+                    "valuation": 190,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -3916,12 +3916,12 @@
                     "request_arrival_time": 120
                 }
             },
-            "original_budget": 174
+            "original_budget": 164
         },
         "AC107": {
-            "appearance_time": 31,
+            "appearance_time": 29,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 238,
+            "budget_constraint": 230,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3933,7 +3933,7 @@
                 },
                 "001": {
                     "bid": 227,
-                    "valuation": 227,
+                    "valuation": 187,
                     "sector_path": [
                         "S0012",
                         "S003",
@@ -3950,12 +3950,12 @@
                     "request_arrival_time": 75
                 }
             },
-            "original_budget": 238
+            "original_budget": 230
         },
         "AC108": {
-            "appearance_time": 257,
+            "appearance_time": 244,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 247,
+            "budget_constraint": 162,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -3967,7 +3967,7 @@
                 },
                 "001": {
                     "bid": 174,
-                    "valuation": 174,
+                    "valuation": 226,
                     "sector_path": [
                         "S005",
                         "S001",
@@ -3984,12 +3984,12 @@
                     "request_arrival_time": 277
                 }
             },
-            "original_budget": 247
+            "original_budget": 162
         },
         "AC109": {
-            "appearance_time": 98,
+            "appearance_time": 91,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 162,
+            "budget_constraint": 212,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4001,7 +4001,7 @@
                 },
                 "001": {
                     "bid": 186,
-                    "valuation": 186,
+                    "valuation": 196,
                     "sector_path": [
                         "S005",
                         "S001",
@@ -4022,12 +4022,12 @@
                     "request_arrival_time": 148
                 }
             },
-            "original_budget": 162
+            "original_budget": 212
         },
         "AC110": {
-            "appearance_time": 107,
+            "appearance_time": 108,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 214,
+            "budget_constraint": 192,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4039,7 +4039,7 @@
                 },
                 "001": {
                     "bid": 235,
-                    "valuation": 235,
+                    "valuation": 189,
                     "sector_path": [
                         "S008"
                     ],
@@ -4052,12 +4052,12 @@
                     "request_arrival_time": 140
                 }
             },
-            "original_budget": 214
+            "original_budget": 192
         },
         "AC111": {
-            "appearance_time": 104,
+            "appearance_time": 116,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 223,
+            "budget_constraint": 204,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4069,7 +4069,7 @@
                 },
                 "001": {
                     "bid": 181,
-                    "valuation": 181,
+                    "valuation": 236,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -4086,12 +4086,12 @@
                     "request_arrival_time": 157
                 }
             },
-            "original_budget": 223
+            "original_budget": 204
         },
         "AC112": {
-            "appearance_time": 98,
+            "appearance_time": 82,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 173,
+            "budget_constraint": 179,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4103,7 +4103,7 @@
                 },
                 "001": {
                     "bid": 250,
-                    "valuation": 250,
+                    "valuation": 162,
                     "sector_path": [
                         "S0011",
                         "S002",
@@ -4120,12 +4120,12 @@
                     "request_arrival_time": 137
                 }
             },
-            "original_budget": 173
+            "original_budget": 179
         },
         "AC113": {
-            "appearance_time": 32,
+            "appearance_time": 29,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 212,
+            "budget_constraint": 237,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4137,7 +4137,7 @@
                 },
                 "001": {
                     "bid": 222,
-                    "valuation": 222,
+                    "valuation": 229,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -4154,12 +4154,12 @@
                     "request_arrival_time": 67
                 }
             },
-            "original_budget": 212
+            "original_budget": 237
         },
         "AC114": {
-            "appearance_time": 250,
+            "appearance_time": 258,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 231,
+            "budget_constraint": 213,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4171,7 +4171,7 @@
                 },
                 "001": {
                     "bid": 213,
-                    "valuation": 213,
+                    "valuation": 222,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -4188,12 +4188,12 @@
                     "request_arrival_time": 277
                 }
             },
-            "original_budget": 231
+            "original_budget": 213
         },
         "AC115": {
-            "appearance_time": 194,
+            "appearance_time": 185,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 228,
+            "budget_constraint": 183,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4205,7 +4205,7 @@
                 },
                 "001": {
                     "bid": 206,
-                    "valuation": 206,
+                    "valuation": 202,
                     "sector_path": [
                         "S0012",
                         "S003",
@@ -4230,12 +4230,12 @@
                     "request_arrival_time": 278
                 }
             },
-            "original_budget": 228
+            "original_budget": 183
         },
         "AC116": {
-            "appearance_time": 150,
+            "appearance_time": 156,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 221,
+            "budget_constraint": 188,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4247,7 +4247,7 @@
                 },
                 "001": {
                     "bid": 181,
-                    "valuation": 181,
+                    "valuation": 212,
                     "sector_path": [
                         "S0011",
                         "S002",
@@ -4264,12 +4264,12 @@
                     "request_arrival_time": 188
                 }
             },
-            "original_budget": 221
+            "original_budget": 188
         },
         "AC117": {
-            "appearance_time": 226,
+            "appearance_time": 224,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 156,
+            "budget_constraint": 167,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4281,7 +4281,7 @@
                 },
                 "001": {
                     "bid": 228,
-                    "valuation": 228,
+                    "valuation": 221,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -4298,12 +4298,12 @@
                     "request_arrival_time": 258
                 }
             },
-            "original_budget": 156
+            "original_budget": 167
         },
         "AC118": {
-            "appearance_time": 132,
+            "appearance_time": 134,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 208,
+            "budget_constraint": 217,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4315,7 +4315,7 @@
                 },
                 "001": {
                     "bid": 243,
-                    "valuation": 243,
+                    "valuation": 176,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -4332,12 +4332,12 @@
                     "request_arrival_time": 158
                 }
             },
-            "original_budget": 208
+            "original_budget": 217
         },
         "AC119": {
-            "appearance_time": 222,
+            "appearance_time": 225,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 216,
+            "budget_constraint": 153,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4349,7 +4349,7 @@
                 },
                 "001": {
                     "bid": 218,
-                    "valuation": 218,
+                    "valuation": 229,
                     "sector_path": [
                         "S008"
                     ],
@@ -4362,12 +4362,12 @@
                     "request_arrival_time": 266
                 }
             },
-            "original_budget": 216
+            "original_budget": 153
         },
         "AC120": {
-            "appearance_time": 32,
+            "appearance_time": 34,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 183,
+            "budget_constraint": 162,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4379,7 +4379,7 @@
                 },
                 "001": {
                     "bid": 190,
-                    "valuation": 190,
+                    "valuation": 229,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -4396,12 +4396,12 @@
                     "request_arrival_time": 73
                 }
             },
-            "original_budget": 183
+            "original_budget": 162
         },
         "AC121": {
-            "appearance_time": 58,
+            "appearance_time": 47,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 200,
+            "budget_constraint": 192,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4413,7 +4413,7 @@
                 },
                 "001": {
                     "bid": 195,
-                    "valuation": 195,
+                    "valuation": 233,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -4430,12 +4430,12 @@
                     "request_arrival_time": 82
                 }
             },
-            "original_budget": 200
+            "original_budget": 192
         },
         "AC122": {
-            "appearance_time": 5,
+            "appearance_time": 18,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 245,
+            "budget_constraint": 196,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4447,7 +4447,7 @@
                 },
                 "001": {
                     "bid": 236,
-                    "valuation": 236,
+                    "valuation": 195,
                     "sector_path": [
                         "S0012",
                         "S003",
@@ -4468,12 +4468,12 @@
                     "request_arrival_time": 66
                 }
             },
-            "original_budget": 245
+            "original_budget": 196
         },
         "AC123": {
-            "appearance_time": 251,
+            "appearance_time": 249,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 238,
+            "budget_constraint": 250,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4485,7 +4485,7 @@
                 },
                 "001": {
                     "bid": 207,
-                    "valuation": 207,
+                    "valuation": 172,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -4502,12 +4502,12 @@
                     "request_arrival_time": 285
                 }
             },
-            "original_budget": 238
+            "original_budget": 250
         },
         "AC124": {
-            "appearance_time": 159,
+            "appearance_time": 141,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 188,
+            "budget_constraint": 214,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4519,7 +4519,7 @@
                 },
                 "001": {
                     "bid": 249,
-                    "valuation": 249,
+                    "valuation": 245,
                     "sector_path": [
                         "S0011",
                         "S002",
@@ -4540,12 +4540,12 @@
                     "request_arrival_time": 211
                 }
             },
-            "original_budget": 188
+            "original_budget": 214
         },
         "AC125": {
-            "appearance_time": 218,
+            "appearance_time": 209,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 242,
+            "budget_constraint": 170,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4557,7 +4557,7 @@
                 },
                 "001": {
                     "bid": 159,
-                    "valuation": 159,
+                    "valuation": 203,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -4578,12 +4578,12 @@
                     "request_arrival_time": 257
                 }
             },
-            "original_budget": 242
+            "original_budget": 170
         },
         "AC126": {
-            "appearance_time": 242,
+            "appearance_time": 252,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 172,
+            "budget_constraint": 177,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4595,7 +4595,7 @@
                 },
                 "001": {
                     "bid": 217,
-                    "valuation": 217,
+                    "valuation": 240,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -4612,12 +4612,12 @@
                     "request_arrival_time": 281
                 }
             },
-            "original_budget": 172
+            "original_budget": 177
         },
         "AC127": {
-            "appearance_time": 129,
+            "appearance_time": 123,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 250,
+            "budget_constraint": 189,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4629,7 +4629,7 @@
                 },
                 "001": {
                     "bid": 214,
-                    "valuation": 214,
+                    "valuation": 216,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -4650,12 +4650,12 @@
                     "request_arrival_time": 203
                 }
             },
-            "original_budget": 250
+            "original_budget": 189
         },
         "AC128": {
-            "appearance_time": 208,
+            "appearance_time": 203,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 201,
+            "budget_constraint": 174,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4667,7 +4667,7 @@
                 },
                 "001": {
                     "bid": 188,
-                    "valuation": 188,
+                    "valuation": 180,
                     "sector_path": [
                         "S006"
                     ],
@@ -4680,12 +4680,12 @@
                     "request_arrival_time": 239
                 }
             },
-            "original_budget": 201
+            "original_budget": 174
         },
         "AC129": {
-            "appearance_time": 209,
+            "appearance_time": 206,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 245,
+            "budget_constraint": 161,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4697,7 +4697,7 @@
                 },
                 "001": {
                     "bid": 237,
-                    "valuation": 237,
+                    "valuation": 165,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -4718,12 +4718,12 @@
                     "request_arrival_time": 277
                 }
             },
-            "original_budget": 245
+            "original_budget": 161
         },
         "AC130": {
-            "appearance_time": 175,
+            "appearance_time": 165,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 196,
+            "budget_constraint": 180,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4735,7 +4735,7 @@
                 },
                 "001": {
                     "bid": 163,
-                    "valuation": 163,
+                    "valuation": 238,
                     "sector_path": [
                         "S0012",
                         "S003",
@@ -4752,12 +4752,12 @@
                     "request_arrival_time": 200
                 }
             },
-            "original_budget": 196
+            "original_budget": 180
         },
         "AC131": {
-            "appearance_time": 113,
+            "appearance_time": 105,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 236,
+            "budget_constraint": 189,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4769,7 +4769,7 @@
                 },
                 "001": {
                     "bid": 228,
-                    "valuation": 228,
+                    "valuation": 191,
                     "sector_path": [
                         "S005",
                         "S001",
@@ -4790,12 +4790,12 @@
                     "request_arrival_time": 177
                 }
             },
-            "original_budget": 236
+            "original_budget": 189
         },
         "AC132": {
-            "appearance_time": 172,
+            "appearance_time": 164,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 170,
+            "budget_constraint": 203,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4828,12 +4828,12 @@
                     "request_arrival_time": 224
                 }
             },
-            "original_budget": 170
+            "original_budget": 203
         },
         "AC133": {
-            "appearance_time": 170,
+            "appearance_time": 177,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 201,
+            "budget_constraint": 183,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4845,7 +4845,7 @@
                 },
                 "001": {
                     "bid": 166,
-                    "valuation": 166,
+                    "valuation": 232,
                     "sector_path": [
                         "S005",
                         "S001",
@@ -4866,12 +4866,12 @@
                     "request_arrival_time": 236
                 }
             },
-            "original_budget": 201
+            "original_budget": 183
         },
         "AC134": {
-            "appearance_time": 176,
+            "appearance_time": 160,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 180,
+            "budget_constraint": 239,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4883,7 +4883,7 @@
                 },
                 "001": {
                     "bid": 196,
-                    "valuation": 196,
+                    "valuation": 199,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -4904,12 +4904,12 @@
                     "request_arrival_time": 225
                 }
             },
-            "original_budget": 180
+            "original_budget": 239
         },
         "AC135": {
-            "appearance_time": 118,
+            "appearance_time": 103,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 166,
+            "budget_constraint": 182,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4921,7 +4921,7 @@
                 },
                 "001": {
                     "bid": 187,
-                    "valuation": 187,
+                    "valuation": 201,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -4946,12 +4946,12 @@
                     "request_arrival_time": 185
                 }
             },
-            "original_budget": 166
+            "original_budget": 182
         },
         "AC136": {
-            "appearance_time": 135,
+            "appearance_time": 123,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 155,
+            "budget_constraint": 151,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -4963,7 +4963,7 @@
                 },
                 "001": {
                     "bid": 178,
-                    "valuation": 178,
+                    "valuation": 162,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -4984,12 +4984,12 @@
                     "request_arrival_time": 199
                 }
             },
-            "original_budget": 155
+            "original_budget": 151
         },
         "AC137": {
-            "appearance_time": 233,
+            "appearance_time": 235,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 152,
+            "budget_constraint": 244,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5001,7 +5001,7 @@
                 },
                 "001": {
                     "bid": 151,
-                    "valuation": 151,
+                    "valuation": 188,
                     "sector_path": [
                         "S0011",
                         "S006",
@@ -5018,12 +5018,12 @@
                     "request_arrival_time": 291
                 }
             },
-            "original_budget": 152
+            "original_budget": 244
         },
         "AC138": {
-            "appearance_time": 236,
+            "appearance_time": 235,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 238,
+            "budget_constraint": 247,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5035,7 +5035,7 @@
                 },
                 "001": {
                     "bid": 219,
-                    "valuation": 219,
+                    "valuation": 189,
                     "sector_path": [
                         "S005",
                         "S009",
@@ -5052,12 +5052,12 @@
                     "request_arrival_time": 278
                 }
             },
-            "original_budget": 238
+            "original_budget": 247
         },
         "AC139": {
-            "appearance_time": 49,
+            "appearance_time": 56,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 182,
+            "budget_constraint": 161,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5069,7 +5069,7 @@
                 },
                 "001": {
                     "bid": 184,
-                    "valuation": 184,
+                    "valuation": 172,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -5090,12 +5090,12 @@
                     "request_arrival_time": 121
                 }
             },
-            "original_budget": 182
+            "original_budget": 161
         },
         "AC140": {
-            "appearance_time": 171,
+            "appearance_time": 169,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 167,
+            "budget_constraint": 200,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5107,7 +5107,7 @@
                 },
                 "001": {
                     "bid": 193,
-                    "valuation": 193,
+                    "valuation": 242,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -5124,12 +5124,12 @@
                     "request_arrival_time": 206
                 }
             },
-            "original_budget": 167
+            "original_budget": 200
         },
         "AC141": {
-            "appearance_time": 63,
+            "appearance_time": 64,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 164,
+            "budget_constraint": 156,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5141,7 +5141,7 @@
                 },
                 "001": {
                     "bid": 202,
-                    "valuation": 202,
+                    "valuation": 208,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -5162,12 +5162,12 @@
                     "request_arrival_time": 141
                 }
             },
-            "original_budget": 164
+            "original_budget": 156
         },
         "AC142": {
-            "appearance_time": 164,
+            "appearance_time": 166,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 247,
+            "budget_constraint": 201,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5179,7 +5179,7 @@
                 },
                 "001": {
                     "bid": 158,
-                    "valuation": 158,
+                    "valuation": 188,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -5200,12 +5200,12 @@
                     "request_arrival_time": 244
                 }
             },
-            "original_budget": 247
+            "original_budget": 201
         },
         "AC143": {
-            "appearance_time": 125,
+            "appearance_time": 136,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 247,
+            "budget_constraint": 173,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5217,7 +5217,7 @@
                 },
                 "001": {
                     "bid": 155,
-                    "valuation": 155,
+                    "valuation": 249,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -5238,12 +5238,12 @@
                     "request_arrival_time": 186
                 }
             },
-            "original_budget": 247
+            "original_budget": 173
         },
         "AC144": {
-            "appearance_time": 30,
+            "appearance_time": 25,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 249,
+            "budget_constraint": 198,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5255,7 +5255,7 @@
                 },
                 "001": {
                     "bid": 160,
-                    "valuation": 160,
+                    "valuation": 232,
                     "sector_path": [
                         "S005",
                         "S001",
@@ -5276,12 +5276,12 @@
                     "request_arrival_time": 99
                 }
             },
-            "original_budget": 249
+            "original_budget": 198
         },
         "AC145": {
-            "appearance_time": 179,
+            "appearance_time": 163,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 196,
+            "budget_constraint": 207,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5293,7 +5293,7 @@
                 },
                 "001": {
                     "bid": 250,
-                    "valuation": 250,
+                    "valuation": 190,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -5310,12 +5310,12 @@
                     "request_arrival_time": 211
                 }
             },
-            "original_budget": 196
+            "original_budget": 207
         },
         "AC146": {
             "appearance_time": 76,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 168,
+            "budget_constraint": 202,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5327,7 +5327,7 @@
                 },
                 "001": {
                     "bid": 246,
-                    "valuation": 246,
+                    "valuation": 168,
                     "sector_path": [
                         "S0011"
                     ],
@@ -5340,12 +5340,12 @@
                     "request_arrival_time": 108
                 }
             },
-            "original_budget": 168
+            "original_budget": 202
         },
         "AC147": {
-            "appearance_time": 59,
+            "appearance_time": 52,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 241,
+            "budget_constraint": 243,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5357,7 +5357,7 @@
                 },
                 "001": {
                     "bid": 175,
-                    "valuation": 175,
+                    "valuation": 151,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -5378,12 +5378,12 @@
                     "request_arrival_time": 121
                 }
             },
-            "original_budget": 241
+            "original_budget": 243
         },
         "AC148": {
-            "appearance_time": 219,
+            "appearance_time": 202,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 186,
+            "budget_constraint": 157,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5395,7 +5395,7 @@
                 },
                 "001": {
                     "bid": 170,
-                    "valuation": 170,
+                    "valuation": 163,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -5412,12 +5412,12 @@
                     "request_arrival_time": 254
                 }
             },
-            "original_budget": 186
+            "original_budget": 157
         },
         "AC149": {
-            "appearance_time": 142,
+            "appearance_time": 156,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 186,
+            "budget_constraint": 178,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5429,7 +5429,7 @@
                 },
                 "001": {
                     "bid": 166,
-                    "valuation": 166,
+                    "valuation": 217,
                     "sector_path": [
                         "S007"
                     ],
@@ -5442,10 +5442,10 @@
                     "request_arrival_time": 188
                 }
             },
-            "original_budget": 186
+            "original_budget": 178
         },
         "AC150": {
-            "appearance_time": 190,
+            "appearance_time": 195,
             "origin_vertiport_id": "V001",
             "budget_constraint": 215,
             "decay_factor": 0.95,
@@ -5459,7 +5459,7 @@
                 },
                 "001": {
                     "bid": 197,
-                    "valuation": 197,
+                    "valuation": 187,
                     "sector_path": [
                         "S005",
                         "S001",
@@ -5483,9 +5483,9 @@
             "original_budget": 215
         },
         "AC151": {
-            "appearance_time": 181,
+            "appearance_time": 198,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 223,
+            "budget_constraint": 172,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5497,7 +5497,7 @@
                 },
                 "001": {
                     "bid": 170,
-                    "valuation": 170,
+                    "valuation": 250,
                     "sector_path": [
                         "S0011",
                         "S002",
@@ -5514,12 +5514,12 @@
                     "request_arrival_time": 230
                 }
             },
-            "original_budget": 223
+            "original_budget": 172
         },
         "AC152": {
-            "appearance_time": 14,
+            "appearance_time": 0,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 177,
+            "budget_constraint": 191,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5531,7 +5531,7 @@
                 },
                 "001": {
                     "bid": 192,
-                    "valuation": 192,
+                    "valuation": 188,
                     "sector_path": [
                         "S008"
                     ],
@@ -5544,12 +5544,12 @@
                     "request_arrival_time": 42
                 }
             },
-            "original_budget": 177
+            "original_budget": 191
         },
         "AC153": {
-            "appearance_time": 51,
+            "appearance_time": 44,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 212,
+            "budget_constraint": 207,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5561,7 +5561,7 @@
                 },
                 "001": {
                     "bid": 170,
-                    "valuation": 170,
+                    "valuation": 154,
                     "sector_path": [
                         "S007",
                         "S004",
@@ -5578,12 +5578,12 @@
                     "request_arrival_time": 81
                 }
             },
-            "original_budget": 212
+            "original_budget": 207
         },
         "AC154": {
-            "appearance_time": 220,
+            "appearance_time": 222,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 231,
+            "budget_constraint": 180,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5595,7 +5595,7 @@
                 },
                 "001": {
                     "bid": 182,
-                    "valuation": 182,
+                    "valuation": 193,
                     "sector_path": [
                         "S007"
                     ],
@@ -5608,12 +5608,12 @@
                     "request_arrival_time": 269
                 }
             },
-            "original_budget": 231
+            "original_budget": 180
         },
         "AC155": {
-            "appearance_time": 205,
+            "appearance_time": 215,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 167,
+            "budget_constraint": 247,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5625,7 +5625,7 @@
                 },
                 "001": {
                     "bid": 194,
-                    "valuation": 194,
+                    "valuation": 232,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -5642,12 +5642,12 @@
                     "request_arrival_time": 250
                 }
             },
-            "original_budget": 167
+            "original_budget": 247
         },
         "AC156": {
-            "appearance_time": 92,
+            "appearance_time": 87,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 206,
+            "budget_constraint": 220,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5659,7 +5659,7 @@
                 },
                 "001": {
                     "bid": 168,
-                    "valuation": 168,
+                    "valuation": 171,
                     "sector_path": [
                         "S0011",
                         "S002",
@@ -5676,12 +5676,12 @@
                     "request_arrival_time": 135
                 }
             },
-            "original_budget": 206
+            "original_budget": 220
         },
         "AC157": {
-            "appearance_time": 109,
+            "appearance_time": 107,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 180,
+            "budget_constraint": 182,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5693,7 +5693,7 @@
                 },
                 "001": {
                     "bid": 167,
-                    "valuation": 167,
+                    "valuation": 182,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -5710,12 +5710,12 @@
                     "request_arrival_time": 155
                 }
             },
-            "original_budget": 180
+            "original_budget": 182
         },
         "AC158": {
-            "appearance_time": 249,
+            "appearance_time": 242,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 155,
+            "budget_constraint": 171,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5727,7 +5727,7 @@
                 },
                 "001": {
                     "bid": 197,
-                    "valuation": 197,
+                    "valuation": 221,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -5744,12 +5744,12 @@
                     "request_arrival_time": 278
                 }
             },
-            "original_budget": 155
+            "original_budget": 171
         },
         "AC159": {
-            "appearance_time": 60,
+            "appearance_time": 62,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 153,
+            "budget_constraint": 246,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5761,7 +5761,7 @@
                 },
                 "001": {
                     "bid": 199,
-                    "valuation": 199,
+                    "valuation": 188,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -5782,12 +5782,12 @@
                     "request_arrival_time": 141
                 }
             },
-            "original_budget": 153
+            "original_budget": 246
         },
         "AC160": {
-            "appearance_time": 78,
+            "appearance_time": 63,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 200,
+            "budget_constraint": 202,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5799,7 +5799,7 @@
                 },
                 "001": {
                     "bid": 150,
-                    "valuation": 150,
+                    "valuation": 178,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -5816,12 +5816,12 @@
                     "request_arrival_time": 113
                 }
             },
-            "original_budget": 200
+            "original_budget": 202
         },
         "AC161": {
-            "appearance_time": 97,
+            "appearance_time": 95,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 202,
+            "budget_constraint": 246,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5833,7 +5833,7 @@
                 },
                 "001": {
                     "bid": 218,
-                    "valuation": 218,
+                    "valuation": 192,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -5854,12 +5854,12 @@
                     "request_arrival_time": 150
                 }
             },
-            "original_budget": 202
+            "original_budget": 246
         },
         "AC162": {
-            "appearance_time": 161,
+            "appearance_time": 164,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 190,
+            "budget_constraint": 176,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5871,7 +5871,7 @@
                 },
                 "001": {
                     "bid": 170,
-                    "valuation": 170,
+                    "valuation": 212,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -5892,12 +5892,12 @@
                     "request_arrival_time": 225
                 }
             },
-            "original_budget": 190
+            "original_budget": 176
         },
         "AC163": {
-            "appearance_time": 135,
+            "appearance_time": 127,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 176,
+            "budget_constraint": 213,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5909,7 +5909,7 @@
                 },
                 "001": {
                     "bid": 162,
-                    "valuation": 162,
+                    "valuation": 166,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -5934,12 +5934,12 @@
                     "request_arrival_time": 229
                 }
             },
-            "original_budget": 176
+            "original_budget": 213
         },
         "AC164": {
-            "appearance_time": 104,
+            "appearance_time": 117,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 232,
+            "budget_constraint": 214,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5951,7 +5951,7 @@
                 },
                 "001": {
                     "bid": 195,
-                    "valuation": 195,
+                    "valuation": 222,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -5972,12 +5972,12 @@
                     "request_arrival_time": 165
                 }
             },
-            "original_budget": 232
+            "original_budget": 214
         },
         "AC165": {
-            "appearance_time": 106,
+            "appearance_time": 100,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 184,
+            "budget_constraint": 203,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -5989,7 +5989,7 @@
                 },
                 "001": {
                     "bid": 231,
-                    "valuation": 231,
+                    "valuation": 248,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -6010,12 +6010,12 @@
                     "request_arrival_time": 171
                 }
             },
-            "original_budget": 184
+            "original_budget": 203
         },
         "AC166": {
-            "appearance_time": 23,
+            "appearance_time": 21,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 200,
+            "budget_constraint": 186,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -6027,7 +6027,7 @@
                 },
                 "001": {
                     "bid": 234,
-                    "valuation": 234,
+                    "valuation": 190,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -6044,12 +6044,12 @@
                     "request_arrival_time": 67
                 }
             },
-            "original_budget": 200
+            "original_budget": 186
         },
         "AC167": {
-            "appearance_time": 108,
+            "appearance_time": 117,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 193,
+            "budget_constraint": 192,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -6061,7 +6061,7 @@
                 },
                 "001": {
                     "bid": 206,
-                    "valuation": 206,
+                    "valuation": 209,
                     "sector_path": [
                         "S006"
                     ],
@@ -6074,12 +6074,12 @@
                     "request_arrival_time": 146
                 }
             },
-            "original_budget": 193
+            "original_budget": 192
         },
         "AC168": {
-            "appearance_time": 43,
+            "appearance_time": 50,
             "origin_vertiport_id": "V004",
-            "budget_constraint": 153,
+            "budget_constraint": 216,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -6091,7 +6091,7 @@
                 },
                 "001": {
                     "bid": 244,
-                    "valuation": 244,
+                    "valuation": 202,
                     "sector_path": [
                         "S0011",
                         "S002",
@@ -6108,12 +6108,12 @@
                     "request_arrival_time": 84
                 }
             },
-            "original_budget": 153
+            "original_budget": 216
         },
         "AC169": {
-            "appearance_time": 199,
+            "appearance_time": 191,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 173,
+            "budget_constraint": 188,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -6125,7 +6125,7 @@
                 },
                 "001": {
                     "bid": 243,
-                    "valuation": 243,
+                    "valuation": 239,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -6142,12 +6142,12 @@
                     "request_arrival_time": 236
                 }
             },
-            "original_budget": 173
+            "original_budget": 188
         },
         "AC170": {
             "appearance_time": 151,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 153,
+            "budget_constraint": 240,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -6159,7 +6159,7 @@
                 },
                 "001": {
                     "bid": 247,
-                    "valuation": 247,
+                    "valuation": 175,
                     "sector_path": [
                         "S009",
                         "S001",
@@ -6184,12 +6184,12 @@
                     "request_arrival_time": 230
                 }
             },
-            "original_budget": 153
+            "original_budget": 240
         },
         "AC171": {
-            "appearance_time": 245,
+            "appearance_time": 253,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 161,
+            "budget_constraint": 195,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -6201,7 +6201,7 @@
                 },
                 "001": {
                     "bid": 189,
-                    "valuation": 189,
+                    "valuation": 239,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -6218,12 +6218,12 @@
                     "request_arrival_time": 289
                 }
             },
-            "original_budget": 161
+            "original_budget": 195
         },
         "AC172": {
-            "appearance_time": 150,
+            "appearance_time": 141,
             "origin_vertiport_id": "V003",
-            "budget_constraint": 198,
+            "budget_constraint": 234,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -6235,7 +6235,7 @@
                 },
                 "001": {
                     "bid": 249,
-                    "valuation": 249,
+                    "valuation": 227,
                     "sector_path": [
                         "S0010",
                         "S004",
@@ -6256,12 +6256,12 @@
                     "request_arrival_time": 216
                 }
             },
-            "original_budget": 198
+            "original_budget": 234
         },
         "AC173": {
-            "appearance_time": 164,
+            "appearance_time": 168,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 201,
+            "budget_constraint": 162,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -6273,7 +6273,7 @@
                 },
                 "001": {
                     "bid": 201,
-                    "valuation": 201,
+                    "valuation": 240,
                     "sector_path": [
                         "S005",
                         "S001",
@@ -6294,12 +6294,12 @@
                     "request_arrival_time": 237
                 }
             },
-            "original_budget": 201
+            "original_budget": 162
         },
         "AC174": {
-            "appearance_time": 106,
+            "appearance_time": 102,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 184,
+            "budget_constraint": 217,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -6311,7 +6311,7 @@
                 },
                 "001": {
                     "bid": 213,
-                    "valuation": 213,
+                    "valuation": 219,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -6328,12 +6328,12 @@
                     "request_arrival_time": 146
                 }
             },
-            "original_budget": 184
+            "original_budget": 217
         },
         "AC175": {
-            "appearance_time": 194,
+            "appearance_time": 187,
             "origin_vertiport_id": "V001",
-            "budget_constraint": 209,
+            "budget_constraint": 249,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -6345,7 +6345,7 @@
                 },
                 "001": {
                     "bid": 248,
-                    "valuation": 248,
+                    "valuation": 168,
                     "sector_path": [
                         "S006",
                         "S002",
@@ -6366,12 +6366,12 @@
                     "request_arrival_time": 255
                 }
             },
-            "original_budget": 209
+            "original_budget": 249
         },
         "AC176": {
-            "appearance_time": 212,
+            "appearance_time": 215,
             "origin_vertiport_id": "V002",
-            "budget_constraint": 224,
+            "budget_constraint": 150,
             "decay_factor": 0.95,
             "requests": {
                 "000": {
@@ -6383,7 +6383,7 @@
                 },
                 "001": {
                     "bid": 156,
-                    "valuation": 156,
+                    "valuation": 184,
                     "sector_path": [
                         "S008",
                         "S003",
@@ -6412,7 +6412,7 @@
                     "request_arrival_time": 306
                 }
             },
-            "original_budget": 224
+            "original_budget": 150
         }
     },
     "fleets": {
@@ -7075,7 +7075,7 @@
         "start_time": 0,
         "end_time": 400,
         "time_step": 1,
-        "auction_frequency": 10
+        "auction_frequency": 20
     },
     "congestion_params": {
         "lambda": 0.1,

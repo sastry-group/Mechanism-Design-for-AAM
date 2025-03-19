@@ -9,7 +9,7 @@ default_good_valuation_values = [1]
 price_default_good_values = [1]
 lambda_frequency_values = [30]
 price_upper_bound_values = [3000]
-beta_adjustment_methods = ["none"]
+beta_adjustment_methods = ["pidcontrol", "adjustedlearning", "excessdemand", "errorbased", "normalizedexcessdemand"]
 # num_agents_to_run = [2,5,10,15,20,30]
 num_agents_to_run = [10]
 tol_error_to_check = [0.1, 0.01, 0.001]
@@ -25,34 +25,8 @@ parameter_combinations = list(product(BETA_values, dropout_good_valuation_values
                                       price_upper_bound_values, num_agents_to_run, beta_adjustment_methods, alpha_values))
 main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 
-# "test_cases/archived_presub/modified_bidbudget_toulouse_case3_withC_cap6_withReturn.json",
-# capacity percentage: 100%, 75%, 50%, 25%
-# "test_cases/toulouse_case_cap13_updated.json", 
-            #  "test_cases/toulouse_case_cap10_updated.json",
-# file_list = ["test_cases/toulouse_case_cap10_updated_10stepauction_30sectau.json",
-#              "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau.json",
-#              "test_cases/toulouse_case_cap10_updated_30stepauction_10sectau.json",
-#              "test_cases/toulouse_case_cap10_updated_60stepauction_5sectau.json"]
-# file_list = [ 
-#              "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random4.json",
-#              "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random5.json",
-#              "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random6.json",
-#              "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random7.json",
-#              "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random8.json",
-#              "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau_random9.json"]
-#              "test_cases/toulouse_case_cap10_updated_10stepauction_30sectau.json",
-#              "test_cases/toulouse_case_cap10_updated_20stepauction_15sectau.json",
-#              "test_cases/toulouse_case_cap10_updated_30stepauction_10sectau.json",
-#              "test_cases/toulouse_case_cap10_updated_60stepauction_5sectau.json",
-#              "test_cases/toulouse_case_cap7_updated_20_nauct5.json",
-#              "test_cases/toulouse_case_cap7_updated_20_nauct10.json",
-#              "test_cases/toulouse_case_cap7_updated_20_nauct20.json",
-#              "test_cases/toulouse_case_cap7_updated_20_nauct40.json",
-#              "test_cases/toulouse_case_cap10_updated_20_nauct5.json",
-#              "test_cases/toulouse_case_cap10_updated_20_nauct10.json",
-#              "test_cases/toulouse_case_cap10_updated_20_nauct20.json",
-#              "test_cases/toulouse_case_cap10_updated_20_nauct40.json"]
-file_list = ["test_cases/toulouse_case_cap7_updated_20stepauction_15sectau_random6.json"]
+
+file_list = ["test_cases/toulouse_case_cap7_updated_20.json"]
 
 for file in file_list:
     for idx, (BETA, dropout_good_valuation, default_good_valuation, price_default_good, 

@@ -71,7 +71,7 @@
             "longitude": 1.4989400246109248,
             "landing_capacity": 0,
             "takeoff_capacity": 0,
-            "hold_capacity": 7,
+            "hold_capacity": 7 ,
             "name": "Cruise-1-bot"
         },
         "S006": {

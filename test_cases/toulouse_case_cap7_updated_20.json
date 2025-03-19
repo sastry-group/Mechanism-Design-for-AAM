@@ -7073,7 +7073,7 @@
     ],
     "timing_info": {
         "start_time": 0,
-        "end_time": 500,
+        "end_time": 1000,
         "time_step": 1,
         "auction_frequency": 20
     },
