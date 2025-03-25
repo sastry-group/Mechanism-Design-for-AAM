@@ -660,7 +660,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
                 beta *= 1.2
 
         
-        elif beta_adjustment_method == 'normalizedexcessdemand' and len(overdemand) > 0:
+        elif beta_adjustment_method == 'normalizedexcessdemand' and len(overdemand) >= num_last_iterations:
             recent_demand = np.array(overdemand[-num_last_iterations:]) 
             demand_reduction = (recent_demand[:-1] - recent_demand[1:]) / (recent_demand[:-1] + 1e-6)  # Avoid division by zero
             if np.mean(demand_reduction) < 0.05:  # If excess demand is not reducing by at least 5%
