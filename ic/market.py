@@ -366,7 +366,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
     # p_k_plus_1 = np.append(p_k_plus_1, 0)  #  (4) update default good
 
 
-    # Update each agent's rebates
+    # Update each agent's rebates - this is the dual multiplier update
     if update_rebates:
         r_k_plus_1 = []
         for i in range(num_agents):
@@ -529,12 +529,39 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_freque
 
 
 
+
+def compute_AADMM(beta, dual_pred, dual_prev, primal_pred, primal_prev, d_prev, eta = 0.999, alpha_k = 1.0):
+    # primal_pred =  curent prediction of primal variable
+
+    primal_pred = np.array(primal_pred)
+    primal_prev = np.array(primal_prev)
+    dual_pred = np.array(dual_pred)
+    dual_prev = np.array(dual_prev)
+    # residual
+    d_k = (1 / beta) * np.linalg.norm(dual_prev - dual_pred)**2 + beta * np.linalg.norm(primal_prev - primal_pred)**2
+
+    # Acceleration decision
+    if d_k < eta * d_prev:
+        alpha_k_plus_1 = 0.5 * (1 + np.sqrt(1 + 4 * alpha_k**2))
+        momentum = (alpha_k - 1) / alpha_k_plus_1
+        r_hat = dual_pred + momentum * (dual_pred - dual_prev)
+        x_hat = primal_pred + momentum * (primal_pred - primal_prev)
+        alpha_k = alpha_k_plus_1
+    else:
+        r_hat = dual_prev.copy()
+        x_hat = primal_prev.copy()
+        alpha_k = 1.0
+        d_k = d_prev / eta
+
+
+    return r_hat, x_hat, alpha_k, d_k
+
+
 def run_market(initial_values, agent_settings, market_settings, bookkeeping, sparse_representation, 
-               rational=False, price_default_good=10, lambda_frequency=1, price_upper_bound=1000, auction=1, tol_error_to_check=None,
-               beta_adjustment_method='none', alpha=1.0):
-     
-        
+            rational=False, price_default_good=10, lambda_frequency=1, price_upper_bound=1000, auction=1, tol_error_to_check=None,
+            beta_adjustment_method='none', alpha=1.0, use_AADMM=False):
     
+        
 
     logger.debug(f"Rebate frequency: {lambda_frequency}, Price upper bound: {price_upper_bound}")
     # print(f"Rebate frequency: {lambda_frequency}, Price upper bound: {price_upper_bound}")
@@ -578,11 +605,24 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     iteration_data = []  
     iter_start = time.time()
 
+
+    r_hat = r.copy()
+    r_prev = r.copy()
+    alpha_k = 1.0
+    eta = 0.999
+    d_prev = 1e9
+
+
     while x_iter <= MAX_NUM_ITERATIONS:  
         beta_values.append(beta)
 
         x, adjusted_budgets, agent_solve_t = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, 
-                                                           beta, x_iter, lambda_frequency, sparse_representation, rational=rational, integral=INTEGRAL_APPROACH)
+                                                        beta, x_iter, lambda_frequency, sparse_representation, rational=rational, integral=INTEGRAL_APPROACH)
+        if x_iter == 0:
+            x_hat = x.copy()
+            x_prev = x.copy()
+
+        
         x_allocations.append(x) # 
         # x_sum = np.hstack([np.sum(x[sparse_agent_x_inds[i][:-2]]) for i in range(len(agent_goods_lists))])
         x_sum = np.array([np.sum(x[x_sparse_array == i]) for i in range(len(goods_list))])[:-2]
@@ -622,9 +662,19 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
             update_rebates = True
 
         # Update market
-        k, y, p, r, problem, market_solve_t = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, 
-                                            price_default_good, problem, sparse_representation,
-                                            update_rebates=update_rebates, integral=INTEGRAL_APPROACH, price_upper_bound=price_upper_bound)
+        if use_AADMM:
+            logger.info("Using AADMM")
+            k, y, p, r, problem, market_solve_t = update_market(x_hat, (1, p, r_hat), (supply, beta), agent_constraints, agent_goods_lists, goods_list, 
+                                                price_default_good, problem, sparse_representation,
+                                                update_rebates=update_rebates, integral=INTEGRAL_APPROACH, price_upper_bound=price_upper_bound)
+            r_hat, x_hat, alpha_k, d_prev = compute_AADMM(beta, r, r_prev, x, x_prev, d_prev, eta, alpha_k)
+            r_prev = r.copy()
+            x_prev = x.copy()
+        else: 
+            k, y, p, r, problem, market_solve_t = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, 
+                                    price_default_good, problem, sparse_representation,
+                                    update_rebates=update_rebates, integral=INTEGRAL_APPROACH, price_upper_bound=price_upper_bound)
+
         y_allocations.append(y)
         rebates.append([[rebate] for rebate in r])
         prices.append(p)
@@ -775,7 +825,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     fisher_run_time = round(time.time() - start_time_algorithm,5)
     logger.info(f"Time to run algorithm: {fisher_run_time}")  
     console.print("[bold green]Simulation Complete! Optimization results in file: /results/log[/bold green]")
- 
+
 
     save_iteration_data(iteration_data, "iteration_data", output_dir="results")
 
