@@ -94,6 +94,7 @@ parser.add_argument('--lambda_frequency', type=float, default=1)
 parser.add_argument('--price_upper_bound', type=float, default=50)
 parser.add_argument('--num_agents_to_run', type=int, default=None)
 parser.add_argument('--run_up_to_auction', type=float, default=10)
+parser.add_argument('--use_AADMM', type=str2bool, nargs="?", const=True, default=False)
 parser.add_argument('--save_pkl_files', type=str2bool, nargs="?", const=True, default=True)
 parser.add_argument("--tol_error_to_check", nargs="+", type=float, default=None, help="List of tolerances for experiments")
 parser.add_argument(
@@ -448,6 +449,7 @@ def create_output_folder(design_parameters, file_path, method, base_dir="ic/resu
         f"pbound{design_parameters['price_upper_bound']}_"
         f"beta-method-{design_parameters['beta_adjustment_method']}_"
         f"alpha-{design_parameters['alpha']}_"
+        f"use_AADMM-{design_parameters['use_AADMM']}_"
         f"receding_{timestamp}"
     )
     main_output_folder = os.path.join(base_dir, folder_name)
@@ -934,7 +936,9 @@ if __name__ == "__main__":
         "save_pkl_files": args.save_pkl_files,
         "tol_error_to_check": args.tol_error_to_check,
         "beta_adjustment_method": args.beta_adjustment_method,
+        "use_AADMM": args.use_AADMM,
         "alpha": args.alpha
+
         }
     method = args.method    
     file_path = args.file 

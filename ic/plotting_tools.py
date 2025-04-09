@@ -23,6 +23,8 @@ def plotting_market(data_to_plot, desired_goods, output_folder, market_auction_t
     agent_constraints = data_to_plot["agent_constraints"]
     yplot = data_to_plot["yplot"]
     social_welfare = data_to_plot["social_welfare_vector"]
+    fixed_point_errors = data_to_plot["fixed_point_error"] 
+
 
 
 
@@ -60,6 +62,7 @@ def plotting_market(data_to_plot, desired_goods, output_folder, market_auction_t
     plt.figure(figsize=(10, 5))
     for agent_index in range(len(agent_constraints)):
         plt.plot(range(1, x_iter + 1), error[agent_index])
+    
     plt.ylabel('Constraint error')
     plt.title("Constraint error evolution $\sum ||Ax - b||^2$")
     plt.savefig(get_filename("linear_constraint_error_evolution"))
@@ -140,6 +143,17 @@ def plotting_market(data_to_plot, desired_goods, output_folder, market_auction_t
     plt.xlabel('x_iter')
     plt.title("Market Clearing Error")
     plt.savefig(get_filename("market_clearing_error"))
+    plt.close()
+
+    # Fixed Point Error
+    plt.figure(figsize=(10, 5))
+    plt.plot(range(1, len(fixed_point_errors)+1), fixed_point_errors, label='Fixed Point Error')
+    # plt.axhline(y=1e-3, color='r', linestyle='--', label='Tolerance')
+    plt.xlabel('Iteration')
+    plt.ylabel('Fixed Point Error')
+    plt.legend()
+    plt.title(f"Fixed-Point Convergence")
+    plt.savefig(get_filename("fixed_point_error_plot"), bbox_inches='tight')
     plt.close()
 
     # # y

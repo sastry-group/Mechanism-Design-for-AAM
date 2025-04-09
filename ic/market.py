@@ -22,6 +22,8 @@ INTEGRAL_APPROACH = False
 UPDATED_APPROACH = True
 TOL_ERROR = 1e-3
 MAX_NUM_ITERATIONS = 10000
+ICE_TOL = 0.1
+LIN_TOL = 0.01
 
 logger = logging.getLogger("global_logger")
 
@@ -389,7 +391,7 @@ def update_market(x, values_k, market_settings, constraints, agent_goods_lists, 
     return k + 1, y_k_plus_1, y_bar_k_plus_1, p_k_plus_1, r_k_plus_1, problem, solve_time
 
 
-def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, beta, x_iter, update_frequency, sparse_representation, rational=False, parallel=False, integral=False):   
+def update_agents(w, adjusted_budgets, u, p, r, constraints, goods_list, agent_goods_lists, y, beta, x_iter, update_frequency, sparse_representation, rational=False, parallel=False, integral=False):   
     num_agents, num_goods = len(w), len(p)
     x_sparse_array, y_sparse_array, sparse_agent_x_inds, sparse_agent_y_inds, _ = sparse_representation
 
@@ -399,7 +401,7 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
     agent_ys = [np.array(y[inds]).reshape(-1,1) for inds in sparse_agent_y_inds]
     # agent_ys = [np.array([y[i, goods_list[:-2].index(good)] for good in agent_goods_lists[i][:-2]]) for i in agent_indices] # removing dropout and detault good (3)
     # agent_ys = [np.array([y[i, goods_list[:-1].index(good)] for good in agent_goods_lists[i][:-1]]) for i in agent_indices] # removing dropout (4)
-    args = [(w[i], agent_utilities[i], agent_prices[i], r[i], constraints[i], agent_ys[i], beta, x_iter, update_frequency, rational, integral) for i in agent_indices]
+    args = [(w[i], adjusted_budgets[i], agent_utilities[i], agent_prices[i], r[i], constraints[i], agent_ys[i], beta, x_iter, update_frequency, rational, integral) for i in agent_indices]
 
     # Update agents in parallel or not depending on parallel flag
     parallel = False
@@ -434,7 +436,7 @@ def update_agents(w, u, p, r, constraints, goods_list, agent_goods_lists, y, bet
     #             x[i, goods_list.index(good)] = agent_x[agent_goods_lists[i].index(good)]
     return x, adjusted_budgets, sum(solve_times)
 
-def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_frequency, rational=False, integral=True, solver=cp.SCS):
+def update_agent(w_i, w_adjust, u_i, p, r_i, constraints, y_i, beta, x_iter, update_frequency, rational=False, integral=True, solver=cp.SCS):
     """
     Update individual agent's consumption given market settings and constraints
     """
@@ -455,8 +457,9 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_freque
         w_adj = max(w_adj, 0)
         # print(f"Adjusted budget: {w_adj}")
     else:
-        w_adj = w_i
+        w_adj = w_adjust
     # w_adj = abs(w_adj) 
+    # w_adj = w_i
 
         # print(f"Non-adjusted budget: {w_adj}")
     # optimizer check
@@ -530,7 +533,7 @@ def update_agent(w_i, u_i, p, r_i, constraints, y_i, beta, x_iter, update_freque
 
 
 
-def compute_AADMM(beta, r, r_prev, r_hat, y, y_prev, y_hat, p, p_prev, p_hat, d_prev, eta = 0.9, alpha_k = 1.0):
+def compute_AADMM(beta, r, r_prev, r_hat, y, y_prev, y_hat, p, p_prev, p_hat, d_prev, eta = 0.999, alpha_k = 1.0):
     # primal_pred =  curent prediction of primal variable
 
     r = np.asarray(r).flatten()
@@ -593,6 +596,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     abs_error = [] * len(agent_constraints)
     social_welfare_vector = []
     beta_values = []
+    adjusted_budgets = w.copy()
 
     # Algorithm 1
     num_agents = len(agent_goods_lists)
@@ -612,6 +616,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
     iteration_data = []  
     iter_start = time.time()
 
+    fixed_point_errors = []
+    omega_prev = w.copy()
 
     r_hat = r.copy()
     r_prev = r.copy()
@@ -629,10 +635,10 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         beta_values.append(beta)
 
         if use_AADMM:
-            x, adjusted_budgets, agent_solve_t = update_agents(w, u, p_hat, r_hat, agent_constraints, goods_list, agent_goods_lists, y_hat, 
+            x, adjusted_budgets, agent_solve_t = update_agents(w, adjusted_budgets, u, p_hat, r_hat, agent_constraints, goods_list, agent_goods_lists, y_hat, 
                                                             beta, x_iter, lambda_frequency, sparse_representation, rational=rational, integral=INTEGRAL_APPROACH)
         else:
-            x, adjusted_budgets, agent_solve_t = update_agents(w, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, 
+            x, adjusted_budgets, agent_solve_t = update_agents(w, adjusted_budgets, u, p, r, agent_constraints, goods_list, agent_goods_lists, y, 
                                                 beta, x_iter, lambda_frequency, sparse_representation, rational=rational, integral=INTEGRAL_APPROACH)
 
 
@@ -688,7 +694,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
    
              
         else: 
-            k, y, p, r, problem, market_solve_t = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, 
+            k, y, z, p, r, problem, market_solve_t = update_market(x, (1, p, r), (supply, beta), agent_constraints, agent_goods_lists, goods_list, 
                                     price_default_good, problem, sparse_representation,
                                     update_rebates=update_rebates, integral=INTEGRAL_APPROACH, price_upper_bound=price_upper_bound)
 
@@ -798,7 +804,12 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         iteration_data.append(iteration_snapshot)
         iter_end = time.time()
         x_iter += 1
-
+        budget_adjustment = np.array(adjusted_budgets) - np.array(w)
+        lambda_curr = np.array([r[i] * agent_constraints[i][1][0][0] for i in range(num_agents)])
+        fixed_point_error = np.linalg.norm(lambda_curr - budget_adjustment, ord=2)
+        # fixed_point_error = np.linalg.norm(np.array(r) * agent_constraints[1][0][0] - budget_adjustement, ord=2)
+        fixed_point_errors.append(fixed_point_error)
+        # omega_prev = np.array(adjusted_budgets.copy())
 
 
         # Create a table with current metrics
@@ -816,6 +827,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         table.add_row("Time to run algorithm", f"{agent_solve_t:.7f}")
         table.add_row("Iter time: ", f"{iter_end - iter_start:.7f}")
         table.add_row("Beta", f"{beta:.7f}")
+        table.add_row("Fixed Point Error", f"{fixed_point_error:.7f}")
 
         console.clear()
         console.print(table)
@@ -828,7 +840,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
             if current_tolerance_to_check_index == len(valid_tol_error_to_check) - 1:
                 break
             current_tolerance_to_check_index += 1
-        if (market_clearing_error <= tolerance) and (iter_constraint_error <= alpha * 0.01) and (x_iter>=5) and (iter_constraint_x_y <= alpha *0.1):
+        if (market_clearing_error <= tolerance) and (iter_constraint_error <= alpha * LIN_TOL) and (x_iter>=5) and (iter_constraint_x_y <= alpha * ICE_TOL):
             # print(f"Iterations per tolerance: {iterations_per_tolerance}")
             break
         if x_iter == 1000:
@@ -883,7 +895,11 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         "social_welfare_vector": social_welfare_vector,
         "fisher_run_time": fisher_run_time,
         "iterations_vs_tolerance": (valid_tol_error_to_check, tolerances_to_check, iterations_per_tolerance),
-        "beta_values": beta_values
+        "beta_values": beta_values,
+        "fixed_point_error": fixed_point_errors,
+        "market_clearing_tolerance": tolerance,
+        "x_y_tolerance": ICE_TOL,
+        "linear_constraint_tolerance": LIN_TOL,
     }
 
 

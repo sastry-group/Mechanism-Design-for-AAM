@@ -9,10 +9,10 @@ default_good_valuation_values = [1]
 price_default_good_values = [1]
 lambda_frequency_values = [30]
 price_upper_bound_values = [3000]
-# beta_adjustment_methods = ["pidcontrol", "adjustedlearning", "excessdemand", "errorbased", "normalizedexcessdemand"]
+# beta_adjustment_methods = ["pidcontrol", "adjustedlearning", "excessdemand", "errorbased", "normalizedexcessdemand", "none"]
 beta_adjustment_methods = ["none"]
 # num_agents_to_run = [2,5,10,15,20,30]
-num_agents_to_run = [10]
+num_agents_to_run = [80]
 tol_error_to_check = [0.1, 0.01, 0.001]
 alpha_values = [1]
 # alpha_values = [1.0, 0.5, 0.1, 5.0, 10.0]
@@ -27,6 +27,7 @@ parameter_combinations = list(product(BETA_values, dropout_good_valuation_values
 main_script_path = os.path.join(os.path.dirname(__file__), 'main.py')
 
 
+# file_list = ["test_cases/toulouse_case_cap10_updated_20stepauction_15sectau.json"]
 file_list = ["test_cases/toulouse_case_cap7_updated_20.json"]
 
 for file in file_list:
@@ -54,6 +55,7 @@ for file in file_list:
             "--save_pkl_files", "True",
             "--beta_adjustment_method", beta_adjustment_method,
             "--alpha", str(alpha),
+            "--use_AADMM", "False",
             "--tol_error_to_check"
         ] + [str(tol) for tol in tol_error_to_check]
             
