@@ -100,9 +100,9 @@ parser.add_argument("--tol_error_to_check", nargs="+", type=float, default=None,
 parser.add_argument(
     "--beta_adjustment_method",
     type=str,
-    choices=["none", "errorbased", "excessdemand", "normalizedexcessdemand", "pidcontrol", "adjustedlearning"],
+    choices=["none", "errorbased", "excessdemand", "normalizederror", "pidcontrol", "adjustedlearning"],
     default="none",
-    help="Method to adjust beta dynamically. Options: none, errorbased, excessdemand, normalizedexcessdemand, pidcontrol, adjustedlearning."
+    help="Method to adjust beta dynamically. Options: none, errorbased, excessdemand, normalizederror, pidcontrol, adjustedlearning."
 )
 parser.add_argument("--alpha", type=float, default=1, help="Alpha value for tolerance.")
 args = parser.parse_args()

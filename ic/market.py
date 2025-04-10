@@ -715,37 +715,39 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
         market_clearing.append(market_clearing_error)
 
         num_last_iterations = 20
+        threshold_decrease = 0.05
         if beta_adjustment_method == 'errorbased' and len(market_clearing) >= num_last_iterations:
             # here I am checking if the market is decreasing by 5% for the last n iterations
-            last_10_errors = market_clearing[-num_last_iterations:]  
-            reduction_rates = [(last_10_errors[i] - last_10_errors[i + 1]) / last_10_errors[i]
-                            for i in range(len(last_10_errors) - 1) if last_10_errors[i] != 0]  # Compute reduction rates
+            recent_errors = market_clearing[-num_last_iterations:]  
+            reduction_rates = [(recent_errors[i] - recent_errors[i + 1]) / recent_errors[i]
+                            for i in range(len(recent_errors) - 1) if recent_errors[i] != 0]  # Compute reduction rates
 
-            if all(rate < 0.05 for rate in reduction_rates):  
+            if all(rate < threshold_decrease for rate in reduction_rates):  
                 beta *= 1.2 # Increase beta
             
-        elif beta_adjustment_method == 'excessdemand' and len(overdemand) >= num_last_iterations:
-            # here is am checking if the excess demand is moving towards zero
-            last_10_demand = overdemand[-num_last_iterations:]  # Use signed excess demand
-            moving_towards_zero = np.all(abs(last_10_demand[i + 1]) < abs(last_10_demand[i]) for i in range(len(last_10_demand) - 1))
+        # elif beta_adjustment_method == 'excessdemand' and len(overdemand) >= num_last_iterations:
+        #     # here is am checking if the excess demand is moving towards zero
+        #     last_10_demand = overdemand[-num_last_iterations:]  # Use signed excess demand
+        #     moving_towards_zero = np.all(abs(last_10_demand[i + 1]) < abs(last_10_demand[i]) for i in range(len(last_10_demand) - 1))
 
-            if not moving_towards_zero:
-                beta *= 1.2
+        #     if not moving_towards_zero:
+        #         beta *= 1.2
 
         
-        elif beta_adjustment_method == 'normalizedexcessdemand' and len(overdemand) >= num_last_iterations:
-            recent_demand = np.array(overdemand[-num_last_iterations:]) 
-            demand_reduction = (recent_demand[:-1] - recent_demand[1:]) / (recent_demand[:-1] + 1e-6)  # Avoid division by zero
-            if np.mean(demand_reduction) < 0.05:  # If excess demand is not reducing by at least 5%
-                excess_demand_norm = np.linalg.norm(overdemand[-1]) / np.linalg.norm(supply)
-                beta *= 1 + 0.05 * excess_demand_norm  # Increase beta based on normalized excess demand
+        elif beta_adjustment_method == 'normalizederror' and len(market_clearing) >= num_last_iterations:
+            recent_errors = np.array(market_clearing[-num_last_iterations:]) 
+            error_reduction = [(recent_errors[i] - recent_errors[i+1]) / (recent_errors[i])
+                               for i in range(len(recent_errors) - 1) if recent_errors[i] != 0] 
+            if np.mean(error_reduction) < threshold_decrease:  
+                error_norm = np.linalg.norm(market_clearing[-1]) / np.linalg.norm(tolerance)
+                beta *= 1 + threshold_decrease * error_norm  
         
         elif beta_adjustment_method == 'pidcontrol' and len(market_clearing) >= num_last_iterations:
             recent_errors = np.array(market_clearing[-num_last_iterations:])
-            error_reduction = (recent_errors[:-1] - recent_errors[1:]) / (recent_errors[:-1] + 1e-6)  # Avoid division by zero
+            error_reduction = (recent_errors[:-1] - recent_errors[1:]) / (recent_errors[:-1] + 1e-6)  
             
             # Only adjust beta if error is not reducing significantly
-            if np.mean(error_reduction) < 0.05:  
+            if np.mean(error_reduction) < threshold_decrease:  
                 target_error = tolerance 
                 error_current = market_clearing[-1]
                 error_previous = market_clearing[-2]  
@@ -756,11 +758,9 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
                 error_integral = max(min(error_integral, 10 * target_error), -10 * target_error)  # Limit integral growth
 
                 error_derivative = error_current - error_previous
-
-                # Adaptive Scaling to Prevent Large Jumps
                 Kp = 0.1 / (1 + error_ratio)  
-                Ki = 0.01 / (1 + abs(error_integral))  # Reduce effect when integral is large
-                Kd = 0.05 / (1 + abs(error_derivative))  # Prevent aggressive derivative jumps
+                Ki = 0.01 / (1 + abs(error_integral)) 
+                Kd = 0.05 / (1 + abs(error_derivative)) 
 
                 beta_adjustment = Kp * error_current + Ki * error_integral + Kd * error_derivative
 
@@ -775,7 +775,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
             reduction_rates = [(last_20_errors[i] - last_20_errors[i + 1]) / (last_20_errors[i] + 1e-6)
                             for i in range(len(last_20_errors) - 1) if last_20_errors[i] != 0]
 
-            if all(rate < 0.05 for rate in reduction_rates):  
+            if all(rate < threshold_decrease for rate in reduction_rates):  
                 gamma = 0.1  
                 target_error = tolerance
                 error_current = market_clearing[-1]
@@ -791,7 +791,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
                 beta *= 1 + beta_adjustment  # Apply adjustment
 
 
-        beta = min(beta, 5000)  # Cap beta to prevent overflow
+        beta = min(beta, 5000)  # Max beta
         # logger.info(f"Beta: {beta}")
 
         iteration_snapshot = {
