@@ -458,6 +458,7 @@ def update_agent(w_i, w_adjust, u_i, p, r_i, constraints, y_i, beta, x_iter, upd
         # print(f"Adjusted budget: {w_adj}")
     else:
         w_adj = w_adjust
+        # w_adj = w_i #this is wrong
     # w_adj = abs(w_adj) 
     # w_adj = w_i
 
@@ -723,7 +724,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
                             for i in range(len(recent_errors) - 1) if recent_errors[i] != 0]  # Compute reduction rates
 
             if all(rate < threshold_decrease for rate in reduction_rates):  
-                beta *= 1.2 # Increase beta
+                beta *= 1.1 # Increase beta
             
         # elif beta_adjustment_method == 'excessdemand' and len(overdemand) >= num_last_iterations:
         #     # here is am checking if the excess demand is moving towards zero
@@ -740,6 +741,8 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
                                for i in range(len(recent_errors) - 1) if recent_errors[i] != 0] 
             if np.mean(error_reduction) < threshold_decrease:  
                 error_norm = np.linalg.norm(market_clearing[-1]) / np.linalg.norm(tolerance)
+                # **Clamp the beta adjustment to avoid large jumps**
+                error_norm = max(min(error_norm, 0.1), -0.1)  # Change limited to ±20%
                 beta *= 1 + threshold_decrease * error_norm  
         
         elif beta_adjustment_method == 'pidcontrol' and len(market_clearing) >= num_last_iterations:
@@ -765,7 +768,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
                 beta_adjustment = Kp * error_current + Ki * error_integral + Kd * error_derivative
 
                 # **Clamp the beta adjustment to avoid large jumps**
-                beta_adjustment = max(min(beta_adjustment, 0.2), -0.2)  # Change limited to ±20%
+                beta_adjustment = max(min(beta_adjustment, 0.1), -0.1)  # Change limited to ±20%
                 beta *= 1 + beta_adjustment  # Adjust beta based on PID control
 
 
@@ -786,7 +789,7 @@ def run_market(initial_values, agent_settings, market_settings, bookkeeping, spa
                 beta_adjustment = gamma * np.log(1 + error_ratio)
 
                 # **Clamp beta adjustment to prevent extreme changes**
-                beta_adjustment = max(min(beta_adjustment, 0.2), -0.2)
+                beta_adjustment = max(min(beta_adjustment, 0.1), -0.1)
 
                 beta *= 1 + beta_adjustment  # Apply adjustment
 
