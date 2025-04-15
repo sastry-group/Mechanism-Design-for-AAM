@@ -26,7 +26,8 @@ def agent_allocation_selection(ranked_list, sorted_agent_dict, agent_data, marke
             barray = agent_data[agent]["constraints"][1]
             n_vals = len(agent_data[agent]["utility"]) - 1  # Remove default good
             utility = agent_data[agent]["utility"][:-2] + [agent_data[agent]["utility"][-1]]  # Keep dropout good
-            budget = agent_data[agent]["original_budget"]
+            # budget = agent_data[agent]["original_budget"]
+            budget = agent_data[agent]["adjusted_budget"]
 
             agent_indices = agent_data[agent]["agent_edge_indices"]
             agent_prices = temp_prices[agent_indices]
