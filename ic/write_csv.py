@@ -184,19 +184,20 @@ def write_output(flights, edge_information, market_data_dict,
         status = agent_data.get("status", "unknown")
         payment = agent_data.get("payment", 0)
         initial_air_credits = agent_data.get("original_budget", 0)
+        final_air_credits = agent_data.get("adjusted_budget", 0)
         utility = agent_data.get("valuation", 0)
         rank_id = np.where(np.array(market_data_dict["ranked_agents"]) == agent_id)[0] + 1
 
         data.append([
             agent_id, (origin, destination), (requested_arr_time, requested_dep_time),
             max_capacity, (allocated_arr_time, allocated_dep_time), status, payment,
-            initial_air_credits, utility, rank_id[0]
+            initial_air_credits, final_air_credits, utility, rank_id[0]
         ])
 
     columns = [
         "Aircraft", "Requested Route (Origin, Destination)", "Requested Time (Arrival, Departure)",
         "Max Capacity (Dep, Rout, Arr)", "Allocated Time (Arrival, Departure)", "Status", "Payment",
-        "Initial Air Credits", "Utility", "Rank"
+        "Initial Air Credits", "Final Air Credits", "Utility", "Rank"
     ]
 
     df = pd.DataFrame(data, columns=columns)
