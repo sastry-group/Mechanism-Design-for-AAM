@@ -105,6 +105,7 @@ parser.add_argument(
     help="Method to adjust beta dynamically. Options: none, errorbased, excessdemand, normalizederror, pidcontrol, adjustedlearning."
 )
 parser.add_argument("--alpha", type=float, default=1, help="Alpha value for tolerance.")
+parser.add_argument("--save_file_path", type=str, default=None, help="Path to save results files.")
 args = parser.parse_args()
 
 
@@ -429,7 +430,7 @@ def adjust_rebased_flights(rebased_flights, flights, arrival_time, depart_time, 
 
 
 
-def create_output_folder(design_parameters, file_path, method, base_dir="ic/results"):
+def create_output_folder(design_parameters, file_path, method, base_dir=os.path.join(os.path.abspath(''), "results")):
     """
     Creates a main folder for storing simulation outputs, including subfolders for logs, results, and plots.
     The folder name incorporates design parameters for easy identification.
@@ -568,7 +569,7 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
     max_travel_time = 6
     last_auction =  end_time - max(max_travel_time,auction_freq)
     auction_times = list(np.arange(0, last_auction+1, auction_freq))
-    # print(f"Last auction: {last_auction}")
+    print(f"Last auction: {last_auction}")
     logger.info(f"Last auction: {last_auction}")
 
     # Initialize stack commands
