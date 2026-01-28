@@ -39,7 +39,7 @@ from ic.VertiportStatus import VertiportStatus, draw_graph
 from ic.fisher.fisher_allocation import fisher_allocation_and_payment
 from ic.ascending_auc.asc_auc_allocation import  ascending_auc_allocation_and_payment
 from ic.write_csv import write_market_interval
-from ic.vcg_allocation import vcg_allocation_and_payment
+from ic.fleet_vcg_allocation import fleet_vcg_allocation_and_payment
 from ic.ff_allocation import ff_allocation_and_payment
 
 # Bluesky settings
@@ -683,7 +683,7 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
         }
         if method == "vcg":
 
-            allocated_flights, payments, sw = vcg_allocation_and_payment(
+            allocated_flights, payments, sw = fleet_vcg_allocation_and_payment(
                 vertiport_usage, current_flights, current_timing_info, congestion_info, fleets, save_file=scenario_name, initial_allocation=initial_allocation, payment_calc=payment_calc, save=save_scenario
             )
             # Update system status based on allocation
