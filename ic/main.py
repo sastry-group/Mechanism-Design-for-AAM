@@ -685,7 +685,7 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
         if method == "vcg":
 
             allocated_flights, payments, sw = fleet_vcg_allocation_and_payment(
-                vertiport_usage, current_flights, current_timing_info, congestion_info, fleets, save_file=scenario_name, initial_allocation=initial_allocation, payment_calc=payment_calc, save=save_scenario
+                vertiport_usage, current_flights, current_timing_info, congestion_info, fleets, save_file=scenario_name, initial_allocation=initial_allocation, payment_calc=payment_calc, save=save_scenario, output_folder=output_folder
             )
             # Update system status based on allocation
             #print(allocated_flights)

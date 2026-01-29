@@ -4,6 +4,7 @@ import numpy as np
 import gurobipy as gp
 import time
 import copy
+import os
 
 rho = 1
 
@@ -21,14 +22,17 @@ def build_auxiliary(vertiport_status, flights, timing_info, congestion_info):
     print("Building auxiliary graph...")
     start_time_graph_build = time.time()
     max_time, time_step = timing_info["end_time"], timing_info["time_step"]
+    vertiports, time_steps = vertiport_status.vertiports, vertiport_status.time_steps
+    # timed_vertiport_ids = [f"{v1}_{v2}" for v1 in vertiports for v2 in time_steps]
     lambda_val, C = congestion_info["lambda"], congestion_info["C"]
     auxiliary_graph = nx.MultiDiGraph()
     ## Construct nodes
     #  V1. Create dep, arr, and standard nodes for each initial node (vertiport + time step)
-    for node in vertiport_status.nodes:
-        auxiliary_graph.add_node(node + "_dep")
-        auxiliary_graph.add_node(node + "_arr")
-        auxiliary_graph.add_node(node)
+    for id in vertiports.keys():
+        for time_step in time_steps:
+            auxiliary_graph.add_node(id + "_dep", **{"id": id})
+            auxiliary_graph.add_node(id + "_arr")
+            auxiliary_graph.add_node(id)
 
     #  V2. Create a node for each unique departure time for each agent
     unique_departure_times = {}
@@ -49,33 +53,34 @@ def build_auxiliary(vertiport_status, flights, timing_info, congestion_info):
 
 
     ## Construct edges
-    for node in vertiport_status.nodes:
-        # E1. Connect arrival to main nodes
-        attributes = {"upper_capacity": vertiport_status.nodes[node]["landing_capacity"],
-                      "lower_capacity": 0,
-                      "weight": 0,
-                      "edge_group": "E1"}
-        auxiliary_graph.add_edge(node + "_arr", node, **attributes)
-
-        # E2. Connect main nodes to departure
-        attributes = {"upper_capacity": vertiport_status.nodes[node]["takeoff_capacity"],
-                      "lower_capacity": 0,
-                      "weight": 0,
-                      "edge_group": "E2"}
-        auxiliary_graph.add_edge(node, node + "_dep", **attributes)
-
-        # E3. Connect time steps together for each vertiport
-        if vertiport_status.nodes[node]["time"] == max_time:
-            continue
-        for val in range(1, vertiport_status.nodes[node]["hold_capacity"] + 1):
-            vertiport_id = vertiport_status.nodes[node]["vertiport_id"]
-            weight = - lambda_val * (C(vertiport_id, val) - C(vertiport_id, val - 1))
-            attributes = {"upper_capacity": 1,
+    for id, data in vertiports.items():
+        for this_time in time_steps:
+            timed_id = id + "_" + str(this_time)
+            # E1. Connect arrival to main nodes
+            attributes = {"upper_capacity": data["landing_capacity"],
                         "lower_capacity": 0,
-                        "weight": weight,
-                        "edge_group": "E3_" + str(val + 1)}
-            next_time = vertiport_status.nodes[node]["time"] + time_step
-            auxiliary_graph.add_edge(node, vertiport_id + "_" + str(next_time), **attributes)
+                        "weight": 0,
+                        "edge_group": "E1"}
+            auxiliary_graph.add_edge(timed_id + "_arr", timed_id, **attributes)
+
+            # E2. Connect main nodes to departure
+            attributes = {"upper_capacity": data["takeoff_capacity"],
+                        "lower_capacity": 0,
+                        "weight": 0,
+                        "edge_group": "E2"}
+            auxiliary_graph.add_edge(timed_id, timed_id + "_dep", **attributes)
+
+            # E3. Connect time steps together for each vertiport
+            if this_time == max_time:
+                continue
+            for val in range(1, data["hold_capacity"] + 1):
+                weight = - lambda_val * (C(id, val) - C(id, val - 1))
+                attributes = {"upper_capacity": 1,
+                            "lower_capacity": 0,
+                            "weight": weight,
+                            "edge_group": "E3_" + str(val + 1)}
+                next_time = this_time + time_step
+                auxiliary_graph.add_edge(timed_id, id + "_" + str(next_time), **attributes)
 
     for flight_id, flight in flights.items():
         origin = flight["origin_vertiport_id"]
@@ -118,28 +123,24 @@ def build_auxiliary(vertiport_status, flights, timing_info, congestion_info):
                     "edge_group": "E9"}
         auxiliary_graph.add_edge(flight_id + "_0", origin + "_" + str(time_step), **attributes)
 
-    for vertiport in vertiport_status.vertiports.items():
+    for id in vertiports.keys():
         # E6. Connect source to each node at the first time step
-        attributes = {"upper_capacity": f"E6_{vertiport[0]}_cap",
-                      "lower_capacity": f"E6_{vertiport[0]}_cap",
+        attributes = {"upper_capacity": f"E6_{id}_cap",
+                      "lower_capacity": f"E6_{id}_cap",
                       "weight": 0,
                       "edge_group": "E6"}
-        auxiliary_graph.add_edge("source", vertiport[0] + "_" + str(time_step), **attributes)
+        auxiliary_graph.add_edge("source", id + "_" + str(time_step), **attributes)
 
         # E8. Connect each node at the last time step to sink per park allowance
-        for val in range(1, vertiport[1]["hold_capacity"] + 1):
-            weight = - lambda_val * (C(vertiport[0], val) - C(vertiport[0], val - 1))
+        for val in range(1, data["hold_capacity"] + 1):
+            weight = - lambda_val * (C(id, val) - C(id, val - 1))
             attributes = {"upper_capacity": 1,
                         "lower_capacity": 0,
                         "weight": weight,
                         "edge_group": "E8_" + str(val + 1)}
-            auxiliary_graph.add_edge(vertiport[0] + "_" + str(max_time), "sink", **attributes)  
+            auxiliary_graph.add_edge(id + "_" + str(max_time), "sink", **attributes)  
     
     print(f"Time to build graph: {time.time() - start_time_graph_build}")
-    # Print edges for debugging
-    #for edge in auxiliary_graph.edges(data=True):
-    #    print(edge)
-    #draw_graph(auxiliary_graph)
     return auxiliary_graph, unique_departure_times
 
 
@@ -276,7 +277,7 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
     return allocation, m.ObjVal
 
 
-def save_allocation(allocation, save_file, start_time, initial_allocation=False):
+def save_allocation(allocation, save_file, start_time, output_folder="", initial_allocation=False):
     """
     Save the allocation to a file.
     
@@ -285,14 +286,15 @@ def save_allocation(allocation, save_file, start_time, initial_allocation=False)
         save_file (str): Name of the file to save the allocation.
     """
     open_style = "w" if initial_allocation else "a"
-    with open(f"./data/{save_file}", open_style) as f:
+    print(os.path.abspath(''))
+    with open(f"{output_folder}/results/{save_file}", open_style) as f:
         f.write(f"Time: {start_time}\n")
         f.write("    Flight ID, Request ID\n")
         for flight_id, request_id in allocation:
             f.write(f"    {flight_id}, {request_id}\n")
 
 
-def fleet_vcg_allocation_and_payment(vertiport_usage, flights, timing_info, congestion_info, fleets, save_file, initial_allocation, payment_calc=True, save=True):
+def fleet_vcg_allocation_and_payment(vertiport_usage, flights, timing_info, congestion_info, fleets, save_file, initial_allocation, payment_calc=True, save=True, output_folder=""):
     """
     Allocate flights for a given time and set of requests.
 
@@ -344,6 +346,6 @@ def fleet_vcg_allocation_and_payment(vertiport_usage, flights, timing_info, cong
         print(f"Social welfares without each fleet: {alternate_SWs}")
         print(f"\nPayment\n{payment}")
     if save:
-        save_allocation(allocation, save_file, timing_info["current_time"], initial_allocation=initial_allocation)
+        save_allocation(allocation, save_file, timing_info["current_time"], output_folder, initial_allocation=initial_allocation)
 
     return allocation, payment, SW

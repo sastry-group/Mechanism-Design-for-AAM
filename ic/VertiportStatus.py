@@ -43,19 +43,7 @@ class VertiportStatus(nx.DiGraph):
                 self.add_edge(time_extended_vertiport_id, time_extended_vertiport_depart, **dep_attributes)
                 self.add_edge(time_extended_vertiport_arrive, time_extended_vertiport_id, **arr_attributes)
 
-        # # Add edges to time extended graph
-        # for step in self.time_steps:
-        #     for edge in edges:
-        #         arrival_time = step + edge["travel_time"]
-        #         if arrival_time > timing["end_time"]:
-        #             continue
-        #         assert arrival_time in self.time_steps, f"Timing setup incorrect. Arrival time {arrival_time} not in time steps."
-        #         time_extended_start = edge["origin_vertiport_id"] + "_" + str(step)
-        #         time_extended_end = edge["destination_vertiport_id"] + "_" + str(arrival_time)
-        #         self.add_edge(time_extended_start, time_extended_end)
 
-
-        # print(f"Added nodes: {self.nodes} and edges {self.edges}")
         # Adding sector capacities to time extended graph
         for i in range(len(self.time_steps) - 1):
             for id, sector in sectors.items():
