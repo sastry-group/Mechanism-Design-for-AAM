@@ -23,16 +23,16 @@ def build_auxiliary(vertiport_status, flights, timing_info, congestion_info):
     start_time_graph_build = time.time()
     max_time, time_step = timing_info["end_time"], timing_info["time_step"]
     vertiports, time_steps = vertiport_status.vertiports, vertiport_status.time_steps
-    # timed_vertiport_ids = [f"{v1}_{v2}" for v1 in vertiports for v2 in time_steps]
     lambda_val, C = congestion_info["lambda"], congestion_info["C"]
     auxiliary_graph = nx.MultiDiGraph()
     ## Construct nodes
     #  V1. Create dep, arr, and standard nodes for each initial node (vertiport + time step)
     for id in vertiports.keys():
-        for time_step in time_steps:
-            auxiliary_graph.add_node(id + "_dep", **{"id": id})
-            auxiliary_graph.add_node(id + "_arr")
-            auxiliary_graph.add_node(id)
+        for this_time in time_steps:
+            timed_id = id + "_" + str(this_time)
+            auxiliary_graph.add_node(timed_id + "_dep", **{"id": id})
+            auxiliary_graph.add_node(timed_id + "_arr")
+            auxiliary_graph.add_node(timed_id)
 
     #  V2. Create a node for each unique departure time for each agent
     unique_departure_times = {}
@@ -253,6 +253,7 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
     print(f"Time to build model: {time.time() - start_time_build_model}")
 
     # Optimize the model
+    m.setParam('OutputFlag', 0)  # Suppress Gurobi output
     print("Optimizing...")
     start_time_optimization = time.time()
     m.optimize()
@@ -325,8 +326,6 @@ def fleet_vcg_allocation_and_payment(vertiport_usage, flights, timing_info, cong
                     allocated_request_id = flights_allocated[flight_id]
                     SW_minus_i -= fleet["rho"] * flights[flight_id]["requests"][allocated_request_id]["bid"]
                 else:
-                    print(flight_id)
-                    print(flights)
                     SW_minus_i -= fleet["rho"] * flights[flight_id]["requests"]["000"]["bid"]
 
             # Get the objective value for the allocation without the complete fleet

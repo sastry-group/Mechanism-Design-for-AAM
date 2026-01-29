@@ -19,6 +19,7 @@
     "AC001": {
       "appearance_time": 0,
       "origin_vertiport_id": "V001",
+      "rho": 1,
       "requests": {
         "000": {
           "destination_vertiport_id": "V001",
@@ -41,6 +42,7 @@
     "AC002": {
       "appearance_time": 0,
       "origin_vertiport_id": "V002",
+      "rho": 1,
       "requests": {
         "000": {
           "destination_vertiport_id": "V002",
@@ -91,13 +93,13 @@
         "C": {
             "V001": [
                 0.0,
-                0.2,
-                0.6
+                0.0,
+                0.0
             ],
             "V002": [
                 0.0,
-                0.2,
-                0.6
+                0.0,
+                0.0
             ]
         }
     }

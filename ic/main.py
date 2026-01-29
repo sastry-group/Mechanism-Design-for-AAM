@@ -492,6 +492,9 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
     # routes_data = data["routes"]
     sectors_data = data["sectors"]
 
+    # # Create vertiport graph and add starting aircraft positions
+    vertiport_usage = VertiportStatus(vertiports, sectors_data, timing_info)
+
     fleets = data["fleets"]
     if method == "vcg":
         congestion_params = data["congestion_params"]
@@ -537,10 +540,7 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
                     flights[flight_id]["rho"] = fleet["rho"]
                 else:
                     flights[flight_id]["rho"] = 1
-
-    # # Create vertiport graph and add starting aircraft positions
-    vertiport_usage = VertiportStatus(vertiports, sectors_data, timing_info)
-    # vertiport_usage.add_aircraft(flights)
+        vertiport_usage.add_aircraft(flights)
 
 
     start_time = timing_info["start_time"]
