@@ -504,8 +504,8 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
                 vertiport (str): The vertiport id.
                 q (int): The number of aircraft in the hold.
             """
-            assert float(q).is_integer() and q >= 0 and q < len(congestion_params["C"]), "q must be a non-negative integer."
-            return congestion_params["C"][q]
+            assert float(q).is_integer() and q >= 0 and q < len(congestion_params["C"][vertiport]), "q must be a non-negative integer."
+            return congestion_params["C"][vertiport][q]
     
         #add delays for vcg
         max_delay = 10
@@ -545,7 +545,7 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
 
     start_time = timing_info["start_time"]
     end_time = timing_info["end_time"]
-    auction_intervals = list(range(start_time, end_time, auction_freq))
+    # auction_intervals = list(range(start_time, end_time, auction_freq))
 
     max_travel_time = 6
     last_auction =  end_time - max_travel_time - auction_freq
@@ -568,7 +568,7 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
 
     max_travel_time = 6
     last_auction =  end_time - max(max_travel_time,auction_freq)
-    auction_times = list(np.arange(0, last_auction+1, auction_freq))
+    auction_times = list(np.arange(start_time, last_auction+1, auction_freq))
     print(f"Last auction: {last_auction}")
     logger.info(f"Last auction: {last_auction}")
 

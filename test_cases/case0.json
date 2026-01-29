@@ -1,7 +1,7 @@
 {
   "timing_info": {
-    "start_time": 0, 
-    "end_time": 30,
+    "start_time": -20, 
+    "end_time": 40,
     "time_step": 10,
     "auction_frequency": 30
   },
@@ -32,7 +32,9 @@
           "request_departure_time": 10,
           "request_arrival_time": 20,
           "valuation": 100,
-          "bid": 100
+          "bid": 100,
+          "sector_path": [],
+          "sector_times": []
         }
       }
     },
@@ -52,7 +54,9 @@
           "request_departure_time": 10,
           "request_arrival_time": 20,
           "valuation": 100,
-          "bid": 100
+          "bid": 100,
+          "sector_path": [],
+          "sector_times": []
         }
       }
     }
