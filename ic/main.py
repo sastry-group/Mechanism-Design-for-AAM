@@ -491,6 +491,7 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
     auction_freq = timing_info["auction_frequency"]
     # routes_data = data["routes"]
     sectors_data = data["sectors"]
+    single_auction = auction_freq == -1
 
     # # Create vertiport graph and add starting aircraft positions
     vertiport_usage = VertiportStatus(vertiports, sectors_data, timing_info)
@@ -512,29 +513,28 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
     
         #add delays for vcg
         max_delay = 10
-        if(method == 'vcg'):
-            for fl in data["flights"]:
-                dr = {}
-                for j, r in enumerate(data["flights"][fl]["requests"]):
-                    if(r=='000'):
-                        dr['000'] = copy.deepcopy(data["flights"][fl]["requests"][r])
-                        dr['000']['delay'] = 0
-                        continue
-                    for i in range(max_delay + 1):
-                        k = copy.deepcopy(data["flights"][fl]["requests"][r])
-                        k["request_departure_time"] += i
-                        k["request_arrival_time"] += i
-                        k["bid"] *= pow(0.95,i)
-                        k["valuation"] *= pow(0.95,i)
-                        k["delay"] = i
-                        id_ = str(1 + (j-1)*(max_delay+1) + i)
-                        s = '0' * (3 - len(id_)) + str(id_)
-                        dr[s] = k
-                data["flights"][fl]["requests"] = dr
+        for fl in data["flights"]:
+            dr = {}
+            for j, r in enumerate(data["flights"][fl]["requests"]):
+                if(r=='000'):
+                    dr['000'] = copy.deepcopy(data["flights"][fl]["requests"][r])
+                    dr['000']['delay'] = 0
+                    continue
+                for i in range(max_delay + 1):
+                    k = copy.deepcopy(data["flights"][fl]["requests"][r])
+                    k["request_departure_time"] += i
+                    k["request_arrival_time"] += i
+                    k["bid"] *= pow(0.95,i)
+                    k["valuation"] *= pow(0.95,i)
+                    k["delay"] = i
+                    id_ = str(1 + (j-1)*(max_delay+1) + i)
+                    s = '0' * (3 - len(id_)) + str(id_)
+                    dr[s] = k
+            data["flights"][fl]["requests"] = dr
 
         congestion_info = {"lambda": congestion_params["lambda"], "C": C}
-            # Add fleet weighting information to flights
-        for fleet_id, fleet in fleets.items():
+        # Add fleet weighting information to flights
+        for _, fleet in fleets.items():
             for flight_id in fleet["members"]:
                 if EQUITABLE_FLEETS:
                     flights[flight_id]["rho"] = fleet["rho"]
@@ -545,13 +545,8 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
 
     start_time = timing_info["start_time"]
     end_time = timing_info["end_time"]
-    # auction_intervals = list(range(start_time, end_time, auction_freq))
 
-    max_travel_time = 6
-    last_auction =  end_time - max_travel_time - auction_freq
-
-
-    
+    max_travel_time = 6 # What is this??
 
     # Sort arriving flights by appearance time
     ordered_flights = {}
@@ -567,8 +562,8 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
         flight["rebase_count"] = 0
 
     max_travel_time = 6
-    last_auction =  end_time - max(max_travel_time,auction_freq)
-    auction_times = list(np.arange(start_time, last_auction+1, auction_freq))
+    last_auction =  start_time if single_auction else end_time - max(max_travel_time,auction_freq)
+    auction_times = [start_time] * 2 if single_auction else list(np.arange(start_time, last_auction+1, auction_freq))
     print(f"Last auction: {last_auction}")
     logger.info(f"Last auction: {last_auction}")
 
@@ -592,15 +587,11 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
     logger.info(f"Auction times: {auction_times}")
 
     for prev_auction_time, auction_time in zip(auction_times[:-1], auction_times[1:]):
-        # Get the current flights
-        # current_flight_ids = ordered_flights[appearance_time]
-        
         if prev_auction_time > design_parameters["run_up_to_auction"]:
             break
 
-        # This is to ensure it doest not rebase the flights beyond simulation end time
+        # This is to ensure it does not rebase the flights beyond simulation end time
         if rebased_flights and auction_time <= last_auction + 1:
-        #    print("Rebasing flights")
             logger.info("Rebasing flights")
             flights = adjust_rebased_flights(rebased_flights, flights, prev_auction_time, auction_time, end_time)
         
@@ -617,7 +608,6 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
             num_agents = design_parameters["num_agents_to_run"]
             current_flight_ids = []
             relevant_appearances = []
-            
             for appearance_time in sorted(ordered_flights.keys()):
                 relevant_appearances.append(appearance_time)
                 current_flight_ids.extend(ordered_flights[appearance_time])
@@ -625,15 +615,14 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
                 # Stop if we have enough agents
                 if len(current_flight_ids) >= num_agents:
                     break
-
             current_flight_ids = current_flight_ids[:num_agents]
+
+        elif single_auction:
+            current_flight_ids = sum(ordered_flights.values(), []) # To turn dict_values into list
+
         else:         
             relevant_appearances = [key for key in ordered_flights.keys() if key >= prev_auction_time and key < auction_time]
-            current_flight_ids = sum([ordered_flights[appearance_time] for appearance_time in relevant_appearances], [])
-        
-
-
-        # print("Current flight ids: ", current_flight_ids)
+            current_flight_ids = sum([ordered_flights[appearance_time] for appearance_time in relevant_appearances], []) # To turn dict_values into list
         
         logger.debug(f"Current flight ids: {current_flight_ids}")
         if len(current_flight_ids) == 0:
@@ -642,7 +631,6 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
             flight_id: flights[flight_id] for flight_id in current_flight_ids
         }
         
-
         unique_vertiport_ids = set()
         interval_sectors = set()
         for flight in current_flights.values():
@@ -654,7 +642,6 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
                 unique_vertiport_ids.add(destination)
                 if request["request_departure_time"] != 0 and request["request_departure_time"] != -1:
                     interval_sectors.update(request["sector_path"])
-                # interval_routes.add((origin, destination))
 
         filtered_vertiports = {vid: vertiports[vid] for vid in unique_vertiport_ids}
         filtered_sectors = {sid: sectors_data[sid] for sid in interval_sectors}
@@ -663,16 +650,13 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
         # filtered_vertiport_usage = VertiportStatus(filtered_vertiports, filtered_sectors, timing_info)
         # filtered_vertiport_usage.add_aircraft(interval_flights)
 
-        # print("Performing auction for interval: ", prev_auction_time, " to ", auction_time) 
         logger.info(f"Performing auction for interval: {prev_auction_time} to {auction_time}")
         write_market_interval(prev_auction_time, auction_time, current_flights, output_folder)
 
         if not current_flights:
             continue
 
-        # print("Method: ", method)
         logger.info(f"Method: {method}")
-        # Determine flight allocation and payment
         current_timing_info = {
             "start_time" : timing_info["start_time"],
             "current_time" : appearance_time,
@@ -682,6 +666,8 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
             "auction_frequency": timing_info["auction_frequency"],
             "time_step": timing_info["time_step"]
         }
+
+        # Determine flight allocation and payment
         if method == "vcg":
 
             allocated_flights, payments, sw = fleet_vcg_allocation_and_payment(
