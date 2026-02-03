@@ -897,20 +897,12 @@ def write_scenario(scenario_folder, scenario_name, stack_commands):
     return path_to_file
 
 
-
 if __name__ == "__main__":
     # Example call:
     # python3 main.py --file /path/to/test_case.json
     # python3 ic/main.py --file test_cases/case1.json --scn_folder /scenario/TEST_IC
 
-    
     # Extract design parameters
-    # BETA = args.BETA
-    # dropout_good_valuation = args.dropout_good_valuation
-    # default_good_valuation = args.default_good_valuation
-    # price_default_good = args.price_default_good
-    # lambda_frequency = args.lambda_frequency
-    # price_upper_bound = args.price_upper_bound
     design_parameters = {
         "beta": args.BETA,
         "dropout_good_valuation": args.dropout_good_valuation,
@@ -925,8 +917,7 @@ if __name__ == "__main__":
         "beta_adjustment_method": args.beta_adjustment_method,
         "use_AADMM": args.use_AADMM,
         "alpha": args.alpha
-
-        }
+    }
     method = args.method    
     file_path = args.file 
     assert Path(file_path).is_file(), f"File at {file_path} does not exist."
@@ -935,11 +926,8 @@ if __name__ == "__main__":
     log_folder = os.path.join(output_folder, "log")
     logger = initialize_logger(log_folder)  # Initialize logger here
 
-
     test_case_data = load_json(file_path)
     file_name = Path(file_path).name
-
-    
     # Create the scenario
     if args.scn_folder is not None:
         SCN_FOLDER = str(top_level_path) + args.scn_folder
@@ -949,9 +937,6 @@ if __name__ == "__main__":
         # print(SCN_FOLDER)
     SCN_NAME = file_name.split(".")[0]
     path = f"{SCN_FOLDER}/{SCN_NAME}.scn"
-
-
-
 
     if os.path.exists(path):
         # Directly proceed if force overwrite is enabled; else, prompt the user

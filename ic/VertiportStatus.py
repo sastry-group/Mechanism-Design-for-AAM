@@ -24,25 +24,14 @@ class VertiportStatus(nx.DiGraph):
 
         # Create time extended graph of vertiports
         for start_step, end_step in zip(self.time_steps[:-1], self.time_steps[1:]):
-            for vertiport in vertiports.items():
-                time_extended_vertiport_id_start = vertiport[0] + "_" + str(start_step)
-                time_extended_vertiport_id_end = vertiport[0] + "_" + str(end_step)
-                self.add_node(time_extended_vertiport_id_start, **vertiport[1])
-                attributes = {"hold_usage": 0, "time": start_step,
-                              "hold_capacity": vertiport[1]["hold_capacity"], "vertiport_id": vertiport[0]}
+            for id, data in vertiports.items():
+                time_extended_vertiport_id_start = id + "_" + str(start_step)
+                time_extended_vertiport_id_end = id + "_" + str(end_step)
+                self.add_node(time_extended_vertiport_id_start, **{**data, "hold_usage": 0, "time": start_step, "vertiport_id": id, "takeoff_usage": 0, "landing_usage": 0})
+                self.add_node(time_extended_vertiport_id_end, **{**data, "hold_usage": 0, "time": end_step, "vertiport_id": id, "takeoff_usage": 0, "landing_usage": 0})
+                attributes = {"hold_usage": 0, "start_time": start_step, "end_time": end_step,
+                              "hold_capacity": data["hold_capacity"], "vertiport_id": id}
                 self.add_edge(time_extended_vertiport_id_start, time_extended_vertiport_id_end, **attributes)
-
-        
-        for step in self.time_steps:
-            for vertiport in vertiports.items():
-                time_extended_vertiport_id = vertiport[0] + "_" + str(step)
-                time_extended_vertiport_depart = vertiport[0] + "_" + str(step) + "_dep"
-                time_extended_vertiport_arrive = vertiport[0] + "_" + str(step) + "_arr"
-                dep_attributes = {"takeoff_usage": 0, "takeoff_capacity": vertiport[1]["takeoff_capacity"], "time": step, "vertiport_id": vertiport[0]}
-                arr_attributes = {"landing_usage": 0, "landing_capacity": vertiport[1]["landing_capacity"], "time": step, "vertiport_id": vertiport[0]}
-                self.add_edge(time_extended_vertiport_id, time_extended_vertiport_depart, **dep_attributes)
-                self.add_edge(time_extended_vertiport_arrive, time_extended_vertiport_id, **arr_attributes)
-
 
         # Adding sector capacities to time extended graph
         for i in range(len(self.time_steps) - 1):
@@ -50,10 +39,8 @@ class VertiportStatus(nx.DiGraph):
                 start_time, end_time = self.time_steps[i], self.time_steps[i+1]
                 time_extended_start = id + "_" + str(start_time)
                 time_extended_end = id + "_" + str(end_time)
-                attributes = {"hold_capacity": sector["hold_capacity"], "hold_usage": 0}
+                attributes = {"hold_capacity": sector["hold_capacity"], "hold_usage": 0, "start_time": start_time, "end_time": end_time, "sector_id": id}
                 self.add_edge(time_extended_start, time_extended_end, **attributes)
-
-        # print(f"Added nodes: {self.nodes} and edges {self.edges}")
 
 
     def add_aircraft(self, flights):
@@ -63,15 +50,20 @@ class VertiportStatus(nx.DiGraph):
         Args:
             flights (list): List of flights with at least origin_vertiport_id information.
         """
-        for flight_id, flight in flights.items():
+        for _, flight in flights.items():
             start_vertiport = flight["origin_vertiport_id"]
             for start_step, end_step in zip(self.time_steps[:-1], self.time_steps[1:]):
                 time_extended_start = start_vertiport + "_" + str(start_step)
                 time_extended_end = start_vertiport + "_" + str(end_step)
                 self[time_extended_start][time_extended_end]["hold_usage"] += 1
+                self.nodes[time_extended_start]["hold_usage"] += 1
                 assert self[time_extended_start][time_extended_end]["hold_usage"] <= self[time_extended_start][time_extended_end]["hold_capacity"], \
                     f"Vertiport {start_vertiport} at time {start_step} to {end_step} over capacity."  
-
+                assert self.nodes[time_extended_start]["hold_usage"] <= self.nodes[time_extended_start]["hold_capacity"], \
+                    f"Vertiport {start_vertiport} at time {start_step} over capacity."
+            self.nodes[time_extended_end]["hold_usage"] += 1
+            assert self.nodes[time_extended_end]["hold_usage"] <= self.nodes[time_extended_end]["hold_capacity"], \
+                    f"Vertiport {start_vertiport} at time {end_step} over capacity."
 
 
     def move_aircraft(self, origin_vertiport, request):
@@ -94,6 +86,9 @@ class VertiportStatus(nx.DiGraph):
                 continue
             start_time_origin = origin_vertiport + "_" + str(start_step)
             end_time_origin = origin_vertiport + "_" + str(end_step)
+            self.nodes[start_time_origin]["hold_usage"] -= 1
+            assert self.nodes[start_time_origin]["hold_usage"] >= 0, \
+                f"Vertiport {origin_vertiport} at time {start_step} has negative hold usage."
             self[start_time_origin][end_time_origin]["hold_usage"] -= 1
             assert self[start_time_origin][end_time_origin]["hold_usage"] >= 0, \
                 f"Vertiport {origin_vertiport} between time {start_step} and {end_step} has negative hold usage."
@@ -105,15 +100,31 @@ class VertiportStatus(nx.DiGraph):
                 self[start_time_destination][end_time_destination]["hold_usage"] += 1
                 assert self[start_time_destination][end_time_destination]["hold_usage"] >= 0, \
                     f"Vertiport {destination_vertiport} between time {start_step} and {end_step} has negative hold usage."
+                self.nodes[start_time_destination]["hold_usage"] += 1  
+                assert self.nodes[start_time_destination]["hold_usage"] >= 0, \
+                    f"Vertiport {destination_vertiport} at time {start_step} has negative hold usage."
+        if len(self.time_steps) > 1:
+            self.nodes[end_time_origin]["hold_usage"] -= 1 # Fix this
+            assert self.nodes[end_time_origin]["hold_usage"] >= 0, \
+                f"Vertiport {origin_vertiport} at time {end_step} has negative hold usage."
+            self.nodes[end_time_destination]["hold_usage"] += 1
+            assert self.nodes[end_time_destination]["hold_usage"] >= 0, \
+                f"Vertiport {destination_vertiport} at time {end_step} has negative hold usage."
         
         # Add the aircrafts takeoff and landing usage
         dep_time_origin = origin_vertiport + "_" + str(departure_time)
         arr_time_destination = destination_vertiport + "_" + str(arrival_time)
-        self[dep_time_origin][dep_time_origin + "_dep"]["takeoff_usage"] += 1
-        assert self[dep_time_origin][dep_time_origin + "_dep"]["takeoff_usage"] <= self[dep_time_origin][dep_time_origin + "_dep"]["takeoff_capacity"], \
+        # self[dep_time_origin][dep_time_origin + "_dep"]["takeoff_usage"] += 1
+        # assert self[dep_time_origin][dep_time_origin + "_dep"]["takeoff_usage"] <= self[dep_time_origin][dep_time_origin + "_dep"]["takeoff_capacity"], \
+        #     f"Vertiport {origin_vertiport} at time {departure_time} over takeoff capacity."
+        self.nodes[dep_time_origin]["takeoff_usage"] += 1
+        assert self.nodes[dep_time_origin]["takeoff_usage"] <= self.nodes[dep_time_origin]["takeoff_capacity"], \
             f"Vertiport {origin_vertiport} at time {departure_time} over takeoff capacity."
-        self[arr_time_destination + "_arr"][arr_time_destination]["landing_usage"] += 1
-        assert self[arr_time_destination + "_arr"][arr_time_destination]["landing_usage"] <= self[arr_time_destination + "_arr"][arr_time_destination]["landing_capacity"], \
+        # self[arr_time_destination + "_arr"][arr_time_destination]["landing_usage"] += 1
+        # assert self[arr_time_destination + "_arr"][arr_time_destination]["landing_usage"] <= self[arr_time_destination + "_arr"][arr_time_destination]["landing_capacity"], \
+        #     f"Vertiport {destination_vertiport} at time {arrival_time} over landing capacity."
+        self.nodes[arr_time_destination]["landing_usage"] += 1
+        assert self.nodes[arr_time_destination]["landing_usage"] <= self.nodes[arr_time_destination]["landing_capacity"], \
             f"Vertiport {destination_vertiport} at time {arrival_time} over landing capacity."
 
     def allocate_aircraft(self, origin_vertiport, flight, request, auction_period):
@@ -143,9 +154,7 @@ class VertiportStatus(nx.DiGraph):
                 assert self[time_extended_origin_start][time_extended_origin_end]["hold_usage"] >= 0 and \
                     self[time_extended_origin_start][time_extended_origin_end]["hold_usage"] <= self[time_extended_origin_start][time_extended_origin_end]["hold_capacity"], \
                     f"Vertiport {origin_vertiport} at time {start_time} to {next_time} has incorrect hold usage. One reason if this is the starting node for an agent is that the holding capacity is lower than the number of agents set to start at that location."
-                # print(f"Adding {time_extended_origin_start} to {time_extended_origin_end} with current hold_usage {self[time_extended_origin_start][time_extended_origin_end]['hold_usage']} and capacity {self[time_extended_origin_start][time_extended_origin_end]['hold_capacity']}")
                 
-            
             # Add the aircraft to the destination vertiport
             elif start_time >= arrival_time:
                 time_extended_destination_start = destination_vertiport + "_" + str(start_time)
@@ -154,7 +163,6 @@ class VertiportStatus(nx.DiGraph):
                 assert self[time_extended_destination_start][time_extended_destination_end]["hold_usage"] >= 0 and \
                     self[time_extended_destination_start][time_extended_destination_end]["hold_usage"] <= self[time_extended_destination_start][time_extended_destination_end]["hold_capacity"], \
                     f"Vertiport {destination_vertiport} at time {start_time} to {next_time} has incorrect hold usage."
-                # print(f"Adding {time_extended_destination_start} to {time_extended_destination_end} with current hold_usage {self[time_extended_destination_start][time_extended_destination_end]['hold_usage']} and capacity {self[time_extended_destination_start][time_extended_destination_end]['hold_capacity']}")
                 
         # Add aircraft sector traversal
         sector_path = request["sector_path"]
@@ -168,22 +176,16 @@ class VertiportStatus(nx.DiGraph):
                 self[start_node][end_node]["hold_usage"] += 1
                 assert self[start_node][end_node]["hold_usage"] >= 0 and self[start_node][end_node]["hold_usage"] <= self[start_node][end_node]["hold_capacity"], \
                     f"Sector {current_sector} at time {ts} to time {ts+1} has incorrect hold usage."
-                # print(f"Adding {start_node} to {end_node} with current hold_usage {self[start_node][end_node]['hold_usage']} and capacity {self[start_node][end_node]['hold_capacity']}")
-                # if start_node == "S002_35" and end_node == "S002_36":
-                #     print(f"Adding ({start_node}, {end_node})") 
                 
-        
         # Add the aircrafts takeoff and landing usage
         time_extended_origin = origin_vertiport + "_" + str(departure_time)
         time_extended_destination = destination_vertiport + "_" + str(arrival_time)
         self[time_extended_origin][time_extended_origin + "_dep"]["takeoff_usage"] += 1
         assert self[time_extended_origin][time_extended_origin + "_dep"]["takeoff_usage"] <= self[time_extended_origin][time_extended_origin + "_dep"]["takeoff_capacity"], \
             f"Vertiport {origin_vertiport} at time {departure_time} over takeoff capacity."
-        # print(f"Adding {time_extended_origin} to {time_extended_origin + '_dep'} with current takeoff_usage {self[time_extended_origin][time_extended_origin + '_dep']['takeoff_usage']} and capacity {self[time_extended_origin][time_extended_origin + '_dep']['takeoff_capacity']}")
         self[time_extended_destination + "_arr"][time_extended_destination]["landing_usage"] += 1
         assert self[time_extended_destination + "_arr"][time_extended_destination]["landing_usage"] <= self[time_extended_destination + "_arr"][time_extended_destination]["landing_capacity"], \
             f"Vertiport {destination_vertiport} at time {arrival_time} over landing capacity."
-        # print(f"Adding {time_extended_destination + '_arr'} to {time_extended_destination} with current landing_usage {self[time_extended_destination + '_arr'][time_extended_destination]['landing_usage']} and capacity {self[time_extended_destination + '_arr'][time_extended_destination]['landing_capacity']}")
 
 def draw_graph(graph):
     """
