@@ -787,23 +787,23 @@ def run_scenario(data, scenario_path, scenario_name, output_folder, method, desi
         # print(f"Elapsed time: {elapsed_time} seconds")
 
         # Evaluate the allocation
-        
-        valuation = False
+        valuation = True
         if valuation:
             allocated_valuation = {flight_id: current_flights[flight_id]["requests"][request_id]["valuation"] for flight_id, request_id in allocated_flights}
             parked_valuation = {flight_id: flight["requests"]["000"]["valuation"] for flight_id, flight in current_flights.items() if flight_id not in [flight_id for flight_id, _ in allocated_flights]}
             valuation = sum([current_flights[flight_id]["rho"] * val for flight_id, val in allocated_valuation.items()]) + sum([current_flights[flight_id]["rho"] * val for flight_id, val in parked_valuation.items()])
 
 
-            #[print('Nodes: -----')]
-            #for n in vertiport_usage.nodes:
+            # print('Nodes: -----')
+            # for n in vertiport_usage.nodes:
             #    print("node: ", n)
             #    print("cost: ", C(vertiport_usage.nodes[n]["vertiport_id"], vertiport_usage.nodes[n]["hold_usage"]))
             #    print('----')
             congestion_costs = congestion_info["lambda"] * sum([C(vertiport_usage.nodes[node]["vertiport_id"], vertiport_usage.nodes[node]["hold_usage"]) for node in vertiport_usage.nodes])
+            print(f"Social welfare: {valuation - congestion_costs}")
+            # print(f"sw - (valuation - congestion_costs): {sw - (valuation - congestion_costs)}")
             if method == "vcg":
                 assert sw - (valuation - congestion_costs) <= 0.01, "Social welfare calculation incorrect."
-            # print(f"Social welfare: {valuation - congestion_costs}")
             results.append((allocated_flights, payments, valuation, congestion_costs))
         auction += 1
 

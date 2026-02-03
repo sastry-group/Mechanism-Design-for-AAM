@@ -31,8 +31,8 @@ def build_auxiliary(vertiport_status, flights, timing_info, congestion_info):
         for this_time in time_steps:
             timed_id = id + "_" + str(this_time)
             auxiliary_graph.add_node(timed_id + "_dep", **{"id": id})
-            auxiliary_graph.add_node(timed_id + "_arr")
-            auxiliary_graph.add_node(timed_id)
+            auxiliary_graph.add_node(timed_id + "_arr", **{"id": id})
+            auxiliary_graph.add_node(timed_id, **{"id": id})
 
     #  V2. Create a node for each unique departure time for each agent
     unique_departure_times = {}
@@ -50,7 +50,6 @@ def build_auxiliary(vertiport_status, flights, timing_info, congestion_info):
     #  V3. Add source and sink nodes
     auxiliary_graph.add_node("source")
     auxiliary_graph.add_node("sink")
-
 
     ## Construct edges
     for id, data in vertiports.items():
@@ -78,7 +77,7 @@ def build_auxiliary(vertiport_status, flights, timing_info, congestion_info):
                 attributes = {"upper_capacity": 1,
                             "lower_capacity": 0,
                             "weight": weight,
-                            "edge_group": "E3_" + str(val + 1)}
+                            "edge_group": "E3_" + str(val)}
                 next_time = this_time + time_step
                 auxiliary_graph.add_edge(timed_id, id + "_" + str(next_time), **attributes)
 
@@ -129,7 +128,7 @@ def build_auxiliary(vertiport_status, flights, timing_info, congestion_info):
                       "lower_capacity": f"E6_{id}_cap",
                       "weight": 0,
                       "edge_group": "E6"}
-        auxiliary_graph.add_edge("source", id + "_" + str(time_step), **attributes)
+        auxiliary_graph.add_edge("source", id + "_" + str(time_steps[0]), **attributes)
 
         # E8. Connect each node at the last time step to sink per park allowance
         for val in range(1, data["hold_capacity"] + 1):
@@ -137,7 +136,7 @@ def build_auxiliary(vertiport_status, flights, timing_info, congestion_info):
             attributes = {"upper_capacity": 1,
                         "lower_capacity": 0,
                         "weight": weight,
-                        "edge_group": "E8_" + str(val + 1)}
+                        "edge_group": "E8_" + str(val)}
             auxiliary_graph.add_edge(id + "_" + str(max_time), "sink", **attributes)  
     
     print(f"Time to build graph: {time.time() - start_time_graph_build}")
@@ -265,12 +264,12 @@ def determine_allocation(vertiport_usage, flights, auxiliary_graph, unique_depar
         allocated_edges = [edge_order[i] for i in nonzero_indices]
         # If the edge is in group E5, pull the flight and request information.
         allocation = []
-        for _, _, attr in allocated_edges:
-            if attr["edge_group"] == "E5":
+        for a,b, attr in allocated_edges:
+            if attr["edge_group"] == 'E5':
                 allocation.append((attr["flight_id"], attr["request_id"]))
-                # print(f"Allocated flight {attr['flight_id']} has weight {attr['weight']}")
+                # print(f"[{a},{b}] Allocated flight {attr['flight_id']} has weight {attr['weight']}")
             # else:
-                # print(f"Other allocated edge: {attr}")
+            #     print(f"[{a},{b}] Other allocated edge: {attr}")
     else:
         print("Optimization was not successful.")
         allocation = None
